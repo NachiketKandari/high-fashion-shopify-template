@@ -1,3 +1,4 @@
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import type { ShopifyScriptsI18n, ShopifyScriptsShop } from "@shopify/hydrogen";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -7,6 +8,8 @@ import { isShopifyScriptsEnabled, shopConfig } from "@/lib/config";
 import { ShopifyScriptsTracker } from "./shopify-client";
 
 export function AnalyticsComponents() {
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const i18n: ShopifyScriptsI18n = {
     country: shopConfig.localization.country,
     language: shopConfig.localization.language,
@@ -21,6 +24,12 @@ export function AnalyticsComponents() {
     <>
       {shopConfig.analytics.vercel.isEnabled && <Analytics />}
       {shopConfig.analytics.speedInsights.isEnabled && <SpeedInsights />}
+      {/* GTM owns the GA4 page view when configured; the direct tag would double-count it. */}
+      {gtmId ? (
+        <GoogleTagManager gtmId={gtmId} />
+      ) : gaMeasurementId ? (
+        <GoogleAnalytics gaId={gaMeasurementId} />
+      ) : null}
       {isShopifyScriptsEnabled && <ShopifyScriptsTracker i18n={i18n} shop={shop} />}
     </>
   );
