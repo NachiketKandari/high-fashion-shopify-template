@@ -14,8 +14,9 @@
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
 const token = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
 const version = process.env.SHOPIFY_API_VERSION ?? "2026-10";
+const dryRun = process.env.DRY_RUN === "1";
 
-if (!domain || !token) {
+if (!dryRun && (!domain || !token)) {
   console.error("Set NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN and SHOPIFY_ADMIN_ACCESS_TOKEN.");
   process.exit(1);
 }
@@ -295,6 +296,11 @@ function productInput(product) {
 }
 
 async function main() {
+  if (dryRun) {
+    console.log(JSON.stringify(productInput(PRODUCTS[0]), null, 2));
+    return;
+  }
+
   const idsByHandle = new Map();
 
   for (const product of PRODUCTS) {
