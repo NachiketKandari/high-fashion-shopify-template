@@ -61,9 +61,14 @@ export interface ProductCard {
   defaultVariantSelectedOptions?: SelectedOption[];
   featuredImage: Image | null;
   handle: string;
+  hoverImage?: Image | null;
   id: string;
   isGiftCard: boolean;
   maxPrice: Money;
+  options?: Array<{
+    name: string;
+    values: Array<{ name: string; swatch?: OptionValueSwatch }>;
+  }>;
   price: Money;
   title: string;
   vendor?: string;

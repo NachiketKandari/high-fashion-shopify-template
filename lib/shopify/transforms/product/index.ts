@@ -176,6 +176,14 @@ function transformProductCard(
     handle: product.handle,
     title: product.title,
     featuredImage: transformImage(matchedVariant?.image ?? product.featuredImage),
+    hoverImage: transformImage(product.images?.nodes?.[1]),
+    options: product.options?.map((option) => ({
+      name: option.name,
+      values: option.optionValues.map((value) => ({
+        name: value.name,
+        swatch: transformSwatch(value.swatch),
+      })),
+    })),
     price: product.priceRange.minVariantPrice,
     maxPrice: product.priceRange.maxVariantPrice,
     compareAtPrice: product.compareAtPriceRange.minVariantPrice,

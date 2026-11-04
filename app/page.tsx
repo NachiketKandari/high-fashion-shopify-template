@@ -1,15 +1,37 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
-import { ProductsGrid } from "@/components/product/products-grid";
-import { Container } from "@/components/ui/container";
+import { HomeProductRail } from "@/components/product/home-product-rail";
+import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
-import { Sections } from "@/components/ui/sections";
 import { shopConfig } from "@/lib/config";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 
+const EDITORIAL_TILES = [
+  { href: "/collections/all", image: "/reference/editorial-corsets.jpg", label: "Corsets" },
+  {
+    href: "/collections/all",
+    image: "/reference/editorial-dresses.jpg",
+    label: "Dresses & Jumpsuits",
+  },
+];
+
+const COLLECTION_TILES = [
+  { href: "/collections/all", image: "/reference/editorial-core.jpg", label: "Core" },
+  { href: "/collections/all", image: "/reference/editorial-essentials.jpg", label: "Essentials" },
+  { href: "/collections/all", image: "/reference/editorial-elevated.jpg", label: "Elevated" },
+];
+
+const LINK_TILES = [
+  { href: "/pages/contact", image: "/reference/tile-flagship.jpg", label: "Flagship Store" },
+  { href: "/blogs/news", image: "/reference/tile-journal.jpg", label: "Journal" },
+  { href: "/pages/contact", image: "/reference/tile-careguide.jpg", label: "Polite Careguide" },
+  { href: "/blogs/news", image: "/reference/tile-our-world.jpg", label: "Our World" },
+];
+
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "Home";
-  const description = "Explore featured products, curated collections, and seasonal campaigns.";
+  const title = "Everyday Luxury Clothing";
+  const description = "Explore featured clothing, curated collections, and seasonal campaigns.";
   return {
     title: `${title} | ${shopConfig.site.name}`,
     description,
@@ -25,31 +47,94 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function HomePage() {
   return (
-    <Page className="pt-0">
-      <Sections>
-        <section className="grid grid-cols-1">
-          <div className="col-start-1 row-start-1 hidden md:block md:aspect-4/1" />
-          <div className="relative col-start-1 row-start-1 flex items-center justify-center px-5 py-10 lg:px-10">
-            <div className="flex flex-col items-center text-center gap-2.5">
-              <h1 className="text-3xl md:text-5xl max-w-3xl text-foreground">
-                A Storefront Built on Vercel Shop
-              </h1>
-              <p className="text-sm md:text-base max-w-xl text-foreground">
-                Agent-ready commerce, powered by Shopify, Next, and Eve.
-              </p>
-            </div>
-          </div>
-        </section>
+    <Page className="pt-0" data-page="home">
+      <h1 className="sr-only">Polite Society | Everyday Luxury Clothing | Made In India</h1>
 
-        <Container>
-          <ProductsGrid
-            title="Products"
-            eagerCount={4}
-            limit={8}
-            collectionUrl="/collections/all"
-          />
-        </Container>
-      </Sections>
+      <section aria-label="Campaign">
+        <Link className="block" href="/collections/all">
+          <div className="relative h-[calc(100svh-91px)] overflow-hidden md:h-auto md:aspect-[1440/784]">
+            <Image
+              alt="Polite Society campaign"
+              className="object-cover md:hidden"
+              fill
+              priority
+              sizes="100vw"
+              src="/reference/hero-mobile.jpg"
+            />
+            <Image
+              alt="Polite Society campaign"
+              className="hidden object-cover md:block"
+              fill
+              priority
+              sizes="100vw"
+              src="/reference/hero-desktop.jpg"
+            />
+          </div>
+        </Link>
+      </section>
+
+      <section aria-label="Shop by category" className="grid grid-cols-1 gap-[3px] md:grid-cols-2">
+        {EDITORIAL_TILES.map((tile) => (
+          <Link
+            className="group relative block aspect-[4/5] overflow-hidden bg-surface"
+            href={tile.href}
+            key={tile.label}
+          >
+            <Image
+              alt={tile.label}
+              className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
+              fill
+              sizes="100vw"
+              src={tile.image}
+            />
+            <span className="absolute bottom-3 left-4 text-2xs uppercase tracking-wider text-white">
+              {tile.label}
+            </span>
+          </Link>
+        ))}
+      </section>
+
+      <HomeProductRail />
+
+      <section aria-label="Collection edits" className="grid grid-cols-1 gap-[3px] md:grid-cols-3">
+        {COLLECTION_TILES.map((tile) => (
+          <Link
+            className="group relative block aspect-[480/557] overflow-hidden bg-surface"
+            href={tile.href}
+            key={tile.label}
+          >
+            <Image
+              alt={tile.label}
+              className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
+              fill
+              sizes="100vw"
+              src={tile.image}
+            />
+            <span className="absolute bottom-3 left-4 text-2xs uppercase tracking-wider text-white">
+              {tile.label}
+            </span>
+          </Link>
+        ))}
+      </section>
+
+      <section aria-label="Discover Polite Society" className="pb-28 pt-10">
+        <div className="grid grid-cols-2 gap-x-[3px] gap-y-6 md:grid-cols-4">
+          {LINK_TILES.map((tile) => (
+            <Link className="group grid content-start" href={tile.href} key={tile.label}>
+              <span className="relative block aspect-square overflow-hidden bg-surface">
+                <Image
+                  alt={tile.label}
+                  className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
+                  fill
+                  sizes="100vw"
+                  src={tile.image}
+                />
+              </span>
+              <span className="mt-2.5 text-2xs uppercase tracking-wider">{tile.label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </Page>
   );
 }

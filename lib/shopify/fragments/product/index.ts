@@ -183,6 +183,14 @@ export const FILTERABLE_PRODUCT_CARD_FRAGMENT = gql(
   `#graphql
   fragment FilterableProductCardFields on Product {
     ...ProductCardFields
+    images(first: 2) {
+      nodes {
+        url
+        altText
+        width
+        height
+      }
+    }
     options {
       name
       optionValues {

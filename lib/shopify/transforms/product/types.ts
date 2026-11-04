@@ -34,4 +34,4 @@ export type ShopifyMediaNode = ShopifyProduct["media"]["edges"][number]["node"];
 type ShopifyBaseProductCard = ResultOf<typeof PRODUCT_CARD_FRAGMENT>;
 type ShopifyFilterableProductCard = ResultOf<typeof FILTERABLE_PRODUCT_CARD_FRAGMENT>;
 export type ShopifyProductCard = ShopifyBaseProductCard &
-  Partial<Pick<ShopifyFilterableProductCard, "options">>;
+  Partial<Pick<ShopifyFilterableProductCard, "images" | "options">>;
