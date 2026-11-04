@@ -22,14 +22,17 @@ export function CollectionsSortSelect({ exclude = [] }: { exclude?: SortValue[] 
   const { reverse, sortKey, status } = useCollection();
   const { setSortByValue } = useCollectionActions();
   const options = SORT_VALUES.filter((value) => !exclude.includes(value));
+  const current = sortKey ? getSortByValue(sortKey, reverse) : "manual";
+  const label =
+    current === "manual" ? "Featured" : (SORT_LABELS[current as SortValue] ?? "Featured");
   return (
     <Select
-      value={sortKey ? getSortByValue(sortKey, reverse) : "manual"}
+      value={current}
       onValueChange={(value) => setSortByValue(value ?? "manual")}
       disabled={status === "loading"}
     >
       <SelectTrigger className="h-5 gap-2 border-0 bg-transparent px-0 text-xs uppercase tracking-wider shadow-none">
-        <span>Featured</span>
+        <span>{label}</span>
       </SelectTrigger>
       <SelectContent>
         {options.map((value) => (

@@ -1,8 +1,10 @@
+import { cn } from "cn";
 import Image from "next/image";
 
 import { NewsletterForm } from "@/components/newsletter/form";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
+import { shopConfig } from "@/lib/config";
 import { FOOTER_COLUMNS } from "@/lib/nav";
 
 const PAYMENTS = ["AMEX", "DINERS", "MASTERCARD", "RUPAY", "VISA"];
@@ -10,7 +12,7 @@ const PAYMENTS = ["AMEX", "DINERS", "MASTERCARD", "RUPAY", "VISA"];
 export function Footer() {
   return (
     <footer className="border-t border-rule bg-background">
-      <Container className="pb-10 pt-16 md:pt-20">
+      <Container className={cn("pt-16 md:pt-20", shopConfig.agent.isEnabled ? "pb-22" : "pb-10")}>
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-[1.6fr_1fr_1fr_1fr_1fr_1.7fr] lg:gap-x-8">
           <div className="col-span-2 grid content-start gap-4 md:col-span-1">
             <div className="grid gap-2">

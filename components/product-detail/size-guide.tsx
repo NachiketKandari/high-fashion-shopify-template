@@ -19,7 +19,7 @@ export function SizeGuide() {
       <SheetTrigger
         render={
           <button
-            className="ml-auto shrink-0 cursor-pointer text-2xs uppercase leading-4 tracking-wider underline underline-offset-4"
+            className="-my-2 ml-auto shrink-0 cursor-pointer py-2 text-2xs uppercase leading-4 tracking-wider underline underline-offset-4"
             type="button"
           >
             Size guide

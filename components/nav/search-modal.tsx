@@ -40,22 +40,26 @@ export function SearchModal() {
           </button>
         }
       />
-      <SearchDrawer onClose={() => setOpen(false)} />
+      <SearchDrawer open={open} onClose={() => setOpen(false)} />
     </Sheet>
   );
 }
 
-function SearchDrawer({ onClose }: { onClose: () => void }) {
+function SearchDrawer({ onClose, open }: { onClose: () => void; open: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { query, reset, results, isLoading, setQuery } = usePredictiveSearch();
-  const recentlyViewed = useRecentlyViewedProducts(true);
+  const recentlyViewed = useRecentlyViewedProducts(open);
   const hasQuery = query.trim().length > 0;
   const products = hasQuery ? (results?.products ?? []) : recentlyViewed;
 
   useEffect(() => {
+    if (!open) {
+      reset();
+      return;
+    }
     requestAnimationFrame(() => inputRef.current?.focus());
-  }, []);
+  }, [open, reset]);
 
   function navigate(href: string) {
     router.push(href);
@@ -64,7 +68,7 @@ function SearchDrawer({ onClose }: { onClose: () => void }) {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const term = inputRef.current?.value?.trim();
+    const term = query.trim();
     if (!term) return;
     navigate(getSearchResultUrl({ baseUrl: "/search", term }));
   }
@@ -100,6 +104,7 @@ function SearchDrawer({ onClose }: { onClose: () => void }) {
             placeholder="Type to search"
             ref={inputRef}
             type="search"
+            value={query}
           />
           {query ? (
             <button
@@ -107,7 +112,7 @@ function SearchDrawer({ onClose }: { onClose: () => void }) {
               className="text-muted-foreground"
               onClick={() => {
                 reset();
-                if (inputRef.current) inputRef.current.value = "";
+                inputRef.current?.focus();
               }}
               type="button"
             >

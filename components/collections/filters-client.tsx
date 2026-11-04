@@ -226,15 +226,18 @@ interface FilterSectionProps {
 
 function FilterSection({ children, title }: FilterSectionProps) {
   return (
-    <div className="grid gap-3 border-t border-rule py-4">
-      <span className="flex items-center justify-between text-2xs uppercase tracking-wider">
+    <details className="group border-t border-rule py-4" open>
+      <summary className="flex cursor-pointer list-none items-center justify-between text-2xs uppercase tracking-wider [&::-webkit-details-marker]:hidden">
         {title}
-        <span aria-hidden="true" className="text-base leading-none font-light">
+        <span
+          aria-hidden="true"
+          className="text-base leading-none font-light transition-transform group-open:rotate-45"
+        >
           +
         </span>
-      </span>
-      {children}
-    </div>
+      </summary>
+      <div className="mt-3">{children}</div>
+    </details>
   );
 }
 

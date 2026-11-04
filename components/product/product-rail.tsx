@@ -52,7 +52,7 @@ export function ProductRail({ children, href, title }: ProductRailProps) {
           <div className="flex items-center gap-2">
             <button
               aria-label="Previous slide"
-              className="flex size-6 items-center justify-center disabled:opacity-30"
+              className="flex size-8 items-center justify-center disabled:opacity-30"
               disabled={!canScrollLeft}
               onClick={() => scroll(-1)}
               type="button"
@@ -61,7 +61,7 @@ export function ProductRail({ children, href, title }: ProductRailProps) {
             </button>
             <button
               aria-label="Next slide"
-              className="flex size-6 items-center justify-center disabled:opacity-30"
+              className="flex size-8 items-center justify-center disabled:opacity-30"
               disabled={!canScrollRight}
               onClick={() => scroll(1)}
               type="button"
@@ -72,8 +72,10 @@ export function ProductRail({ children, href, title }: ProductRailProps) {
         </div>
       </div>
       <div
+        aria-label={`${title} products`}
         className="scrollbar-hide mt-7 flex gap-2.5 overflow-x-auto px-5 pb-1 md:px-[30px]"
         ref={trackRef}
+        tabIndex={0}
       >
         {children}
       </div>

@@ -27,10 +27,10 @@ const LCP_IMAGE_PROPS = { fetchPriority: "high", loading: "eager", preload: true
 
 const LAZY_IMAGE_PROPS = { loading: "lazy" } as const;
 
-// Tailwind `lg`, where the 2x2 grid replaces the carousel.
+// Tailwind `lg`, where the stacked gallery replaces the carousel.
 const DESKTOP_MEDIA = "(min-width: 1024px)";
-// The 2x2 grid is above the fold, so desktop preloads every tile while the lazy <img> keeps mobile from fetching them.
-const DESKTOP_GRID_PRELOAD_COUNT = 2;
+// Only the first stacked image is above the fold; later images stay lazy on both layouts.
+const DESKTOP_GRID_PRELOAD_COUNT = 1;
 
 // The preload must share the <img>'s srcset and sizes, or the browser downloads the tile twice.
 function preloadDesktopGridImage(image: ImageType) {

@@ -108,13 +108,14 @@ function CollectionChips({
   activeHandle: string;
   collections: Collection[];
 }) {
-  const visible = collections.filter((collection) => collection.handle !== "frontpage").slice(0, 5);
+  const visible = collections.filter((collection) => collection.handle !== "frontpage");
   return (
     <nav
       aria-label="Collections"
       className="scrollbar-hide -mx-5 flex gap-5 overflow-x-auto px-5 md:mx-0 md:px-0"
     >
       <Link
+        aria-current={activeHandle === "all" ? "page" : undefined}
         className="shrink-0 border-b border-transparent pb-1 pt-1.5 text-xs uppercase tracking-wider data-[active=true]:border-foreground"
         data-active={activeHandle === "all"}
         href="/collections/all"
@@ -123,6 +124,7 @@ function CollectionChips({
       </Link>
       {visible.map((collection) => (
         <Link
+          aria-current={collection.handle === activeHandle ? "page" : undefined}
           className="shrink-0 border-b border-transparent pb-1 pt-1.5 text-xs uppercase tracking-wider data-[active=true]:border-foreground"
           data-active={collection.handle === activeHandle}
           href={`/collections/${collection.handle}`}

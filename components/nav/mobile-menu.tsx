@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { Link } from "@/components/ui/link";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { shopConfig } from "@/lib/config";
 import { MAIN_NAV } from "@/lib/nav";
 
 export function MobileMenu() {
@@ -112,7 +113,7 @@ export function MobileMenu() {
 
         <div className="flex h-14 shrink-0 items-center justify-between border-t border-rule px-5 text-2xs uppercase tracking-wider">
           <span>USD</span>
-          <Link href="/account">Account</Link>
+          {shopConfig.auth.isEnabled ? <Link href="/account">Account</Link> : <span />}
         </div>
       </SheetContent>
     </Sheet>

@@ -11,7 +11,15 @@ const ROTATE_MS = 3000;
 
 export function Announcement() {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [documentHidden, setDocumentHidden] = useState(false);
+  const paused = hovered || documentHidden;
+
+  useEffect(() => {
+    const onVisibilityChange = () => setDocumentHidden(document.hidden);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, []);
 
   useEffect(() => {
     if (paused) return;
@@ -25,14 +33,15 @@ export function Announcement() {
     <div
       aria-live="polite"
       className="relative flex h-[35px] items-center justify-center overflow-hidden bg-black text-white md:h-[30px]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       role="region"
       aria-label="Announcement"
     >
       {MESSAGES.map((message, messageIndex) => (
         <p
           className="absolute inset-0 flex items-center justify-center px-5 text-center text-xs leading-4 tracking-wider transition-[opacity,transform] duration-500 data-[active=false]:pointer-events-none data-[active=false]:translate-y-0.5 data-[active=false]:opacity-0"
+          aria-hidden={messageIndex !== index}
           data-active={messageIndex === index}
           key={message}
         >

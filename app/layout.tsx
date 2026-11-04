@@ -13,6 +13,7 @@ import { CartProviderWrapper } from "@/components/cart/context";
 import { CartStandardActionsScript } from "@/components/cart/standard-actions";
 import { Footer } from "@/components/footer";
 import { Nav } from "@/components/nav";
+import { NavFallback } from "@/components/nav/fallback";
 import { NewsletterPopup } from "@/components/newsletter/popup";
 import { SiteSchema } from "@/components/schema/site-schema";
 import { botIdProtectedRoutes } from "@/lib/botid";
@@ -50,7 +51,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteSchema />
 
         <CartProviderWrapper cartData={cartData}>
-          <Nav />
+          <Suspense fallback={<NavFallback />}>
+            <Nav />
+          </Suspense>
           <main id="main-content" className="flex flex-1 flex-col min-w-0">
             {children}
           </main>

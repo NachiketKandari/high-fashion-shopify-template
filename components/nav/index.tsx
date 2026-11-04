@@ -36,14 +36,6 @@ export function Nav() {
             Wishlist
           </Link>
           <ContactDrawer />
-          {!shopConfig.auth.isEnabled && (
-            <Link
-              className="hidden text-xs uppercase tracking-wider transition-opacity hover:opacity-60 xl:inline-flex"
-              href="/account"
-            >
-              Account
-            </Link>
-          )}
           {shopConfig.auth.isEnabled && (
             <Suspense fallback={<NavAccountFallback />}>
               <NavAccount />

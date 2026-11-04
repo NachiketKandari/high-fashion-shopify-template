@@ -44,10 +44,10 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
 }
 
 :root {
@@ -76,38 +76,6 @@
 }
 
 @layer components {
-  [data-app-header] {
-    height: 3.5rem;
-  }
-
-  [data-masthead] {
-    height: 0;
-  }
-
-  @media (min-width: 1280px) {
-    [data-app-header] {
-      height: 4.75rem;
-    }
-  }
-
-  body:has([data-page="home"]) [data-app-header] {
-    height: 3.5rem;
-  }
-
-  @media (min-width: 1280px) {
-    body:has([data-page="home"]) [data-app-header] {
-      height: 11.625rem;
-    }
-
-    body:has([data-page="home"]) [data-app-header][data-scrolled="false"] [data-masthead] {
-      height: 6.875rem;
-    }
-
-    body:has([data-page="home"]) [data-app-header][data-scrolled="false"] [data-compact-logo] {
-      display: none;
-    }
-  }
-
   .prose :where(h1, h2, h3, h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     letter-spacing: -0.025em;
     font-weight: 400;

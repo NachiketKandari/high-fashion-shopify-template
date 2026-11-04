@@ -64,12 +64,14 @@ export function DiscountForm({ cart }: DiscountFormProps) {
           disabled={isPending}
           autoComplete="off"
           spellCheck={false}
-          className="flex-1"
+          className="h-9 flex-1 rounded-none border-0 border-b border-rule px-0 shadow-none focus-visible:ring-0"
         />
         <Button
           {...register("discount-apply")}
           type="submit"
           disabled={isPending || code.trim() === ""}
+          variant="outline"
+          className="h-9 rounded-none border border-foreground bg-transparent px-3 text-2xs uppercase tracking-wider text-foreground shadow-none hover:bg-foreground hover:text-background"
         >
           {isPending ? (
             <>

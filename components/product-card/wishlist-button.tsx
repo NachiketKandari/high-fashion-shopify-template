@@ -13,7 +13,7 @@ export function WishlistButton({ product }: { product: ProductCard }) {
         saved ? `Remove ${product.title} from wishlist` : `Save ${product.title} to wishlist`
       }
       aria-pressed={saved}
-      className="relative z-10 flex size-6 cursor-pointer items-start justify-center text-foreground"
+      className="relative z-10 flex size-8 cursor-pointer items-start justify-center text-foreground"
       onClick={() => toggleWishlist(product)}
       type="button"
     >

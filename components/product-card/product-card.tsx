@@ -14,13 +14,15 @@ export interface ProductCardProps {
   loading?: "eager" | "lazy";
   outOfStockText?: string;
   product: ProductCardType;
-  quickShopText?: string;
   showSizes?: boolean;
 }
 
-function formatSwatchValue(swatch: { color?: string; image?: string } | undefined) {
-  if (swatch?.color) return swatch.color;
-  return undefined;
+function swatchStyle(swatch: { color?: string; image?: string } | undefined) {
+  if (!swatch) return undefined;
+  return {
+    ...(swatch.color ? { backgroundColor: swatch.color } : {}),
+    ...(swatch.image ? { backgroundImage: `url(${swatch.image})`, backgroundSize: "cover" } : {}),
+  };
 }
 
 export function ProductCard({
@@ -41,9 +43,10 @@ export function ProductCard({
   return (
     <article className={cn("group/card relative flex h-full flex-col", className)}>
       <Link
-        aria-label={product.title}
+        aria-hidden="true"
         className="relative block aspect-[2/3] overflow-hidden bg-surface"
         href={href}
+        tabIndex={-1}
       >
         {product.featuredImage ? (
           <Image
@@ -79,7 +82,7 @@ export function ProductCard({
               <span
                 className="size-3.5 ring-1 ring-black/10"
                 key={value.name}
-                style={{ backgroundColor: formatSwatchValue(value.swatch) }}
+                style={swatchStyle(value.swatch)}
                 title={value.name}
               />
             ))}
@@ -93,11 +96,24 @@ export function ProductCard({
             <h3 className="min-w-0 flex-1 truncate text-13 uppercase leading-[17px] text-foreground">
               <Link href={href}>{product.title}</Link>
             </h3>
-            <Price
-              amount={product.price.amount}
-              className="shrink-0 text-[13px] leading-[17px] text-foreground"
-              currencyCode={product.price.currencyCode}
-            />
+            <span className="flex shrink-0 flex-wrap items-baseline justify-end gap-x-1.5 text-[13px] leading-[17px] text-foreground">
+              {product.maxPrice.amount !== product.price.amount ? (
+                <span className="text-2xs text-muted-foreground">From</span>
+              ) : null}
+              <Price
+                amount={product.price.amount}
+                className="text-[13px] leading-[17px]"
+                currencyCode={product.price.currencyCode}
+              />
+              {product.compareAtPrice &&
+              Number(product.compareAtPrice.amount) > Number(product.price.amount) ? (
+                <Price
+                  amount={product.compareAtPrice.amount}
+                  className="text-2xs text-muted-foreground line-through"
+                  currencyCode={product.compareAtPrice.currencyCode}
+                />
+              ) : null}
+            </span>
           </div>
           {showSizes && sizes.length > 0 ? (
             <p className="truncate text-xs leading-4 text-muted-foreground">{sizes.join(" ")}</p>

@@ -7,6 +7,8 @@ import { Price } from "@/components/product/price";
 import { Button } from "@/components/ui/button";
 import { useCart, useCheckout } from "@/lib/cart/client";
 
+import { DiscountForm } from "./discount-form";
+
 interface CartSummaryProps {
   cart: CartData;
 }
@@ -16,6 +18,14 @@ export function CartSummary({ cart }: CartSummaryProps) {
     <div className="grid gap-4">
       <CartTotal cart={cart} />
       <CartCheckout label="Checkout" />
+      <details className="group">
+        <summary className="cursor-pointer list-none text-2xs uppercase tracking-wider underline underline-offset-4 [&::-webkit-details-marker]:hidden">
+          Discount code
+        </summary>
+        <div className="mt-3">
+          <DiscountForm cart={cart} />
+        </div>
+      </details>
     </div>
   );
 }

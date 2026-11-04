@@ -47,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function HomePage() {
   return (
-    <Page className="pt-0" data-page="home">
+    <Page className="pt-0">
       <h1 className="sr-only">Polite Society | Everyday Luxury Clothing | Made In India</h1>
 
       <section aria-label="Campaign">
@@ -81,7 +81,7 @@ export default function HomePage() {
             key={tile.label}
           >
             <Image
-              alt={tile.label}
+              alt=""
               className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
               fill
               sizes="100vw"
@@ -104,7 +104,7 @@ export default function HomePage() {
             key={tile.label}
           >
             <Image
-              alt={tile.label}
+              alt=""
               className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
               fill
               sizes="100vw"
@@ -123,7 +123,7 @@ export default function HomePage() {
             <Link className="group grid content-start" href={tile.href} key={tile.label}>
               <span className="relative block aspect-square overflow-hidden bg-surface">
                 <Image
-                  alt={tile.label}
+                  alt=""
                   className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
                   fill
                   sizes="100vw"

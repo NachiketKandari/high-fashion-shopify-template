@@ -34,11 +34,15 @@ function write(items: WishlistItem[]) {
 }
 
 function subscribe(listener: () => void) {
+  const onStorage = () => {
+    cache = null;
+    listener();
+  };
   window.addEventListener(CHANGE_EVENT, listener);
-  window.addEventListener("storage", listener);
+  window.addEventListener("storage", onStorage);
   return () => {
     window.removeEventListener(CHANGE_EVENT, listener);
-    window.removeEventListener("storage", listener);
+    window.removeEventListener("storage", onStorage);
   };
 }
 

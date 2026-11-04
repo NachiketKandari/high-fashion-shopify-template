@@ -28,7 +28,7 @@ export function NewsletterPopup() {
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
       <DialogContent
-        className="max-w-[448px] gap-0 rounded-none border border-rule p-0 shadow-xl"
+        className="sm:max-w-[448px] gap-0 rounded-none border border-rule p-0 shadow-xl"
         showCloseButton
       >
         <DialogTitle className="sr-only">Join Polite Society</DialogTitle>

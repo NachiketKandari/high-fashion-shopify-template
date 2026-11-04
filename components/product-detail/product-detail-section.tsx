@@ -5,7 +5,6 @@ import { type ReactNode, Suspense } from "react";
 import { WishlistButton } from "@/components/product-card/wishlist-button";
 import { BundleComponents, BundleParents } from "@/components/product-detail/bundle-components";
 import { BuyButtons, PurchaseOptions } from "@/components/product-detail/buy-buttons";
-import { BuyWithShopLogo } from "@/components/product-detail/buy-with-shop-logo";
 import { GiftCardPurchaseForm } from "@/components/product-detail/gift-card-purchase-form";
 import { ProductOpenGraph } from "@/components/product-detail/open-graph";
 import {
@@ -102,7 +101,7 @@ function ProductMediaArea({
       title={product.title}
       desktopSlot={
         // Color image is the LCP slot; a pulsing skeleton flashes harder than an empty image canvas.
-        <Suspense fallback={<div className="aspect-square w-full" />}>
+        <Suspense fallback={<div className="aspect-[2/3] w-full" />}>
           <ResolvedColorImageGrid
             product={product}
             selectedOptionsPromise={selectedOptionsPromise}
@@ -112,7 +111,7 @@ function ProductMediaArea({
       mobileSlot={
         <Suspense
           fallback={
-            <div className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-square" />
+            <div className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-[2/3]" />
           }
         >
           <ResolvedColorImageCarousel
@@ -162,6 +161,19 @@ function ProductInfoArea({
   const showBuyLabel = uniformStock && !singleVariant;
   const allInStock = product.defaultVariant?.availableForSale ?? product.availableForSale;
   const hasOptions = options.some((option) => option.values.length > 1);
+  const wishlistProduct = {
+    availableForSale: product.availableForSale,
+    compareAtPrice: product.compareAtPrice,
+    featuredImage: product.featuredImage,
+    handle: product.handle,
+    hoverImage: product.hoverImage,
+    id: product.id,
+    isGiftCard: product.isGiftCard,
+    maxPrice: product.maxPrice,
+    price: product.price,
+    title: product.title,
+    vendor: product.vendor,
+  };
   return (
     <div className="px-5 py-7 lg:sticky lg:top-[76px] lg:max-h-[calc(100svh-76px)] lg:self-start lg:overflow-y-auto lg:px-0 lg:pb-6 lg:pt-[64px]">
       <div className="mx-auto grid w-full max-w-[408px] gap-7">
@@ -170,7 +182,7 @@ function ProductInfoArea({
             <h1 className="text-[22px] uppercase leading-[29px] tracking-wider text-foreground">
               {product.title}
             </h1>
-            <WishlistButton product={product} />
+            <WishlistButton product={wishlistProduct} />
           </div>
           {product.hasUniformPricing ? (
             <ProductPrice
@@ -405,18 +417,18 @@ function BuyButtonsFallback({
       ) : null}
       <div className="flex flex-wrap gap-2.5">
         {shopConfig.pdp.quantityPicker.isEnabled ? <QuantityPickerFallback /> : null}
-        <div className="flex h-12 min-w-40 flex-1 items-center justify-center rounded-lg bg-primary text-sm font-medium text-primary-foreground">
+        <div className="flex h-9 min-w-0 flex-1 items-center justify-center border border-foreground text-2xs uppercase tracking-wider text-foreground">
           {showLabel ? (allInStock ? "Add to Cart" : "Out of Stock") : null}
         </div>
       </div>
       {shopConfig.pdp.buyWithShop.isEnabled && !selectedPlan && !variant?.requiresSellingPlan ? (
         <div
           className={cn(
-            "flex h-12 items-center justify-center rounded-lg bg-shop px-4 text-white",
+            "flex h-9 items-center justify-center bg-foreground px-4 text-2xs uppercase tracking-wider text-background",
             !allInStock && "invisible",
           )}
         >
-          <BuyWithShopLogo aria-hidden="true" className="h-auto w-24.5" />
+          Buy it now
         </div>
       ) : null}
     </div>
@@ -430,7 +442,7 @@ export function ProductDetailSkeleton() {
         <div className="aspect-[2/3] w-full bg-accent lg:hidden" />
         <div className="hidden aspect-[2/3] w-full bg-accent lg:block" />
       </div>
-      <div className="px-5 py-7 lg:sticky lg:top-[76px] lg:px-0 lg:py-6">
+      <div className="px-5 py-7 lg:sticky lg:top-[76px] lg:px-0 lg:pt-[64px]">
         <div className="mx-auto grid w-full max-w-[408px] gap-7">
           <div className="grid gap-2">
             <Skeleton className="h-7 w-3/4" />

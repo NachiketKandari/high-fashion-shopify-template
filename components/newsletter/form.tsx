@@ -16,7 +16,11 @@ export function NewsletterForm({ className, inputId }: NewsletterFormProps) {
   }
 
   if (submitted) {
-    return <p className={className}>Thank you. You are on the list.</p>;
+    return (
+      <p className={className} role="status">
+        Thank you. You are on the list.
+      </p>
+    );
   }
 
   return (

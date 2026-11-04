@@ -83,23 +83,12 @@ interface ToolbarLayoutProps {
 function ToolbarLayout({ filterSheet, resultCount, sortSelect }: ToolbarLayoutProps) {
   return (
     <div className="flex items-center gap-5">
-      <div className="order-2 hidden items-center gap-2 md:order-1 md:flex">
-        <button
-          aria-label="Grid view"
-          aria-pressed="true"
-          className="flex size-5 items-center justify-center"
-          type="button"
-        >
-          <LayoutGridIcon className="size-4" strokeWidth={1.25} />
-        </button>
-        <button
-          aria-label="Large grid view"
-          aria-pressed="false"
-          className="flex size-5 items-center justify-center text-muted-foreground"
-          type="button"
-        >
-          <Grid2X2Icon className="size-4" strokeWidth={1.25} />
-        </button>
+      <div
+        aria-hidden="true"
+        className="order-2 hidden items-center gap-2 text-muted-foreground md:order-1 md:flex"
+      >
+        <LayoutGridIcon className="size-4" strokeWidth={1.25} />
+        <Grid2X2Icon className="size-4" strokeWidth={1.25} />
       </div>
       <div className="order-1 md:order-2 md:ml-auto">{filterSheet}</div>
       {resultCount !== undefined && (
