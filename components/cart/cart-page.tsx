@@ -62,38 +62,32 @@ export function CartPageSkeleton() {
   return (
     <CartPageLayout
       aria-busy="true"
-      count={<Skeleton className="size-7 rounded-full" />}
+      count={<Skeleton className="h-4 w-6" />}
       summary={
         <div className="grid gap-5">
-          <div className="grid gap-2.5">
-            <div className="flex gap-2.5">
-              <Skeleton className="h-9 flex-1" />
-              <Skeleton className="h-9 w-18 rounded-lg" />
+          <div className="grid gap-1">
+            <div className="flex h-7 items-center justify-between">
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-3 w-16" />
             </div>
-            <div className="grid gap-1">
-              <div className="flex h-7 items-center justify-between">
-                <Skeleton className="h-5 w-28" />
-                <Skeleton className="h-6 w-20" />
-              </div>
-              <Skeleton className="h-4 w-48" />
-            </div>
+            <Skeleton className="h-3 w-48" />
           </div>
-          <Skeleton className="h-12 rounded-lg" />
+          <Skeleton className="h-9" />
         </div>
       }
     >
       <ul className="grid gap-5">
         {[0, 1, 2].map((index) => (
-          <li key={index} className="flex gap-2.5">
-            <Skeleton className="size-18 shrink-0 rounded-none" />
-            <div className="grid min-h-18 flex-1 gap-2.5 pt-0.5">
+          <li key={index} className="flex gap-3">
+            <Skeleton className="h-[75px] w-15 shrink-0" />
+            <div className="grid min-h-[75px] flex-1 gap-3">
               <div className="grid gap-1">
-                <Skeleton className="h-5 w-2/3" />
-                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-3 w-2/3" />
+                <Skeleton className="h-3 w-1/3" />
               </div>
-              <Skeleton className="h-6 w-20 self-end rounded-full" />
+              <Skeleton className="h-6 w-20" />
             </div>
-            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-3 w-16" />
           </li>
         ))}
       </ul>
