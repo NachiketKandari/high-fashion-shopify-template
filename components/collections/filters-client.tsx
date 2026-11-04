@@ -39,9 +39,9 @@ export function FilterSheet({ children, label, trigger }: FilterSheetProps) {
   return (
     <Sheet>
       <SheetTrigger render={trigger} />
-      <SheetContent side="left" className="gap-0 overflow-y-auto px-5 pb-5">
-        <div className="flex h-16 shrink-0 items-center gap-2">
-          <SheetTitle className="text-lg font-semibold">{label}</SheetTitle>
+      <SheetContent className="w-full max-w-[420px] gap-0 overflow-y-auto px-5 pb-5" side="right">
+        <div className="flex h-20 shrink-0 items-center">
+          <SheetTitle className="text-xs uppercase tracking-wider">{label}</SheetTitle>
         </div>
         {children}
       </SheetContent>
@@ -149,7 +149,7 @@ export function CollectionFilterSidebar({ filters, priceRange }: CollectionFilte
             />
             <button
               aria-label="Apply price"
-              className="flex size-8 cursor-pointer items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
+              className="flex size-8 cursor-pointer items-center justify-center bg-primary text-primary-foreground transition-opacity hover:opacity-80"
               onClick={() => applyPrice(parsePriceValue(minInput), parsePriceValue(maxInput))}
               type="button"
             >
@@ -226,8 +226,13 @@ interface FilterSectionProps {
 
 function FilterSection({ children, title }: FilterSectionProps) {
   return (
-    <div className="flex flex-col gap-2.5">
-      <span className="text-base font-semibold text-muted-foreground">{title}</span>
+    <div className="grid gap-3 border-t border-rule py-4">
+      <span className="flex items-center justify-between text-2xs uppercase tracking-wider">
+        {title}
+        <span aria-hidden="true" className="text-base leading-none font-light">
+          +
+        </span>
+      </span>
       {children}
     </div>
   );
@@ -289,21 +294,19 @@ function FilterOption({ count, href, label, onClick, pending, selected }: Filter
       onKeyDown={pressOnSpace}
       role="button"
       data-selected={selected}
-      className="flex items-center justify-between text-left text-sm text-muted-foreground transition-colors hover:text-foreground data-[selected=true]:font-medium"
+      className="flex items-center gap-3 text-left text-xs uppercase tracking-wider transition-opacity hover:opacity-60 data-[selected=true]:font-medium"
       onClick={onClick}
     >
-      <span>
-        {label}
-        {count !== undefined && <span className="text-muted-foreground"> ({count})</span>}
+      <span
+        aria-hidden="true"
+        className="flex size-3 shrink-0 items-center justify-center border border-foreground"
+      >
+        {selected ? <span className="size-1.5 bg-foreground" /> : null}
       </span>
-      {pending || selected ? (
-        <span className="flex size-3.5 shrink-0 items-center justify-center overflow-hidden">
-          {pending ? (
-            <LoaderCircleIcon className="size-3.5 animate-spin text-muted-foreground" />
-          ) : (
-            <CheckIcon className="size-3.5 text-muted-foreground" />
-          )}
-        </span>
+      <span className="flex-1">{label}</span>
+      {count !== undefined && <span className="text-2xs text-muted-foreground">{count}</span>}
+      {pending ? (
+        <LoaderCircleIcon className="size-3.5 animate-spin text-muted-foreground" />
       ) : null}
     </Link>
   );
@@ -319,8 +322,8 @@ interface PriceInputProps {
 
 function PriceInput({ currencyCode, label, onChange, placeholder, value }: PriceInputProps) {
   return (
-    <div className="flex h-8 flex-1 items-center rounded-lg bg-input px-2.5">
-      <span className="text-base text-muted-foreground md:text-sm">
+    <div className="flex h-8 flex-1 items-center border-b border-rule">
+      <span className="text-xs text-muted-foreground">
         {currencyCode ? formatCurrencySymbol(currencyCode) : null}
       </span>
       <Input

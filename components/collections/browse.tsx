@@ -46,7 +46,7 @@ export function BrowseResultsFallback() {
   return (
     <ProductsGridSkeleton
       count={PRODUCTS_PER_PAGE}
-      className="sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
     />
   );
 }
@@ -89,10 +89,9 @@ function BrowseResultsGrid({ results }: BrowseResultsGridProps) {
       {products.map((product, index) => (
         <ProductCard
           key={product.id}
-          loading={index < 5 ? "eager" : "lazy"}
+          loading={index < 4 ? "eager" : "lazy"}
           product={product}
           outOfStockText="Out of Stock"
-          quickShopText="Choose"
         />
       ))}
     </InfiniteProductGrid>
