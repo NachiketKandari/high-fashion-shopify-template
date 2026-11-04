@@ -1,44 +1,48 @@
 import { PredictiveSearchProvider } from "@shopify/hydrogen/react";
+import { ChevronDown } from "lucide-react";
 import { Suspense } from "react";
 
-import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
-import type { MenuItem } from "@/lib/menu/types";
 
 import { NavAccount, NavAccountFallback } from "./account";
 import { CartIcon, CartIconFallback } from "./cart";
-import { MobileMenu } from "./mobile-menu";
-import { QuickLinks } from "./quick-links";
+import { ContactDrawer } from "./contact-drawer";
+import { Header } from "./header";
 import { SearchModal } from "./search-modal";
 
 export function Nav() {
-  const items: MenuItem[] = [
-    { id: "default-nav-shop", items: [], title: "Shop", url: "/collections/all" },
-  ];
   return (
-    <nav
-      className="sticky top-0 z-30 w-full bg-background pt-[env(safe-area-inset-top,0px)] transition-shadow duration-250"
-      id="nav-outer"
-    >
-      <Container className="flex h-16 items-center gap-2.5 md:gap-5">
-        <MobileMenu items={items} />
-
-        <Link className="flex items-center shrink-0" href="/">
-          <span className="text-xl leading-4">{shopConfig.site.name}</span>
-        </Link>
-
-        <QuickLinks items={items} />
-
-        <div className="flex items-center gap-5 ml-auto">
+    <Header
+      actions={
+        <>
+          <span className="hidden items-center gap-1 text-xs uppercase tracking-wider xl:inline-flex">
+            USD
+            <ChevronDown className="size-3" strokeWidth={1.25} />
+          </span>
           {shopConfig.search.isEnabled && (
             <PredictiveSearchProvider
               debounceInMs={300}
-              limit={3}
+              limit={4}
               types={["PRODUCT", "COLLECTION", "QUERY"]}
             >
               <SearchModal />
             </PredictiveSearchProvider>
+          )}
+          <Link
+            className="hidden text-xs uppercase tracking-wider transition-opacity hover:opacity-60 xl:inline-flex"
+            href="/wishlist"
+          >
+            Wishlist
+          </Link>
+          <ContactDrawer />
+          {!shopConfig.auth.isEnabled && (
+            <Link
+              className="hidden text-xs uppercase tracking-wider transition-opacity hover:opacity-60 xl:inline-flex"
+              href="/account"
+            >
+              Account
+            </Link>
           )}
           {shopConfig.auth.isEnabled && (
             <Suspense fallback={<NavAccountFallback />}>
@@ -48,8 +52,8 @@ export function Nav() {
           <Suspense fallback={<CartIconFallback />}>
             <CartIcon />
           </Suspense>
-        </div>
-      </Container>
-    </nav>
+        </>
+      }
+    />
   );
 }

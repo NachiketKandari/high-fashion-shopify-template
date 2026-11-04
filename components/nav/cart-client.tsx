@@ -1,6 +1,6 @@
 "use client";
 
-import { HandbagIcon } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 
 import { useCartDrawer } from "@/components/cart/context";
 import { useCart } from "@/lib/cart/client";
@@ -20,19 +20,20 @@ export function CartIconClient({ cartLabel, initialCart }: CartIconClientProps) 
 
   return (
     <button
+      aria-label={`${cartLabel} (${quantity})`}
+      className="flex cursor-pointer items-center justify-center text-xs uppercase tracking-wider transition-opacity hover:opacity-60"
       onClick={openOverlay}
-      className="flex cursor-pointer items-center justify-center gap-1.5 text-foreground hover:text-foreground/80 transition-colors"
       type="button"
     >
-      <span className="relative">
-        <HandbagIcon className="size-5" />
-        {quantity > 0 && (
-          <span className="absolute -top-2 -right-1 flex size-4 items-center justify-center rounded-full bg-foreground text-xxs leading-none text-background">
+      <span className="hidden xl:inline">{`Cart (${quantity})`}</span>
+      <span className="relative flex xl:hidden">
+        <ShoppingBag className="size-4" strokeWidth={1.25} />
+        {quantity > 0 ? (
+          <span className="absolute -right-1.5 -top-1.5 flex size-3.5 items-center justify-center rounded-full bg-foreground text-[9px] leading-none text-background">
             {quantity}
           </span>
-        )}
+        ) : null}
       </span>
-      <span className="sr-only">{cartLabel}</span>
     </button>
   );
 }

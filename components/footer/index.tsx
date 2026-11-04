@@ -1,79 +1,82 @@
-import { cn } from "cn";
+import Image from "next/image";
 
-import { MenuLink } from "@/components/nav/menu-link";
+import { NewsletterForm } from "@/components/newsletter/form";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
-import { Sections } from "@/components/ui/sections";
-import { shopConfig } from "@/lib/config";
-import type { MenuItem } from "@/lib/menu/types";
-import { getShopPolicies } from "@/lib/policies/server";
+import { FOOTER_COLUMNS } from "@/lib/nav";
 
-import { SocialLinks } from "./social-links";
-import type { SocialLink } from "./social-links";
+const PAYMENTS = ["AMEX", "DINERS", "MASTERCARD", "RUPAY", "VISA"];
 
-export async function Footer() {
-  const socialLinks: SocialLink[] = [];
-  const items: MenuItem[] = [];
-  const policies = await getShopPolicies({}).catch(() => []);
+export function Footer() {
   return (
-    <footer>
-      {/* pb-22 clears the fixed agent ActionBar pill when it renders */}
-      <Container className={cn("pt-20 pb-10", shopConfig.agent.isEnabled && "pb-22")}>
-        <Sections className="gap-10">
-          {items.length > 0 && <FooterMenu items={items} />}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
-            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 sm:justify-start">
-              {policies.map((policy) => (
-                <Link
-                  key={policy.handle}
-                  href={`/policies/${policy.handle}`}
-                  className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {policy.title}
-                </Link>
-              ))}
+    <footer className="border-t border-rule bg-background">
+      <Container className="pb-10 pt-16 md:pt-20">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-[1.6fr_1fr_1fr_1fr_1fr_1.7fr] lg:gap-x-8">
+          <div className="col-span-2 grid content-start gap-4 md:col-span-1">
+            <div className="grid gap-2">
+              <p className="text-2xs uppercase tracking-wider">Flagship Store</p>
+              <p className="max-w-[260px] text-xs leading-[18px] text-muted-foreground">
+                Shop No.1, Solace Apartment, 33rd Road, Bandra West, Mumbai, India
+              </p>
+              <p className="text-xs leading-[18px] text-muted-foreground">Open daily, 11am – 8pm</p>
             </div>
-            {socialLinks.length > 0 && <SocialLinks links={socialLinks} />}
+            <Image
+              alt="Polite Society"
+              className="mt-2 h-auto w-[315px] max-w-full"
+              height={25}
+              sizes="100vw"
+              src="/reference/ps-wordmark.svg"
+              width={315}
+            />
           </div>
-        </Sections>
+
+          {FOOTER_COLUMNS.map((column) => (
+            <div className="grid content-start gap-3" key={column.title}>
+              <p className="text-2xs uppercase tracking-wider">{column.title}</p>
+              <ul className="grid gap-1.5" role="list">
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      className="text-xs leading-[22px] text-muted-foreground transition-colors hover:text-foreground"
+                      href={link.href}
+                      {...(link.href.startsWith("http")
+                        ? { rel: "noreferrer", target: "_blank" }
+                        : {})}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+          <div className="col-span-2 grid content-start gap-3 md:col-span-3 lg:col-span-1">
+            <p className="text-xs text-foreground">Subscribe to Our Newsletter</p>
+            <NewsletterForm className="text-2xs" inputId="footer-newsletter-email" />
+          </div>
+        </div>
+
+        <div className="mt-16 flex flex-col gap-6 border-t border-transparent pt-2 sm:flex-row sm:items-end sm:justify-between">
+          <p className="text-2xs text-muted-foreground">
+            © 2026 · Polite Society <span className="mx-1">·</span> Website by Embed Studios
+          </p>
+          <ul
+            className="flex flex-wrap items-center gap-1.5"
+            aria-label="Payment methods"
+            role="list"
+          >
+            {PAYMENTS.map((payment) => (
+              <li
+                className="flex h-5 min-w-8 items-center justify-center border border-rule px-1 text-[8px] uppercase tracking-wider text-muted-foreground"
+                key={payment}
+              >
+                {payment}
+              </li>
+            ))}
+          </ul>
+        </div>
       </Container>
     </footer>
-  );
-}
-
-function FooterMenu({ items }: { items: MenuItem[] }) {
-  const columns = items.slice(0, 5);
-
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-10">
-      {columns.map((column) => (
-        <div key={column.id} className="space-y-3">
-          {column.url ? (
-            <MenuLink
-              url={column.url}
-              className="block text-sm font-semibold hover:opacity-70 transition-opacity"
-            >
-              {column.title}
-            </MenuLink>
-          ) : (
-            <h3 className="text-sm font-semibold">{column.title}</h3>
-          )}
-          {column.items.length > 0 && (
-            <ul className="space-y-2">
-              {column.items.map((leaf) => (
-                <li key={leaf.id}>
-                  <MenuLink
-                    url={leaf.url}
-                    className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {leaf.title}
-                  </MenuLink>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ))}
-    </div>
   );
 }

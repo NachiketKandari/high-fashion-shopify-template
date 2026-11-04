@@ -1,26 +1,16 @@
 "use client";
 
-import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { getSearchResultUrl } from "@shopify/hydrogen";
-import { cn } from "cn";
 import { Search, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  type FormEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 
-import { Price } from "@/components/product/price";
-import { Dialog, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Link } from "@/components/ui/link";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useRecentlyViewedProducts } from "@/lib/product/client";
 import { SEARCH_TERM_MAX_LENGTH } from "@/lib/search";
 import { usePredictiveSearch } from "@/lib/search/client";
-import type { PredictiveSearchProduct, SearchSuggestion } from "@/lib/search/types";
 
 export function SearchModal() {
   const [open, setOpen] = useState(false);
@@ -29,7 +19,7 @@ export function SearchModal() {
     function handleShortcut(event: KeyboardEvent) {
       if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        setOpen((prev) => !prev);
+        setOpen((previous) => !previous);
       }
     }
     document.addEventListener("keydown", handleShortcut);
@@ -37,302 +27,162 @@ export function SearchModal() {
   }, []);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <SearchTrigger />
-      <SearchDialogContent open={open} onClose={() => setOpen(false)} />
-    </Dialog>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger
+        render={
+          <button
+            aria-label="Search"
+            className="flex cursor-pointer items-center justify-center text-xs uppercase tracking-wider transition-opacity hover:opacity-60"
+            type="button"
+          >
+            <Search className="size-4 xl:hidden" strokeWidth={1.25} />
+            <span className="hidden xl:inline">Search</span>
+          </button>
+        }
+      />
+      <SearchDrawer onClose={() => setOpen(false)} />
+    </Sheet>
   );
 }
 
-function SearchTrigger() {
-  return (
-    <DialogTrigger
-      render={
-        <button
-          type="button"
-          className="flex items-center justify-center text-foreground hover:text-foreground/80 transition-colors"
-        >
-          <Search className="size-5" />
-          <span className="sr-only">Search</span>
-        </button>
-      }
-    />
-  );
-}
-
-function SearchDialogContent({ onClose, open }: { onClose: () => void; open: boolean }) {
+function SearchDrawer({ onClose }: { onClose: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const { query, setQuery, results, isLoading, activeIndex, setActiveIndex, reset } =
-    usePredictiveSearch();
-  const recentlyViewed = useRecentlyViewedProducts(open);
+  const { query, reset, results, isLoading, setQuery } = usePredictiveSearch();
+  const recentlyViewed = useRecentlyViewedProducts(true);
   const hasQuery = query.trim().length > 0;
-  // An empty query falls back to recently viewed, so both states drive one keyboard list.
-  const suggestions = hasQuery ? (results?.queries ?? []) : [];
   const products = hasQuery ? (results?.products ?? []) : recentlyViewed;
+
   useEffect(() => {
     requestAnimationFrame(() => inputRef.current?.focus());
   }, []);
-  const navigate = useCallback(
-    (href: string) => {
-      router.push(href);
-      requestAnimationFrame(() => onClose());
-    },
-    [router, onClose],
-  );
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    const q = inputRef.current?.value?.trim();
-    if (!q) return;
-    navigate(getSearchResultUrl({ baseUrl: "/search", term: q }));
+
+  function navigate(href: string) {
+    router.push(href);
+    requestAnimationFrame(onClose);
   }
 
-  const visibleItems = suggestions.length + products.length;
-  function navigateToActiveItem() {
-    if (activeIndex < 0) return;
-
-    if (activeIndex < suggestions.length) {
-      const suggestion = suggestions[activeIndex];
-      if (inputRef.current) inputRef.current.value = suggestion.text;
-      setQuery(suggestion.text);
-      return;
-    }
-
-    const product = products[activeIndex - suggestions.length];
-    if (product) {
-      navigate(`/products/${product.handle}`);
-    }
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    const term = inputRef.current?.value?.trim();
+    if (!term) return;
+    navigate(getSearchResultUrl({ baseUrl: "/search", term }));
   }
-  function handleKeyDown(e: ReactKeyboardEvent) {
-    if (e.key === "ArrowDown" && visibleItems > 0) {
-      e.preventDefault();
-      setActiveIndex(Math.min(activeIndex + 1, visibleItems - 1));
-      return;
-    }
-    if (e.key === "ArrowUp" && visibleItems > 0) {
-      e.preventDefault();
-      setActiveIndex(Math.max(activeIndex - 1, -1));
-      return;
-    }
-    if (e.key === "Enter" && activeIndex >= 0) {
-      e.preventDefault();
-      navigateToActiveItem();
-    }
-  }
-  const show = hasQuery ? results !== null || isLoading : products.length > 0;
+
   return (
-    <DialogPrimitive.Portal>
-      <DialogPrimitive.Backdrop className="data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 fixed inset-0 z-60 bg-black/30 backdrop-blur-sm" />
-      <DialogPrimitive.Popup
-        aria-describedby={undefined}
-        className="fixed inset-0 z-60 flex justify-center pt-[15vh] px-4 outline-none"
-        initialFocus={inputRef}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) onClose();
-        }}
-      >
-        <div className="w-full max-w-xl h-fit">
-          <DialogTitle className="sr-only">Search</DialogTitle>
-          <div className="bg-background rounded-xl shadow-lg overflow-hidden duration-200">
-            <form onSubmit={handleSubmit} className="flex items-center gap-3 px-4 py-3">
-              <Search className="size-4 shrink-0 text-foreground/40" />
-              <input
-                ref={inputRef}
-                type="text"
-                name="q"
-                role="combobox"
-                placeholder="Search products"
-                maxLength={SEARCH_TERM_MAX_LENGTH}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
-                aria-expanded={!!results}
-                aria-controls="search-modal-results"
-                aria-activedescendant={
-                  activeIndex >= 0 ? `search-modal-item-${activeIndex}` : undefined
-                }
-                autoComplete="off"
-                className="flex-1 min-w-0 bg-transparent text-base text-foreground placeholder:text-foreground/40 focus:outline-none"
-              />
-              {query.trim() && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    reset();
-                    if (inputRef.current) {
-                      inputRef.current.value = "";
-                      inputRef.current.focus();
-                    }
-                  }}
-                  className="shrink-0 text-sm text-foreground/60 hover:text-foreground transition-colors"
-                >
-                  Clear
-                </button>
-              )}
-              <DialogPrimitive.Close className="shrink-0 flex items-center justify-center rounded-full text-foreground/40 hover:text-foreground transition-colors">
-                <X className="size-4" />
-                <span className="sr-only">Close</span>
-              </DialogPrimitive.Close>
-            </form>
+    <SheetContent
+      className="w-full max-w-[440px] gap-0 border-l border-rule p-0"
+      closeButton={false}
+      side="right"
+    >
+      <SheetTitle className="sr-only">Search</SheetTitle>
+      <div className="flex h-14 shrink-0 items-center justify-end px-5">
+        <SheetClose
+          aria-label="Close search"
+          className="flex size-9 items-center justify-center"
+          type="button"
+        >
+          <X className="size-4" strokeWidth={1.25} />
+        </SheetClose>
+      </div>
 
-            {show && (
-              <div
-                id="search-modal-results"
-                role="listbox"
-                className="border-t border-border/30 max-h-[60vh] overflow-y-auto overscroll-contain"
-              >
-                {hasQuery && isLoading && !results && <LoadingSkeleton />}
+      <form className="px-5" onSubmit={handleSubmit}>
+        <label className="block text-xs uppercase tracking-wider" htmlFor="search-drawer-input">
+          Search
+        </label>
+        <div className="mt-2 flex items-center gap-3 border-b border-foreground pb-2">
+          <input
+            autoComplete="off"
+            className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+            id="search-drawer-input"
+            maxLength={SEARCH_TERM_MAX_LENGTH}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Type to search"
+            ref={inputRef}
+            type="search"
+          />
+          {query ? (
+            <button
+              aria-label="Clear search"
+              className="text-muted-foreground"
+              onClick={() => {
+                reset();
+                if (inputRef.current) inputRef.current.value = "";
+              }}
+              type="button"
+            >
+              <X className="size-3.5" />
+            </button>
+          ) : null}
+          <button className="text-xs uppercase tracking-wider" type="submit">
+            Search
+          </button>
+        </div>
+      </form>
 
-                {(!hasQuery || results) && (
-                  <>
-                    {suggestions.length > 0 && (
-                      <div className="px-4 pt-3 pb-2 flex flex-wrap gap-2">
-                        {suggestions.map((suggestion, i) => (
-                          <SuggestionChip
-                            key={suggestion.text}
-                            suggestion={suggestion}
-                            active={activeIndex === i}
-                            onClick={() => {
-                              setQuery(suggestion.text);
-                              if (inputRef.current) inputRef.current.value = suggestion.text;
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
-
-                    {products.length > 0 && (
-                      <div>
-                        <div className="px-4 pt-3 pb-1.5 text-xs font-medium text-foreground/50 uppercase tracking-wider">
-                          {hasQuery ? "Products" : "Recently viewed"}
-                        </div>
-                        {products.map((product, i) => (
-                          <ProductResult
-                            key={product.id}
-                            product={product}
-                            active={activeIndex === suggestions.length + i}
-                            onNavigate={navigate}
-                          />
-                        ))}
-                      </div>
-                    )}
-
-                    {hasQuery && visibleItems === 0 && (
-                      <div className="px-4 py-6 text-center text-sm text-foreground/50">
-                        {`No results for "${query}"`}
-                      </div>
-                    )}
-
-                    {hasQuery && visibleItems > 0 && (
-                      <div className="px-4 py-3 flex justify-center">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            navigate(getSearchResultUrl({ baseUrl: "/search", term: query.trim() }))
-                          }
-                          className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-medium h-9 px-5 hover:bg-primary/90 transition-colors"
-                        >
-                          View All
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6">
+        {isLoading && products.length === 0 ? (
+          <div className="grid gap-4">
+            {[0, 1, 2].map((item) => (
+              <div className="flex items-center gap-4" key={item}>
+                <div className="h-15 w-10 animate-pulse bg-surface" />
+                <div className="h-3 w-40 animate-pulse bg-surface" />
               </div>
-            )}
+            ))}
           </div>
-        </div>
-      </DialogPrimitive.Popup>
-    </DialogPrimitive.Portal>
-  );
-}
+        ) : null}
 
-function SuggestionChip({
-  suggestion,
-  active,
-  onClick,
-}: {
-  suggestion: SearchSuggestion;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="option"
-      aria-selected={active}
-      data-active={active}
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center rounded-full border px-3 py-1 text-sm transition-colors cursor-pointer",
-        active
-          ? "bg-foreground text-background border-foreground"
-          : "bg-transparent text-foreground border-border hover:bg-accent",
-      )}
-    >
-      {suggestion.text}
-    </button>
-  );
-}
+        {!isLoading && products.length > 0 ? (
+          <>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              {hasQuery ? "Suggestions" : "Recently viewed"}
+            </p>
+            <ul className="mt-4 grid gap-4" role="list">
+              {products.map((product) => (
+                <li key={product.id}>
+                  <button
+                    className="flex w-full items-center gap-4 text-left"
+                    onClick={() => navigate(`/products/${product.handle}`)}
+                    type="button"
+                  >
+                    <span className="relative block h-15 w-10 shrink-0 overflow-hidden bg-surface">
+                      {product.featuredImage ? (
+                        <Image
+                          alt={product.featuredImage.altText || product.title}
+                          className="object-cover"
+                          fill
+                          sizes="100vw"
+                          src={product.featuredImage.url}
+                        />
+                      ) : null}
+                    </span>
+                    <span className="text-xs uppercase tracking-wider">{product.title}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
 
-function ProductResult({
-  product,
-  active,
-  onNavigate,
-}: {
-  product: PredictiveSearchProduct;
-  active: boolean;
-  onNavigate: (href: string) => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="option"
-      aria-selected={active}
-      data-active={active}
-      onClick={() => onNavigate(`/products/${product.handle}`)}
-      className="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-accent/50 data-[active=true]:bg-accent/50 transition-colors text-left cursor-pointer"
-    >
-      {product.featuredImage ? (
-        <Image
-          src={product.featuredImage.url}
-          alt={product.featuredImage.altText}
-          width={56}
-          height={56}
-          sizes="100vw"
-          className="size-14 object-cover bg-muted shrink-0"
-        />
-      ) : (
-        <div className="size-14 bg-muted shrink-0" />
-      )}
-      <div className="flex-1 min-w-0">
-        <div className="text-sm text-foreground truncate">{product.title}</div>
-        <Price
-          amount={product.price.amount}
-          currencyCode={product.price.currencyCode}
-          className="text-sm text-foreground/70"
-        />
+        {!isLoading && hasQuery && products.length === 0 ? (
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            No results for “{query}”
+          </p>
+        ) : null}
+
+        {hasQuery ? (
+          <Link
+            className="mt-8 inline-block text-xs uppercase tracking-wider underline underline-offset-4"
+            href={getSearchResultUrl({ baseUrl: "/search", term: query.trim() })}
+            onClick={(event) => {
+              event.preventDefault();
+              navigate(getSearchResultUrl({ baseUrl: "/search", term: query.trim() }));
+            }}
+          >
+            View all results
+          </Link>
+        ) : null}
       </div>
-    </button>
-  );
-}
-
-function LoadingSkeleton() {
-  return (
-    <div className="px-4 py-3 space-y-3">
-      <div className="pt-1.5 pb-2 h-6 w-40 rounded bg-accent/40 animate-pulse" />
-      <div className="h-3 w-24 rounded bg-accent/40 animate-pulse" />
-      {["skeleton-1", "skeleton-2", "skeleton-3"].map((key) => (
-        <div key={key} className="flex items-center gap-3 py-2.5">
-          <div className="size-14 bg-accent animate-pulse shrink-0" />
-          <div className="flex-1 space-y-1.5">
-            <div className="h-3.5 w-3/4 rounded bg-accent animate-pulse" />
-            <div className="h-3 w-1/3 rounded bg-accent animate-pulse" />
-          </div>
-        </div>
-      ))}
-      <div className="pt-2 pb-1 flex justify-center">
-        <div className="h-9 w-32 rounded-lg bg-accent/40 animate-pulse" />
-      </div>
-    </div>
+    </SheetContent>
   );
 }

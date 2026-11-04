@@ -1,128 +1,120 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import type { MenuItem } from "@/lib/menu/types";
+import { Link } from "@/components/ui/link";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { MAIN_NAV } from "@/lib/nav";
 
-import { MenuLink } from "./menu-link";
-
-export function MobileMenu({ items }: { items: MenuItem[] }) {
+export function MobileMenu() {
   const [open, setOpen] = useState(false);
-  const close = () => setOpen(false);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
         render={
-          <button type="button" className="md:hidden -ml-2 p-2" aria-label="Menu">
-            <Menu className="size-5" />
+          <button
+            aria-label="Menu"
+            className="flex size-9 items-center justify-center xl:hidden"
+            type="button"
+          >
+            <Menu className="size-5" strokeWidth={1.25} />
           </button>
         }
       />
-      <SheetContent side="left" className="gap-0">
-        <div className="flex h-16 items-center px-5">
-          <SheetTitle className="text-lg font-semibold">Menu</SheetTitle>
+      <SheetContent
+        className="w-full max-w-none gap-0 border-0 p-0"
+        closeButton={false}
+        side="right"
+      >
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-rule px-5">
+          <SheetTitle className="sr-only">Menu</SheetTitle>
+          <Image
+            alt="Polite Society"
+            className="h-[22px] w-auto"
+            height={28}
+            priority
+            sizes="100vw"
+            src="/reference/ps-wordmark.svg"
+            width={342}
+          />
+          <SheetClose
+            aria-label="Close menu"
+            className="flex size-9 items-center justify-center"
+            type="button"
+          >
+            <X className="size-5" strokeWidth={1.25} />
+          </SheetClose>
         </div>
-        <nav className="min-h-0 flex-1 overflow-y-auto px-5 pb-5">
-          <MobileMenuList items={items} onLinkClick={close} />
+
+        <nav className="min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-4">
+          <ul className="grid" role="list">
+            {MAIN_NAV.map((item) =>
+              item.columns ? (
+                <li className="border-b border-transparent" key={item.label}>
+                  <details className="group">
+                    <summary className="flex cursor-pointer list-none items-center justify-between py-3 text-13 uppercase tracking-wider [&::-webkit-details-marker]:hidden">
+                      {item.label}
+                      <ChevronDown
+                        className="size-4 transition-transform group-open:rotate-180"
+                        strokeWidth={1.25}
+                      />
+                    </summary>
+                    <div className="grid gap-5 pb-5 pl-1 pt-1">
+                      {item.columns.map((column) => (
+                        <div key={column.title}>
+                          <p className="text-2xs uppercase tracking-wider text-muted-foreground">
+                            {column.title}
+                          </p>
+                          <ul className="mt-2 grid gap-1" role="list">
+                            {column.links.map((link) => (
+                              <li key={link.label}>
+                                <Link
+                                  className="block py-1 text-13 uppercase tracking-wider"
+                                  href={link.href}
+                                  onClick={() => setOpen(false)}
+                                >
+                                  {link.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                </li>
+              ) : (
+                <li key={item.label}>
+                  <Link
+                    className="flex items-center justify-between py-3 text-13 uppercase tracking-wider"
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ),
+            )}
+            <li>
+              <Link
+                className="flex items-center justify-between py-3 text-13 uppercase tracking-wider"
+                href="/wishlist"
+                onClick={() => setOpen(false)}
+              >
+                Wishlist
+              </Link>
+            </li>
+          </ul>
         </nav>
+
+        <div className="flex h-14 shrink-0 items-center justify-between border-t border-rule px-5 text-2xs uppercase tracking-wider">
+          <span>USD</span>
+          <Link href="/account">Account</Link>
+        </div>
       </SheetContent>
     </Sheet>
-  );
-}
-
-function MobileMenuList({ items, onLinkClick }: { items: MenuItem[]; onLinkClick: () => void }) {
-  const hasAnyChildren = items.some((item) => item.items.length > 0);
-
-  if (!hasAnyChildren) {
-    return (
-      <ul className="flex flex-col gap-2.5">
-        {items.map((item) => (
-          <li key={item.id}>
-            <MenuLink
-              url={item.url}
-              onClick={onLinkClick}
-              className="text-base transition-colors hover:text-muted-foreground"
-            >
-              {item.title}
-            </MenuLink>
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  return (
-    <Accordion multiple className="w-full">
-      {items.map((item) =>
-        item.items.length > 0 ? (
-          <AccordionItem key={item.id} value={item.id}>
-            <AccordionTrigger className="py-3 text-base">{item.title}</AccordionTrigger>
-            <AccordionContent>
-              <NestedItems items={item.items} onLinkClick={onLinkClick} />
-              {item.url ? (
-                <MenuLink
-                  url={item.url}
-                  onClick={onLinkClick}
-                  className="mt-3 block text-xs font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {`Show all ${item.title}`}
-                </MenuLink>
-              ) : null}
-            </AccordionContent>
-          </AccordionItem>
-        ) : (
-          <div key={item.id} className="border-b last:border-b-0">
-            <MenuLink
-              url={item.url}
-              onClick={onLinkClick}
-              className="flex py-3 text-base transition-colors hover:text-muted-foreground"
-            >
-              {item.title}
-            </MenuLink>
-          </div>
-        ),
-      )}
-    </Accordion>
-  );
-}
-
-function NestedItems({ items, onLinkClick }: { items: MenuItem[]; onLinkClick: () => void }) {
-  return (
-    <ul className="flex flex-col gap-3 pl-3">
-      {items.map((item) => (
-        <li key={item.id} className="space-y-2">
-          <MenuLink
-            url={item.url}
-            onClick={onLinkClick}
-            className="block text-sm font-medium hover:opacity-70 transition-opacity"
-          >
-            {item.title}
-          </MenuLink>
-          {item.items.length > 0 && (
-            <ul className="flex flex-col gap-2 pl-3">
-              {item.items.map((leaf) => (
-                <li key={leaf.id}>
-                  <MenuLink
-                    url={leaf.url}
-                    onClick={onLinkClick}
-                    className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {leaf.title}
-                  </MenuLink>
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
-    </ul>
   );
 }

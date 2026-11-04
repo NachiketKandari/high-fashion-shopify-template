@@ -67,8 +67,8 @@ export const shopConfig = {
   },
   site: {
     description:
-      "A Storefront Built on Vercel Shop. Agent-ready commerce, powered by Shopify, Next, and Eve.",
-    name: "Vercel Shop",
+      "Everyday luxury clothing, made in India. A design-study storefront built on Vercel Shop.",
+    name: "Polite Society",
     url: defaultUrl,
   },
 } satisfies ShopConfig;
