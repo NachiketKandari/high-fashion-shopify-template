@@ -1,0 +1,591 @@
+{
+  "info": {
+    "name": "Shopify Storefront API — Dummy Store",
+    "description": "Storefront GraphQL API requests for the trial storefront.\n\nSetup:\n1. Set the collection variable `storefront_token` to your public Storefront API access token.\n2. Confirm `store_domain` and `api_version`.\n3. Run `Shop info` to verify the connection.\n4. Run `List products` to populate `variant_id` and `product_handle`.\n5. Run `Create cart` to populate `cart_id` and `line_id`, then the other cart requests.\n\nThe token is the public Storefront token, not an Admin API `shpat_` token. Do not commit a real token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Shopify-Storefront-Access-Token",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{storefront_token}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "store_domain",
+      "value": "dummy-store-f0ejfuh9.myshopify.com"
+    },
+    {
+      "key": "api_version",
+      "value": "2026-10"
+    },
+    {
+      "key": "storefront_token",
+      "value": ""
+    },
+    {
+      "key": "product_handle",
+      "value": "the-complete-snowboard"
+    },
+    {
+      "key": "collection_handle",
+      "value": "hydrogen"
+    },
+    {
+      "key": "variant_id",
+      "value": ""
+    },
+    {
+      "key": "cart_id",
+      "value": ""
+    },
+    {
+      "key": "line_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Shop",
+      "item": [
+        {
+          "name": "Shop info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "pm.test(\"Shop returned\", () => pm.expect(json.data.shop.id).to.be.a(\"string\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ShopInfo {\n  shop {\n    id\n    name\n    description\n    primaryDomain {\n      url\n      host\n    }\n  }\n}",
+                "variables": "{}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "item": [
+        {
+          "name": "List products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "const product = json.data.products.nodes[0];",
+                  "if (product) {",
+                  "  pm.collectionVariables.set(\"product_handle\", product.handle);",
+                  "  const variant = product.variants.nodes[0];",
+                  "  if (variant) pm.collectionVariables.set(\"variant_id\", variant.id);",
+                  "}",
+                  "pm.test(\"At least one product\", () => pm.expect(json.data.products.nodes.length).to.be.above(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ListProducts($first: Int!) {\n  products(first: $first) {\n    nodes {\n      id\n      title\n      handle\n      availableForSale\n      featuredImage {\n        url\n        altText\n      }\n      priceRange {\n        minVariantPrice {\n          amount\n          currencyCode\n        }\n        maxVariantPrice {\n          amount\n          currencyCode\n        }\n      }\n      variants(first: 5) {\n        nodes {\n          id\n          title\n          availableForSale\n          price {\n            amount\n            currencyCode\n          }\n          selectedOptions {\n            name\n            value\n          }\n        }\n      }\n    }\n  }\n}",
+                "variables": "{\"first\": 10}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Product by handle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "const product = json.data.product;",
+                  "if (product) {",
+                  "  const variant = product.variants.nodes[0];",
+                  "  if (variant) pm.collectionVariables.set(\"variant_id\", variant.id);",
+                  "}",
+                  "pm.test(\"Product found\", () => pm.expect(product).to.not.be.null);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ProductByHandle($handle: String!) {\n  product(handle: $handle) {\n    id\n    title\n    handle\n    description\n    descriptionHtml\n    availableForSale\n    featuredImage {\n      url\n      altText\n      width\n      height\n    }\n    images(first: 10) {\n      nodes {\n        url\n        altText\n        width\n        height\n      }\n    }\n    options {\n      name\n      optionValues {\n        name\n      }\n    }\n    priceRange {\n      minVariantPrice {\n        amount\n        currencyCode\n      }\n      maxVariantPrice {\n        amount\n        currencyCode\n      }\n    }\n    variants(first: 20) {\n      nodes {\n        id\n        title\n        availableForSale\n        price {\n          amount\n          currencyCode\n        }\n        compareAtPrice {\n          amount\n          currencyCode\n        }\n        selectedOptions {\n          name\n          value\n        }\n      }\n    }\n  }\n}",
+                "variables": "{\"handle\": \"{{product_handle}}\"}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List collections",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "const collection = json.data.collections.nodes[0];",
+                  "if (collection) pm.collectionVariables.set(\"collection_handle\", collection.handle);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ListCollections($first: Int!) {\n  collections(first: $first) {\n    nodes {\n      id\n      title\n      handle\n      description\n      image {\n        url\n        altText\n      }\n    }\n  }\n}",
+                "variables": "{\"first\": 10}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Collection products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query CollectionProducts($handle: String!, $first: Int!) {\n  collection(handle: $handle) {\n    id\n    title\n    handle\n    description\n    products(first: $first) {\n      nodes {\n        id\n        title\n        handle\n        availableForSale\n        featuredImage {\n          url\n          altText\n        }\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n      }\n    }\n  }\n}",
+                "variables": "{\"handle\": \"{{collection_handle}}\", \"first\": 20}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query SearchProducts($query: String!, $first: Int!) {\n  search(query: $query, first: $first, types: PRODUCT) {\n    totalCount\n    nodes {\n      __typename\n      ... on Product {\n        id\n        title\n        handle\n        availableForSale\n        featuredImage {\n          url\n          altText\n        }\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n      }\n    }\n  }\n}",
+                "variables": "{\"query\": \"snowboard\", \"first\": 10}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Create cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "pm.test(\"No user errors\", () => pm.expect(json.data.cartCreate.userErrors).to.be.empty);",
+                  "const cart = json.data.cartCreate.cart;",
+                  "if (cart) {",
+                  "  pm.collectionVariables.set(\"cart_id\", cart.id);",
+                  "  const line = cart.lines.nodes[0];",
+                  "  if (line) pm.collectionVariables.set(\"line_id\", line.id);",
+                  "}",
+                  "pm.test(\"Cart created\", () => pm.expect(cart.id).to.be.a(\"string\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CartCreate($lines: [CartLineInput!]!) {\n  cartCreate(input: { lines: $lines }) {\n    cart {\n      id\n      checkoutUrl\n      totalQuantity\n      cost {\n        subtotalAmount {\n          amount\n          currencyCode\n        }\n        totalAmount {\n          amount\n          currencyCode\n        }\n      }\n      lines(first: 10) {\n        nodes {\n          id\n          quantity\n          cost {\n            totalAmount {\n              amount\n              currencyCode\n            }\n          }\n          merchandise {\n            ... on ProductVariant {\n              id\n              title\n              price {\n                amount\n                currencyCode\n              }\n              product {\n                id\n                title\n                handle\n              }\n            }\n          }\n        }\n      }\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
+                "variables": "{\"lines\": [{\"merchandiseId\": \"{{variant_id}}\", \"quantity\": 1}]}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "const cart = json.data.cart;",
+                  "if (cart && cart.lines.nodes[0]) pm.collectionVariables.set(\"line_id\", cart.lines.nodes[0].id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetCart($cartId: ID!) {\n  cart(id: $cartId) {\n    id\n    checkoutUrl\n    totalQuantity\n    cost {\n      subtotalAmount {\n        amount\n        currencyCode\n      }\n      totalAmount {\n        amount\n        currencyCode\n      }\n    }\n    lines(first: 50) {\n      nodes {\n        id\n        quantity\n        cost {\n          totalAmount {\n            amount\n            currencyCode\n          }\n        }\n        merchandise {\n          ... on ProductVariant {\n            id\n            title\n            price {\n              amount\n              currencyCode\n            }\n            product {\n              id\n              title\n              handle\n            }\n          }\n        }\n      }\n    }\n  }\n}",
+                "variables": "{\"cartId\": \"{{cart_id}}\"}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add line",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "pm.test(\"No user errors\", () => pm.expect(json.data.cartLinesAdd.userErrors).to.be.empty);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {\n  cartLinesAdd(cartId: $cartId, lines: $lines) {\n    cart {\n      id\n      totalQuantity\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
+                "variables": "{\"cartId\": \"{{cart_id}}\", \"lines\": [{\"merchandiseId\": \"{{variant_id}}\", \"quantity\": 1}]}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update line quantity",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "pm.test(\"No user errors\", () => pm.expect(json.data.cartLinesUpdate.userErrors).to.be.empty);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {\n  cartLinesUpdate(cartId: $cartId, lines: $lines) {\n    cart {\n      id\n      totalQuantity\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
+                "variables": "{\"cartId\": \"{{cart_id}}\", \"lines\": [{\"id\": \"{{line_id}}\", \"quantity\": 2}]}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Remove line",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
+                  "pm.test(\"No user errors\", () => pm.expect(json.data.cartLinesRemove.userErrors).to.be.empty);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {\n  cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {\n    cart {\n      id\n      totalQuantity\n    }\n    userErrors {\n      field\n      message\n    }\n  }\n}",
+                "variables": "{\"cartId\": \"{{cart_id}}\", \"lineIds\": [\"{{line_id}}\"]}"
+              }
+            },
+            "url": {
+              "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
+              "protocol": "https",
+              "host": [
+                "{{store_domain}}"
+              ],
+              "path": [
+                "api",
+                "{{api_version}}",
+                "graphql.json"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

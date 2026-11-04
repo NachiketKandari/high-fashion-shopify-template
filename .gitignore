@@ -33,6 +33,9 @@ dist/
 .env*
 !.env.example
 
+# postman environment with a real token
+docs/postman/local.postman_environment.json
+
 # vercel
 .vercel
 
