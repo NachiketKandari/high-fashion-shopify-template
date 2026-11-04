@@ -9,6 +9,7 @@
     "dev:portless": "portless shop next dev",
     "format": "oxfmt",
     "lint": "oxlint . && oxfmt --check",
+    "seed:catalog": "node --env-file=.env.local scripts/seed-catalog.mjs",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit"
   },
