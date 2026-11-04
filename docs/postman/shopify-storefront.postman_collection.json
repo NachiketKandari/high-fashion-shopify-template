@@ -123,13 +123,16 @@
                   "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
                   "const json = pm.response.json();",
                   "pm.test(\"No GraphQL errors\", () => pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined);",
-                  "const product = json.data.products.nodes[0];",
-                  "if (product) {",
-                  "  pm.collectionVariables.set(\"product_handle\", product.handle);",
-                  "  const variant = product.variants.nodes[0];",
-                  "  if (variant) pm.collectionVariables.set(\"variant_id\", variant.id);",
+                  "const products = json.data.products.nodes;",
+                  "const purchasable = products",
+                  "  .map((product) => ({ product, variant: product.variants.nodes.find((v) => v.availableForSale) }))",
+                  "  .find((entry) => entry.variant);",
+                  "if (purchasable) {",
+                  "  pm.collectionVariables.set(\"product_handle\", purchasable.product.handle);",
+                  "  pm.collectionVariables.set(\"variant_id\", purchasable.variant.id);",
                   "}",
-                  "pm.test(\"At least one product\", () => pm.expect(json.data.products.nodes.length).to.be.above(0));"
+                  "pm.test(\"At least one product\", () => pm.expect(products.length).to.be.above(0));",
+                  "pm.test(\"A purchasable variant exists\", () => pm.expect(purchasable, \"no product has an availableForSale variant\").to.not.be.undefined);"
                 ]
               }
             }
