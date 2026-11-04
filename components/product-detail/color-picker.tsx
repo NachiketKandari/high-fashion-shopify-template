@@ -18,13 +18,10 @@ export function ColorPicker({
   className,
   ...props
 }: ColorPickerProps) {
-  const selectedValue = option.values.find((value) => value.selected)?.name ?? "";
   return (
-    <div className={cn("grid gap-2.5", className)} {...props}>
-      <p className="text-sm font-medium text-foreground/70">
-        {option.name}: <span className="text-foreground">{selectedValue}</span>
-      </p>
-      <div className="flex flex-wrap gap-2.5">
+    <div className={cn("flex items-center gap-4", className)} {...props}>
+      <span className="w-16 shrink-0 text-2xs uppercase tracking-wider">{option.name}</span>
+      <div className="flex flex-wrap gap-2">
         {option.values.map((value) => {
           const imageUrl = hideImages
             ? undefined

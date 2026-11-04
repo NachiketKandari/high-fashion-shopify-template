@@ -5,7 +5,6 @@ import type { ComponentProps, ReactNode } from "react";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
-import { Sections } from "@/components/ui/sections";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSuspenseCart } from "@/lib/cart/client";
 
@@ -18,13 +17,13 @@ export function CartPageContent() {
 
   if (cart.totalQuantity === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-5 py-10 px-5">
-        <h2 className="text-2xl sm:text-3xl">Your cart is empty</h2>
+      <div className="flex flex-col items-start justify-center gap-5 px-5 py-10">
+        <h2 className="text-xs uppercase tracking-wider">Your shopping cart is empty</h2>
         <Link
-          href="/"
-          className="inline-flex cursor-pointer items-center justify-center h-12 px-8 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+          href="/collections/all"
+          className="inline-flex h-9 cursor-pointer items-center justify-center border border-foreground px-4 text-2xs uppercase tracking-wider text-foreground transition-colors hover:bg-foreground hover:text-background"
         >
-          Continue Shopping
+          Explore collections
         </Link>
       </div>
     );
@@ -33,15 +32,29 @@ export function CartPageContent() {
   return (
     <CartPageLayout
       count={
-        <span className="flex size-7 items-center justify-center rounded-full bg-foreground text-sm text-background">
-          {cart.totalQuantity}
+        <span className="text-xs uppercase tracking-wider text-muted-foreground">
+          ({cart.totalQuantity})
         </span>
       }
       summary={<CartSummary cart={cart} />}
       warnings={<CartWarnings />}
     >
-      <CartLineItems lines={cart.lines.nodes} />
+      <div className="grid gap-5">
+        <FreeShippingLine subtotal={cart.cost.subtotalAmount.amount} />
+        <CartLineItems lines={cart.lines.nodes} />
+      </div>
     </CartPageLayout>
+  );
+}
+
+function FreeShippingLine({ subtotal }: { subtotal: string }) {
+  const remaining = Math.max(0, 500 - Number(subtotal));
+  return (
+    <p className="border-t border-rule pt-2.5 text-2xs text-muted-foreground">
+      {remaining === 0
+        ? "Congratulations! You qualify for free shipping."
+        : `You're $${remaining.toFixed(0)} away from free shipping.`}
+    </p>
   );
 }
 
@@ -96,21 +109,26 @@ interface CartPageLayoutProps extends ComponentProps<"div"> {
 
 function CartPageLayout({ children, count, summary, warnings, ...props }: CartPageLayoutProps) {
   return (
-    <Page {...props}>
+    <Page {...props} className="pt-8">
       <Container>
-        <Sections>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl">Cart</h1>
+        <div className="grid gap-8">
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg uppercase tracking-wider">Shopping cart</h1>
             {count}
           </div>
           {warnings}
-          <div className="grid gap-5 lg:grid-cols-12">
-            <div className="lg:col-span-8 xl:col-span-9">{children}</div>
-            <aside className="lg:col-span-4 xl:col-span-3">
-              <div className="lg:sticky lg:top-20">{summary}</div>
+          <div className="grid gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-8 xl:col-span-8">{children}</div>
+            <aside className="lg:col-span-4 lg:border-l lg:border-rule lg:pl-8 xl:col-span-4">
+              <div className="grid gap-4 lg:sticky lg:top-24">
+                <p className="border-t border-foreground pt-3 text-2xs uppercase tracking-wider">
+                  Order summary
+                </p>
+                {summary}
+              </div>
             </aside>
           </div>
-        </Sections>
+        </div>
       </Container>
     </Page>
   );

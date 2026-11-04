@@ -4,67 +4,51 @@ import type { ComponentProps } from "react";
 import { Link } from "@/components/ui/link";
 import type { OptionGroupState } from "@/lib/product/types";
 
+import { SizeGuide } from "./size-guide";
+
 interface OptionPickerProps extends ComponentProps<"div"> {
   compact?: boolean;
   onSelectValue?: (optionName: string, value: string) => void;
   option: OptionGroupState;
 }
 
-export function OptionPicker({
-  compact = false,
-  onSelectValue,
-  option,
-  className,
-  ...props
-}: OptionPickerProps) {
+export function OptionPicker({ onSelectValue, option, className, ...props }: OptionPickerProps) {
   return (
-    <div className={cn("grid gap-2.5", className)} {...props}>
-      <p className="text-sm font-medium text-foreground/70">{option.name}</p>
-      <div className="flex flex-wrap gap-2">
+    <div className={cn("flex items-center gap-4", className)} {...props}>
+      <span className="w-16 shrink-0 text-2xs uppercase tracking-wider">{option.name}</span>
+      <div className="flex flex-1 flex-wrap items-center gap-x-3 gap-y-1">
         {option.values.map((value) => {
           const classes = cn(
-            "grid px-5 text-center text-sm rounded-lg transition-all border",
-            compact ? "py-1" : "py-2",
+            "text-2xs uppercase leading-4 tracking-wider transition-colors",
             !value.exists
-              ? "font-normal border-dashed border-border text-muted-foreground/50 line-through cursor-not-allowed"
+              ? "cursor-not-allowed text-muted-foreground/50 line-through"
               : value.selected
-                ? "font-medium border-foreground text-foreground starting:border-border starting:text-muted-foreground"
-                : "font-normal border-border text-muted-foreground hover:border-foreground hover:text-foreground",
-            value.exists && !value.available && "border-dashed line-through",
-          );
-
-          // Invisible medium-weight twin reserves the bold width so pills don't shift on selection.
-          const label = (
-            <>
-              <span className="col-start-1 row-start-1">{value.name}</span>
-              <span aria-hidden="true" className="invisible col-start-1 row-start-1 font-medium">
-                {value.name}
-              </span>
-            </>
+                ? "border-b border-foreground pb-0.5 text-foreground"
+                : "text-foreground hover:opacity-60",
+            value.exists && !value.available && "line-through opacity-50",
           );
 
           if (!value.exists) {
             return (
               <button
-                key={value.name}
                 aria-label={`${option.name}: ${value.name} (unavailable)`}
                 className={classes}
                 disabled
+                key={value.name}
                 type="button"
               >
-                {label}
+                {value.name}
               </button>
             );
           }
 
           return (
             <Link
-              key={value.name}
-              href={value.href}
-              scroll={false}
-              className={classes}
               aria-current={value.selected ? "true" : undefined}
               aria-label={value.available ? undefined : `${option.name}: ${value.name} (sold out)`}
+              className={classes}
+              href={value.href}
+              key={value.name}
               onClick={
                 onSelectValue && !value.crossProduct
                   ? (event) => {
@@ -73,12 +57,14 @@ export function OptionPicker({
                     }
                   : undefined
               }
+              scroll={false}
             >
-              {label}
+              {value.name}
             </Link>
           );
         })}
       </div>
+      {option.name.toLowerCase().includes("size") ? <SizeGuide /> : null}
     </div>
   );
 }

@@ -5,9 +5,9 @@ import { getProductRecommendations } from "@/lib/product/server";
 
 function RelatedProductsSectionSkeleton({ limit }: { limit: number }) {
   return (
-    <div className="grid gap-4">
-      <h2 className="text-2xl sm:text-3xl">You May Also Like</h2>
-      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
+    <div className="grid gap-7">
+      <h2 className="text-base uppercase tracking-wider">You may also like</h2>
+      <div className="grid grid-cols-2 gap-x-[3px] gap-y-5 md:grid-cols-4">
         {Array.from({ length: limit }, (_, index) => (
           <ProductCardSkeleton key={index} />
         ))}
@@ -20,9 +20,9 @@ async function Render({ handle, limit }: { handle: string; limit: number }) {
   const related = await getProductRecommendations({ handle, intent: "RELATED" });
   if (related.length === 0) return null;
   return (
-    <div className="grid gap-4">
-      <h2 className="text-2xl sm:text-3xl">You May Also Like</h2>
-      <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
+    <div className="grid gap-7">
+      <h2 className="text-base uppercase tracking-wider">You may also like</h2>
+      <div className="grid grid-cols-2 gap-x-[3px] gap-y-5 md:grid-cols-4">
         {related.slice(0, limit).map((product) => (
           <ProductCard key={product.id} product={product} outOfStockText="Out of Stock" />
         ))}

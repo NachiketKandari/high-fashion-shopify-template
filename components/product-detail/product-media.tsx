@@ -30,7 +30,7 @@ const LAZY_IMAGE_PROPS = { loading: "lazy" } as const;
 // Tailwind `lg`, where the 2x2 grid replaces the carousel.
 const DESKTOP_MEDIA = "(min-width: 1024px)";
 // The 2x2 grid is above the fold, so desktop preloads every tile while the lazy <img> keeps mobile from fetching them.
-const DESKTOP_GRID_PRELOAD_COUNT = 4;
+const DESKTOP_GRID_PRELOAD_COUNT = 2;
 
 // The preload must share the <img>'s srcset and sizes, or the browser downloads the tile twice.
 function preloadDesktopGridImage(image: ImageType) {
@@ -153,10 +153,10 @@ function Carousel({
     };
   }, [container]);
   return (
-    <div className="grid gap-5">
+    <div className="grid gap-3">
       <div
         ref={setContainer}
-        className="relative overflow-x-auto flex snap-x snap-mandatory overscroll-x-contain scrollbar-hide -mx-5 w-[calc(100%+2.5rem)]"
+        className="relative flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain scrollbar-hide"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {children}
@@ -165,7 +165,7 @@ function Carousel({
           return (
             <div
               key={mediaKey(item)}
-              className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-square"
+              className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-[2/3]"
             >
               {item.type === "video" ? (
                 <MediaVideo item={item} priority={priority} />
@@ -180,17 +180,15 @@ function Carousel({
       </div>
 
       {/* Dot indicators – reserve space but hide when there's only one image */}
-      <div className={cn("flex justify-center gap-2", itemCount <= 1 && "invisible")}>
+      <div className={cn("flex justify-center gap-1.5", itemCount <= 1 && "invisible")}>
         {Array.from({ length: itemCount }, (_, idx) => (
           <button
             type="button"
             key={idx}
             onClick={() => scrollToImage(idx)}
             className={cn(
-              "h-1.5 rounded-full transition-all",
-              idx === selectedIndex
-                ? "bg-foreground w-8"
-                : "bg-muted-foreground/30 w-1.5 hover:bg-muted-foreground/50",
+              "size-1 rounded-full transition-opacity",
+              idx === selectedIndex ? "bg-foreground" : "bg-foreground/25 hover:bg-foreground/50",
             )}
             aria-label={`Go to image ${idx + 1}`}
           />
@@ -212,7 +210,7 @@ function GridItem({
   priority: boolean;
 }) {
   return (
-    <div className="relative w-full overflow-hidden aspect-square">
+    <div className="relative w-full overflow-hidden aspect-[2/3]">
       {item.type === "video" ? (
         <MediaVideo item={item} priority={priority} />
       ) : item.type === "placeholder" ? (
@@ -249,7 +247,7 @@ function Grid({
   }
 
   const grid = (
-    <div className="grid grid-cols-2 gap-2.5">
+    <div className="grid grid-cols-1">
       {children}
       {mediaItems.map((item, idx) => (
         <GridItem
@@ -282,7 +280,7 @@ export function ColorImageCarouselItems({ images, title }: { images: ImageType[]
   return images.map((image, idx) => (
     <div
       key={image.url}
-      className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-square"
+      className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-[2/3]"
     >
       <Image
         src={image.url}

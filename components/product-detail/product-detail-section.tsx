@@ -2,10 +2,10 @@ import { cn } from "cn";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { type ReactNode, Suspense } from "react";
 
+import { WishlistButton } from "@/components/product-card/wishlist-button";
 import { BundleComponents, BundleParents } from "@/components/product-detail/bundle-components";
 import { BuyButtons, PurchaseOptions } from "@/components/product-detail/buy-buttons";
 import { BuyWithShopLogo } from "@/components/product-detail/buy-with-shop-logo";
-import { ComplementaryProducts } from "@/components/product-detail/complementary-products";
 import { GiftCardPurchaseForm } from "@/components/product-detail/gift-card-purchase-form";
 import { ProductOpenGraph } from "@/components/product-detail/open-graph";
 import {
@@ -13,16 +13,14 @@ import {
   ProductFormOptions,
   ProductFormPrice,
 } from "@/components/product-detail/product-form";
-import {
-  ProductInfoDescription,
-  ProductInfoOptions,
-} from "@/components/product-detail/product-info";
+import { ProductInfoOptions } from "@/components/product-detail/product-info";
 import {
   ColorImageCarouselItems,
   ColorImageGrid,
   ProductMedia,
 } from "@/components/product-detail/product-media";
 import { ProductPrice } from "@/components/product-detail/product-price";
+import { ProductTabs } from "@/components/product-detail/product-tabs";
 import { ProductSchema } from "@/components/product-detail/schema";
 import { BreadcrumbSchema } from "@/components/schema/breadcrumb-schema";
 import { Input } from "@/components/ui/input";
@@ -76,7 +74,7 @@ export function ProductDetailSection({
           { name: product.title, path: `/products/${product.handle}` },
         ]}
       />
-      <div className="grid gap-10 lg:grid-cols-10 lg:items-start lg:gap-5">
+      <div className="grid grid-cols-1 items-start lg:grid-cols-2">
         <ProductMediaArea product={product} selectedOptionsPromise={selectedOptionsPromise} />
         <ProductInfoArea product={product} variantPromise={variantPromise} />
       </div>
@@ -93,12 +91,7 @@ function ProductMediaArea({
 }) {
   if (!hasColorImagePartitioning(product.options)) {
     return (
-      <ProductMedia
-        otherImages={product.images}
-        videos={product.videos}
-        title={product.title}
-        className="lg:col-span-6"
-      />
+      <ProductMedia otherImages={product.images} videos={product.videos} title={product.title} />
     );
   }
 
@@ -107,7 +100,6 @@ function ProductMediaArea({
       otherImages={getSharedImages(product.images, product.options)}
       videos={product.videos}
       title={product.title}
-      className="lg:col-span-6"
       desktopSlot={
         // Color image is the LCP slot; a pulsing skeleton flashes harder than an empty image canvas.
         <Suspense fallback={<div className="aspect-square w-full" />}>
@@ -164,20 +156,22 @@ function ProductInfoArea({
   product: ProductDetails;
   variantPromise: Promise<ProductVariant | undefined>;
 }) {
-  const { options, handle, descriptionHtml } = product;
+  const { options, descriptionHtml } = product;
   const uniformStock = product.allVariantsInStock;
   const singleVariant = product.variantsCount === 1;
   const showBuyLabel = uniformStock && !singleVariant;
   const allInStock = product.defaultVariant?.availableForSale ?? product.availableForSale;
   const hasOptions = options.some((option) => option.values.length > 1);
   return (
-    <div className="grid gap-10 lg:sticky lg:top-20 lg:col-span-4">
-      <div
-        className="grid data-[uniform-price=true]:gap-10"
-        data-uniform-price={product.hasUniformPricing}
-      >
-        <div data-slot="product-info-header">
-          <h1 className="text-foreground text-3xl">{product.title}</h1>
+    <div className="px-5 py-7 lg:sticky lg:top-[76px] lg:max-h-[calc(100svh-76px)] lg:self-start lg:overflow-y-auto lg:px-0 lg:pb-6 lg:pt-[64px]">
+      <div className="mx-auto grid w-full max-w-[408px] gap-7">
+        <div className="grid gap-2" data-slot="product-info-header">
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="text-[22px] uppercase leading-[29px] tracking-wider text-foreground">
+              {product.title}
+            </h1>
+            <WishlistButton product={product} />
+          </div>
           {product.hasUniformPricing ? (
             <ProductPrice
               amount={product.priceRange.minVariantPrice.amount}
@@ -187,43 +181,50 @@ function ProductInfoArea({
           ) : null}
         </div>
 
-        {singleVariant ? (
-          <ProductInfoContent
-            priceSlot={
-              !product.hasUniformPricing ? (
-                <Suspense fallback={<div className="h-7" aria-hidden />}>
-                  <ResolvedProductPrice variantPromise={variantPromise} />
-                </Suspense>
-              ) : undefined
-            }
-            product={product}
-            selectedVariant={product.defaultVariant}
-          />
-        ) : (
-          <Suspense
-            fallback={
-              <ProductInfoFallback
-                allInStock={allInStock}
-                hasOptions={hasOptions}
-                product={product}
-                showLabel={showBuyLabel}
-              />
-            }
-          >
-            <ResolvedProductInfo product={product} variantPromise={variantPromise} />
-          </Suspense>
-        )}
+        <div className="grid gap-7">
+          {singleVariant ? (
+            <ProductInfoContent
+              priceSlot={
+                !product.hasUniformPricing ? (
+                  <Suspense fallback={<div className="h-7" aria-hidden />}>
+                    <ResolvedProductPrice variantPromise={variantPromise} />
+                  </Suspense>
+                ) : undefined
+              }
+              product={product}
+              selectedVariant={product.defaultVariant}
+            />
+          ) : (
+            <Suspense
+              fallback={
+                <ProductInfoFallback
+                  allInStock={allInStock}
+                  hasOptions={hasOptions}
+                  product={product}
+                  showLabel={showBuyLabel}
+                />
+              }
+            >
+              <ResolvedProductInfo product={product} variantPromise={variantPromise} />
+            </Suspense>
+          )}
+
+          {!product.isGiftCard && shopConfig.pdp.bundles.isEnabled ? (
+            <BundleRelationships variant={product.defaultVariant} />
+          ) : null}
+
+          <ProductTabs descriptionHtml={descriptionHtml} />
+
+          <div className="flex justify-end">
+            <a
+              className="text-2xs uppercase tracking-wider underline underline-offset-4"
+              href="mailto:hi@politesociety.in"
+            >
+              Need help?
+            </a>
+          </div>
+        </div>
       </div>
-
-      {!product.isGiftCard && shopConfig.pdp.bundles.isEnabled ? (
-        <BundleRelationships variant={product.defaultVariant} />
-      ) : null}
-
-      {!product.isGiftCard && shopConfig.pdp.complementaryProducts.isEnabled ? (
-        <ComplementaryProducts handle={handle} limit={4} title="Pairs Well With" />
-      ) : null}
-
-      <ProductInfoDescription descriptionHtml={descriptionHtml} />
     </div>
   );
 }
@@ -368,16 +369,14 @@ function QuantityPickerFallback() {
   return (
     <div
       aria-hidden="true"
-      className="grid h-12 w-32 shrink-0 grid-cols-[3rem_2rem_3rem] rounded-lg bg-background ring-1 ring-border ring-inset"
+      className="grid h-9 w-24 shrink-0 grid-cols-[2rem_2rem_2rem] border border-rule bg-background"
     >
-      <span className="flex size-12 items-center justify-center opacity-50">
-        <MinusIcon className="size-4 shrink-0" />
+      <span className="flex size-9 items-center justify-center opacity-50">
+        <MinusIcon className="size-3 shrink-0" />
       </span>
-      <span className="flex h-12 w-8 items-center justify-center text-sm font-medium tabular-nums">
-        1
-      </span>
-      <span className="flex size-12 items-center justify-center">
-        <PlusIcon className="size-4 shrink-0" />
+      <span className="flex h-9 w-8 items-center justify-center text-xs tabular-nums">1</span>
+      <span className="flex size-9 items-center justify-center">
+        <PlusIcon className="size-3 shrink-0" />
       </span>
     </div>
   );
@@ -426,51 +425,40 @@ function BuyButtonsFallback({
 
 export function ProductDetailSkeleton() {
   return (
-    <div aria-busy="true" className="grid gap-10 lg:grid-cols-10 lg:items-start lg:gap-5">
-      <div className="lg:col-span-6">
-        {/* Media blocks stay static; a pulsing skeleton in the LCP slot flashes harder than an empty image canvas. */}
-        <div className="grid gap-5 lg:hidden">
-          <div className="-mx-5 aspect-square w-[calc(100%+2.5rem)] bg-accent" />
-          <div aria-hidden="true" className="h-1.5" />
-        </div>
-        <div className="hidden grid-cols-2 gap-2.5 lg:grid">
-          <div className="aspect-square w-full bg-accent" />
-          <div className="aspect-square w-full bg-accent" />
-          <div className="aspect-square w-full bg-accent" />
-          <div className="aspect-square w-full bg-accent" />
-        </div>
+    <div aria-busy="true" className="grid grid-cols-1 items-start lg:grid-cols-2">
+      <div>
+        <div className="aspect-[2/3] w-full bg-accent lg:hidden" />
+        <div className="hidden aspect-[2/3] w-full bg-accent lg:block" />
       </div>
-      <div className="grid gap-10 lg:sticky lg:top-20 lg:col-span-4">
-        <div className="grid gap-10">
-          <div>
-            <Skeleton className="h-9 w-3/4" />
+      <div className="px-5 py-7 lg:sticky lg:top-[76px] lg:px-0 lg:py-6">
+        <div className="mx-auto grid w-full max-w-[408px] gap-7">
+          <div className="grid gap-2">
+            <Skeleton className="h-7 w-3/4" />
             <Skeleton className="h-7 w-24" />
           </div>
-          <div className="grid gap-10">
+          <div className="grid gap-7">
             <div className="grid gap-5">
-              <Skeleton className="h-5 w-32" />
-              <div className="grid gap-2.5">
-                <Skeleton className="h-5 w-16" />
-                <div className="flex flex-wrap gap-2">
-                  {["w-15", "w-16", "w-16", "w-15", "w-15"].map((width, index) => (
-                    <Skeleton key={index} className={cn("h-9.5 rounded-lg", width)} />
-                  ))}
-                </div>
+              <Skeleton className="h-4 w-24" />
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="size-2.5" />
+                <Skeleton className="size-2.5" />
+                <Skeleton className="size-2.5" />
               </div>
             </div>
             <div className="grid gap-2.5">
               <div className="flex flex-wrap gap-2.5">
                 {shopConfig.pdp.quantityPicker.isEnabled ? <QuantityPickerFallback /> : null}
-                <Skeleton className="h-12 min-w-40 flex-1" />
+                <Skeleton className="h-9 min-w-0 flex-1" />
               </div>
-              {shopConfig.pdp.buyWithShop.isEnabled ? <Skeleton className="h-12 w-full" /> : null}
+              {shopConfig.pdp.buyWithShop.isEnabled ? <Skeleton className="h-9 w-full" /> : null}
             </div>
           </div>
-        </div>
-        <div className="grid gap-4">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
+          <div className="grid gap-4">
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+          </div>
         </div>
       </div>
     </div>

@@ -7,20 +7,15 @@ import { Price } from "@/components/product/price";
 import { Button } from "@/components/ui/button";
 import { useCart, useCheckout } from "@/lib/cart/client";
 
-import { DiscountForm } from "./discount-form";
-
 interface CartSummaryProps {
   cart: CartData;
 }
 
 export function CartSummary({ cart }: CartSummaryProps) {
   return (
-    <div className="grid gap-5">
-      <div className="grid gap-2.5">
-        <DiscountForm cart={cart} />
-        <CartTotal cart={cart} />
-      </div>
-      <CartCheckout label="Go to Checkout" />
+    <div className="grid gap-4">
+      <CartTotal cart={cart} />
+      <CartCheckout label="Checkout" />
     </div>
   );
 }
@@ -37,19 +32,21 @@ export function CartTotal({ cart }: CartTotalProps) {
   return (
     <div
       aria-busy={isCostPending || undefined}
-      aria-label="Estimated total"
+      aria-label="Subtotal"
       className="grid gap-1"
       role="group"
     >
-      <div className="flex items-baseline justify-between text-base text-foreground">
-        <span>Estimated total</span>
+      <div className="flex items-baseline justify-between text-xs tracking-wider text-foreground">
+        <span>Subtotal</span>
         {isCostPending || !currencyCode ? (
-          <span className="font-medium text-muted-foreground text-xl">Updating…</span>
+          <span className="text-muted-foreground">Updating…</span>
         ) : (
-          <Price amount={amount} className="font-medium text-xl" currencyCode={currencyCode} />
+          <Price amount={amount} className="text-xs tracking-wider" currencyCode={currencyCode} />
         )}
       </div>
-      <p className="text-muted-foreground text-xs">Taxes and shipping calculated at checkout.</p>
+      <p className="text-2xs text-muted-foreground">
+        Tax included and shipping calculated at checkout.
+      </p>
     </div>
   );
 }
@@ -72,10 +69,11 @@ export function CartCheckout({ label = "Checkout" }: CartCheckoutProps) {
       <Button
         aria-busy={isCheckingOut || isUpdatingCart || undefined}
         aria-describedby={checkoutError ? checkoutErrorId : undefined}
-        className="h-12 w-full justify-center"
+        className="h-9 w-full justify-center rounded-none border border-foreground bg-transparent text-2xs uppercase tracking-wider text-foreground shadow-none hover:bg-foreground hover:text-background"
         disabled={isCheckoutDisabled}
         onClick={handleCheckout}
         type="button"
+        variant="outline"
       >
         {isCheckingOut || isUpdatingCart ? (
           <Loader2 className="size-4 animate-spin" aria-hidden="true" />

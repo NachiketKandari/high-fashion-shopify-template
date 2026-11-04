@@ -1,7 +1,7 @@
 "use client";
 
 import type { CartLine as HydrogenCartLine } from "@shopify/hydrogen";
-import { MinusIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
@@ -75,7 +75,10 @@ function CartLineItem({ item }: CartLineItemProps) {
     finalUnitPrice < sellingUnitPrice ? sellingUnitPrice : compareAtUnitPrice;
   const title = merchandise?.product.title || "Cart item";
   const variantLabel = merchandise?.selectedOptions?.length
-    ? merchandise.selectedOptions.map((option) => option.value).join(" / ")
+    ? merchandise.selectedOptions
+        .filter((option) => option.value !== "Default Title")
+        .map((option) => option.value)
+        .join(" / ")
     : "";
   const lineName = variantLabel ? `${title}, ${variantLabel}` : title;
   const href = merchandise?.product.handle ? `/products/${merchandise.product.handle}` : undefined;
@@ -94,42 +97,69 @@ function CartLineItem({ item }: CartLineItemProps) {
   const price = (amount: number) => formatPrice({ amount: String(amount), currencyCode });
 
   return (
-    <li className="flex gap-2.5" aria-busy={isPending || undefined} aria-label={title}>
+    <li className="flex gap-3" aria-busy={isPending || undefined} aria-label={title}>
       {href ? (
         <Link
           href={href}
-          className="relative size-18 shrink-0 cursor-pointer self-start overflow-hidden transition-opacity hover:opacity-80"
+          className="relative h-[75px] w-15 shrink-0 cursor-pointer self-start overflow-hidden bg-surface transition-opacity hover:opacity-80"
         >
           {imageContent}
         </Link>
       ) : (
-        <div className="relative size-18 shrink-0 self-start overflow-hidden">{imageContent}</div>
+        <div className="relative h-[75px] w-15 shrink-0 self-start overflow-hidden bg-surface">
+          {imageContent}
+        </div>
       )}
-      <div className="grid min-h-18 min-w-0 flex-1 gap-2.5 pt-0.5">
-        <div className="grid gap-2.5">
-          <div className="grid gap-1">
-            {href ? (
-              <Link href={href} className="cursor-pointer transition-opacity hover:opacity-70">
-                <h3 className="line-clamp-1 text-sm font-medium text-foreground">{title}</h3>
-              </Link>
-            ) : (
-              <h3 className="line-clamp-1 text-sm font-medium text-foreground">{title}</h3>
-            )}
-            {variantLabel ? <p className="text-xs text-muted-foreground">{variantLabel}</p> : null}
-            {item.sellingPlanAllocation ? (
-              <p className="text-xs text-muted-foreground">
-                {item.sellingPlanAllocation.sellingPlan.name || "Subscription"}
-              </p>
-            ) : null}
+      <div className="grid min-h-[75px] min-w-0 flex-1 gap-3">
+        <div className="grid gap-1">
+          <div className="flex items-start justify-between gap-3">
+            <div className="grid min-w-0 gap-1">
+              {href ? (
+                <Link href={href} className="cursor-pointer transition-opacity hover:opacity-70">
+                  <h3 className="line-clamp-2 text-xs uppercase leading-4 tracking-wider text-foreground">
+                    {title}
+                  </h3>
+                </Link>
+              ) : (
+                <h3 className="line-clamp-2 text-xs uppercase leading-4 tracking-wider text-foreground">
+                  {title}
+                </h3>
+              )}
+              {variantLabel ? (
+                <p className="text-2xs uppercase tracking-wider text-muted-foreground">
+                  {variantLabel}
+                </p>
+              ) : null}
+              {item.sellingPlanAllocation ? (
+                <p className="text-2xs uppercase tracking-wider text-muted-foreground">
+                  {item.sellingPlanAllocation.sellingPlan.name || "Subscription"}
+                </p>
+              ) : null}
+            </div>
+            <div className="grid shrink-0 gap-0.5 text-right text-xs tracking-wider">
+              <span
+                className="text-foreground data-[pending=true]:text-muted-foreground"
+                data-pending={isCostPending || !currencyCode}
+              >
+                {isCostPending || !currencyCode ? "Updating…" : price(finalUnitPrice)}
+              </span>
+              {!isCostPending && currencyCode && originalUnitPrice > finalUnitPrice ? (
+                <span className="text-2xs text-muted-foreground line-through">
+                  {price(originalUnitPrice)}
+                </span>
+              ) : null}
+            </div>
           </div>
           {components.length ? (
             <div className="grid gap-1">
-              <p className="text-xs font-medium text-muted-foreground">Bundle Includes</p>
+              <p className="text-2xs uppercase tracking-wider text-muted-foreground">
+                Bundle includes
+              </p>
               <ul className="grid gap-0.5">
                 {components.map((component) => (
                   <li
                     key={component.id}
-                    className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                    className="flex items-center gap-1.5 text-2xs text-muted-foreground"
                   >
                     <span className="truncate">
                       {component.merchandise?.product.title || "Bundle item"}
@@ -142,7 +172,7 @@ function CartLineItem({ item }: CartLineItemProps) {
           ) : null}
         </div>
         <CartLineForm
-          className="flex items-center gap-1.5 self-end"
+          className="flex flex-col items-start gap-2"
           lineId={item.id}
           minQuantity={canRemove ? 0 : 1}
         >
@@ -150,7 +180,7 @@ function CartLineItem({ item }: CartLineItemProps) {
             <>
               <div
                 aria-label="Item quantity"
-                className="grid h-6 grid-cols-[1.75rem_1.5rem_1.75rem] rounded-full ring-1 ring-border ring-inset"
+                className="grid h-6 grid-cols-[1.5rem_1.25rem_1.5rem] border border-rule"
                 role="group"
               >
                 <button
@@ -160,13 +190,13 @@ function CartLineItem({ item }: CartLineItemProps) {
                   className="flex h-6 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={isOptimistic || !canUpdateQuantity || quantity <= 1}
                 >
-                  <MinusIcon className="size-3 shrink-0" />
+                  <MinusIcon className="size-2.5 shrink-0" />
                 </button>
                 <input
                   key={quantity}
                   {...register("quantity", { interactive: true, value: quantity })}
                   aria-label={`Quantity: ${lineName}`}
-                  className="h-6 w-6 rounded-full bg-transparent text-center text-xs font-medium tabular-nums outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed"
+                  className="h-6 w-5 rounded-none bg-transparent text-center text-2xs tabular-nums outline-none focus-visible:ring-1 focus-visible:ring-ring/50 disabled:cursor-not-allowed"
                   disabled={isOptimistic || !canUpdateQuantity}
                   max={99}
                   min={canRemove ? 0 : 1}
@@ -178,35 +208,22 @@ function CartLineItem({ item }: CartLineItemProps) {
                   className="flex h-6 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={isOptimistic || !canUpdateQuantity || quantity >= 99}
                 >
-                  <PlusIcon className="size-3 shrink-0" />
+                  <PlusIcon className="size-2.5 shrink-0" />
                 </button>
               </div>
               <button
                 {...register("remove")}
                 type="submit"
-                className="flex cursor-pointer items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+                className="cursor-pointer text-2xs uppercase tracking-wider text-muted-foreground underline underline-offset-2 transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={isOptimistic || !canRemove}
                 aria-label={`Remove item: ${lineName}`}
               >
-                <Trash2Icon className="size-4" />
+                Remove
               </button>
             </>
           )}
         </CartLineForm>
         <CartWarnings lineId={item.id} />
-      </div>
-      <div className="grid gap-0.5 self-start py-0.5 text-right font-mono text-sm tabular-nums tracking-tight">
-        <span
-          className="font-medium text-foreground data-[pending=true]:text-muted-foreground"
-          data-pending={isCostPending || !currencyCode}
-        >
-          {isCostPending || !currencyCode ? "Updating…" : price(finalUnitPrice)}
-        </span>
-        {!isCostPending && currencyCode && originalUnitPrice > finalUnitPrice ? (
-          <span className="text-xs text-muted-foreground line-through">
-            {price(originalUnitPrice)}
-          </span>
-        ) : null}
       </div>
     </li>
   );

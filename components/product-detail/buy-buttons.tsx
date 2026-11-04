@@ -13,8 +13,6 @@ import { getProductPurchaseOptions } from "@/lib/product";
 import { useProductForm } from "@/lib/product/client";
 import type { ProductFormVariant, SellingPlanAllocation } from "@/lib/product/types";
 
-import { BuyWithShopLogo } from "./buy-with-shop-logo";
-
 interface BuyButtonsProps {
   availableForSale?: boolean;
   buyWithShop?: boolean;
@@ -100,21 +98,21 @@ export function BuyButtons({
         {quantityPicker ? (
           <div
             aria-label="Item quantity"
-            className="grid h-12 w-32 shrink-0 grid-cols-[3rem_2rem_3rem] rounded-lg bg-background ring-1 ring-border ring-inset"
+            className="grid h-9 w-24 shrink-0 grid-cols-[2rem_2rem_2rem] border border-rule"
             role="group"
           >
             <button
               type="button"
               aria-label="Decrease quantity"
-              className="flex size-12 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={quantity === 1}
               onClick={() => setQuantity((currentQuantity) => Math.max(1, currentQuantity - 1))}
             >
-              <MinusIcon className="size-4 shrink-0" />
+              <MinusIcon className="size-3 shrink-0" />
             </button>
             <span
               aria-live="polite"
-              className="flex h-12 w-8 items-center justify-center text-sm font-medium tabular-nums"
+              className="flex h-9 w-8 items-center justify-center text-xs tabular-nums"
               role="status"
             >
               {quantity}
@@ -122,11 +120,11 @@ export function BuyButtons({
             <button
               type="button"
               aria-label="Increase quantity"
-              className="flex size-12 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={quantity === 99}
               onClick={() => setQuantity((currentQuantity) => Math.min(99, currentQuantity + 1))}
             >
-              <PlusIcon className="size-4 shrink-0" />
+              <PlusIcon className="size-3 shrink-0" />
             </button>
           </div>
         ) : null}
@@ -140,7 +138,7 @@ export function BuyButtons({
             missingRequiredPlan ||
             pending
           }
-          className="h-12 min-w-40 flex-1 justify-center data-[selection-unresolved=true]:disabled:opacity-100"
+          className="h-9 min-w-0 flex-1 justify-center rounded-none border border-foreground bg-transparent text-2xs uppercase tracking-wider text-foreground shadow-none hover:bg-foreground hover:text-background data-[selection-unresolved=true]:disabled:opacity-100"
         >
           {getButtonText()}
         </Button>
@@ -149,9 +147,9 @@ export function BuyButtons({
         <a
           aria-busy={isBuyingNow || undefined}
           aria-disabled={buyNowUrl ? undefined : true}
-          aria-label="Buy with Shop Pay"
+          aria-label="Buy it now"
           className={cn(
-            "flex h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-shop px-4 text-white transition-colors hover:bg-shop/85 aria-busy:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50 data-[selection-unresolved=true]:aria-disabled:opacity-100",
+            "flex h-9 w-full cursor-pointer items-center justify-center rounded-none bg-foreground px-4 text-2xs uppercase tracking-wider text-background transition-opacity hover:opacity-80 aria-busy:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50 data-[selection-unresolved=true]:aria-disabled:opacity-100",
             !availableForSale && "invisible",
           )}
           data-selection-unresolved={isSelectionUnresolved}
@@ -165,14 +163,7 @@ export function BuyButtons({
           }}
           rel="nofollow"
         >
-          {isBuyingNow ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <>
-              <span className="sr-only">Buy with</span>
-              <BuyWithShopLogo aria-hidden="true" className="h-auto w-24.5" />
-            </>
-          )}
+          {isBuyingNow ? <Loader2 className="size-4 animate-spin" /> : <span>Buy it now</span>}
         </a>
       ) : null}
     </form>
