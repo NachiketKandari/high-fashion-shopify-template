@@ -1,8 +1,10 @@
 # Polite Society replica — implementation notes
 
 The storefront in this repository now reproduces the design system and page anatomy captured in
-[`docs/reference/DESIGN.md`](./reference/DESIGN.md). This file records what is implemented, how it
-was verified, and what still depends on Shopify credentials or production decisions.
+[`docs/reference/DESIGN.md`](./reference/DESIGN.md). For the stack map — which Shopify API owns
+what, and where Hydrogen, Next.js and Vercel fit — read
+[`docs/SHOPIFY-WALKTHROUGH.md`](./SHOPIFY-WALKTHROUGH.md). This file records what is implemented,
+how it was verified, and what still depends on Shopify credentials or production decisions.
 
 ## Implemented
 
