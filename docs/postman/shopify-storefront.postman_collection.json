@@ -96,14 +96,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         }
@@ -155,14 +149,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         },
@@ -205,14 +193,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         },
@@ -251,14 +233,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         },
@@ -295,14 +271,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         },
@@ -339,14 +309,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         }
@@ -396,14 +360,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         },
@@ -442,14 +400,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         },
@@ -487,14 +439,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         },
@@ -532,14 +478,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         },
@@ -577,14 +517,8 @@
             "url": {
               "raw": "https://{{store_domain}}/api/{{api_version}}/graphql.json",
               "protocol": "https",
-              "host": [
-                "{{store_domain}}"
-              ],
-              "path": [
-                "api",
-                "{{api_version}}",
-                "graphql.json"
-              ]
+              "host": ["{{store_domain}}"],
+              "path": ["api", "{{api_version}}", "graphql.json"]
             }
           }
         }

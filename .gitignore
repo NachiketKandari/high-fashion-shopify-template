@@ -26,6 +26,9 @@ dist/
 .DS_Store
 *.pem
 
+# playwright mcp output
+.playwright-mcp/
+
 # debug
 .pnpm-debug.log*
 

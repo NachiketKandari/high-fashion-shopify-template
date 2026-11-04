@@ -12,7 +12,7 @@ Postman collection for the trial storefront. It calls the same Shopify Storefron
 1. Postman → **Import** → select the collection file.
 2. Optional: copy the environment example to `local.postman_environment.json`, import it, and select it in the environment picker.
 3. Set the `storefront_token` variable to your **public Storefront API access token**:
-   - Collection → **Variables** → `storefront_token` → *Current value*, or
+   - Collection → **Variables** → `storefront_token` → _Current value_, or
    - the imported environment → `storefront_token`
 4. Confirm `store_domain` and `api_version` (`2026-10`).
 

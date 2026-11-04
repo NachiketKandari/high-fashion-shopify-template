@@ -12,82 +12,82 @@ to Polite Society; replace them before publishing or distributing the clone.
 
 ### Typography
 
-| Token | Value | Used for |
-| --- | --- | --- |
-| Body family | `"DM Sans", sans-serif` | Everything except the wordmark |
-| Body size / line | `14px / 21px` | Default text, footer, product cards |
-| Body weight | `300` | Default copy; `400` for labels and titles |
-| Body tracking | `0.7px` (`0.05em`) | Default copy |
-| Announcement | `12px / 16px`, `400`, tracking `0.6px` | Rotating announcement bar |
-| Nav | `13px / 18px`, `400`, tracking `0.65px`, uppercase | Desktop menu |
-| Utility links | `14px / 21px`, `300` | Currency, search, wishlist, help, account, cart |
-| Collection title | `18px / 23px`, `400`, tracking `0.9px`, uppercase | PLP heading |
-| Product card title | `13px / 17px`, `400`, uppercase | PLP and rails |
-| Product card price | `13px / 17px`, `300`, tracking `0.65px` | PLP and rails |
-| Card size list | `12px / 16px`, `300`, tracking `0.6px`, `#4d4d4d` | PLP card |
-| Chip / toolbar / button | `11–12px / 14–18px`, `400`, uppercase, tracking `0.55–0.6px` | Filters, sort, buttons |
-| PDP title / price | `22px / 29px`, `400`, tracking `1.1px`, uppercase | Product page |
-| PDP body | `14px / 21px`, `300` | Description tabs |
-| Wordmark | SVG, 1016 × 82 at 1440; 342 × 28 compact | Header and footer |
+| Token                   | Value                                                        | Used for                                        |
+| ----------------------- | ------------------------------------------------------------ | ----------------------------------------------- |
+| Body family             | `"DM Sans", sans-serif`                                      | Everything except the wordmark                  |
+| Body size / line        | `14px / 21px`                                                | Default text, footer, product cards             |
+| Body weight             | `300`                                                        | Default copy; `400` for labels and titles       |
+| Body tracking           | `0.7px` (`0.05em`)                                           | Default copy                                    |
+| Announcement            | `12px / 16px`, `400`, tracking `0.6px`                       | Rotating announcement bar                       |
+| Nav                     | `13px / 18px`, `400`, tracking `0.65px`, uppercase           | Desktop menu                                    |
+| Utility links           | `14px / 21px`, `300`                                         | Currency, search, wishlist, help, account, cart |
+| Collection title        | `18px / 23px`, `400`, tracking `0.9px`, uppercase            | PLP heading                                     |
+| Product card title      | `13px / 17px`, `400`, uppercase                              | PLP and rails                                   |
+| Product card price      | `13px / 17px`, `300`, tracking `0.65px`                      | PLP and rails                                   |
+| Card size list          | `12px / 16px`, `300`, tracking `0.6px`, `#4d4d4d`            | PLP card                                        |
+| Chip / toolbar / button | `11–12px / 14–18px`, `400`, uppercase, tracking `0.55–0.6px` | Filters, sort, buttons                          |
+| PDP title / price       | `22px / 29px`, `400`, tracking `1.1px`, uppercase            | Product page                                    |
+| PDP body                | `14px / 21px`, `300`                                         | Description tabs                                |
+| Wordmark                | SVG, 1016 × 82 at 1440; 342 × 28 compact                     | Header and footer                               |
 
 The wordmark is a high-contrast, wide-tracked serif. The prototype uses the reference SVG for
 fidelity; swap in the production brand mark before launch.
 
 ### Colour
 
-| Token | Value | Notes |
-| --- | --- | --- |
-| Background | `#ffffff` | Page, header, drawers |
-| Foreground | `#000000` | Text, buttons, rules |
-| Muted | `#4d4d4d` | Secondary copy, size lists |
-| Border | `#e1e1e1` | Rules, card dividers |
-| Input border | `#cccccc` | Search field, newsletter field |
-| Surface | `#f2f2f2` | Image placeholder before load |
-| Button background | `#000000` | Primary button |
-| Button text | `#f9f9f9` | Primary button |
-| Announcement | `#000000` / `#ffffff` | Black bar, white copy |
-| Errors | `#d94c4c`, border `#c7261b`, background `#fff5f5` | Inherited Shopify error styles |
+| Token             | Value                                             | Notes                          |
+| ----------------- | ------------------------------------------------- | ------------------------------ |
+| Background        | `#ffffff`                                         | Page, header, drawers          |
+| Foreground        | `#000000`                                         | Text, buttons, rules           |
+| Muted             | `#4d4d4d`                                         | Secondary copy, size lists     |
+| Border            | `#e1e1e1`                                         | Rules, card dividers           |
+| Input border      | `#cccccc`                                         | Search field, newsletter field |
+| Surface           | `#f2f2f2`                                         | Image placeholder before load  |
+| Button background | `#000000`                                         | Primary button                 |
+| Button text       | `#f9f9f9`                                         | Primary button                 |
+| Announcement      | `#000000` / `#ffffff`                             | Black bar, white copy          |
+| Errors            | `#d94c4c`, border `#c7261b`, background `#fff5f5` | Inherited Shopify error styles |
 
 No accent colour is used in the shopping surface. Colour comes from photography and product
 swatches. The interface is strictly monochrome.
 
 ### Spacing and layout
 
-| Token | Value |
-| --- | --- |
-| Page gutter | `20px` (mobile and desktop) |
-| Editorial side padding | `30px` at 1440 |
-| Content max width | Full-bleed; header and footer use the gutter |
-| Base spacing unit | `4px`; common steps `5, 10, 20, 24, 30, 40, 60` |
-| Section spacing | `60–80px` between homepage sections |
-| Card grid gap | `3px` horizontal, `20–24px` vertical |
-| Form control height | `36px` buttons, `35px` search input |
-| Header bar height | `76px` desktop, `56px` mobile |
-| Announcement height | `30px` desktop, `35px` mobile |
-| Large masthead | `110px` wordmark row + `76px` bar = `186px` |
-| Compact header | `56px` |
+| Token                  | Value                                           |
+| ---------------------- | ----------------------------------------------- |
+| Page gutter            | `20px` (mobile and desktop)                     |
+| Editorial side padding | `30px` at 1440                                  |
+| Content max width      | Full-bleed; header and footer use the gutter    |
+| Base spacing unit      | `4px`; common steps `5, 10, 20, 24, 30, 40, 60` |
+| Section spacing        | `60–80px` between homepage sections             |
+| Card grid gap          | `3px` horizontal, `20–24px` vertical            |
+| Form control height    | `36px` buttons, `35px` search input             |
+| Header bar height      | `76px` desktop, `56px` mobile                   |
+| Announcement height    | `30px` desktop, `35px` mobile                   |
+| Large masthead         | `110px` wordmark row + `76px` bar = `186px`     |
+| Compact header         | `56px`                                          |
 
 ### Breakpoints
 
-| Range | Behaviour |
-| --- | --- |
-| `< 750px` | Mobile: compact 56px header, hamburger, 2-column PLP, horizontal PDP gallery |
-| `750–1099px` | Tablet: compact header, 3-column PLP, hamburger or condensed menu |
-| `≥ 1100px` | Desktop: large homepage masthead, full nav, 4-column PLP, mega menus, side drawers |
+| Range        | Behaviour                                                                          |
+| ------------ | ---------------------------------------------------------------------------------- |
+| `< 750px`    | Mobile: compact 56px header, hamburger, 2-column PLP, horizontal PDP gallery       |
+| `750–1099px` | Tablet: compact header, 3-column PLP, hamburger or condensed menu                  |
+| `≥ 1100px`   | Desktop: large homepage masthead, full nav, 4-column PLP, mega menus, side drawers |
 
 ### Motion
 
-| Token | Value |
-| --- | --- |
-| Ease | `cubic-bezier(.2, .6, .2, 1)` |
-| Short | `100ms` |
-| Default | `300ms` |
-| Long | `500ms` |
-| Extra long | `600ms` |
-| Announcement swap | `500ms` opacity + `4px` translate |
-| Header collapse | `300ms` height/translate |
-| Drawers | `300ms` transform; overlay fades |
-| Image hover | `scale(1.03)` over `600ms`, product card swaps to second image |
+| Token             | Value                                                          |
+| ----------------- | -------------------------------------------------------------- |
+| Ease              | `cubic-bezier(.2, .6, .2, 1)`                                  |
+| Short             | `100ms`                                                        |
+| Default           | `300ms`                                                        |
+| Long              | `500ms`                                                        |
+| Extra long        | `600ms`                                                        |
+| Announcement swap | `500ms` opacity + `4px` translate                              |
+| Header collapse   | `300ms` height/translate                                       |
+| Drawers           | `300ms` transform; overlay fades                               |
+| Image hover       | `scale(1.03)` over `600ms`, product card swaps to second image |
 
 ## 2. Page shell
 
@@ -264,18 +264,18 @@ uppercase black. On mobile the columns stack with 32px gaps.
 
 ## 7. Responsive rules
 
-| Element | Desktop | Mobile |
-| --- | --- | --- |
-| Header | 186px large home / 56px compact | 56px compact |
-| Hero | 4:1.84 landscape | full viewport height portrait |
-| Editorial 2-up | 2 columns, 4:5 | stacked, 4:5 |
-| Editorial 3-up | 3 columns | stacked or horizontal scroll |
-| Product rail | 5 cards, 266px | 1.6 cards, 226px, edge peek |
-| PLP grid | 4 columns, 3px gap | 2 columns, 3px gap |
-| PDP gallery | 50% left, stacked 2:3 | full-width snap strip + dots |
-| PDP info | 408px centred | full width, 20px gutter |
-| Cart | drawer 440px + cart page 2 columns | full-width drawer/page |
-| Footer | 6 zones in one row | stacked columns |
+| Element        | Desktop                            | Mobile                        |
+| -------------- | ---------------------------------- | ----------------------------- |
+| Header         | 186px large home / 56px compact    | 56px compact                  |
+| Hero           | 4:1.84 landscape                   | full viewport height portrait |
+| Editorial 2-up | 2 columns, 4:5                     | stacked, 4:5                  |
+| Editorial 3-up | 3 columns                          | stacked or horizontal scroll  |
+| Product rail   | 5 cards, 266px                     | 1.6 cards, 226px, edge peek   |
+| PLP grid       | 4 columns, 3px gap                 | 2 columns, 3px gap            |
+| PDP gallery    | 50% left, stacked 2:3              | full-width snap strip + dots  |
+| PDP info       | 408px centred                      | full width, 20px gutter       |
+| Cart           | drawer 440px + cart page 2 columns | full-width drawer/page        |
+| Footer         | 6 zones in one row                 | stacked columns               |
 
 ## 8. Accessibility and interaction notes
 
