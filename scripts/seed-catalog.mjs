@@ -2,28 +2,58 @@
 /**
  * Seeds a Shopify store with the fashion catalog used by the Polite Society design study.
  *
- * Requires an Admin API token for a custom app with:
+ * Requires an Admin app with:
  *   read_products, write_products, read_collections, write_collections, read_files, write_files
  *
+ * Authenticate with either a Dev Dashboard app (client ID + secret) or an existing
+ * Admin API access token. Dev Dashboard tokens expire after 24 hours, so the script
+ * exchanges the credentials on every run.
+ *
  * Run:
- *   SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_xxx \
+ *   SHOPIFY_CLIENT_ID=... SHOPIFY_CLIENT_SECRET=... \
  *   NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com \
  *   node scripts/seed-catalog.mjs
  */
 
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
-const token = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
 const version = process.env.SHOPIFY_API_VERSION ?? "2026-10";
 const dryRun = process.env.DRY_RUN === "1";
+const staticToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
+const clientId = process.env.SHOPIFY_CLIENT_ID;
+const clientSecret = process.env.SHOPIFY_CLIENT_SECRET;
 
-if (!dryRun && (!domain || !token)) {
-  console.error("Set NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN and SHOPIFY_ADMIN_ACCESS_TOKEN.");
+if (!dryRun && (!domain || (!staticToken && !(clientId && clientSecret)))) {
+  console.error(
+    "Set NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN and either SHOPIFY_ADMIN_ACCESS_TOKEN or SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET.",
+  );
   process.exit(1);
 }
 
 const endpoint = `https://${domain}/admin/api/${version}/graphql.json`;
 
+let accessToken = staticToken;
+
+async function getAccessToken() {
+  if (accessToken) return accessToken;
+  const response = await fetch(`https://${domain}/admin/oauth/access_token`, {
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: "client_credentials",
+    }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    method: "POST",
+  });
+  const payload = await response.json();
+  if (!response.ok || !payload.access_token) {
+    throw new Error(`Client credentials grant failed: ${JSON.stringify(payload)}`);
+  }
+  accessToken = payload.access_token;
+  return accessToken;
+}
+
 async function admin(query, variables = {}) {
+  const token = await getAccessToken();
   const response = await fetch(endpoint, {
     body: JSON.stringify({ query, variables }),
     headers: {
@@ -238,6 +268,59 @@ const COLLECTION_ADD = `#graphql
   }
 `;
 
+const PUBLISHABLE_PUBLISH = `#graphql
+  mutation PublishablePublish($id: ID!, $input: [PublicationInput!]!) {
+    publishablePublish(id: $id, input: $input) {
+      userErrors { field message }
+    }
+  }
+`;
+
+const PUBLICATIONS = `#graphql
+  query {
+    publications(first: 20) {
+      nodes { id name }
+    }
+  }
+`;
+
+// Products and collections only reach the Storefront API through the Headless publication.
+let publicationId;
+
+async function getPublicationId() {
+  if (publicationId !== undefined) return publicationId;
+  if (process.env.SHOPIFY_PUBLICATION_ID) {
+    publicationId = process.env.SHOPIFY_PUBLICATION_ID;
+    return publicationId;
+  }
+  const data = await admin(PUBLICATIONS);
+  const nodes = data.publications.nodes;
+  const match = nodes.find(({ name }) => /headless|hydrogen|storefront/i.test(name));
+  if (!match) {
+    console.warn(
+      `No Headless publication found; set SHOPIFY_PUBLICATION_ID. Available: ${
+        nodes.map(({ name }) => name).join(", ") || "none"
+      }`,
+    );
+    publicationId = null;
+    return publicationId;
+  }
+  console.log(`publishing to ${match.name}`);
+  publicationId = match.id;
+  return publicationId;
+}
+
+async function publish(id) {
+  const target = await getPublicationId();
+  if (!target) return;
+  const data = await admin(PUBLISHABLE_PUBLISH, {
+    id,
+    input: [{ publicationId: target }],
+  });
+  const errors = data.publishablePublish.userErrors;
+  if (errors.length) throw new Error(`publish ${id}: ${JSON.stringify(errors)}`);
+}
+
 async function findProduct(handle) {
   const data = await admin(
     `#graphql
@@ -307,12 +390,14 @@ async function main() {
     const existing = await findProduct(product.handle);
     if (existing) {
       console.log(`skip product ${product.handle}`);
+      await publish(existing.id);
       idsByHandle.set(product.handle, existing.id);
       continue;
     }
     const data = await admin(PRODUCT_SET, { input: productInput(product), synchronous: true });
     const errors = data.productSet.userErrors;
     if (errors.length) throw new Error(`${product.handle}: ${JSON.stringify(errors)}`);
+    await publish(data.productSet.product.id);
     idsByHandle.set(product.handle, data.productSet.product.id);
     console.log(`created product ${product.handle}`);
   }
@@ -322,12 +407,14 @@ async function main() {
     const existing = await findCollection(collection.handle);
     if (existing) {
       console.log(`skip collection ${collection.handle}`);
+      await publish(existing.id);
       collectionIds.set(collection.handle, existing.id);
       continue;
     }
     const data = await admin(COLLECTION_CREATE, { input: collection });
     const errors = data.collectionCreate.userErrors;
     if (errors.length) throw new Error(`${collection.handle}: ${JSON.stringify(errors)}`);
+    await publish(data.collectionCreate.collection.id);
     collectionIds.set(collection.handle, data.collectionCreate.collection.id);
     console.log(`created collection ${collection.handle}`);
   }
