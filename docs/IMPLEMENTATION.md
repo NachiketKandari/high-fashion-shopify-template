@@ -81,9 +81,10 @@ collection chips already read live collections, so they update automatically.
 
 - **Catalog**: needs the Admin API token described above. The source assets are licensed for this
   private prototype only; replace them before distribution.
-- **Wishlist page and account UI**: the wishlist control is a local visual toggle; the reference
-  wishlist page and Customer Account OAuth surface are Shopify-owned and out of scope. Account
-  utilities appear only when `shopConfig.auth.isEnabled`.
+- **Wishlist and account**: wishlist saves products in local storage and renders at `/wishlist`;
+  it is per-browser and not synced to a customer account. The account utility opens the existing
+  `/account` surface, while Shopify Customer Account OAuth remains disabled unless
+  `shopConfig.auth.isEnabled` is turned on.
 - **Checkout, order status and payment failure** are Shopify-hosted.
 - **Newsletter submission** shows a local success state; it does not yet post to Shopify or a
   marketing provider.

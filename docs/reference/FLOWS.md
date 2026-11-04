@@ -53,7 +53,7 @@ in DESIGN.md.
 | -------------------- | ----------------------------------------- | --------------------------------------------------- |
 | Checkout             | Shopify-hosted, account/address dependent | Redirects to Shopify checkout with the cart         |
 | Account sign-in      | Shopify Customer Account OAuth            | Redirects to hosted account login                   |
-| Wishlist             | Requires a saved session                  | `/pages/wishlist` with empty state and product grid |
+| Wishlist | Requires a saved session on the reference | `/pages/wishlist` with empty state and product grid; the prototype keeps saved products in local storage at `/wishlist` |
 | Order status         | Tokenised Shopify URL                     | Hosted order status page                            |
 | Payment failure      | Requires a live checkout                  | Shopify-hosted error UI                             |
 | Sold-out add to cart | State depends on live inventory           | Button disables; sold-out label remains             |
