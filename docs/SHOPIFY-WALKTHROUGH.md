@@ -473,7 +473,7 @@ seeder needs credentials, or when any administrative script needs the Admin API.
 4. Open the app → **Versions** → **Create version**:
    - **App URL**: `https://shopify.dev/apps/default-app-home`
    - **Webhooks API version**: the newest
-   - **Scopes**: `read_products`, `write_products`, `read_collections`, `write_collections`,
+   - **Scopes**: `read_products`, `write_products`, `read_publications`, `write_publications`,
      `read_files`, `write_files`
    - **Release**
 5. **Install app** → select the store → **Install**. Approve the scopes.

@@ -55,7 +55,7 @@ Changing the catalog requires a Shopify Admin API access token. The storefront t
 token with these scopes:
 
 ```
-read_products, write_products, read_collections, write_collections, read_files, write_files
+read_products, write_products, read_publications, write_publications, read_files, write_files
 ```
 
 Then run the seeding script (added alongside this note) with:

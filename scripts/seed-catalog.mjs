@@ -3,7 +3,7 @@
  * Seeds a Shopify store with the fashion catalog used by the Polite Society design study.
  *
  * Requires an Admin app with:
- *   read_products, write_products, read_collections, write_collections, read_files, write_files
+ *   read_products, write_products, read_publications, write_publications, read_files, write_files
  *
  * Authenticate with either a Dev Dashboard app (client ID + secret) or an existing
  * Admin API access token. Dev Dashboard tokens expire after 24 hours, so the script
