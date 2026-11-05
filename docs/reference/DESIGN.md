@@ -5,6 +5,11 @@ Source: <https://politesocietyshop.com/>. Captured on 4 November 2026 with Playw
 page, not estimates from screenshots. Screenshots for each flow live beside this file and are
 indexed in [FLOWS.md](./FLOWS.md).
 
+> This file records the original measurement pass. The canonical implementation contract is
+> [`../DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md). A 5 November 2026 re-measurement found live drift in
+> editorial captions and grids, the product-card ratio, the rail heading size and PDP top spacing;
+> those values are recorded in [`../DESIGN-SYSTEM-AUDIT.md`](../DESIGN-SYSTEM-AUDIT.md).
+
 This is a design study for a private prototype. The photography, wordmark and brand copy belong
 to Polite Society; replace them before publishing or distributing the clone.
 
