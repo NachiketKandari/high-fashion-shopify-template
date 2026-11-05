@@ -4,11 +4,11 @@ import type { CartLine as HydrogenCartLine } from "@shopify/hydrogen";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 
+import { useDisplayPrice } from "@/components/currency/provider";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Link } from "@/components/ui/link";
 import { useCart } from "@/lib/cart/client";
 import type { CartLine } from "@/lib/cart/types";
-import { formatPrice } from "@/lib/money";
 
 import { CartLineForm } from "./line-form";
 import { CartWarnings } from "./warnings";
@@ -67,6 +67,7 @@ function CartLineItem({ item }: CartLineItemProps) {
   );
   const components = (item as HydrogenCartLine).lineComponents ?? [];
   const isOptimistic = item.id.startsWith("optimistic:");
+  const format = useDisplayPrice();
   const currencyCode = cost.totalAmount.currencyCode;
   const finalUnitPrice = quantity > 0 ? Number(cost.totalAmount.amount) / quantity : 0;
   const sellingUnitPrice = Number(cost.amountPerQuantity.amount);
@@ -94,7 +95,7 @@ function CartLineItem({ item }: CartLineItemProps) {
   ) : (
     <ImagePlaceholder className="size-full" />
   );
-  const price = (amount: number) => formatPrice({ amount: String(amount), currencyCode });
+  const price = (amount: number) => format({ amount: String(amount), currencyCode });
 
   return (
     <li className="flex gap-3" aria-busy={isPending || undefined} aria-label={title}>

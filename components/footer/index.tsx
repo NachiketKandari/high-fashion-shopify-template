@@ -1,13 +1,14 @@
 import { cn } from "cn";
 
 import { Wordmark } from "@/components/brand/wordmark";
+import { CurrencySelector } from "@/components/currency/selector";
 import { NewsletterForm } from "@/components/newsletter/form";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 import { FOOTER_COLUMNS } from "@/lib/nav";
 
-const PAYMENTS = ["AMEX", "DINERS", "MAESTRO", "MASTERCARD", "RUPAY", "VISA"];
+import { PaymentMarks } from "./payment-marks";
 
 export function Footer() {
   return (
@@ -61,20 +62,10 @@ export function Footer() {
           <p className="type-label text-ink-muted">
             © 2026 · {shopConfig.site.name} <span className="mx-1">·</span> Website by UniPlus
           </p>
-          <ul
-            aria-label="Payment methods"
-            className="flex flex-wrap items-center gap-1.5"
-            role="list"
-          >
-            {PAYMENTS.map((payment) => (
-              <li
-                className="type-label flex h-5 min-w-8 items-center justify-center border border-rule px-1 text-ink-muted"
-                key={payment}
-              >
-                {payment}
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-4 tablet:justify-end">
+            <PaymentMarks />
+            <CurrencySelector className="type-label h-9 text-ink-muted" />
+          </div>
         </div>
       </Container>
     </footer>

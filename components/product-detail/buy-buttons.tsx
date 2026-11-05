@@ -6,8 +6,8 @@ import { Loader2, MinusIcon, PlusIcon } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
 import { useCartDrawer } from "@/components/cart/context";
+import { useDisplayPrice } from "@/components/currency/provider";
 import { Button } from "@/components/ui/button";
-import { formatPrice } from "@/lib/money";
 import type { Money } from "@/lib/money/types";
 import { getProductPurchaseOptions } from "@/lib/product";
 import { useProductForm } from "@/lib/product/client";
@@ -188,6 +188,7 @@ export function PurchaseOptions({
   selectedPlan,
 }: PurchaseOptionsProps) {
   const purchaseOptionId = useId();
+  const format = useDisplayPrice();
   if (plans.length === 0) return null;
 
   return (
@@ -216,7 +217,7 @@ export function PurchaseOptions({
           />
           <span className="flex flex-1 flex-wrap items-center justify-between gap-2.5">
             <span>{option.name}</span>
-            <span className="tabular-nums">{formatPrice(option.price)}</span>
+            <span className="tabular-nums">{format(option.price)}</span>
           </span>
         </label>
       ))}

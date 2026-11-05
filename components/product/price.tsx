@@ -1,7 +1,9 @@
+"use client";
+
 import { cn } from "cn";
 import type { ComponentProps } from "react";
 
-import { formatPrice } from "@/lib/money";
+import { useDisplayPrice } from "@/components/currency/provider";
 
 interface PriceProps extends ComponentProps<"span"> {
   amount: string;
@@ -9,9 +11,10 @@ interface PriceProps extends ComponentProps<"span"> {
 }
 
 export function Price({ amount, currencyCode, className, ...props }: PriceProps) {
+  const format = useDisplayPrice();
   return (
     <span className={cn("font-light normal-case tabular-nums text-ink", className)} {...props}>
-      {formatPrice({ amount, currencyCode })}
+      {format({ amount, currencyCode })}
     </span>
   );
 }

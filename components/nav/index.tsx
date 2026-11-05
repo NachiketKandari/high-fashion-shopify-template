@@ -1,7 +1,7 @@
 import { PredictiveSearchProvider } from "@shopify/hydrogen/react";
-import { ChevronDown } from "lucide-react";
 import { Suspense } from "react";
 
+import { CurrencySelector } from "@/components/currency/selector";
 import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 
@@ -16,10 +16,7 @@ export function Nav() {
     <Header
       actions={
         <>
-          <span className="type-nav hidden h-9 items-center gap-1 desktop:inline-flex">
-            USD
-            <ChevronDown className="size-3" strokeWidth={1.25} />
-          </span>
+          <CurrencySelector className="type-nav hidden h-9 desktop:inline-flex" />
           {shopConfig.search.isEnabled && (
             <PredictiveSearchProvider
               debounceInMs={300}

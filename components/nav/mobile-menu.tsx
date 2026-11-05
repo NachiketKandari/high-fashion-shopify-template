@@ -3,6 +3,7 @@
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { CurrencySelector } from "@/components/currency/selector";
 import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 import { MAIN_NAV } from "@/lib/nav";
@@ -110,7 +111,7 @@ export function MobileMenu() {
           </nav>
 
           <div className="type-label flex h-14 shrink-0 items-center justify-between border-t border-rule px-(--gutter)">
-            <span>USD</span>
+            <CurrencySelector className="h-11" />
             {shopConfig.auth.isEnabled ? <Link href="/account">Account</Link> : <span />}
           </div>
         </div>

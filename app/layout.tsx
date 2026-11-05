@@ -11,6 +11,7 @@ import { AnalyticsComponents } from "@/components/analytics";
 import { CartUI } from "@/components/cart/cart-ui";
 import { CartProviderWrapper } from "@/components/cart/context";
 import { CartStandardActionsScript } from "@/components/cart/standard-actions";
+import { CurrencyProvider } from "@/components/currency/provider";
 import { Footer } from "@/components/footer";
 import { Nav } from "@/components/nav";
 import { NavFallback } from "@/components/nav/fallback";
@@ -50,23 +51,25 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <SiteSchema />
 
-        <CartProviderWrapper cartData={cartData}>
-          <Suspense fallback={<NavFallback />}>
-            <Nav />
-          </Suspense>
-          <main id="main-content" className="flex flex-1 flex-col min-w-0">
-            {children}
-          </main>
-          <Footer />
-          <CartUI />
-          <NewsletterPopup />
-          <Suspense>
-            <ActionBar>{shopConfig.agent.isEnabled && <AgentButton />}</ActionBar>
-          </Suspense>
-          <Suspense>
-            <AnalyticsComponents />
-          </Suspense>
-        </CartProviderWrapper>
+        <CurrencyProvider>
+          <CartProviderWrapper cartData={cartData}>
+            <Suspense fallback={<NavFallback />}>
+              <Nav />
+            </Suspense>
+            <main id="main-content" className="flex flex-1 flex-col min-w-0">
+              {children}
+            </main>
+            <Footer />
+            <CartUI />
+            <NewsletterPopup />
+            <Suspense>
+              <ActionBar>{shopConfig.agent.isEnabled && <AgentButton />}</ActionBar>
+            </Suspense>
+            <Suspense>
+              <AnalyticsComponents />
+            </Suspense>
+          </CartProviderWrapper>
+        </CurrencyProvider>
       </body>
     </html>
   );
