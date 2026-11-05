@@ -473,11 +473,12 @@ seeder needs credentials, or when any administrative script needs the Admin API.
 4. Open the app → **Versions** → **Create version**:
    - **App URL**: `https://shopify.dev/apps/default-app-home`
    - **Webhooks API version**: the newest
-   - **Scopes**: `read_products`, `write_products`, `read_publications`, `write_publications`,
-     `read_files`, `write_files`
+   - **Scopes**: `write_products`, `write_publications`, `write_files` (a write scope includes its
+     read counterpart)
    - **Release**
 5. **Install app** → select the store → **Install**. Approve the scopes.
-6. **App settings** → **Credentials** → copy **Client ID** and **Client secret**.
+6. **Settings** (the docs call it **App settings**) → **Credentials** → copy **Client ID** and
+   **Client secret**. The secret may be hidden behind a reveal control; rotate it if none exists.
 7. Add them to `.env.local`:
 
    ```
@@ -492,7 +493,30 @@ seeder needs credentials, or when any administrative script needs the Admin API.
    ```
 
    The script exchanges the credentials for a 24-hour Admin API token on every run, so there is no
-   static token to rotate. Add `DRY_RUN=1` to print one product input without calling Shopify.
+   static token to rotate. Add `DRY_RUN=1` to print one product input without calling Shopify, or
+   `UNPUBLISH_OTHERS=1` to also unpublish demo products and collections from the Headless channel.
+
+### Where the credentials come from and how they are stored
+
+The app created for this repository is **Catalog Seeder**; its scopes are `write_products`,
+`write_publications` and `write_files`, and it publishes to **Dummy Store Headless**.
+
+- **Source:** Dev Dashboard → **Apps** → `Catalog Seeder` → **Settings** → **Credentials**. The
+  Client ID identifies the app; the Client secret is the credential.
+- **Local storage:** `.env.local` at the repository root, as `SHOPIFY_CLIENT_ID` and
+  `SHOPIFY_CLIENT_SECRET`. `.gitignore` excludes `.env*` and re-includes only `.env.example`, so
+  the file is never committed.
+- **Template:** `.env.example` documents both variables with placeholders. It must never contain a
+  real value.
+- **Readers:** only `scripts/seed-catalog.mjs`. The storefront bundle never reads either variable,
+  and neither is prefixed with `NEXT_PUBLIC_`.
+- **Tokens:** the script posts the credentials to
+  `https://{shop}.myshopify.com/admin/oauth/access_token` with `grant_type=client_credentials`.
+  Shopify returns a token valid for 24 hours. It is held in memory for the run and never written to
+  disk, so there is no long-lived `shpat_…` token to rotate.
+- **Rotation:** if the secret is exposed in a screenshot, chat, log or commit, open
+  **Settings → Credentials → Rotate secret**, update `.env.local`, and re-run the seed. Deleting the
+  app revokes access immediately.
 
 **Note on the dashboard options.** "Create a catalog" publishes product feeds for AI shopping; it
 does not seed your store catalog. "Agents" configures Shopify's agent surfaces, not Eve. Neither is
@@ -607,11 +631,14 @@ pointing at `/api/webhooks/shopify` and `SHOPIFY_WEBHOOK_SECRET` matching.
 
 ## 16. Current state of this clone
 
-- Store: `Dummy Store`, USD, Hydrogen demo snowboard catalog.
+- Store: `Dummy Store`, USD.
+- Catalog: 10 fashion products across 8 collections, seeded through the Admin API; demo snowboards
+  unpublished from the Headless channel and kept in the Shopify admin.
 - Design: Polite Society reference, rebuilt in `app/` and `components/`.
 - Reference photography and wordmark: `public/reference/`, private prototype use only.
 - GA4: `G-SQVPB589E7` loads and sends `page_view`.
-- Catalog seeding: script ready, Admin API credentials pending.
+- Seeder credentials: Dev Dashboard app `Catalog Seeder`, stored in `.env.local` and exchanged for a
+  24-hour token at run time.
 - Customer accounts: disabled (`shopConfig.auth.isEnabled = false`).
 - Eve: disabled (`shopConfig.agent.isEnabled = false`).
 - Vercel Analytics and Speed Insights: disabled in `shopConfig`.

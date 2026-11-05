@@ -46,29 +46,52 @@ and `google-analytics.com/g/collect` receives `en=page_view` for `/`, `/collecti
 
 ## Shopify catalog
 
-The connected store still contains the Hydrogen demo catalog (snowboards). That is why product
-photography and titles in the rebuilt surfaces do not match the fashion reference yet. The design,
-layout and every commerce interaction are catalog-agnostic.
+Seeded on 5 November 2026 through the Shopify Admin API. The storefront now shows the fashion
+catalog the design was built for instead of the Hydrogen demo catalog:
 
-Changing the catalog requires a Shopify Admin API access token. The storefront token in
-`.env.local` cannot create products or collections. To seed the fashion catalog, add a custom app
-token with these scopes:
+- 10 products across corsets, dresses and jumpsuits, tops and bottoms.
+- 8 collections: `corsets`, `dresses-and-jumpsuits`, `tops`, `bottoms`, `new-in`, `core`,
+  `essentials`, and `signature` (titled “Elevated”).
+- 12–18 variants per product (colour × XS–XXL), priced in USD.
+- Product photography imported from the reference CDN into Shopify Files.
+- Demo snowboards unpublished from the **Dummy Store Headless** publication. They remain in the
+  Shopify admin and on the Online Store; the gift card stays published.
+- Navigation, editorial tiles and the “Our Picks” rail now point at the seeded collection handles.
 
-```
-read_products, write_products, read_publications, write_publications, read_files, write_files
-```
+### Credentials: source and storage
 
-Then run the seeding script (added alongside this note) with:
+The seeder authenticates with a **Dev Dashboard app**, not a legacy admin custom app:
+
+1. Dev Dashboard → **Apps** → `Catalog Seeder` → **Settings** → **Credentials**.
+2. Copy **Client ID** and **Client secret**.
+3. Store them in `.env.local` at the repository root. `.gitignore` excludes `.env*` and allows only
+   `.env.example`, so the file never enters git:
+
+   ```bash
+   SHOPIFY_CLIENT_ID=...
+   SHOPIFY_CLIENT_SECRET=...
+   ```
+
+4. `scripts/seed-catalog.mjs` exchanges them at run time with the client credentials grant. The
+   resulting Admin API token expires after 24 hours and is never written to disk.
+
+The two variables are read only by the seeder. They are not bundled into the storefront, must never
+use the `NEXT_PUBLIC_` prefix, and must never be committed. `.env.example` and
+`docs/SHOPIFY-WALKTHROUGH.md` hold placeholders and instructions, never values. If the secret is
+ever exposed — a screenshot, a chat, a log — rotate it under **Settings → Credentials**, update
+`.env.local`, and re-run the seed. The app scopes are `write_products`, `write_publications` and
+`write_files` (write includes read), and the target publication is **Dummy Store Headless**.
+
+### Commands
 
 ```bash
-SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_xxx \
-NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com \
-node --env-file=.env.local scripts/seed-catalog.mjs
+DRY_RUN=1 corepack pnpm seed:catalog                 # print one product input, no API calls
+corepack pnpm seed:catalog                           # create missing products and collections
+UNPUBLISH_OTHERS=1 corepack pnpm seed:catalog        # also unpublish demo catalog from the Headless channel
 ```
 
-After seeding, switch the navigation and editorial links from `/collections/all` to the seeded
-collection handles (`/collections/corsets`, `/collections/dresses-and-jumpsuits`, etc.). The
-collection chips already read live collections, so they update automatically.
+The script is idempotent: it looks up each handle, skips what exists, and re-publishes to the
+Headless channel on every run.
 
 ## Verification
 
@@ -77,12 +100,15 @@ collection chips already read live collections, so they update automatically.
 - `corepack pnpm build` — passes; all storefront routes prerender.
 - Browser checks with Playwright MCP at desktop and mobile sizes, including header collapse,
   mega menu, search, contact, filter, PDP tabs, cart drawer and cart page.
+- Seeded catalog: `/collections/corsets` renders six corsets, `/collections/all` renders the ten
+  fashion products plus the gift card, the home rail renders `new-in`, Shopify CDN imagery loads at
+  full resolution, and add-to-cart puts `Alma Lace Corset Top` (Brown / XS, $185) in the drawer.
 - GA4 network verification as above.
 
 ## Known gaps
 
-- **Catalog**: needs the Admin API token described above. The source assets are licensed for this
-  private prototype only; replace them before distribution.
+- **Catalog**: seeded; the design-system assets in `public/reference/` are licensed for this
+  private prototype only and must be replaced before distribution.
 - **Wishlist and account**: wishlist saves products in local storage and renders at `/wishlist`;
   it is per-browser and not synced to a customer account. Account utilities render only when
   `shopConfig.auth.isEnabled` is turned on, matching the template's account gate.
