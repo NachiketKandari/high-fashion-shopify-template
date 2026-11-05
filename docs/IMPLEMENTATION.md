@@ -208,6 +208,9 @@ product photography imported into Shopify Files.
 
 ## Known gaps
 
+The ordered closure plan, with dependencies and acceptance checks, is in
+[`GAP-CLOSURE-PLAN.md`](./GAP-CLOSURE-PLAN.md).
+
 - **Catalog**: 95 published products imported from the reference; the design-system assets in
   `public/reference/` are licensed for this private prototype only and must be replaced before
   distribution. Inventory availability and per-product Fabric/Fit copy are not imported yet; the

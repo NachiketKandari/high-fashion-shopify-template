@@ -67,7 +67,8 @@ The script is `scripts/import-live-catalog.mjs`; the original twelve-product des
 
 ## Remaining gaps
 
-These are known and deliberate, not silent omissions:
+These are known and deliberate, not silent omissions. The ordered closure plan, with dependencies
+and acceptance checks, is in [`GAP-CLOSURE-PLAN.md`](./GAP-CLOSURE-PLAN.md):
 
 1. **Inventory availability is not mirrored.** The Dev Dashboard app has `read_products`,
    `write_products`, `read_publications`, `write_publications`, `read_files`, and `write_files`, but
