@@ -34,12 +34,12 @@ export function CartOverlay({ description, title }: CartOverlayProps) {
   return (
     <Sheet open={isOverlayOpen} onOpenChange={setOverlayOpen}>
       <SheetContent
-        className="w-full max-w-[440px] gap-0 border-l border-rule p-0"
+        className="w-(--drawer-cart) max-w-full gap-0 border-l border-rule p-0"
         closeButton={false}
         side="right"
       >
-        <div className="flex h-14 shrink-0 items-center justify-between border-b border-rule px-5">
-          <SheetTitle className="text-xs uppercase tracking-wider">
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-rule px-(--gutter)">
+          <SheetTitle>
             {title} ({quantity})
           </SheetTitle>
           <SheetClose
@@ -74,16 +74,16 @@ function OverlayContent() {
 
   if (cart.lines.nodes.length === 0) {
     return (
-      <div className="flex h-full flex-col px-5">
+      <div className="flex h-full flex-col px-(--gutter)">
         <CartWarnings />
         <div className="flex flex-1 flex-col justify-start gap-4 pt-8">
-          <h3 className="text-xs uppercase tracking-wider">Your shopping cart is empty</h3>
-          <p className="max-w-[30ch] text-2xs leading-[18px] text-muted-foreground">
+          <h3 className="type-h3">Your shopping cart is empty</h3>
+          <p className="type-body-sm max-w-[30ch] text-ink-muted">
             Browse our latest collection or check your saved favorites to add more items to your
             cart.
           </p>
           <Button
-            className="mt-2 h-9 w-fit rounded-none border border-foreground bg-transparent px-4 text-2xs uppercase tracking-wider text-foreground shadow-none hover:bg-foreground hover:text-background"
+            className="mt-2 w-fit"
             onClick={() => {
               setOverlayOpen(false);
               router.push("/collections/all");
@@ -100,14 +100,14 @@ function OverlayContent() {
   return (
     <div className="flex h-full flex-col">
       <FreeShippingProgress cart={cart} />
-      <div className="grid flex-1 content-start gap-6 overflow-y-auto px-5 py-5">
+      <div className="grid flex-1 content-start gap-6 overflow-y-auto px-(--gutter) py-5">
         <CartWarnings />
         <CartLineItems lines={cart.lines.nodes} />
       </div>
-      <footer className="grid gap-3 border-t border-rule px-5 pb-4 pt-4">
+      <footer className="grid gap-3 border-t border-rule px-(--gutter) py-4">
         <CartSummary cart={cart} />
         <Link
-          className="justify-self-center text-2xs uppercase tracking-wider underline underline-offset-4"
+          className="type-control focus-ring flex h-9 items-center justify-self-center underline underline-offset-4"
           href="/cart"
           onClick={() => setOverlayOpen(false)}
         >
@@ -124,14 +124,21 @@ function FreeShippingProgress({ cart }: { cart: CartData }) {
   const progress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
 
   return (
-    <div className="grid gap-2 border-b border-rule px-5 py-3">
-      <div className="h-px w-full bg-rule">
+    <div className="grid gap-2 border-b border-rule px-(--gutter) py-3">
+      <div
+        aria-label="Free shipping progress"
+        aria-valuemax={100}
+        aria-valuemin={0}
+        aria-valuenow={Math.round(progress)}
+        className="h-px w-full bg-rule"
+        role="progressbar"
+      >
         <div
-          className="h-px bg-foreground transition-[width] duration-500"
+          className="h-px bg-ink transition-[width] duration-(--motion-long) ease-(--ease-standard)"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <p className="text-2xs text-muted-foreground">
+      <p aria-live="polite" className="type-label text-ink-muted">
         {remaining === 0
           ? "Congratulations! You qualify for free shipping."
           : `You're $${remaining.toFixed(0)} away from free shipping.`}

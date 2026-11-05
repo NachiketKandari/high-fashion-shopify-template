@@ -58,15 +58,15 @@ export function AddressBook({ addresses }: { addresses: CustomerAddress[] }) {
       </div>
 
       {addresses.length === 0 ? (
-        <div className="rounded-lg border p-6 text-center">
-          <p className="text-sm text-muted-foreground">You have no saved addresses yet.</p>
+        <div className="rounded-none border p-6 text-center">
+          <p className="type-body-sm text-muted-foreground">You have no saved addresses yet.</p>
         </div>
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="grid gap-3 tablet:grid-cols-2">
           {addresses.map((address) => (
-            <li key={address.id} className="flex flex-col gap-3 rounded-lg border p-4">
+            <li key={address.id} className="flex flex-col gap-3 rounded-none border p-4">
               <div className="flex items-start justify-between gap-2">
-                <address className="text-sm text-muted-foreground not-italic">
+                <address className="type-body-sm text-muted-foreground not-italic">
                   {address.formatted.map((line, index) => (
                     <span key={index} className="block">
                       {line}
@@ -95,7 +95,7 @@ export function AddressBook({ addresses }: { addresses: CustomerAddress[] }) {
       )}
 
       <Dialog open={formState !== null} onOpenChange={(open) => !open && setFormState(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
+        <DialogContent className="max-h-[90vh] overflow-y-auto tablet:max-w-xl">
           <DialogHeader>
             <DialogTitle>{formState?.mode === "edit" ? "Edit address" : "Add address"}</DialogTitle>
           </DialogHeader>
@@ -141,13 +141,13 @@ function AddressForm({ address, onSuccess }: { address?: CustomerAddress; onSucc
   };
   return (
     <form onSubmit={handleSubmit} className="grid gap-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 tablet:grid-cols-2">
         {TEXT_FIELDS.map((field) => {
           const fieldError = fieldErrors[field.key];
           return (
             <div
               key={field.key}
-              className={field.span ? "grid gap-1.5 sm:col-span-2" : "grid gap-1.5"}
+              className={field.span ? "grid gap-1.5 tablet:col-span-2" : "grid gap-1.5"}
             >
               <Label htmlFor={field.key}>
                 {field.label}
@@ -172,7 +172,7 @@ function AddressForm({ address, onSuccess }: { address?: CustomerAddress; onSucc
                 }
               />
               {fieldError ? (
-                <p role="alert" className="text-xs text-destructive">
+                <p role="alert" className="type-body-sm text-error-rule">
                   {fieldError}
                 </p>
               ) : null}
@@ -181,7 +181,7 @@ function AddressForm({ address, onSuccess }: { address?: CustomerAddress; onSucc
         })}
       </div>
 
-      <div className="flex items-center justify-between rounded-lg border p-3">
+      <div className="flex items-center justify-between rounded-none border p-3">
         <Label htmlFor="isDefault">Set as default address</Label>
         <Switch
           id="isDefault"
@@ -192,7 +192,7 @@ function AddressForm({ address, onSuccess }: { address?: CustomerAddress; onSucc
       </div>
 
       {error ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="type-body-sm text-error-rule">
           {error}
         </p>
       ) : null}
@@ -237,7 +237,7 @@ function DeleteDialog({
           </DialogDescription>
         </DialogHeader>
         {error ? (
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="type-body-sm text-error-rule">
             {error}
           </p>
         ) : null}

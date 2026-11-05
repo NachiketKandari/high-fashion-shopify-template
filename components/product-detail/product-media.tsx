@@ -28,7 +28,7 @@ const LCP_IMAGE_PROPS = { fetchPriority: "high", loading: "eager", preload: true
 const LAZY_IMAGE_PROPS = { loading: "lazy" } as const;
 
 // Tailwind `lg`, where the stacked gallery replaces the carousel.
-const DESKTOP_MEDIA = "(min-width: 1024px)";
+const DESKTOP_MEDIA = "(min-width: 1100px)";
 // Only the first stacked image is above the fold; later images stay lazy on both layouts.
 const DESKTOP_GRID_PRELOAD_COUNT = 1;
 
@@ -120,7 +120,7 @@ function Carousel({
     if (!container) return;
     container.scrollTo({
       left: index * container.offsetWidth,
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
     });
     setSelectedIndex(index);
   };
@@ -186,12 +186,16 @@ function Carousel({
             type="button"
             key={idx}
             onClick={() => scrollToImage(idx)}
-            className={cn(
-              "size-1 rounded-full transition-opacity",
-              idx === selectedIndex ? "bg-foreground" : "bg-foreground/25 hover:bg-foreground/50",
-            )}
+            className="focus-ring flex size-9 items-center justify-center"
             aria-label={`Go to image ${idx + 1}`}
-          />
+          >
+            <span
+              className={cn(
+                "block size-1.5 rounded-full transition-opacity",
+                idx === selectedIndex ? "bg-ink" : "bg-ink/25 hover:bg-ink/50",
+              )}
+            />
+          </button>
         ))}
       </div>
     </div>
@@ -322,7 +326,7 @@ export function ProductMedia({
 
   return (
     <div className={className}>
-      <div className="lg:hidden">
+      <div className="desktop:hidden">
         <Carousel
           key={mediaItems.map(mediaKey).join(",")}
           mediaItems={mediaItems}
@@ -332,7 +336,7 @@ export function ProductMedia({
           {mobileSlot}
         </Carousel>
       </div>
-      <div className="hidden lg:block">
+      <div className="hidden desktop:block">
         <Grid
           mediaItems={mediaItems}
           title={title}

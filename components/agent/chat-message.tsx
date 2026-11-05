@@ -43,7 +43,7 @@ export function ChatMessage({
     return text ? (
       <div className="flex justify-end">
         <Bubble className="max-w-[85%]" variant="default">
-          <BubbleContent className="rounded-lg px-3.5">
+          <BubbleContent className="px-3.5">
             <Markdown>{text}</Markdown>
           </BubbleContent>
         </Bubble>
@@ -62,7 +62,7 @@ export function ChatMessage({
       : part.type === "interaction" && part.status === "open",
   );
   return (
-    <div className="grid gap-2.5 text-foreground text-sm">
+    <div className="type-body-sm grid gap-2.5 text-ink">
       <AgentThinking active={isStreaming && !text} tool={active?.name} />
       {text && <Markdown>{text}</Markdown>}
       <ShoppingResults

@@ -23,8 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function AccountLayout({ children }: { children: ReactNode }) {
   return (
     <Page className="flex flex-1 flex-col">
-      <Container className="flex flex-1 flex-col gap-6 md:flex-row md:gap-10">
-        <aside className="hidden w-52 shrink-0 md:block">
+      <Container className="flex flex-1 flex-col gap-6 desktop:flex-row desktop:gap-10">
+        <aside className="hidden w-52 shrink-0 desktop:block">
           <div className="sticky top-24 flex flex-col gap-6">
             <Suspense fallback={<AccountLabelSkeleton />}>
               <AccountLabel />
@@ -37,7 +37,7 @@ export default function AccountLayout({ children }: { children: ReactNode }) {
         </aside>
 
         <div className="flex flex-1 flex-col min-w-0">
-          <div className="mb-4 flex items-center justify-between md:hidden">
+          <div className="mb-4 flex items-center justify-between desktop:hidden">
             <Suspense fallback={<AccountLabelSkeleton />}>
               <AccountLabel />
             </Suspense>
@@ -46,7 +46,7 @@ export default function AccountLayout({ children }: { children: ReactNode }) {
           <Suspense>
             <AccountMobileTabs />
           </Suspense>
-          <Sections className="gap-5 pt-6 md:pt-0">
+          <Sections>
             <Suspense>
               <AccountGate>{children}</AccountGate>
             </Suspense>
@@ -68,15 +68,15 @@ async function AccountLabel() {
   await requireCustomerSession();
   const accessToken = await getCustomerAccessToken();
   if (!accessToken) {
-    return <p className="text-sm font-medium">Account</p>;
+    return <p className="type-body-sm font-normal">Account</p>;
   }
   const profile = await getCustomerProfile();
   if (!profile) return null;
   const name = [profile.firstName, profile.lastName].filter(Boolean).join(" ");
   return (
     <div>
-      <p className="text-sm font-medium">{name || profile.email}</p>
-      <p className="text-xs text-muted-foreground">{profile.email}</p>
+      <p className="type-body-sm font-normal">{name || profile.email}</p>
+      <p className="type-body-sm text-muted-foreground">{profile.email}</p>
     </div>
   );
 }
@@ -93,9 +93,9 @@ function AccountLabelSkeleton() {
 function SidebarSkeleton() {
   return (
     <div className="flex flex-col gap-1">
-      <Skeleton className="h-9 w-full rounded-lg" />
-      <Skeleton className="h-9 w-full rounded-lg" />
-      <Skeleton className="h-9 w-full rounded-lg" />
+      <Skeleton className="h-9 w-full rounded-none" />
+      <Skeleton className="h-9 w-full rounded-none" />
+      <Skeleton className="h-9 w-full rounded-none" />
     </div>
   );
 }

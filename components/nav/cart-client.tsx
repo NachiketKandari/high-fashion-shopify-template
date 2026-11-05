@@ -21,15 +21,15 @@ export function CartIconClient({ cartLabel, initialCart }: CartIconClientProps) 
   return (
     <button
       aria-label={`${cartLabel} (${quantity})`}
-      className="flex cursor-pointer items-center justify-center text-xs uppercase tracking-wider transition-opacity hover:opacity-60"
+      className="focus-ring flex h-9 min-w-9 shrink-0 cursor-pointer items-center justify-center transition-opacity hover:opacity-60"
       onClick={openOverlay}
       type="button"
     >
-      <span className="hidden xl:inline">{`Cart (${quantity})`}</span>
-      <span className="relative flex xl:hidden">
+      <span className="type-nav hidden desktop:inline">{`Cart (${quantity})`}</span>
+      <span className="relative flex desktop:hidden">
         <ShoppingBag className="size-4" strokeWidth={1.25} />
         {quantity > 0 ? (
-          <span className="absolute -right-1.5 -top-1.5 flex size-3.5 items-center justify-center rounded-full bg-foreground text-[9px] leading-none text-background">
+          <span className="absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full bg-ink text-label leading-none text-inverse">
             {quantity}
           </span>
         ) : null}

@@ -5,6 +5,7 @@ import { LoaderCircleIcon } from "lucide-react";
 import { type ReactNode, useEffect, useEffectEvent, useRef, useState } from "react";
 
 import { ProductCard } from "@/components/product-card/product-card";
+import { Button } from "@/components/ui/button";
 import { getBrowseSearch } from "@/lib/collections";
 import { loadMoreBrowseProductsAction } from "@/lib/collections/action";
 import type { BrowseSource } from "@/lib/collections/types";
@@ -30,6 +31,7 @@ export function InfiniteProductGrid({
   const [additionalProducts, setAdditionalProducts] = useState<ProductCardType[]>([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>(initialPageInfo);
   const [isLoading, setIsLoading] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
   const loadMorePage = useEffectEvent(async () => {
@@ -37,6 +39,7 @@ export function InfiniteProductGrid({
     if (isPending || loadingRef.current || !pageInfo.hasNextPage || !pageInfo.endCursor) return;
     loadingRef.current = true;
     setIsLoading(true);
+    setAnnouncement("Loading more products.");
 
     try {
       const result = await loadMoreBrowseProductsAction({
@@ -45,10 +48,15 @@ export function InfiniteProductGrid({
         source,
       });
       // Live cursor pages can re-emit a boundary product if the ranking shifts mid-scroll; skip ids already shown.
-      setAdditionalProducts((prev) => {
-        const seen = new Set([...initialProductIds, ...prev.map((product) => product.id)]);
-        return [...prev, ...result.products.filter((product) => !seen.has(product.id))];
-      });
+      const seen = new Set([
+        ...initialProductIds,
+        ...additionalProducts.map((product) => product.id),
+      ]);
+      const newProducts = result.products.filter((product) => !seen.has(product.id));
+      setAdditionalProducts((prev) => [...prev, ...newProducts]);
+      setAnnouncement(
+        `${newProducts.length} more ${newProducts.length === 1 ? "product" : "products"} loaded.`,
+      );
       setPageInfo(result.pageInfo);
     } finally {
       setIsLoading(false);
@@ -74,19 +82,34 @@ export function InfiniteProductGrid({
   }, [endCursor, hasNextPage]);
   return (
     <div
-      className="transition-opacity duration-200 data-[pending=true]:pointer-events-none data-[pending=true]:opacity-50"
+      aria-busy={isLoading || undefined}
+      className="transition-opacity duration-(--motion-fast) data-[pending=true]:pointer-events-none data-[pending=true]:opacity-50"
       data-pending={isPending}
     >
-      <div className="grid grid-cols-2 gap-x-[3px] gap-y-5 md:grid-cols-3 md:gap-y-6 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-(--grid-gap) gap-y-(--grid-row-gap) tablet:grid-cols-3 desktop:grid-cols-4">
         {children}
         {additionalProducts.map((product) => (
           <ProductCard key={product.id} product={product} outOfStockText="Out of Stock" />
         ))}
       </div>
 
+      <p aria-live="polite" className="sr-only" role="status">
+        {announcement}
+      </p>
+
       {pageInfo.hasNextPage && (
-        <div ref={sentinelRef} className="flex justify-center py-10">
-          {isLoading && <LoaderCircleIcon className="size-6 animate-spin text-muted-foreground" />}
+        <div className="flex flex-col items-center gap-3 py-10">
+          {isLoading ? (
+            <div className="flex items-center gap-2" role="status">
+              <LoaderCircleIcon className="size-4 animate-spin text-ink-muted motion-reduce:animate-none" />
+              <span className="type-label text-ink-muted">Loading more products</span>
+            </div>
+          ) : (
+            <Button onClick={() => void loadMorePage()} size="sm" type="button" variant="outline">
+              Load more
+            </Button>
+          )}
+          <div aria-hidden="true" className="h-px w-full" ref={sentinelRef} />
         </div>
       )}
     </div>

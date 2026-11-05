@@ -58,7 +58,7 @@ export function GiftCardPurchaseForm() {
         <div className="grid gap-2.5">
           <div className="flex items-center justify-between gap-2.5">
             <Label htmlFor="gift-card-email">Recipient email</Label>
-            <Button className="h-auto p-0 text-xs" disabled={pending} type="reset" variant="link">
+            <Button className="h-9 px-0" disabled={pending} type="reset" variant="link">
               Clear recipient details
             </Button>
           </div>
@@ -93,7 +93,7 @@ export function GiftCardPurchaseForm() {
           />
         </div>
 
-        <div className="grid gap-3 rounded-lg border p-3">
+        <div className="grid gap-3 border p-3">
           <div className="flex items-center justify-between gap-2.5">
             <Label htmlFor="gift-card-send-later">Schedule for later</Label>
             <Switch

@@ -19,7 +19,7 @@ export function CartSummary({ cart }: CartSummaryProps) {
       <CartTotal cart={cart} />
       <CartCheckout label="Checkout" />
       <details className="group">
-        <summary className="cursor-pointer list-none text-2xs uppercase tracking-wider underline underline-offset-4 [&::-webkit-details-marker]:hidden">
+        <summary className="type-control focus-ring flex h-9 cursor-pointer list-none items-center underline underline-offset-4 [&::-webkit-details-marker]:hidden">
           Discount code
         </summary>
         <div className="mt-3">
@@ -46,17 +46,15 @@ export function CartTotal({ cart }: CartTotalProps) {
       className="grid gap-1"
       role="group"
     >
-      <div className="flex items-baseline justify-between text-xs tracking-wider text-foreground">
+      <div className="type-h4 flex items-baseline justify-between text-ink">
         <span>Subtotal</span>
         {isCostPending || !currencyCode ? (
-          <span className="text-muted-foreground">Updating…</span>
+          <span className="text-ink-muted">Updating…</span>
         ) : (
-          <Price amount={amount} className="text-xs tracking-wider" currencyCode={currencyCode} />
+          <Price amount={amount} className="type-h4 font-normal" currencyCode={currencyCode} />
         )}
       </div>
-      <p className="text-2xs text-muted-foreground">
-        Tax included and shipping calculated at checkout.
-      </p>
+      <p className="type-label text-ink-muted">Tax included and shipping calculated at checkout.</p>
     </div>
   );
 }
@@ -79,7 +77,7 @@ export function CartCheckout({ label = "Checkout" }: CartCheckoutProps) {
       <Button
         aria-busy={isCheckingOut || isUpdatingCart || undefined}
         aria-describedby={checkoutError ? checkoutErrorId : undefined}
-        className="h-9 w-full justify-center rounded-none border border-foreground bg-transparent text-2xs uppercase tracking-wider text-foreground shadow-none hover:bg-foreground hover:text-background"
+        className="h-9 w-full justify-center"
         disabled={isCheckoutDisabled}
         onClick={handleCheckout}
         type="button"
@@ -91,7 +89,7 @@ export function CartCheckout({ label = "Checkout" }: CartCheckoutProps) {
         {isCheckingOut ? "Redirecting..." : isUpdatingCart ? "Updating cart..." : label}
       </Button>
       {checkoutError ? (
-        <p className="text-xs text-destructive" id={checkoutErrorId} role="alert">
+        <p className="type-body-sm text-error-rule" id={checkoutErrorId} role="alert">
           {checkoutError}
         </p>
       ) : null}

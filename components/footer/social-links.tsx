@@ -96,6 +96,6 @@ function SocialIcon({ platform }: { platform: string }) {
         </svg>
       );
     default:
-      return <span className="text-xs font-medium">{platform}</span>;
+      return <span className="type-label">{platform}</span>;
   }
 }

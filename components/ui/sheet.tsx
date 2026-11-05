@@ -26,7 +26,7 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
     <SheetPrimitive.Backdrop
       data-slot="sheet-overlay"
       className={cn(
-        "fixed inset-0 z-60 bg-black/30 transition-opacity ease-in-out data-open:duration-500 data-closed:duration-300 data-starting-style:opacity-0 data-ending-style:opacity-0 data-[dim=false]:bg-transparent",
+        "fixed inset-0 z-60 bg-black/30 transition-opacity duration-(--motion-base) ease-(--ease-standard) data-starting-style:opacity-0 data-ending-style:opacity-0 data-[dim=false]:bg-transparent",
         className,
       )}
       {...props}
@@ -53,26 +53,27 @@ function SheetContent({
       {/* Base UI's own modal backdrop has no z-index, so z-indexed page chrome such as the sticky header stays clickable; without a dimmed overlay, this transparent one takes the click-away. */}
       <SheetOverlay data-dim={overlay} />
       <SheetPrimitive.Popup
+        aria-modal={overlay ? "true" : undefined}
         data-slot="sheet-content"
         data-side={side}
         className={cn(
-          "bg-card fixed z-60 flex flex-col gap-5 shadow-lg transition ease-in-out data-open:duration-500 data-closed:duration-300",
+          "bg-paper fixed z-60 flex flex-col gap-5 shadow-modal transition duration-(--motion-base) ease-(--ease-standard)",
           side === "right" &&
-            "inset-y-0 right-0 h-full w-[calc(100%-2.5rem)] max-w-md border-l data-starting-style:translate-x-full data-ending-style:translate-x-full",
+            "inset-y-0 right-0 h-full w-(--drawer-search) max-w-full border-l data-starting-style:translate-x-full data-ending-style:translate-x-full",
           side === "left" &&
-            "inset-y-0 left-0 h-full w-[calc(100%-2.5rem)] max-w-md border-r data-starting-style:-translate-x-full data-ending-style:-translate-x-full",
+            "inset-y-0 left-0 h-full w-(--drawer-search) max-w-full border-r data-starting-style:-translate-x-full data-ending-style:-translate-x-full",
           side === "top" &&
             "inset-x-0 top-0 h-auto border-b data-starting-style:-translate-y-full data-ending-style:-translate-y-full",
           side === "bottom" &&
-            "inset-x-0 bottom-0 h-auto rounded-t-3xl border-t data-starting-style:translate-y-full data-ending-style:translate-y-full",
+            "inset-x-0 bottom-0 h-auto border-t data-starting-style:translate-y-full data-ending-style:translate-y-full",
           className,
         )}
         {...props}
       >
         {children}
         {closeButton && (
-          <SheetPrimitive.Close className="ring-offset-background focus-visible:ring-ring absolute top-3 right-2.5 flex size-10 items-center justify-center rounded-full opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none">
-            <XIcon className="size-5" />
+          <SheetPrimitive.Close className="focus-ring absolute top-2 right-2 flex size-9 items-center justify-center transition-opacity hover:opacity-60 disabled:pointer-events-none">
+            <XIcon className="size-4" strokeWidth={1.25} />
             <span className="sr-only">Close</span>
           </SheetPrimitive.Close>
         )}
@@ -85,7 +86,7 @@ function SheetTitle({ className, ...props }: SheetPrimitive.Title.Props) {
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
-      className={cn("text-foreground font-semibold", className)}
+      className={cn("type-h3 text-ink", className)}
       {...props}
     />
   );
@@ -95,7 +96,7 @@ function SheetDescription({ className, ...props }: SheetPrimitive.Description.Pr
   return (
     <SheetPrimitive.Description
       data-slot="sheet-description"
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn("type-body-sm text-ink-muted", className)}
       {...props}
     />
   );

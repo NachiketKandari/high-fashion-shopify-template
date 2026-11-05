@@ -115,36 +115,31 @@ function CartLineItem({ item }: CartLineItemProps) {
           <div className="flex items-start justify-between gap-3">
             <div className="grid min-w-0 gap-1">
               {href ? (
-                <Link href={href} className="cursor-pointer transition-opacity hover:opacity-70">
-                  <h3 className="line-clamp-2 text-xs uppercase leading-4 tracking-wider text-foreground">
-                    {title}
-                  </h3>
+                <Link
+                  className="focus-ring flex min-h-9 cursor-pointer items-center transition-opacity hover:opacity-70"
+                  href={href}
+                >
+                  <h3 className="type-h4 line-clamp-2">{title}</h3>
                 </Link>
               ) : (
-                <h3 className="line-clamp-2 text-xs uppercase leading-4 tracking-wider text-foreground">
-                  {title}
-                </h3>
+                <h3 className="type-h4 line-clamp-2">{title}</h3>
               )}
-              {variantLabel ? (
-                <p className="text-2xs uppercase tracking-wider text-muted-foreground">
-                  {variantLabel}
-                </p>
-              ) : null}
+              {variantLabel ? <p className="type-label text-ink-muted">{variantLabel}</p> : null}
               {item.sellingPlanAllocation ? (
-                <p className="text-2xs uppercase tracking-wider text-muted-foreground">
+                <p className="type-label text-ink-muted">
                   {item.sellingPlanAllocation.sellingPlan.name || "Subscription"}
                 </p>
               ) : null}
             </div>
-            <div className="grid shrink-0 gap-0.5 text-right text-xs tracking-wider">
+            <div className="type-h4 grid shrink-0 gap-0.5 text-right">
               <span
-                className="text-foreground data-[pending=true]:text-muted-foreground"
+                className="text-ink data-[pending=true]:text-ink-muted"
                 data-pending={isCostPending || !currencyCode}
               >
                 {isCostPending || !currencyCode ? "Updating…" : price(finalUnitPrice)}
               </span>
               {!isCostPending && currencyCode && originalUnitPrice > finalUnitPrice ? (
-                <span className="text-2xs text-muted-foreground line-through">
+                <span className="type-label text-ink-muted line-through">
                   {price(originalUnitPrice)}
                 </span>
               ) : null}
@@ -152,14 +147,12 @@ function CartLineItem({ item }: CartLineItemProps) {
           </div>
           {components.length ? (
             <div className="grid gap-1">
-              <p className="text-2xs uppercase tracking-wider text-muted-foreground">
-                Bundle includes
-              </p>
+              <p className="type-label text-ink-muted">Bundle includes</p>
               <ul className="grid gap-0.5">
                 {components.map((component) => (
                   <li
                     key={component.id}
-                    className="flex items-center gap-1.5 text-2xs text-muted-foreground"
+                    className="type-label flex items-center gap-1.5 text-ink-muted"
                   >
                     <span className="truncate">
                       {component.merchandise?.product.title || "Bundle item"}
@@ -180,14 +173,14 @@ function CartLineItem({ item }: CartLineItemProps) {
             <>
               <div
                 aria-label="Item quantity"
-                className="grid h-6 grid-cols-[1.5rem_1.25rem_1.5rem] border border-rule"
+                className="grid h-9 grid-cols-[2.25rem_1.5rem_2.25rem] border border-rule"
                 role="group"
               >
                 <button
                   {...register("decrease")}
                   type="submit"
                   aria-label={`Decrease quantity: ${lineName}`}
-                  className="flex h-6 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="focus-ring flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={isOptimistic || !canUpdateQuantity || quantity <= 1}
                 >
                   <MinusIcon className="size-2.5 shrink-0" />
@@ -196,7 +189,7 @@ function CartLineItem({ item }: CartLineItemProps) {
                   key={quantity}
                   {...register("quantity", { interactive: true, value: quantity })}
                   aria-label={`Quantity: ${lineName}`}
-                  className="h-6 w-5 rounded-none bg-transparent text-center text-2xs tabular-nums outline-none focus-visible:ring-1 focus-visible:ring-ring/50 disabled:cursor-not-allowed"
+                  className="type-label h-9 bg-transparent text-center tabular-nums focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ink disabled:cursor-not-allowed"
                   disabled={isOptimistic || !canUpdateQuantity}
                   max={99}
                   min={canRemove ? 0 : 1}
@@ -205,7 +198,7 @@ function CartLineItem({ item }: CartLineItemProps) {
                   {...register("increase")}
                   type="submit"
                   aria-label={`Increase quantity: ${lineName}`}
-                  className="flex h-6 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="focus-ring flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={isOptimistic || !canUpdateQuantity || quantity >= 99}
                 >
                   <PlusIcon className="size-2.5 shrink-0" />
@@ -214,7 +207,7 @@ function CartLineItem({ item }: CartLineItemProps) {
               <button
                 {...register("remove")}
                 type="submit"
-                className="cursor-pointer text-2xs uppercase tracking-wider text-muted-foreground underline underline-offset-2 transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+                className="type-control focus-ring flex min-h-9 cursor-pointer items-center text-ink-muted underline underline-offset-2 transition-colors hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={isOptimistic || !canRemove}
                 aria-label={`Remove item: ${lineName}`}
               >

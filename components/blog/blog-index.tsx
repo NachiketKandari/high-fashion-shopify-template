@@ -11,18 +11,18 @@ export interface BlogIndexProps {
 
 export function BlogIndex({ blog }: BlogIndexProps) {
   return (
-    <Page className="pt-2.5 md:pt-10">
+    <Page>
       <Container>
-        <Sections className="gap-5">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl">{blog.title}</h1>
+        <Sections>
+          <h1 className="type-display">{blog.title}</h1>
           {blog.articles.length > 0 ? (
-            <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-10 tablet:grid-cols-2 desktop:grid-cols-3">
               {blog.articles.map((article) => (
                 <ArticleCard article={article} key={article.handle} />
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">No articles found.</p>
+            <p className="type-body text-ink-muted">No articles found.</p>
           )}
         </Sections>
       </Container>
@@ -32,14 +32,14 @@ export function BlogIndex({ blog }: BlogIndexProps) {
 
 export function BlogIndexSkeleton() {
   return (
-    <Page aria-busy="true" className="pt-2.5 md:pt-10">
+    <Page aria-busy="true">
       <Container>
-        <Sections className="gap-5">
-          <Skeleton className="h-9 w-1/2 sm:h-10 md:h-12" />
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+        <Sections>
+          <Skeleton className="h-7 w-1/2" />
+          <div className="grid gap-10 tablet:grid-cols-2 desktop:grid-cols-3">
             {[0, 1, 2].map((index) => (
               <div className="grid content-start gap-4" key={index}>
-                <Skeleton className="aspect-3/2 w-full rounded-xl" />
+                <Skeleton className="aspect-3/2 w-full" />
                 <div className="grid gap-2.5">
                   <Skeleton className="h-5 w-24" />
                   <Skeleton className="h-7 w-3/4" />

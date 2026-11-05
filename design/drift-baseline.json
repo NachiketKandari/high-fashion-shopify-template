@@ -1,0 +1,14 @@
+{
+  "aliases": {
+    "bg-accent": 4,
+    "bg-background": 1,
+    "bg-foreground": 2,
+    "bg-muted": 2,
+    "bg-popover": 1,
+    "border-foreground": 1,
+    "text-accent-foreground": 1,
+    "text-background": 1,
+    "text-foreground": 7,
+    "text-muted-foreground": 21
+  }
+}

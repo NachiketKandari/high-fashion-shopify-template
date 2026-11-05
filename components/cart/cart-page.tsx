@@ -17,11 +17,11 @@ export function CartPageContent() {
 
   if (cart.totalQuantity === 0) {
     return (
-      <div className="flex flex-col items-start justify-center gap-5 px-5 py-10">
-        <h2 className="text-xs uppercase tracking-wider">Your shopping cart is empty</h2>
+      <div className="flex flex-col items-start justify-center gap-5 py-10">
+        <h2 className="type-h3">Your shopping cart is empty</h2>
         <Link
           href="/collections/all"
-          className="inline-flex h-9 cursor-pointer items-center justify-center border border-foreground px-4 text-2xs uppercase tracking-wider text-foreground transition-colors hover:bg-foreground hover:text-background"
+          className="type-control focus-ring inline-flex h-9 cursor-pointer items-center justify-center border border-ink px-4 text-ink transition-colors hover:bg-ink hover:text-inverse"
         >
           Explore collections
         </Link>
@@ -31,11 +31,7 @@ export function CartPageContent() {
 
   return (
     <CartPageLayout
-      count={
-        <span className="text-xs uppercase tracking-wider text-muted-foreground">
-          ({cart.totalQuantity})
-        </span>
-      }
+      count={<span className="type-h4 text-ink-muted">({cart.totalQuantity})</span>}
       summary={<CartSummary cart={cart} />}
       warnings={<CartWarnings />}
     >
@@ -50,7 +46,7 @@ export function CartPageContent() {
 function FreeShippingLine({ subtotal }: { subtotal: string }) {
   const remaining = Math.max(0, 500 - Number(subtotal));
   return (
-    <p className="border-t border-rule pt-2.5 text-2xs text-muted-foreground">
+    <p className="type-label border-t border-rule pt-2.5 text-ink-muted">
       {remaining === 0
         ? "Congratulations! You qualify for free shipping."
         : `You're $${remaining.toFixed(0)} away from free shipping.`}
@@ -103,21 +99,19 @@ interface CartPageLayoutProps extends ComponentProps<"div"> {
 
 function CartPageLayout({ children, count, summary, warnings, ...props }: CartPageLayoutProps) {
   return (
-    <Page {...props} className="pt-8">
+    <Page {...props}>
       <Container>
         <div className="grid gap-8">
           <div className="flex items-center gap-2">
-            <h1 className="text-lg uppercase tracking-wider">Shopping cart</h1>
+            <h1 className="type-h2">Shopping cart</h1>
             {count}
           </div>
           {warnings}
-          <div className="grid gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-8 xl:col-span-8">{children}</div>
-            <aside className="lg:col-span-4 lg:border-l lg:border-rule lg:pl-8 xl:col-span-4">
-              <div className="grid gap-4 lg:sticky lg:top-24">
-                <p className="border-t border-foreground pt-3 text-2xs uppercase tracking-wider">
-                  Order summary
-                </p>
+          <div className="grid gap-10 desktop:grid-cols-[minmax(0,1fr)_310px]">
+            <div className="min-w-0">{children}</div>
+            <aside className="desktop:border-l desktop:border-rule desktop:pl-8">
+              <div className="grid gap-4 desktop:sticky desktop:top-24">
+                <p className="type-label border-t border-ink pt-3">Order summary</p>
                 {summary}
               </div>
             </aside>

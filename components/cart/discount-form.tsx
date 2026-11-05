@@ -64,14 +64,14 @@ export function DiscountForm({ cart }: DiscountFormProps) {
           disabled={isPending}
           autoComplete="off"
           spellCheck={false}
-          className="h-9 flex-1 rounded-none border-0 border-b border-rule px-0 shadow-none focus-visible:ring-0"
+          className="h-9 flex-1 border-0 border-b border-rule px-0"
         />
         <Button
           {...register("discount-apply")}
           type="submit"
           disabled={isPending || code.trim() === ""}
           variant="outline"
-          className="h-9 rounded-none border border-foreground bg-transparent px-3 text-2xs uppercase tracking-wider text-foreground shadow-none hover:bg-foreground hover:text-background"
+          className="h-9 px-3"
         >
           {isPending ? (
             <>
@@ -85,7 +85,7 @@ export function DiscountForm({ cart }: DiscountFormProps) {
       </form>
 
       {error ? (
-        <p role="alert" className="text-xs text-destructive">
+        <p role="alert" className="type-body-sm text-error-rule">
           {error}
         </p>
       ) : null}
@@ -105,27 +105,25 @@ export function DiscountForm({ cart }: DiscountFormProps) {
                     },
                   })}
                   className={cn(
-                    "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs",
+                    "type-label inline-flex min-h-9 items-center gap-1 px-2.5",
                     discount.applicable || isCodePending
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground border border-input",
+                      ? "bg-ink text-inverse"
+                      : "border border-input bg-surface text-ink-muted",
                   )}
                 >
                   <input type="hidden" {...register("discountCode", { value: discount.code })} />
                   <span className={cn(isInvalid && "line-through")}>{discount.code}</span>
-                  {isInvalid ? (
-                    <span className="text-xs uppercase tracking-wide">Not applicable</span>
-                  ) : null}
+                  {isInvalid ? <span className="type-label">Not applicable</span> : null}
                   <button
                     {...register("discount-remove")}
                     type="submit"
                     aria-label={`${"Remove discount"}: ${discount.code}`}
                     disabled={isPending}
                     className={cn(
-                      "ml-0.5 inline-flex size-4 items-center justify-center rounded-sm cursor-pointer disabled:cursor-not-allowed",
+                      "focus-ring ml-0.5 inline-flex size-9 items-center justify-center cursor-pointer disabled:cursor-not-allowed",
                       discount.applicable || isCodePending
-                        ? "hover:bg-primary-foreground/15"
-                        : "hover:bg-foreground/10",
+                        ? "hover:bg-inverse/15"
+                        : "hover:bg-ink/10",
                     )}
                   >
                     <X className="size-3" aria-hidden="true" />

@@ -19,13 +19,13 @@ export async function ComplementaryProducts({
   if (complementary.length === 0) return null;
   return (
     <div className="grid gap-2.5" data-slot="complementary-products">
-      <h2 className="font-medium text-foreground/70 text-sm">{title}</h2>
+      <h2 className="type-h4 text-ink-muted">{title}</h2>
       <ul className="grid gap-2.5">
         {complementary.slice(0, limit).map((product: ProductCard) => (
           <li key={product.id}>
             <Link
               href={`/products/${product.handle}`}
-              className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-border p-2.5 transition-colors hover:border-foreground/30"
+              className="type-body-sm flex min-h-9 cursor-pointer items-center gap-2.5 border border-rule p-2.5 transition-colors hover:border-ink/30"
             >
               {product.featuredImage ? (
                 <Image
@@ -34,15 +34,15 @@ export async function ComplementaryProducts({
                   width={48}
                   height={48}
                   sizes="100vw"
-                  className="size-12 rounded-md object-cover"
+                  className="size-12 object-cover"
                 />
               ) : (
-                <ImagePlaceholder className="size-12 shrink-0 rounded-md" />
+                <ImagePlaceholder className="size-12 shrink-0" />
               )}
-              <span className="min-w-0 flex-1 truncate font-medium text-sm">{product.title}</span>
+              <span className="min-w-0 flex-1 truncate">{product.title}</span>
               <Price
                 amount={product.price.amount}
-                className="shrink-0 text-sm"
+                className="type-body-sm shrink-0"
                 currencyCode={product.price.currencyCode}
               />
             </Link>

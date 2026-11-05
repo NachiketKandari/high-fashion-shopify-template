@@ -14,7 +14,15 @@ export interface SearchSuggestion {
   text: string;
 }
 
+export interface PredictiveSearchCollection {
+  handle: string;
+  id: string;
+  image: Image | null;
+  title: string;
+}
+
 export interface PredictiveSearchResult {
+  collections: PredictiveSearchCollection[];
   products: PredictiveSearchProduct[];
   queries: SearchSuggestion[];
 }

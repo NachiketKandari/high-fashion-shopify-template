@@ -35,13 +35,13 @@ export default async function CollectionsPage() {
   const collections = await getCollectionsListing({});
   const viewCollectionLabel = "View this collection";
   return (
-    <Page className="pt-2.5 md:pt-10">
+    <Page>
       <Container>
-        <Sections className="gap-5">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl">Collections</h1>
+        <Sections>
+          <h1 className="type-display">Collections</h1>
 
           {collections.length > 0 ? (
-            <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-x-(--grid-gap) gap-y-10 tablet:grid-cols-3 desktop:grid-cols-4">
               {collections.map((collection) => (
                 <CollectionCard
                   key={collection.handle}
@@ -51,7 +51,7 @@ export default async function CollectionsPage() {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">No collections found.</p>
+            <p className="type-body text-ink-muted">No collections found.</p>
           )}
         </Sections>
       </Container>

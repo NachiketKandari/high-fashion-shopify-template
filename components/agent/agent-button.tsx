@@ -26,7 +26,7 @@ export function AgentButton() {
       <button
         ref={triggerRef}
         aria-expanded={open}
-        className="flex cursor-pointer items-center gap-1.5 px-2 py-1"
+        className="focus-ring flex h-9 cursor-pointer items-center gap-1.5 px-2"
         onClick={() => {
           setMounted(true);
           setOpen((previous) => !previous);
@@ -36,7 +36,7 @@ export function AgentButton() {
         onTouchStart={mount}
         type="button"
       >
-        <MessageCircle className="size-4 text-primary" />
+        <MessageCircle className="size-4 text-ink" strokeWidth={1.25} />
         <span className="sr-only">Open Shop Agent</span>
       </button>
       {mounted && <AgentPanel onOpenChange={setOpen} open={open} triggerRef={triggerRef} />}

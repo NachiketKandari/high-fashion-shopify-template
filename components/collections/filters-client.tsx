@@ -19,13 +19,14 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Link } from "@/components/ui/link";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Swatch } from "@/components/ui/swatch";
 import { parseFilterInput } from "@/lib/collections";
 import { shopConfig } from "@/lib/config";
 import { getActiveFilterBadges } from "@/lib/filters";
 import type { Filter, PriceRange } from "@/lib/filters/types";
 import { formatCurrencySymbol, formatPrice } from "@/lib/money";
+import { getColorSwatch } from "@/lib/product/color-swatches";
 
 import { usePublishedFacets } from "./collection-browse-provider";
 
@@ -39,11 +40,17 @@ export function FilterSheet({ children, label, trigger }: FilterSheetProps) {
   return (
     <Sheet>
       <SheetTrigger render={trigger} />
-      <SheetContent className="w-full max-w-[420px] gap-0 overflow-y-auto px-5 pb-5" side="right">
-        <div className="flex h-20 shrink-0 items-center">
-          <SheetTitle className="text-xs uppercase tracking-wider">{label}</SheetTitle>
+      <SheetContent
+        className="w-(--drawer-filter) max-w-full gap-0 border-l border-rule p-0"
+        side="right"
+      >
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex h-14 shrink-0 items-center border-b border-rule pr-12 pl-(--gutter)">
+            <SheetTitle>{label}</SheetTitle>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto px-(--gutter)">{children}</div>
+          <FilterFooter />
         </div>
-        {children}
       </SheetContent>
     </Sheet>
   );
@@ -149,7 +156,7 @@ export function CollectionFilterSidebar({ filters, priceRange }: CollectionFilte
             />
             <button
               aria-label="Apply price"
-              className="flex size-8 cursor-pointer items-center justify-center bg-primary text-primary-foreground transition-opacity hover:opacity-80"
+              className="focus-ring flex size-9 cursor-pointer items-center justify-center bg-ink text-inverse transition-opacity hover:opacity-80"
               onClick={() => applyPrice(parsePriceValue(minInput), parsePriceValue(maxInput))}
               type="button"
             >
@@ -163,7 +170,7 @@ export function CollectionFilterSidebar({ filters, priceRange }: CollectionFilte
         filter.values.length === 0 ? null : (
           <FilterSection key={filter.id} title={filter.label}>
             {filter.presentation === "swatch" ? (
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2">
                 {filter.values.map((value) => {
                   const isSelected = isFilterInputActive(state.filters, value.input);
                   return (
@@ -182,7 +189,7 @@ export function CollectionFilterSidebar({ filters, priceRange }: CollectionFilte
                       }}
                     >
                       <Swatch
-                        color={value.swatch?.color}
+                        color={value.swatch?.color ?? getColorSwatch(value.label)}
                         image={value.swatch?.image}
                         label={value.label}
                         selected={isSelected}
@@ -192,7 +199,7 @@ export function CollectionFilterSidebar({ filters, priceRange }: CollectionFilte
                 })}
               </div>
             ) : (
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col">
                 {filter.values.map((value) => {
                   const isSelected = isFilterInputActive(state.filters, value.input);
                   return (
@@ -219,6 +226,31 @@ export function CollectionFilterSidebar({ filters, priceRange }: CollectionFilte
   );
 }
 
+function FilterFooter() {
+  const actions = useCollectionActions();
+  return (
+    <div className="flex shrink-0 items-center gap-3 border-t border-rule px-(--gutter) py-4">
+      <button
+        className="type-control focus-ring flex h-9 items-center underline underline-offset-4"
+        onClick={() => actions.setFilters([])}
+        type="button"
+      >
+        Clear all
+      </button>
+      <SheetClose
+        render={
+          <button
+            className="type-control focus-ring ml-auto flex h-9 items-center bg-ink px-5 text-inverse"
+            type="button"
+          >
+            Apply
+          </button>
+        }
+      />
+    </div>
+  );
+}
+
 interface FilterSectionProps {
   children: ReactNode;
   title: string;
@@ -227,7 +259,7 @@ interface FilterSectionProps {
 function FilterSection({ children, title }: FilterSectionProps) {
   return (
     <details className="group border-t border-rule py-4" open>
-      <summary className="flex cursor-pointer list-none items-center justify-between text-2xs uppercase tracking-wider [&::-webkit-details-marker]:hidden">
+      <summary className="type-h4 flex min-h-9 cursor-pointer list-none items-center justify-between [&::-webkit-details-marker]:hidden">
         {title}
         <span
           aria-hidden="true"
@@ -249,11 +281,11 @@ interface FilterBadgeProps {
 
 function FilterBadge({ href, label, onRemove }: FilterBadgeProps) {
   const className =
-    "inline-flex cursor-pointer items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-xs font-semibold text-primary transition-colors hover:bg-primary/25";
+    "type-label focus-ring inline-flex min-h-9 cursor-pointer items-center gap-1 bg-surface px-2.5 text-ink transition-colors hover:bg-rule";
   const content = (
     <>
       {label}
-      <XIcon className="size-3" />
+      <XIcon className="size-3" strokeWidth={1.25} />
     </>
   );
   const removeLabel = `Remove filter: ${label}`;
@@ -297,7 +329,7 @@ function FilterOption({ count, href, label, onClick, pending, selected }: Filter
       onKeyDown={pressOnSpace}
       role="button"
       data-selected={selected}
-      className="flex items-center gap-3 text-left text-xs uppercase tracking-wider transition-opacity hover:opacity-60 data-[selected=true]:font-medium"
+      className="type-body-sm flex min-h-9 items-center gap-3 text-left transition-opacity hover:opacity-60 data-[selected=true]:font-normal"
       onClick={onClick}
     >
       <span
@@ -307,7 +339,7 @@ function FilterOption({ count, href, label, onClick, pending, selected }: Filter
         {selected ? <span className="size-1.5 bg-foreground" /> : null}
       </span>
       <span className="flex-1">{label}</span>
-      {count !== undefined && <span className="text-2xs text-muted-foreground">{count}</span>}
+      {count !== undefined && <span className="type-label text-ink-muted">{count}</span>}
       {pending ? (
         <LoaderCircleIcon className="size-3.5 animate-spin text-muted-foreground" />
       ) : null}
@@ -325,7 +357,7 @@ interface PriceInputProps {
 
 function PriceInput({ currencyCode, label, onChange, placeholder, value }: PriceInputProps) {
   return (
-    <div className="flex h-8 flex-1 items-center border-b border-rule">
+    <div className="flex h-9 flex-1 items-center border-b border-rule">
       <span className="text-xs text-muted-foreground">
         {currencyCode ? formatCurrencySymbol(currencyCode) : null}
       </span>
@@ -337,7 +369,7 @@ function PriceInput({ currencyCode, label, onChange, placeholder, value }: Price
         placeholder={placeholder}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-auto border-0 bg-transparent px-1 shadow-none outline-none focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="h-9 border-0 bg-transparent px-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
     </div>
   );

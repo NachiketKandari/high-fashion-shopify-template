@@ -16,7 +16,7 @@ export function Nav() {
     <Header
       actions={
         <>
-          <span className="hidden items-center gap-1 text-xs uppercase tracking-wider xl:inline-flex">
+          <span className="type-nav hidden h-9 items-center gap-1 desktop:inline-flex">
             USD
             <ChevronDown className="size-3" strokeWidth={1.25} />
           </span>
@@ -30,7 +30,7 @@ export function Nav() {
             </PredictiveSearchProvider>
           )}
           <Link
-            className="hidden text-xs uppercase tracking-wider transition-opacity hover:opacity-60 xl:inline-flex"
+            className="type-nav focus-ring hidden h-9 shrink-0 items-center px-1 transition-opacity hover:opacity-60 desktop:inline-flex"
             href="/pages/wishlist"
           >
             Wishlist

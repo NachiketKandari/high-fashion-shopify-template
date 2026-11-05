@@ -20,13 +20,13 @@ export default function NotFoundError() {
       ) : null}
       <Container className="flex flex-1 flex-col items-center justify-center text-center">
         <div className="flex flex-col items-center text-center gap-2.5">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl">Page Not Found</h1>
-          <p className="text-sm md:text-base text-muted-foreground max-w-xl">
+          <h1 className="type-display">Page Not Found</h1>
+          <p className="type-body max-w-xl text-ink-muted">
             The link may be incorrect, or the page has been removed.
           </p>
           <Link
             href="/search"
-            className="inline-flex items-center justify-center h-12 px-8 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="type-control focus-ring inline-flex h-9 items-center justify-center border border-ink bg-ink px-8 text-inverse transition-colors hover:bg-ink/80"
           >
             Continue Shopping
           </Link>

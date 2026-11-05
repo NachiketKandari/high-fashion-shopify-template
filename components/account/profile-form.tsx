@@ -47,7 +47,7 @@ export function ProfileForm({
 
   return (
     <form onSubmit={handleSubmit} className="grid max-w-md gap-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 tablet:grid-cols-2">
         <div className="grid gap-1.5">
           <Label htmlFor="firstName">{labels.firstName}</Label>
           <Input
@@ -82,7 +82,7 @@ export function ProfileForm({
       </div>
 
       {error ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="type-body-sm text-error-rule">
           {error}
         </p>
       ) : null}
@@ -92,7 +92,7 @@ export function ProfileForm({
           {isPending ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : labels.save}
         </Button>
         {saved ? (
-          <span className="text-sm text-muted-foreground">{labels.profileUpdated}</span>
+          <span className="type-body-sm text-muted-foreground">{labels.profileUpdated}</span>
         ) : null}
       </div>
     </form>

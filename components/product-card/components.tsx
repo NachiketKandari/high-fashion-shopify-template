@@ -72,10 +72,8 @@ function ProductCardImage({
         <ImagePlaceholder className="size-full" />
       )}
       {outOfStock && (
-        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-          <span className="text-destructive-foreground font-medium text-xs px-2 py-1 bg-destructive rounded">
-            {outOfStockText}
-          </span>
+        <div className="absolute inset-0 flex items-center justify-center bg-black/55">
+          <span className="type-label px-2 py-1 text-inverse">{outOfStockText}</span>
         </div>
       )}
       {children}
@@ -87,7 +85,7 @@ function ProductCardContent({ className, children, ...props }: ComponentProps<"d
   return (
     <div
       data-slot="product-card-content"
-      className={cn("flex flex-col flex-1 py-2.5", className)}
+      className={cn("flex flex-1 flex-col gap-1 px-2 pb-2 pt-2", className)}
       {...props}
     >
       {children}
@@ -97,11 +95,7 @@ function ProductCardContent({ className, children, ...props }: ComponentProps<"d
 
 function ProductCardTitle({ className, children, ...props }: ComponentProps<"h3">) {
   return (
-    <h3
-      data-slot="product-card-title"
-      className={cn("text-sm font-medium text-foreground line-clamp-1", className)}
-      {...props}
-    >
+    <h3 data-slot="product-card-title" className={cn("type-h4 line-clamp-1", className)} {...props}>
       {children}
     </h3>
   );
@@ -130,15 +124,19 @@ function ProductCardPrice({
   return (
     <div data-slot="product-card-price" className={cn(className)}>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span className="inline-flex items-baseline gap-x-1 text-sm text-foreground">
-          <Price amount={amount} currencyCode={currencyCode} className="text-sm text-foreground" />
+        <span className="type-body-sm inline-flex items-baseline gap-x-1 text-ink-muted">
+          <Price
+            amount={amount}
+            currencyCode={currencyCode}
+            className="type-h4 font-light text-ink-muted"
+          />
           {isRange && (
             <>
               <span>–</span>
               <Price
                 amount={maxAmount}
                 currencyCode={currencyCode}
-                className="text-sm text-foreground"
+                className="type-h4 font-light text-ink-muted"
               />
             </>
           )}
@@ -148,7 +146,7 @@ function ProductCardPrice({
             <Price
               amount={compareAtAmount}
               currencyCode={compareAtCurrencyCode}
-              className="text-xs text-muted-foreground line-through"
+              className="type-label text-ink-muted line-through"
             />
             <DiscountBadge percent={discountPercent} />
           </>

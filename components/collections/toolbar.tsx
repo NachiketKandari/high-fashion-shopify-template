@@ -1,4 +1,3 @@
-import { ChevronDownIcon, Grid2X2Icon, LayoutGridIcon, SlidersHorizontalIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { ProductsGridSkeleton } from "@/components/product/products-grid";
@@ -8,6 +7,9 @@ import type { SortValue } from "@/lib/collections/types";
 import { CollectionActiveFilterCountBadge } from "./collection-browse-provider";
 import { FilterSheet } from "./filters-client";
 import { CollectionsSortSelect } from "./sort-select";
+
+const FILTER_TRIGGER_CLASS =
+  "type-chip focus-ring flex h-9 cursor-pointer items-center gap-2 bg-transparent";
 
 interface BrowseToolbarProps {
   filters: ReactNode;
@@ -22,11 +24,7 @@ export function BrowseToolbar({ filters, resultCount, sortExclude }: BrowseToolb
         <FilterSheet
           label="Filter"
           trigger={
-            <button
-              className="flex cursor-pointer items-center gap-2 text-xs uppercase tracking-wider"
-              type="button"
-            >
-              <SlidersHorizontalIcon className="size-3.5" strokeWidth={1.25} />
+            <button className={FILTER_TRIGGER_CLASS} type="button">
               <span>Filter</span>
               <CollectionActiveFilterCountBadge />
             </button>
@@ -50,26 +48,14 @@ export function BrowseFallback({ resultCount }: BrowseFallbackProps) {
     <>
       <ToolbarLayout
         filterSheet={
-          <button
-            className="flex cursor-pointer items-center gap-2 text-xs uppercase tracking-wider"
-            type="button"
-          >
-            <SlidersHorizontalIcon className="size-3.5" strokeWidth={1.25} />
+          <button className={FILTER_TRIGGER_CLASS} type="button">
             <span>Filter</span>
           </button>
         }
         resultCount={resultCount}
-        sortSelect={
-          <div className="flex h-5 w-fit items-center gap-2 text-xs uppercase tracking-wider">
-            <span>Featured</span>
-            <ChevronDownIcon className="size-3.5 text-muted-foreground" strokeWidth={1.25} />
-          </div>
-        }
+        sortSelect={<span className="type-chip flex h-9 items-center">Featured</span>}
       />
-      <ProductsGridSkeleton
-        count={PRODUCTS_PER_PAGE}
-        className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-      />
+      <ProductsGridSkeleton count={PRODUCTS_PER_PAGE} />
     </>
   );
 }
@@ -82,21 +68,14 @@ interface ToolbarLayoutProps {
 
 function ToolbarLayout({ filterSheet, resultCount, sortSelect }: ToolbarLayoutProps) {
   return (
-    <div className="flex items-center gap-5">
-      <div
-        aria-hidden="true"
-        className="order-2 hidden items-center gap-2 text-muted-foreground md:order-1 md:flex"
-      >
-        <LayoutGridIcon className="size-4" strokeWidth={1.25} />
-        <Grid2X2Icon className="size-4" strokeWidth={1.25} />
-      </div>
-      <div className="order-1 md:order-2 md:ml-auto">{filterSheet}</div>
+    <div className="flex min-w-0 items-center gap-4">
+      <div className="shrink-0">{filterSheet}</div>
       {resultCount !== undefined && (
-        <div className="order-2 hidden items-center text-xs text-muted-foreground sm:flex">
+        <div className="type-body-sm hidden min-w-0 items-center truncate text-ink-muted tablet:flex">
           {resultCount}
         </div>
       )}
-      <div className="order-3 ml-auto md:ml-0">{sortSelect}</div>
+      <div className="ml-auto shrink-0">{sortSelect}</div>
     </div>
   );
 }

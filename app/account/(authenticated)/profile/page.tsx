@@ -36,7 +36,7 @@ async function ProfileContent() {
 function ProfileSkeleton() {
   return (
     <div className="grid max-w-md gap-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 tablet:grid-cols-2">
         <div className="grid gap-1.5">
           <Skeleton className="h-4 w-16" />
           <Skeleton className="h-9 w-full" />
@@ -50,7 +50,7 @@ function ProfileSkeleton() {
         <Skeleton className="h-4 w-16" />
         <Skeleton className="h-9 w-full" />
       </div>
-      <Skeleton className="h-9 w-24 rounded-lg" />
+      <Skeleton className="h-9 w-24 rounded-none" />
     </div>
   );
 }

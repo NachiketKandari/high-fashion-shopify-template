@@ -5,7 +5,7 @@ export function Prose({ className, ...props }: ComponentProps<"article">) {
   return (
     <article
       className={cn(
-        "prose prose-neutral prose-headings:font-medium prose-headings:tracking-tight",
+        "prose prose-neutral max-w-none prose-headings:font-normal prose-headings:uppercase prose-headings:tracking-[0.05em] prose-p:font-light prose-p:tracking-[0.05em]",
         className,
       )}
       {...props}

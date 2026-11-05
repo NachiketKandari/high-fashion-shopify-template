@@ -100,7 +100,7 @@ export function AutoPlayVideo({
       <button
         type="button"
         aria-label={playing ? "Pause video" : "Play video"}
-        className="absolute right-2.5 bottom-2.5 flex size-8 cursor-pointer items-center justify-center rounded-full bg-background/80 text-foreground backdrop-blur-sm transition-colors outline-none hover:bg-background focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="focus-ring absolute right-2.5 bottom-2.5 flex size-9 cursor-pointer items-center justify-center bg-paper/80 text-ink backdrop-blur-sm transition-colors hover:bg-paper"
         onClick={() => setPlayRequested(!playing)}
       >
         {playing ? <PauseIcon className="size-4" /> : <PlayIcon className="size-4" />}

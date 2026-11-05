@@ -18,21 +18,21 @@ export default function SignInFailedPage() {
     <Page className="flex flex-1 flex-col">
       <Container className="flex flex-1 flex-col items-center justify-center text-center">
         <div className="flex flex-col items-center gap-2.5 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl">Sign-in failed</h1>
-          <p className="max-w-xl text-sm text-muted-foreground md:text-base">
+          <h1 className="type-display">Sign-in failed</h1>
+          <p className="type-body max-w-xl text-ink-muted">
             Your sign-in didn’t finish. Try again, or keep shopping without an account.
           </p>
           <div className="flex flex-wrap justify-center gap-2.5">
             {/* oxlint-disable-next-line next/no-html-link-for-pages -- Sign-in must be a full document navigation so the proxy can start OAuth. */}
             <a
               href="/account/login"
-              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              className="type-control focus-ring inline-flex h-9 cursor-pointer items-center justify-center bg-ink px-8 text-inverse transition-colors hover:bg-ink/80"
             >
               Try again
             </a>
             <Link
               href="/"
-              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-lg border px-8 text-sm font-medium transition-colors hover:bg-muted"
+              className="type-control focus-ring inline-flex h-9 cursor-pointer items-center justify-center border border-ink px-8 transition-colors hover:bg-surface"
             >
               Continue shopping
             </Link>

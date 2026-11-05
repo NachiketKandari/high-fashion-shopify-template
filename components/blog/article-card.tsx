@@ -15,12 +15,12 @@ export function ArticleCard({ article }: ArticleCardProps) {
     dateStyle: "long",
   }).format(new Date(article.publishedAt));
   return (
-    <article className="grid content-start gap-4">
-      <Link className="relative aspect-3/2 overflow-hidden rounded-xl" href={href}>
+    <article className="group grid content-start gap-4">
+      <Link className="relative aspect-3/2 overflow-hidden" href={href}>
         {article.image ? (
           <Image
             alt={article.image.altText}
-            className="object-cover transition-transform duration-300 hover:scale-105"
+            className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-hover:scale-[1.03]"
             fill
             sizes="100vw"
             src={article.image.url}
@@ -30,16 +30,16 @@ export function ArticleCard({ article }: ArticleCardProps) {
         )}
       </Link>
       <div className="grid gap-2.5">
-        <time className="text-muted-foreground text-sm" dateTime={article.publishedAt}>
+        <time className="type-label text-ink-muted" dateTime={article.publishedAt}>
           {publishedAt}
         </time>
-        <h2 className="font-medium text-xl tracking-tight">
-          <Link className="hover:underline" href={href}>
+        <h2 className="type-h3">
+          <Link className="focus-ring inline-flex min-h-9 items-center hover:underline" href={href}>
             {article.title}
           </Link>
         </h2>
         {article.excerpt && (
-          <p className="text-muted-foreground text-sm leading-6 line-clamp-3">{article.excerpt}</p>
+          <p className="type-body-sm line-clamp-3 text-ink-muted">{article.excerpt}</p>
         )}
       </div>
     </article>

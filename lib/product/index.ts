@@ -9,6 +9,7 @@ import type {
   SelectedOption,
 } from "@/lib/product/types";
 
+import { getColorSwatch } from "./color-swatches";
 import type {
   OptionGroupState,
   ProductFormInput,
@@ -40,16 +41,19 @@ export function parseSelectedOptions(
 export function toStaticOptionGroups(product: ProductDetails): OptionGroupState[] {
   return product.options.map((option) => ({
     name: option.name,
-    values: option.values.map((value) => ({
-      available: true,
-      crossProduct: false,
-      exists: true,
-      href: buildProductUrl(product.handle, [{ name: option.name, value: value.name }]),
-      image: value.image,
-      name: value.name,
-      selected: false,
-      swatch: value.swatch,
-    })),
+    values: option.values.map((value) => {
+      const color = value.swatch?.color ?? getColorSwatch(value.name);
+      return {
+        available: true,
+        crossProduct: false,
+        exists: true,
+        href: buildProductUrl(product.handle, [{ name: option.name, value: value.name }]),
+        image: value.image,
+        name: value.name,
+        selected: false,
+        swatch: color ? { ...value.swatch, color } : value.swatch,
+      };
+    }),
   }));
 }
 
@@ -104,14 +108,19 @@ export function toProductFormInput(
     id: product.id,
     options: product.options.map((option) => ({
       name: option.name,
-      optionValues: option.values.map((value) => ({
-        firstSelectableVariant: value.firstSelectableVariant
-          ? toProductFormVariant(value.firstSelectableVariant)
-          : null,
-        name: value.name,
-        swatch:
-          value.swatch || value.image ? { ...value.swatch, variantImage: value.image } : undefined,
-      })),
+      optionValues: option.values.map((value) => {
+        const color = value.swatch?.color ?? getColorSwatch(value.name);
+        return {
+          firstSelectableVariant: value.firstSelectableVariant
+            ? toProductFormVariant(value.firstSelectableVariant)
+            : null,
+          name: value.name,
+          swatch:
+            color || value.swatch?.image || value.image
+              ? { ...value.swatch, color, variantImage: value.image }
+              : undefined,
+        };
+      }),
     })),
     priceRange: product.priceRange,
     selectedOrFirstAvailableVariant: selectedVariant ? toProductFormVariant(selectedVariant) : null,
@@ -157,9 +166,11 @@ export function isColorOption(option: {
   name: string;
   values: ReadonlyArray<{ swatch?: OptionValueSwatch }>;
 }): boolean {
+  const name = option.name.toLowerCase();
   return (
-    option.values.some((value) => value.swatch?.color || value.swatch?.image) ||
-    option.name.toLowerCase().includes("color")
+    name.includes("color") ||
+    name.includes("colour") ||
+    option.values.some((value) => value.swatch?.color || value.swatch?.image)
   );
 }
 

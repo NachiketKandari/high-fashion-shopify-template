@@ -17,13 +17,13 @@ export function ArticlePageSkeleton() {
   return (
     <Page aria-busy="true">
       <Container className="max-w-4xl">
-        <Sections className="gap-5">
+        <Sections>
           <div className="grid justify-items-center gap-4">
             <Skeleton className="h-5 w-24" />
-            <Skeleton className="h-9 w-3/4 sm:h-10 md:h-12" />
+            <Skeleton className="h-7 w-3/4" />
             <Skeleton className="h-5 w-40" />
           </div>
-          <Skeleton className="aspect-3/2 w-full rounded-xl" />
+          <Skeleton className="aspect-3/2 w-full" />
           <div className="mx-auto grid w-full max-w-2xl gap-2.5">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
@@ -42,23 +42,23 @@ export function ArticlePage({ article }: ArticlePageProps) {
   return (
     <Page>
       <Container className="max-w-4xl">
-        <Sections className="gap-5">
+        <Sections>
           <header className="grid gap-4 text-center">
             <Link
-              className="justify-self-center text-muted-foreground text-sm hover:text-foreground"
+              className="type-label justify-self-center text-ink-muted hover:text-ink"
               href={`/blogs/${article.blogHandle}`}
             >
               {article.blogTitle}
             </Link>
-            <h1 className="text-3xl tracking-tight sm:text-4xl md:text-5xl">{article.title}</h1>
-            <div className="flex flex-wrap justify-center gap-x-2 text-muted-foreground text-sm">
+            <h1 className="type-display">{article.title}</h1>
+            <div className="type-label flex flex-wrap justify-center gap-x-2 text-ink-muted">
               {article.author && <span>{article.author}</span>}
               {article.author && <span aria-hidden>·</span>}
               <time dateTime={article.publishedAt}>{publishedAt}</time>
             </div>
           </header>
           {article.image && (
-            <div className="relative aspect-3/2 overflow-hidden rounded-xl">
+            <div className="relative aspect-3/2 overflow-hidden">
               <Image
                 alt={article.image.altText}
                 className="object-cover"

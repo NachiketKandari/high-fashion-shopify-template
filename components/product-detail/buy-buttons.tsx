@@ -98,13 +98,13 @@ export function BuyButtons({
         {quantityPicker ? (
           <div
             aria-label="Item quantity"
-            className="grid h-9 w-24 shrink-0 grid-cols-[2rem_2rem_2rem] border border-rule"
+            className="grid h-9 w-24 shrink-0 grid-cols-[2.25rem_1.5rem_2.25rem] border border-rule"
             role="group"
           >
             <button
               type="button"
               aria-label="Decrease quantity"
-              className="flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={quantity === 1}
               onClick={() => setQuantity((currentQuantity) => Math.max(1, currentQuantity - 1))}
             >
@@ -112,7 +112,7 @@ export function BuyButtons({
             </button>
             <span
               aria-live="polite"
-              className="flex h-9 w-8 items-center justify-center text-xs tabular-nums"
+              className="type-label flex h-9 items-center justify-center tabular-nums"
               role="status"
             >
               {quantity}
@@ -120,7 +120,7 @@ export function BuyButtons({
             <button
               type="button"
               aria-label="Increase quantity"
-              className="flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={quantity === 99}
               onClick={() => setQuantity((currentQuantity) => Math.min(99, currentQuantity + 1))}
             >
@@ -138,7 +138,7 @@ export function BuyButtons({
             missingRequiredPlan ||
             pending
           }
-          className="h-9 min-w-0 flex-1 justify-center rounded-none border border-foreground bg-transparent text-2xs uppercase tracking-wider text-foreground shadow-none hover:bg-foreground hover:text-background data-[selection-unresolved=true]:disabled:opacity-100"
+          className="h-9 min-w-0 flex-1 justify-center border border-ink bg-transparent text-ink hover:bg-ink hover:text-inverse data-[selection-unresolved=true]:disabled:opacity-100"
         >
           {getButtonText()}
         </Button>
@@ -149,7 +149,7 @@ export function BuyButtons({
           aria-disabled={buyNowUrl ? undefined : true}
           aria-label="Buy it now"
           className={cn(
-            "flex h-9 w-full cursor-pointer items-center justify-center rounded-none bg-foreground px-4 text-2xs uppercase tracking-wider text-background transition-opacity hover:opacity-80 aria-busy:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50 data-[selection-unresolved=true]:aria-disabled:opacity-100",
+            "type-control flex h-9 w-full cursor-pointer items-center justify-center bg-ink px-4 text-inverse transition-opacity hover:opacity-80 aria-busy:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50 data-[selection-unresolved=true]:aria-disabled:opacity-100",
             !availableForSale && "invisible",
           )}
           data-selection-unresolved={isSelectionUnresolved}
@@ -192,7 +192,7 @@ export function PurchaseOptions({
 
   return (
     <fieldset className="grid gap-2.5" disabled={disabled}>
-      <legend className="pb-2.5 text-sm font-medium">Purchase options</legend>
+      <legend className="type-h4 pb-2.5">Purchase options</legend>
       {[
         ...(!requiresSellingPlan ? [{ id: "", name: "One-time purchase", price }] : []),
         ...plans.map((allocation) => ({
@@ -203,7 +203,7 @@ export function PurchaseOptions({
       ].map((option) => (
         <label
           key={option.id}
-          className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-border p-4 has-checked:border-foreground has-disabled:cursor-not-allowed has-disabled:opacity-50"
+          className="type-body-sm flex min-h-9 cursor-pointer items-center gap-2.5 border border-rule p-4 has-checked:border-ink has-disabled:cursor-not-allowed has-disabled:opacity-50"
         >
           <input
             type="radio"
@@ -212,16 +212,16 @@ export function PurchaseOptions({
             checked={(selectedPlan?.sellingPlan.id ?? "") === option.id}
             onChange={onSelect ? () => onSelect(option.id) : undefined}
             readOnly={!onSelect}
-            className="size-4 cursor-pointer accent-foreground disabled:cursor-not-allowed"
+            className="size-4 cursor-pointer accent-ink disabled:cursor-not-allowed"
           />
-          <span className="flex flex-1 flex-wrap items-center justify-between gap-2.5 text-sm">
+          <span className="flex flex-1 flex-wrap items-center justify-between gap-2.5">
             <span>{option.name}</span>
             <span className="tabular-nums">{formatPrice(option.price)}</span>
           </span>
         </label>
       ))}
       {selectedPlan ? (
-        <p className="text-sm text-muted-foreground">
+        <p className="type-body-sm text-ink-muted">
           Recurring purchase.{" "}
           {selectedPlan.sellingPlan.description || "Subscription details are shown at checkout."}
         </p>

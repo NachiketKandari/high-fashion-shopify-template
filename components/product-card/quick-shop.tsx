@@ -152,7 +152,7 @@ export function QuickShop({ handle, href, image, label, title }: QuickShopProps)
         render={
           <button
             aria-label={`${label}: ${title}`}
-            className="absolute right-2.5 bottom-2.5 z-10 hidden size-9 cursor-pointer items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-background lg:flex"
+            className="focus-ring absolute right-2 bottom-2 z-10 flex size-9 cursor-pointer items-center justify-center bg-paper/90 text-ink opacity-0 backdrop-blur-sm transition-opacity duration-(--motion-base) group-focus-within/card:opacity-100 group-hover/card:opacity-100 hover:bg-paper focus-visible:opacity-100 pointer-coarse:opacity-100"
             onClick={load}
             type="button"
           >
@@ -163,12 +163,12 @@ export function QuickShop({ handle, href, image, label, title }: QuickShopProps)
       {/* Hidden overflow is programmatically scrollable, which can displace the close button. */}
       <DialogContent
         aria-describedby={undefined}
-        className="flex max-h-[calc(100dvh-2.5rem)] w-[calc(100%-2.5rem)] max-w-3xl flex-col gap-0 overflow-clip p-0 sm:max-w-[min(48rem,calc(200dvh-5rem-2px))]"
+        className="flex max-h-[calc(100dvh-2.5rem)] w-[calc(100%-2.5rem)] max-w-3xl flex-col gap-0 overflow-clip rounded-none p-0 tablet:max-w-[min(48rem,calc(200dvh-5rem-2px))]"
         finalFocus={cartHandoff ? false : undefined}
         initialFocus={closeButtonRef}
         showCloseButton={false}
       >
-        <div className="min-h-0 overflow-y-auto overscroll-contain sm:overflow-visible">
+        <div className="min-h-0 overflow-y-auto overscroll-contain tablet:overflow-visible">
           <QuickShopLayout image={imageUrl} title={product?.title ?? title}>
             {product ? (
               <ProductProvider onSelect={selectVariant} product={resolvedForm ?? product.form}>
@@ -193,18 +193,13 @@ export function QuickShop({ handle, href, image, label, title }: QuickShopProps)
               >
                 {status === "failed" || status === "unavailable" ? (
                   <div className="grid gap-4">
-                    <p className="text-sm text-muted-foreground" role="status">
+                    <p className="type-body-sm text-ink-muted" role="status">
                       {status === "failed"
                         ? "We couldn’t load the purchase options. Try again or open the product page."
                         : "Quick shop is unavailable for this product."}
                     </p>
                     {status === "failed" ? (
-                      <Button
-                        className="h-12 w-full"
-                        onClick={load}
-                        type="button"
-                        variant="outline"
-                      >
+                      <Button className="h-9 w-full" onClick={load} type="button" variant="outline">
                         Try again
                       </Button>
                     ) : null}
@@ -219,7 +214,7 @@ export function QuickShop({ handle, href, image, label, title }: QuickShopProps)
         </div>
         <DialogPrimitive.Close
           aria-label="Close quick shop"
-          className="absolute top-6.5 right-5 z-10 flex size-5 cursor-pointer items-center justify-center text-foreground transition-colors hover:text-foreground/80 focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="focus-ring absolute top-2 right-2 z-10 flex size-9 cursor-pointer items-center justify-center bg-paper/90 text-ink transition-opacity hover:opacity-60"
           ref={closeButtonRef}
         >
           <XIcon className="size-5" />
@@ -274,7 +269,7 @@ function QuickShopDetails({
       {product.hasOptions ? <ProductFormOptions handle={handle} /> : null}
       {selectionStatus !== "idle" ? (
         <div className="grid gap-2.5">
-          <p className="text-sm text-muted-foreground" role="status">
+          <p className="type-body-sm text-ink-muted" role="status">
             {selectionStatus === "loading"
               ? "Loading selected options…"
               : selectionStatus === "failed"
@@ -312,8 +307,8 @@ interface QuickShopLayoutProps {
 
 function QuickShopLayout({ children, image, title }: QuickShopLayoutProps) {
   return (
-    <div className="grid min-h-0 sm:aspect-[2/1] sm:grid-cols-2 sm:grid-rows-[auto_minmax(0,1fr)]">
-      <div className="relative aspect-square overflow-hidden sm:row-span-2">
+    <div className="grid min-h-0 tablet:aspect-[2/1] tablet:grid-cols-2 tablet:grid-rows-[auto_minmax(0,1fr)]">
+      <div className="relative aspect-square overflow-hidden tablet:row-span-2">
         {image ? (
           <Image alt={title} className="object-cover" fill sizes="100vw" src={image} />
         ) : (
@@ -334,15 +329,13 @@ interface QuickShopPurchasePanelProps {
 function QuickShopPurchasePanel({ children, price, title }: QuickShopPurchasePanelProps) {
   return (
     <div className="contents">
-      <div className="sticky top-0 z-10 order-first grid min-w-0 grid-cols-[minmax(0,1fr)_1.25rem] gap-2.5 bg-background p-5 pb-2.5 sm:static sm:order-none">
+      <div className="sticky top-0 z-10 order-first grid min-w-0 grid-cols-[minmax(0,1fr)_1.25rem] gap-2.5 bg-paper p-5 pb-2.5 tablet:static tablet:order-none">
         <div className="min-w-0">
-          <DialogTitle className="text-2xl leading-snug font-normal break-words">
-            {title}
-          </DialogTitle>
+          <DialogTitle className="type-h2 break-words">{title}</DialogTitle>
           {price}
         </div>
       </div>
-      <div className="grid min-h-0 min-w-0 content-start gap-4 px-5 pb-5 sm:overflow-y-auto sm:overscroll-contain">
+      <div className="grid min-h-0 min-w-0 content-start gap-4 px-5 pb-5 tablet:overflow-y-auto tablet:overscroll-contain">
         {children}
       </div>
     </div>
@@ -357,7 +350,7 @@ interface QuickShopDetailsLinkProps {
 function QuickShopDetailsLink({ href, onNavigate }: QuickShopDetailsLinkProps) {
   return (
     <Link
-      className="w-fit cursor-pointer text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+      className="type-control focus-ring flex h-9 w-fit cursor-pointer items-center text-ink-muted underline underline-offset-4 transition-colors hover:text-ink"
       href={href}
       onNavigate={onNavigate}
     >
@@ -376,7 +369,7 @@ function QuickShopSkeleton() {
           <Skeleton className="h-5 w-12" />
           <div className="flex flex-wrap gap-2.5">
             {[0, 1, 2, 3, 4].map((value) => (
-              <Skeleton className="h-9.5 w-15 rounded-lg" key={value} />
+              <Skeleton className="h-9.5 w-15" key={value} />
             ))}
           </div>
         </div>
@@ -387,7 +380,7 @@ function QuickShopSkeleton() {
             ) : null}
             <Skeleton className="h-12 min-w-40 flex-1" />
           </div>
-          {shopConfig.pdp.buyWithShop.isEnabled ? <Skeleton className="h-12 w-full" /> : null}
+          {shopConfig.pdp.buyWithShop.isEnabled ? <Skeleton className="h-9 w-full" /> : null}
         </div>
       </div>
     </div>

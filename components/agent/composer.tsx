@@ -55,7 +55,7 @@ export function AgentComposer({
       }}
       className="px-2.5 py-2.5"
     >
-      <InputGroup className="h-auto flex-row items-end rounded-lg border-border bg-transparent shadow-none has-[[data-slot=input-group-control]:focus-visible]:border-foreground has-[[data-slot=input-group-control]:focus-visible]:ring-0">
+      <InputGroup className="h-auto flex-row items-end border-rule bg-transparent">
         <InputGroupTextarea
           aria-label="Message Shop Agent"
           value={value}

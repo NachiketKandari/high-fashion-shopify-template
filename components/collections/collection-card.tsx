@@ -37,10 +37,7 @@ export function CollectionCard({
           <ImagePlaceholder className="size-full" />
         )}
       </div>
-      <h2
-        data-slot="collection-card-title"
-        className="py-2.5 text-sm font-medium text-foreground line-clamp-1"
-      >
+      <h2 data-slot="collection-card-title" className="type-h4 line-clamp-1 pt-2.5">
         {title}
       </h2>
     </Link>

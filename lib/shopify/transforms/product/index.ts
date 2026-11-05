@@ -24,13 +24,34 @@ import type {
   ShopifyVariant,
 } from "@/lib/shopify/transforms/product/types";
 
+const MAX_IMAGE_WIDTH = 1920;
+
+function resizedImageUrl(url: string, width: number, height: number) {
+  if (
+    width <= MAX_IMAGE_WIDTH ||
+    !/cdn\.shopify\.com|politesocietyshop\.com\/cdn\/shop/.test(url)
+  ) {
+    return url;
+  }
+  const parsed = new URL(url);
+  parsed.searchParams.set("width", String(MAX_IMAGE_WIDTH));
+  return parsed.toString();
+}
+
 export function transformImage(image: ShopifyImage | null | undefined): Image | null {
   if (!image) return null;
+  const originalWidth = image.width ?? 0;
+  const originalHeight = image.height ?? 0;
+  const width = originalWidth > MAX_IMAGE_WIDTH ? MAX_IMAGE_WIDTH : originalWidth;
+  const height =
+    originalWidth > MAX_IMAGE_WIDTH && originalHeight > 0
+      ? Math.round((originalHeight * MAX_IMAGE_WIDTH) / originalWidth)
+      : originalHeight;
   return {
-    url: image.url,
+    url: resizedImageUrl(image.url, originalWidth, originalHeight),
     altText: image.altText ?? "",
-    width: image.width ?? 0,
-    height: image.height ?? 0,
+    width,
+    height,
   };
 }
 

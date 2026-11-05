@@ -20,10 +20,10 @@ export function SidebarClient({ links }: { links: AccountSidebarLink[] }) {
           key={link.href}
           href={link.href}
           className={cn(
-            "rounded-lg px-3 py-2 text-sm transition-colors",
+            "type-body-sm flex min-h-9 items-center px-3 transition-colors",
             pathname.startsWith(link.href)
-              ? "bg-accent font-medium text-foreground"
-              : "text-muted-foreground hover:bg-accent hover:text-foreground",
+              ? "bg-surface font-normal text-ink"
+              : "text-ink-muted hover:bg-surface hover:text-ink",
           )}
         >
           {link.label}

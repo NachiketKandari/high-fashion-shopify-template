@@ -64,15 +64,17 @@ export default function SearchPage({ searchParams }: PageProps<"/search">) {
     fetchSearchResults({ query: getParam(resolved, "q"), statePromise }),
   );
   return (
-    <Page className="pt-2.5 md:pt-10">
+    <Page>
       <Container>
-        <Sections className="gap-5">
+        <Sections>
           <Suspense fallback={null}>
             <SearchAnalyticsTracker searchParamsPromise={searchParams} />
           </Suspense>
           <div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl">
-              <Link href="/search">Search</Link>
+            <h1 className="type-display">
+              <Link className="focus-ring inline-flex min-h-9 items-center" href="/search">
+                Search
+              </Link>
               <Suspense fallback={null}>
                 <SearchQueryLabel searchParamsPromise={searchParams} />
               </Suspense>

@@ -2,21 +2,25 @@
 
 import { cn } from "cn";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Link } from "@/components/ui/link";
 import { MAIN_NAV } from "@/lib/nav";
 
 const TRIGGER_CLASS =
-  "relative inline-flex cursor-pointer items-center py-3 text-13 uppercase tracking-wider after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-300 hover:after:scale-x-100 data-[open=true]:after:scale-x-100";
+  "type-nav relative inline-flex min-w-9 cursor-pointer items-center justify-center py-3 after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-ink after:transition-transform after:duration-(--motion-underline) after:ease-(--ease-standard) hover:after:scale-x-100 focus-visible:after:scale-x-100 data-[open=true]:after:scale-x-100";
 
 export function DesktopNav() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const triggerRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   useEffect(() => {
     if (openIndex === null) return;
+    const triggerIndex = openIndex;
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpenIndex(null);
+      if (event.key !== "Escape") return;
+      triggerRefs.current[triggerIndex]?.focus();
+      setOpenIndex(null);
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
@@ -25,44 +29,48 @@ export function DesktopNav() {
   return (
     <nav
       aria-label="Menu"
-      className="hidden xl:block"
+      className="hidden desktop:block"
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setOpenIndex(null);
       }}
       onMouseLeave={() => setOpenIndex(null)}
     >
-      <ul className="flex items-center gap-6 xl:gap-8" role="list">
+      <ul className="flex items-center gap-[25px]" role="list">
         {MAIN_NAV.map((item, index) =>
           item.columns ? (
             <li className="static" key={item.label}>
               <button
                 aria-controls={`mega-${index}`}
                 aria-expanded={openIndex === index}
-                aria-haspopup="true"
-                className={cn(TRIGGER_CLASS, "bg-transparent")}
+                className={TRIGGER_CLASS}
                 data-open={openIndex === index}
                 onClick={() => setOpenIndex((current) => (current === index ? null : index))}
-                onFocus={() => setOpenIndex(index)}
+                onFocus={(event) => {
+                  if (event.target.matches(":focus-visible")) setOpenIndex(index);
+                }}
                 onMouseEnter={() => setOpenIndex(index)}
+                ref={(element) => {
+                  triggerRefs.current[index] = element;
+                }}
                 type="button"
               >
                 {item.label}
               </button>
               <div
-                className="invisible absolute inset-x-0 top-full z-40 translate-y-1 border-b border-rule bg-background opacity-0 transition-[opacity,transform,visibility] duration-300 data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:opacity-100"
+                className="invisible absolute inset-x-0 top-full z-40 translate-y-1 border-b border-rule bg-paper opacity-0 transition-[opacity,transform,visibility] duration-(--motion-base) ease-(--ease-standard) data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:opacity-100"
                 data-open={openIndex === index}
                 id={`mega-${index}`}
               >
-                <div className="grid grid-cols-[1.5fr_1fr] gap-15 px-[30px] py-9">
+                <div className="grid grid-cols-[minmax(0,1fr)_minmax(420px,520px)] gap-[60px] px-(--gutter) pt-9 pb-10">
                   <div className="grid grid-cols-3 gap-10">
                     {item.columns.map((column) => (
                       <div key={column.title}>
-                        <p className="text-2xs uppercase tracking-wider">{column.title}</p>
+                        <p className="type-h4">{column.title}</p>
                         <ul className="mt-5 grid" role="list">
                           {column.links.map((link) => (
                             <li key={link.label}>
                               <Link
-                                className="block text-2xs uppercase leading-[25px] tracking-wider text-foreground transition-opacity hover:opacity-60"
+                                className="type-h4 block transition-opacity hover:opacity-60"
                                 href={link.href}
                                 onClick={() => setOpenIndex(null)}
                               >
@@ -75,7 +83,7 @@ export function DesktopNav() {
                     ))}
                   </div>
                   {item.tiles && item.tiles.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-2 gap-[10px]">
                       {item.tiles.map((tile) => (
                         <Link
                           className="group/tile grid content-start"
@@ -83,18 +91,16 @@ export function DesktopNav() {
                           key={tile.label}
                           onClick={() => setOpenIndex(null)}
                         >
-                          <span className="relative block aspect-[254/360] overflow-hidden bg-surface">
+                          <span className="relative block aspect-[260/418] overflow-hidden bg-surface">
                             <Image
                               alt={tile.label}
-                              className="object-cover transition-transform duration-600 group-hover/tile:scale-[1.03]"
+                              className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-hover/tile:scale-[1.03] motion-reduce:transform-none"
                               fill
                               sizes="100vw"
                               src={tile.image}
                             />
                           </span>
-                          <span className="mt-2.5 block text-2xs uppercase tracking-wider">
-                            {tile.label}
-                          </span>
+                          <span className="type-h4 mt-2.5 block">{tile.label}</span>
                         </Link>
                       ))}
                     </div>

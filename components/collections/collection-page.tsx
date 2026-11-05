@@ -35,15 +35,15 @@ export async function CollectionLayout({
       {collection.id ? (
         <CollectionViewedTracker collection={{ handle: collection.handle, id: collection.id }} />
       ) : null}
-      <Page className="pt-6 md:pt-8">
+      <Page>
         <Container>
-          <div className="grid gap-4">
+          <div className="grid min-w-0 gap-4">
             <CollectionHeader collection={collection} handle={handle} homeLabel="Home" />
             <CollectionBrowseFrame handle={handle} path={`/collections/${handle}`}>
-              <div className="grid gap-4">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-10">
+              <div className="grid min-w-0 gap-4">
+                <div className="flex min-w-0 flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-10">
                   <CollectionChips activeHandle={handle} collections={collections} />
-                  <div className="md:ml-auto md:shrink-0">
+                  <div className="min-w-0 desktop:ml-auto desktop:shrink-0">
                     <BrowseToolbar
                       filters={
                         <PublishedCollectionFilters fallback={<CollectionFiltersSkeleton />} />
@@ -87,9 +87,9 @@ async function SearchParamsRead({ searchParams }: { searchParams: Promise<unknow
 
 export function CollectionDetailSkeleton() {
   return (
-    <Page aria-busy="true" className="pt-6 md:pt-8">
+    <Page aria-busy="true">
       <Container>
-        <div className="grid gap-5 md:gap-6">
+        <div className="grid gap-5 desktop:gap-6">
           <div className="grid gap-2.5">
             <Skeleton className="h-6 w-32" />
             <Skeleton className="h-4 w-full max-w-xl" />
@@ -121,11 +121,11 @@ function CollectionChips({
   return (
     <nav
       aria-label="Collections"
-      className="scrollbar-hide -mx-5 flex gap-5 overflow-x-auto px-5 md:mx-0 md:px-0"
+      className="scrollbar-hide -mx-(--gutter) flex w-full min-w-0 gap-5 overflow-x-auto px-(--gutter) desktop:mx-0 desktop:px-0"
     >
       <Link
         aria-current={activeHandle === "all" ? "page" : undefined}
-        className="shrink-0 border-b border-transparent pb-1 pt-1.5 text-xs uppercase tracking-wider data-[active=true]:border-foreground"
+        className="type-chip focus-ring flex min-h-9 min-w-9 shrink-0 items-center justify-center border-b border-transparent data-[active=true]:border-ink"
         data-active={activeHandle === "all"}
         href="/collections/all"
       >
@@ -134,7 +134,7 @@ function CollectionChips({
       {visible.map((collection) => (
         <Link
           aria-current={collection.handle === activeHandle ? "page" : undefined}
-          className="shrink-0 border-b border-transparent pb-1 pt-1.5 text-xs uppercase tracking-wider data-[active=true]:border-foreground"
+          className="type-chip focus-ring flex min-h-9 min-w-9 shrink-0 items-center justify-center border-b border-transparent data-[active=true]:border-ink"
           data-active={collection.handle === activeHandle}
           href={`/collections/${collection.handle}`}
           key={collection.handle}
@@ -167,13 +167,16 @@ function CollectionHeader({
       <BreadcrumbSchema items={breadcrumbItems} />
       <CollectionSchema collection={{ handle, title, description, updatedAt }} />
       <div>
-        <h1 className="text-lg uppercase leading-[23px] tracking-wider">
-          <Link href={`/collections/${handle}`}>{title}</Link>
+        <h1 className="type-h2">
+          <Link
+            className="focus-ring inline-flex min-h-9 items-center"
+            href={`/collections/${handle}`}
+          >
+            {title}
+          </Link>
         </h1>
         {description && (
-          <p className="mt-1.5 max-w-[60rem] text-xs leading-[18px] text-muted-foreground">
-            {description}
-          </p>
+          <p className="type-body-sm mt-1.5 max-w-[60rem] text-ink-muted">{description}</p>
         )}
       </div>
     </>

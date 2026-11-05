@@ -209,22 +209,22 @@ export function AgentPanel({ onOpenChange, open, triggerRef }: AgentPanelProps) 
         side="right"
       >
         <div className="flex h-16 shrink-0 items-center justify-between gap-2 px-2.5">
-          <SheetTitle className="font-normal text-xl leading-4">Shop Agent</SheetTitle>
+          <SheetTitle>Shop Agent</SheetTitle>
           <div className="flex items-center gap-2.5">
             <button
               aria-label="Clear chat"
-              className="flex cursor-pointer items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+              className="focus-ring flex size-9 cursor-pointer items-center justify-center text-ink-muted transition-colors hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
               disabled={clearing || (!messages.length && !input.trim() && !agent.session && !busy)}
               onClick={handleClear}
               type="button"
             >
-              <Trash2Icon className="size-5" />
+              <Trash2Icon className="size-4" strokeWidth={1.25} />
             </button>
             <SheetClose
               aria-label="Close Shop Agent"
-              className="flex cursor-pointer items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+              className="focus-ring flex size-9 cursor-pointer items-center justify-center text-ink-muted transition-colors hover:text-ink"
             >
-              <XIcon className="size-5" />
+              <XIcon className="size-4" strokeWidth={1.25} />
             </SheetClose>
           </div>
         </div>
@@ -256,9 +256,9 @@ export function AgentPanel({ onOpenChange, open, triggerRef }: AgentPanelProps) 
             {messages.length === 0
               ? restoring
                 ? showRestoring && (
-                    <p className="text-muted-foreground text-sm">Restoring your conversation…</p>
+                    <p className="type-body-sm text-ink-muted">Restoring your conversation…</p>
                   )
-                : !awaitingReply && <p className="text-foreground text-sm">Hi, how can I help?</p>
+                : !awaitingReply && <p className="type-body-sm text-ink">Hi, how can I help?</p>
               : messages.map((message, index) => (
                   <ChatMessage
                     key={message.id}
@@ -271,14 +271,14 @@ export function AgentPanel({ onOpenChange, open, triggerRef }: AgentPanelProps) 
           </div>
         </div>
         {(clearing || (showRestoring && messages.length > 0)) && (
-          <p role="status" className="px-2.5 py-2 text-muted-foreground text-xs">
+          <p role="status" className="type-label px-2.5 py-2 text-ink-muted">
             {clearing
               ? "Waiting for the response to stop…"
               : "Restoring your conversation… Clear chat to start fresh."}
           </p>
         )}
         {hasReachedLimit && (
-          <p role="alert" className="px-2.5 py-2 text-muted-foreground text-xs">
+          <p role="alert" className="type-label px-2.5 py-2 text-ink-muted">
             This conversation has reached its limit. Clear chat to start a new conversation.
           </p>
         )}
@@ -296,7 +296,7 @@ export function AgentPanel({ onOpenChange, open, triggerRef }: AgentPanelProps) 
           value={input}
         />
         {(agent.error || notice) && (
-          <p role="alert" className="px-2.5 pb-2 text-red-500 text-xs">
+          <p role="alert" className="type-label px-2.5 pb-2 text-error-rule">
             {notice ?? "The assistant is unavailable. Try again, or clear an expired conversation."}
           </p>
         )}

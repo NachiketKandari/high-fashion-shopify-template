@@ -147,8 +147,10 @@ async function ProductPageContent({
         variantPromise={variantPromise}
       />
       {shopConfig.pdp.relatedProducts.isEnabled ? (
-        <Container className="py-16 md:py-20">
-          <RelatedProductsSection handle={handle} limit={4} />
+        <Container>
+          <div className="py-16 desktop:py-20">
+            <RelatedProductsSection handle={handle} limit={4} />
+          </div>
         </Container>
       ) : null}
     </>

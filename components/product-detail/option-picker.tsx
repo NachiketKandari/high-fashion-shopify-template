@@ -12,23 +12,29 @@ interface OptionPickerProps extends ComponentProps<"div"> {
   option: OptionGroupState;
 }
 
-export function OptionPicker({ onSelectValue, option, className, ...props }: OptionPickerProps) {
+export function OptionPicker({
+  onSelectValue,
+  option,
+  className,
+  compact: _compact,
+  ...props
+}: OptionPickerProps) {
   return (
     <div className={cn("flex items-center gap-4", className)} {...props}>
-      <span className="w-16 shrink-0 text-2xs uppercase tracking-wider">{option.name}</span>
+      <span className="type-h4 w-16 shrink-0">{option.name}</span>
       <div className="flex flex-1 flex-wrap items-center gap-x-3 gap-y-1">
         {option.values.map((value) => {
           const classes = cn(
-            "text-2xs uppercase leading-4 tracking-wider transition-colors",
+            "type-body-sm inline-flex min-h-9 min-w-9 items-center justify-center transition-colors",
             !value.exists
-              ? "cursor-not-allowed text-muted-foreground/50 line-through"
+              ? "cursor-not-allowed text-ink-muted/50 line-through"
               : value.selected
-                ? "border-b border-foreground pb-0.5 text-foreground"
-                : "text-foreground hover:opacity-60",
-            value.exists && !value.available && "line-through opacity-50",
+                ? "border-b border-ink pb-0.5 text-ink"
+                : "text-ink hover:opacity-60",
+            value.exists && !value.available && "cursor-not-allowed line-through opacity-50",
           );
 
-          if (!value.exists) {
+          if (!value.exists || (!value.available && !value.selected)) {
             return (
               <button
                 aria-label={`${option.name}: ${value.name} (unavailable)`}
@@ -45,7 +51,6 @@ export function OptionPicker({ onSelectValue, option, className, ...props }: Opt
           return (
             <Link
               aria-current={value.selected ? "true" : undefined}
-              aria-label={value.available ? undefined : `${option.name}: ${value.name} (sold out)`}
               className={classes}
               href={value.href}
               key={value.name}

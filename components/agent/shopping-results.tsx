@@ -159,7 +159,7 @@ export function ShoppingResults({
       shownOptions.add(product.handle);
       if (!hasCompleteVariants(product)) {
         children.push(
-          <div key={part.callId} className="my-2 grid gap-2 rounded-lg border p-2.5">
+          <div key={part.callId} className="my-2 grid gap-2 border border-rule p-2.5">
             <p>Choose options for {product.title} on the product page.</p>
             <Button render={<Link href={`/products/${product.handle}`} />}>Choose options</Button>
           </div>,
@@ -183,7 +183,7 @@ export function ShoppingResults({
 }
 
 function MissingData({ children }: { children: string }) {
-  return <p className="my-2 text-muted-foreground text-xs">{children}</p>;
+  return <p className="type-label my-2 text-ink-muted">{children}</p>;
 }
 
 interface AgentCartSummaryProps {
@@ -199,18 +199,18 @@ function AgentCartSummary({ warnings = [] }: AgentCartSummaryProps) {
   }, []);
   if (isLoading && cart.lines.nodes.length === 0)
     return (
-      <div className="my-2 flex items-center gap-2.5 text-muted-foreground text-xs" role="status">
+      <div className="type-label my-2 flex items-center gap-2.5 text-ink-muted" role="status">
         <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         Loading cart…
       </div>
     );
   if (cart.lines.nodes.length === 0) return <MissingData>Your cart is empty</MissingData>;
   return (
-    <div ref={ref} className="my-2 grid gap-5 rounded-lg border p-2.5">
+    <div ref={ref} className="my-2 grid gap-5 border border-rule p-2.5">
       {warnings.length > 0 && (
         <div className="grid gap-1">
           {warnings.map((warning) => (
-            <p key={warning} role="alert" className="text-muted-foreground text-xs">
+            <p key={warning} role="alert" className="type-label text-ink-muted">
               {warning}
             </p>
           ))}
@@ -308,11 +308,11 @@ function AgentVariantPicker({ isLatest, product }: AgentVariantPickerProps) {
           : "Add to Cart";
   return (
     <>
-      <div className="my-2 overflow-hidden rounded-lg border">
+      <div className="my-2 overflow-hidden border border-rule">
         <div className="flex gap-2.5 border-b p-2.5">
           <Link
             href={`/products/${product.handle}`}
-            className="relative size-11 shrink-0 overflow-hidden rounded-md"
+            className="relative size-11 shrink-0 overflow-hidden bg-surface"
           >
             {product.image ? (
               <Image
@@ -377,7 +377,7 @@ function AgentVariantPicker({ isLatest, product }: AgentVariantPickerProps) {
       </div>
       {result === "added" && isLatest && <AgentCartSummary />}
       {result === "failed" && (
-        <p role="alert" className="text-red-500 text-xs">
+        <p role="alert" className="type-label text-error-rule">
           We couldn't add this to your cart. Check the cart before trying again.
         </p>
       )}

@@ -24,11 +24,15 @@ dist/
 
 # misc
 .DS_Store
+.catalog-import/
 .seed-content-cache.json
 *.pem
 
-# playwright mcp output
+# playwright output
+.playwright/
 .playwright-mcp/
+playwright-report/
+test-results/
 
 # debug
 .pnpm-debug.log*
@@ -62,3 +66,6 @@ progress.txt
 
 # opensrc - source code for packages
 opensrc/
+
+# generated design report
+design/drift-report.json

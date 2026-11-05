@@ -35,8 +35,8 @@ async function OrdersContent({
   });
   if (orders.length === 0) {
     return (
-      <div className="rounded-lg border p-6 text-center">
-        <p className="text-sm text-muted-foreground">You have no orders yet.</p>
+      <div className="rounded-none border p-6 text-center">
+        <p className="type-body-sm text-muted-foreground">You have no orders yet.</p>
       </div>
     );
   }
@@ -47,17 +47,17 @@ async function OrdersContent({
           <li key={order.id}>
             <Link
               href={`/account/orders/${encodeURIComponent(order.id)}`}
-              className="flex items-center justify-between gap-4 rounded-lg border p-4 transition-colors hover:bg-accent"
+              className="flex items-center justify-between gap-4 rounded-none border p-4 transition-colors hover:bg-accent"
             >
               <div className="grid gap-1">
-                <span className="font-medium">{order.name}</span>
-                <span className="text-xs text-muted-foreground">
+                <span className="font-normal">{order.name}</span>
+                <span className="type-body-sm text-muted-foreground">
                   {formatOrderDate(order.processedAt)}
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <OrderStatusBadge status={order.fulfillmentStatus} />
-                <span className="text-sm tabular-nums">{formatPrice(order.totalPrice)}</span>
+                <span className="type-body-sm tabular-nums">{formatPrice(order.totalPrice)}</span>
               </div>
             </Link>
           </li>
@@ -102,7 +102,7 @@ function OrdersSkeleton() {
   return (
     <div className="grid gap-3">
       {Array.from({ length: 4 }).map((_, index) => (
-        <Skeleton key={index} className="h-18 w-full rounded-lg" />
+        <Skeleton key={index} className="h-18 w-full rounded-none" />
       ))}
     </div>
   );

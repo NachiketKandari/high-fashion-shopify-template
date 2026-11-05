@@ -38,6 +38,20 @@ export function usePredictiveSearch() {
     state.status !== "success"
       ? null
       : {
+          collections: state.result.items.collections.map((collection) => ({
+            handle: collection.handle,
+            id: collection.id,
+            image:
+              collection.image?.height && collection.image.width
+                ? {
+                    altText: collection.image.altText ?? "",
+                    height: collection.image.height,
+                    url: collection.image.url,
+                    width: collection.image.width,
+                  }
+                : null,
+            title: collection.title,
+          })),
           products: state.result.items.products.map((product) => ({
             featuredImage: product.featuredImage
               ? {

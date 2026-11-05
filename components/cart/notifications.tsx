@@ -23,13 +23,13 @@ export function CartNotifications() {
 
   return (
     <div
-      className="fixed right-5 bottom-20 z-50 flex max-w-sm items-center gap-2.5 rounded-lg border border-destructive/20 bg-background px-4 py-2.5 text-sm text-destructive shadow-lg"
+      className="type-body-sm fixed right-5 bottom-20 z-70 flex max-w-sm items-center gap-2.5 border border-error-rule bg-error-soft px-4 py-2.5 text-error-rule"
       role="alert"
     >
       <span>We couldn&apos;t update your cart. Please try again.</span>
       <button
         aria-label="Dismiss"
-        className="flex cursor-pointer items-center text-muted-foreground transition-colors hover:text-foreground"
+        className="focus-ring flex size-9 cursor-pointer items-center justify-center transition-opacity hover:opacity-60"
         onClick={() => setDismissedAt(errorAt)}
         type="button"
       >

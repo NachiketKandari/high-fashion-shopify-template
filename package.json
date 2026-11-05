@@ -7,11 +7,15 @@
     "build:agent": "eve build",
     "dev": "next dev",
     "dev:portless": "portless shop next dev",
+    "audit:reference": "node scripts/compare-reference.mjs",
     "format": "oxfmt",
-    "lint": "oxlint . && oxfmt --check",
+    "import:catalog": "node --env-file=.env.local scripts/import-live-catalog.mjs",
+    "lint": "oxlint . && oxfmt --check && node scripts/check-design.mjs",
+    "lint:design": "node scripts/check-design.mjs",
     "seed:catalog": "node --env-file=.env.local scripts/seed-catalog.mjs",
     "seed:content": "node --env-file=.env.local scripts/seed-content.mjs",
     "start": "next start",
+    "test:design": "playwright test tests/design",
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
@@ -45,6 +49,9 @@
     "tw-animate-css": "1.4.0",
     "typescript": "7.0.2",
     "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
   },
   "devEngines": {
     "runtime": {

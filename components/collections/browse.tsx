@@ -46,7 +46,7 @@ export function BrowseResultsFallback() {
   return (
     <ProductsGridSkeleton
       count={PRODUCTS_PER_PAGE}
-      className="grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      className="grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4"
     />
   );
 }
@@ -72,8 +72,8 @@ function BrowseResultsGrid({ results }: BrowseResultsGridProps) {
     const query = source.type === "search" ? source.query : undefined;
     return (
       <div className="py-10 text-center">
-        <h2 className="mb-2 text-2xl">No products found</h2>
-        <p className="text-muted-foreground">
+        <h2 className="type-h2 mb-2">No products found</h2>
+        <p className="type-body-sm text-ink-muted">
           {query ? `We couldn't find any products matching "${query}"` : "No products available"}
         </p>
       </div>

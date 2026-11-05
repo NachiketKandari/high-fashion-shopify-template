@@ -4,7 +4,7 @@ import { ProductCard } from "@/components/product-card/product-card";
 import { ProductRail } from "@/components/product/product-rail";
 import { getCollectionResults } from "@/lib/collections/server";
 
-const CARD_CLASS = "w-[226px] shrink-0 md:w-[266px]";
+const CARD_CLASS = "w-[226px] shrink-0 desktop:w-[266px]";
 
 export function HomeProductRail() {
   return (

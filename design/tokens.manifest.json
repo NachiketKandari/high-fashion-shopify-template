@@ -1,0 +1,114 @@
+{
+  "$schema": "design-system-manifest/v1",
+  "colors": {
+    "--paper": "#ffffff",
+    "--ink": "#000000",
+    "--ink-muted": "#4d4d4d",
+    "--rule": "#e1e1e1",
+    "--input": "#cccccc",
+    "--surface": "#f2f2f2",
+    "--inverse": "#f9f9f9",
+    "--error": "#d94c4c",
+    "--error-rule": "#c7261b",
+    "--error-soft": "#fff5f5"
+  },
+  "type": {
+    "display": {
+      "lineHeight": "1.8125rem",
+      "size": "1.375rem",
+      "weight": 400
+    },
+    "h2": {
+      "lineHeight": "1.4375rem",
+      "size": "1.125rem",
+      "weight": 400
+    },
+    "h3": {
+      "lineHeight": "1.125rem",
+      "size": "0.875rem",
+      "weight": 400
+    },
+    "h4": {
+      "lineHeight": "1rem",
+      "size": "0.75rem",
+      "weight": 400
+    },
+    "label": {
+      "lineHeight": "0.875rem",
+      "size": "0.5625rem",
+      "weight": 400
+    },
+    "body": {
+      "lineHeight": "1.3125rem",
+      "size": "0.875rem",
+      "weight": 300
+    },
+    "body-sm": {
+      "lineHeight": "1.125rem",
+      "size": "0.75rem",
+      "weight": 300
+    },
+    "control": {
+      "lineHeight": "0.875rem",
+      "size": "0.6875rem",
+      "weight": 400
+    },
+    "chip": {
+      "lineHeight": "1.125rem",
+      "size": "0.75rem",
+      "weight": 400
+    },
+    "tab": {
+      "lineHeight": "1rem",
+      "size": "0.6875rem",
+      "weight": 400
+    },
+    "nav": {
+      "lineHeight": "1.125rem",
+      "size": "0.8125rem",
+      "weight": 400
+    }
+  },
+  "spacing": {
+    "base": {
+      "--card-inset": "8px",
+      "--grid-gap": "3px",
+      "--grid-row-gap": "24px",
+      "--gutter": "20px",
+      "--page-top": "24px",
+      "--section-gap": "40px"
+    },
+    "desktop": {
+      "--grid-row-gap": "20px",
+      "--gutter": "30px",
+      "--section-gap": "60px"
+    }
+  },
+  "motion": {
+    "--ease-standard": "cubic-bezier(0.2, 0.6, 0.2, 1)",
+    "--motion-base": "300ms",
+    "--motion-fast": "100ms",
+    "--motion-image": "600ms",
+    "--motion-long": "500ms",
+    "--motion-underline": "350ms"
+  },
+  "breakpoints": {
+    "--breakpoint-desktop": "68.75rem",
+    "--breakpoint-tablet": "46.875rem",
+    "--breakpoint-wide": "90rem"
+  },
+  "targets": {
+    "minimum": 36
+  },
+  "forbid": [
+    "--color-shop",
+    "--positive",
+    "--text-xxs",
+    "--text-lg--letter-spacing",
+    "--text-xl--letter-spacing",
+    "--text-3xs",
+    "--text-2xs",
+    "--text-13",
+    "--font-mono"
+  ]
+}

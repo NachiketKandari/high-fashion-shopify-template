@@ -14,10 +14,10 @@ export const metadata: Metadata = {
 
 export default function WishlistPage() {
   return (
-    <Page className="pt-6 md:pt-8">
+    <Page>
       <Container>
         <div className="grid gap-6">
-          <h1 className="text-lg uppercase leading-[23px] tracking-wider">Wishlist</h1>
+          <h1 className="type-h2">Wishlist</h1>
           <WishlistContent />
         </div>
       </Container>

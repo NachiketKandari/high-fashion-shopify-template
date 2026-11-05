@@ -58,13 +58,13 @@ interface BundleProductListProps {
 function BundleProductList({ items, title }: BundleProductListProps) {
   return (
     <div className="grid gap-2.5" data-slot="bundle-components">
-      <h2 className="font-medium text-foreground/70 text-sm">{title}</h2>
+      <h2 className="type-h4 text-ink-muted">{title}</h2>
       <ul className="grid gap-2.5">
         {items.map((item) => (
           <li key={item.key}>
             <Link
               href={item.href}
-              className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-border p-2.5 transition-colors hover:border-foreground/30"
+              className="type-body-sm flex min-h-9 cursor-pointer items-center gap-2.5 border border-rule p-2.5 transition-colors hover:border-ink/30"
             >
               {item.image ? (
                 <Image
@@ -73,14 +73,14 @@ function BundleProductList({ items, title }: BundleProductListProps) {
                   width={48}
                   height={48}
                   sizes="100vw"
-                  className="size-12 rounded-md object-cover"
+                  className="size-12 object-cover"
                 />
               ) : (
-                <ImagePlaceholder className="size-12 shrink-0 rounded-md" />
+                <ImagePlaceholder className="size-12 shrink-0" />
               )}
-              <span className="min-w-0 flex-1 truncate font-medium text-sm">{item.title}</span>
+              <span className="min-w-0 flex-1 truncate">{item.title}</span>
               {item.quantity && item.quantity > 1 ? (
-                <span className="text-foreground/50 text-sm">×{item.quantity}</span>
+                <span className="type-body-sm text-ink-muted">×{item.quantity}</span>
               ) : null}
             </Link>
           </li>

@@ -20,7 +20,7 @@ export function ColorPicker({
 }: ColorPickerProps) {
   return (
     <div className={cn("flex items-center gap-4", className)} {...props}>
-      <span className="w-16 shrink-0 text-2xs uppercase tracking-wider">{option.name}</span>
+      <span className="type-h4 w-16 shrink-0">{option.name}</span>
       <div className="flex flex-wrap gap-2">
         {option.values.map((value) => {
           const imageUrl = hideImages
@@ -34,12 +34,12 @@ export function ColorPicker({
               selected={value.selected}
             />
           );
-          if (!value.exists) {
+          if (!value.exists || (!value.available && !value.selected)) {
             return (
               <button
                 key={value.name}
                 aria-label={`${option.name}: ${value.name} (unavailable)`}
-                className="block cursor-not-allowed opacity-40"
+                className="block cursor-not-allowed"
                 disabled
                 type="button"
               >
@@ -52,7 +52,7 @@ export function ColorPicker({
               key={value.name}
               href={value.href}
               scroll={false}
-              className={cn("block cursor-pointer", !value.available && "opacity-40")}
+              className="flex min-h-9 min-w-9 cursor-pointer items-center justify-center"
               aria-label={`Select ${option.name}: ${value.name}${value.available ? "" : " (sold out)"}`}
               aria-current={value.selected ? "true" : undefined}
               onClick={

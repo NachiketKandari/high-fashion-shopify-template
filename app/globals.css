@@ -3,96 +3,291 @@
 
 @plugin '@tailwindcss/typography';
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-shop: #5A31F4;
-  --color-surface: #f2f2f2;
-  --color-rule: #e1e1e1;
-  --font-sans: var(--font-dm-sans);
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --text-3xs: 0.625rem;
-  --text-2xs: 0.6875rem;
-  --text-13: 0.8125rem;
-  --text-xxs: 0.625rem;
-  /* Headings track tighter as they grow (Geist behavior); attaches to every text-* utility. */
-  --text-lg--letter-spacing: -0.01em;
-  --text-xl--letter-spacing: -0.015em;
-  --text-2xl--letter-spacing: -0.02em;
-  --text-3xl--letter-spacing: -0.025em;
-  --text-4xl--letter-spacing: -0.03em;
-  --text-5xl--letter-spacing: -0.035em;
-  --text-6xl--letter-spacing: -0.04em;
-  --text-7xl--letter-spacing: -0.045em;
+@theme {
+  --breakpoint-tablet: 46.875rem;
+  --breakpoint-desktop: 68.75rem;
+  --breakpoint-wide: 90rem;
+}
 
-  --color-ring: var(--ring);
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-rule: var(--rule);
   --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-positive: var(--positive);
-  --color-positive-foreground: var(--positive-foreground);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
+  --color-surface: var(--surface);
+  --color-inverse: var(--inverse);
+  --color-error: var(--error);
+  --color-error-rule: var(--error-rule);
+  --color-error-soft: var(--error-soft);
+
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--paper);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--paper);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--inverse);
+  --color-secondary: var(--surface);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--surface);
+  --color-muted-foreground: var(--ink-muted);
+  --color-accent: var(--surface);
+  --color-accent-foreground: var(--ink);
+  --color-destructive: var(--error);
+  --color-destructive-foreground: var(--inverse);
+  --color-border: var(--rule);
+  --color-ring: var(--ink);
+
+  --font-sans: var(--font-dm-sans);
+
+  --text-display: 1.375rem;
+  --text-display--line-height: 1.8125rem;
+  --text-display--letter-spacing: 0.05em;
+  --text-h2: 1.125rem;
+  --text-h2--line-height: 1.4375rem;
+  --text-h2--letter-spacing: 0.05em;
+  --text-h3: 0.875rem;
+  --text-h3--line-height: 1.125rem;
+  --text-h3--letter-spacing: 0.05em;
+  --text-h4: 0.75rem;
+  --text-h4--line-height: 1rem;
+  --text-h4--letter-spacing: 0.05em;
+  --text-label: 0.5625rem;
+  --text-label--line-height: 0.875rem;
+  --text-label--letter-spacing: 0.05em;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.3125rem;
+  --text-body--letter-spacing: 0.05em;
+  --text-body-sm: 0.75rem;
+  --text-body-sm--line-height: 1.125rem;
+  --text-body-sm--letter-spacing: 0.05em;
+  --text-control: 0.6875rem;
+  --text-control--line-height: 0.875rem;
+  --text-control--letter-spacing: 0.05em;
+  --text-chip: 0.75rem;
+  --text-chip--line-height: 1.125rem;
+  --text-chip--letter-spacing: 0.05em;
+  --text-tab: 0.6875rem;
+  --text-tab--line-height: 1rem;
+  --text-tab--letter-spacing: 0.05em;
+  --text-nav: 0.8125rem;
+  --text-nav--line-height: 1.125rem;
+  --text-nav--letter-spacing: 0.05em;
+
+  --radius-xs: 0px;
   --radius-sm: 0px;
   --radius-md: 0px;
   --radius-lg: 0px;
   --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+
+  --shadow-xs: 0 0 #0000;
+  --shadow-sm: 0 0 #0000;
+  --shadow-md: 0 0 #0000;
+  --shadow-lg: 0 0 #0000;
+  --shadow-xl: 0 0 #0000;
+  --shadow-2xl: 0 0 #0000;
+  --shadow-modal: 0 0 0 1px var(--rule), 0 18px 50px rgb(0 0 0 / 0.12);
 }
 
 :root {
+  --paper: #ffffff;
+  --ink: #000000;
+  --ink-muted: #4d4d4d;
+  --rule: #e1e1e1;
+  --input: #cccccc;
+  --surface: #f2f2f2;
+  --inverse: #f9f9f9;
+  --error: #d94c4c;
+  --error-rule: #c7261b;
+  --error-soft: #fff5f5;
+
   --radius: 0rem;
-  --background: #ffffff;
-  --foreground: #000000;
-  --card: #ffffff;
-  --card-foreground: #000000;
-  --popover: #ffffff;
-  --popover-foreground: #000000;
-  --primary: #000000;
-  --primary-foreground: #f9f9f9;
-  --secondary: #f2f2f2;
-  --secondary-foreground: #000000;
-  --muted: #f2f2f2;
-  --muted-foreground: #4d4d4d;
-  --accent: #f2f2f2;
-  --accent-foreground: #000000;
-  --destructive: #cc0001;
-  --destructive-foreground: #f4f4f4;
-  --positive: #00ba5a;
-  --positive-foreground: #ffffff;
-  --border: #e1e1e1;
-  --input: #ececec;
-  --ring: #000000;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--inverse);
+  --secondary: var(--surface);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--surface);
+  --accent-foreground: var(--ink);
+  --destructive: var(--error);
+  --destructive-foreground: var(--inverse);
+  --border: var(--rule);
+  --ring: var(--ink);
+
+  --gutter: 20px;
+  --page-top: 24px;
+  --section-gap: 40px;
+  --grid-gap: 3px;
+  --grid-row-gap: 24px;
+  --card-inset: 8px;
+  --announcement-h: 35px;
+  --header-bar-h: 56px;
+  --header-masthead-h: 0px;
+  --header-total-h: 91px;
+  --drawer-search: 100%;
+  --drawer-filter: 100%;
+  --drawer-size: 100%;
+  --drawer-cart: 100%;
+  --modal-narrow: 100%;
+  --modal-newsletter: 448px;
+
+  --target-min: 36px;
+  --border-hair: 1px;
+  --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --motion-fast: 100ms;
+  --motion-base: 300ms;
+  --motion-long: 500ms;
+  --motion-image: 600ms;
+  --motion-underline: 350ms;
+
+  --z-mega: 40;
+  --z-header: 50;
+  --z-overlay: 60;
+  --z-toast: 70;
+  --z-skip: 100;
+}
+
+@media (width >= 68.75rem) {
+  :root {
+    --gutter: 30px;
+    --section-gap: 60px;
+    --grid-row-gap: 20px;
+    --announcement-h: 30px;
+    --header-bar-h: 76px;
+    --header-masthead-h: 110px;
+    --header-total-h: 186px;
+    --drawer-search: 440px;
+    --drawer-filter: 420px;
+    --drawer-size: 720px;
+    --drawer-cart: 440px;
+    --modal-narrow: 448px;
+  }
+}
+
+@utility type-display {
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-display--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-h2--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-h3--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-h4 {
+  font-size: var(--text-h4);
+  line-height: var(--text-h4--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-h4--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-label {
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-body {
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  font-weight: 300;
+  letter-spacing: var(--text-body--letter-spacing);
+}
+
+@utility type-body-sm {
+  font-size: var(--text-body-sm);
+  line-height: var(--text-body-sm--line-height);
+  font-weight: 300;
+  letter-spacing: var(--text-body-sm--letter-spacing);
+}
+
+@utility type-control {
+  font-size: var(--text-control);
+  line-height: var(--text-control--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-control--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-chip {
+  font-size: var(--text-chip);
+  line-height: var(--text-chip--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-chip--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-tab {
+  font-size: var(--text-tab);
+  line-height: var(--text-tab--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-tab--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-nav {
+  font-size: var(--text-nav);
+  line-height: var(--text-nav--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-nav--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
 }
 
 @layer components {
   .prose :where(h1, h2, h3, h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-    letter-spacing: -0.025em;
+    letter-spacing: 0.05em;
     font-weight: 400;
   }
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--rule);
   }
   body {
-    @apply bg-background text-foreground;
+    background: var(--paper);
+    color: var(--ink);
     font-family: var(--font-dm-sans), sans-serif;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 300;
     letter-spacing: 0.05em;
-    line-height: 21px;
+    line-height: 1.3125rem;
   }
   button,
   [role="button"] {
@@ -105,15 +300,13 @@
 }
 
 @layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
 
-  /* Hide scrollbar for IE, Edge and Firefox */
   .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
@@ -169,6 +362,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
   .shimmer {
     animation: none;
     background-image: none;

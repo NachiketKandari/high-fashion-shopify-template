@@ -36,7 +36,7 @@ function ProductInfoOptions({
     <div data-slot="product-info-options" className={className} {...props}>
       <div className={cn("grid", compact ? "gap-2.5" : "gap-5")}>
         {singleValueOptions.map((option) => (
-          <p key={option.name} className="text-sm font-medium text-foreground/70">
+          <p key={option.name} className="type-h4 text-ink-muted">
             {option.name}: <span className="text-foreground">{option.values[0]?.name}</span>
           </p>
         ))}
