@@ -3,25 +3,28 @@
 import { ChevronRight, Mail, MapPin, MessageCircle, Phone, X } from "lucide-react";
 
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { shopConfig } from "@/lib/config";
+
+const { contact } = shopConfig.site;
 
 const ROWS = [
   {
-    href: "https://wa.me/918976064836",
+    href: contact.whatsappHref,
     icon: MessageCircle,
     label: "WhatsApp",
   },
   {
-    href: "tel:+918976064836",
+    href: contact.phoneHref,
     icon: Phone,
     label: "Call Us",
   },
   {
-    href: "mailto:hi@politesociety.in",
+    href: `mailto:${contact.email}`,
     icon: Mail,
     label: "Email Us",
   },
   {
-    href: "https://maps.google.com",
+    href: contact.mapUrl,
     icon: MapPin,
     label: "Visit Our Flagship Store",
   },
@@ -34,7 +37,7 @@ export function ContactDrawer() {
         render={
           <button
             aria-label="Contact us"
-            className="flex cursor-pointer items-center justify-center transition-opacity hover:opacity-60 xl:hidden"
+            className="focus-ring flex size-9 shrink-0 cursor-pointer items-center justify-center transition-opacity hover:opacity-60 desktop:hidden"
             type="button"
           >
             <MessageCircle className="size-4" strokeWidth={1.25} />
@@ -44,7 +47,7 @@ export function ContactDrawer() {
       <SheetTrigger
         render={
           <button
-            className="hidden cursor-pointer text-xs uppercase tracking-wider transition-opacity hover:opacity-60 xl:inline-flex"
+            className="type-nav focus-ring hidden h-9 cursor-pointer items-center px-1 transition-opacity hover:opacity-60 desktop:inline-flex"
             type="button"
           >
             Help
@@ -52,28 +55,28 @@ export function ContactDrawer() {
         }
       />
       <SheetContent
-        className="w-full max-w-[440px] gap-0 border-l border-rule p-0"
+        className="w-(--drawer-search) max-w-full gap-0 border-l border-rule p-0"
         closeButton={false}
         side="right"
       >
         <SheetTitle className="sr-only">Contact us</SheetTitle>
-        <div className="flex h-14 shrink-0 items-center justify-between px-5">
-          <span className="text-xs uppercase tracking-wider">Contact Us</span>
+        <div className="flex h-14 shrink-0 items-center justify-between px-(--gutter)">
+          <span className="type-h3">Contact Us</span>
           <SheetClose
             aria-label="Close contact"
-            className="flex size-9 items-center justify-center"
+            className="focus-ring flex size-9 items-center justify-center"
             type="button"
           >
             <X className="size-4" strokeWidth={1.25} />
           </SheetClose>
         </div>
-        <ul className="grid px-5" role="list">
+        <ul className="grid px-(--gutter)" role="list">
           {ROWS.map((row) => {
             const Icon = row.icon;
             return (
               <li key={row.label}>
                 <a
-                  className="flex items-center gap-3 border-b border-rule py-4 text-xs uppercase tracking-wider transition-opacity hover:opacity-60"
+                  className="type-label focus-ring flex min-h-9 items-center gap-3 border-b border-rule py-4 transition-opacity hover:opacity-60"
                   href={row.href}
                   rel="noreferrer"
                   target={row.href.startsWith("http") ? "_blank" : undefined}

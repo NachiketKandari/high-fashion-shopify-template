@@ -81,6 +81,16 @@ export interface ShopConfig {
     };
   };
   site: {
+    contact: {
+      address: string;
+      careersEmail: string;
+      communityEmail: string;
+      email: string;
+      mapUrl: string;
+      phone: string;
+      phoneHref: string;
+      whatsappHref: string;
+    };
     description: string;
     name: string;
     url: string;

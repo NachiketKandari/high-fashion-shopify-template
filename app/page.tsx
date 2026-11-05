@@ -29,7 +29,7 @@ const COLLECTION_TILES = [
 const LINK_TILES = [
   { href: "/pages/about-us#store", image: "/reference/tile-flagship.jpg", label: "Flagship Store" },
   { href: "/blogs/journal-2", image: "/reference/tile-journal.jpg", label: "Journal" },
-  { href: "/pages/care-guide", image: "/reference/tile-careguide.jpg", label: "Polite Careguide" },
+  { href: "/pages/care-guide", image: "/reference/tile-careguide.jpg", label: "Care Guide" },
   { href: "/pages/about-us", image: "/reference/tile-our-world.jpg", label: "Our World" },
 ];
 
@@ -52,22 +52,22 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function HomePage() {
   return (
     <Page className="pt-0">
-      <h1 className="sr-only">Polite Society | Everyday Luxury Clothing | Made In India</h1>
+      <h1 className="sr-only">{shopConfig.site.name} | High Fashion Clothing</h1>
 
       <section aria-label="Campaign">
         <Link className="block" href="/collections/chapter-x">
-          <div className="relative h-[calc(100svh-91px)] overflow-hidden md:h-auto md:aspect-[1440/784]">
+          <div className="relative h-[calc(100svh-91px)] overflow-hidden desktop:aspect-[1440/784] desktop:h-auto">
             <Image
-              alt="Polite Society campaign"
-              className="object-cover md:hidden"
+              alt={`${shopConfig.site.name} campaign`}
+              className="object-cover desktop:hidden"
               fill
-              priority
+              loading="eager"
               sizes="100vw"
               src="/reference/hero-mobile.jpg"
             />
             <Image
-              alt="Polite Society campaign"
-              className="hidden object-cover md:block"
+              alt={`${shopConfig.site.name} campaign`}
+              className="hidden object-cover desktop:block"
               fill
               priority
               sizes="100vw"
@@ -77,21 +77,21 @@ export default function HomePage() {
         </Link>
       </section>
 
-      <section aria-label="Shop by category" className="grid grid-cols-1 gap-[3px] md:grid-cols-2">
+      <section aria-label="Shop by category" className="grid grid-cols-1 desktop:grid-cols-2">
         {EDITORIAL_TILES.map((tile) => (
           <Link
-            className="group relative block aspect-[4/5] overflow-hidden bg-surface"
+            className="group relative block aspect-[2/3] overflow-hidden bg-surface desktop:aspect-[720/893]"
             href={tile.href}
             key={tile.label}
           >
             <Image
               alt=""
-              className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
+              className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within:scale-[1.03] group-hover:scale-[1.03] motion-reduce:transform-none"
               fill
               sizes="100vw"
               src={tile.image}
             />
-            <span className="absolute bottom-3 left-4 text-2xs uppercase tracking-wider text-white">
+            <span className="type-h2 absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/45 to-transparent px-(--gutter) pt-12 pb-5 text-inverse">
               {tile.label}
             </span>
           </Link>
@@ -100,7 +100,7 @@ export default function HomePage() {
 
       <HomeProductRail />
 
-      <section aria-label="Collection edits" className="grid grid-cols-1 gap-[3px] md:grid-cols-3">
+      <section aria-label="Collection edits" className="grid grid-cols-1 desktop:grid-cols-3">
         {COLLECTION_TILES.map((tile) => (
           <Link
             className="group relative block aspect-[480/557] overflow-hidden bg-surface"
@@ -109,32 +109,32 @@ export default function HomePage() {
           >
             <Image
               alt=""
-              className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
+              className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within:scale-[1.03] group-hover:scale-[1.03] motion-reduce:transform-none"
               fill
               sizes="100vw"
               src={tile.image}
             />
-            <span className="absolute bottom-3 left-4 text-2xs uppercase tracking-wider text-white">
+            <span className="type-h3 absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/45 to-transparent px-(--gutter) pt-10 pb-4 text-inverse">
               {tile.label}
             </span>
           </Link>
         ))}
       </section>
 
-      <section aria-label="Discover Polite Society" className="pb-28 pt-10">
-        <div className="grid grid-cols-2 gap-x-[3px] gap-y-6 md:grid-cols-4">
+      <section aria-label={`Discover ${shopConfig.site.name}`} className="pb-10 pt-10">
+        <div className="grid grid-cols-2 desktop:grid-cols-4">
           {LINK_TILES.map((tile) => (
             <Link className="group grid content-start" href={tile.href} key={tile.label}>
               <span className="relative block aspect-square overflow-hidden bg-surface">
                 <Image
                   alt=""
-                  className="object-cover transition-transform duration-600 ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.03]"
+                  className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within:scale-[1.03] group-hover:scale-[1.03] motion-reduce:transform-none"
                   fill
                   sizes="100vw"
                   src={tile.image}
                 />
               </span>
-              <span className="mt-2.5 text-2xs uppercase tracking-wider">{tile.label}</span>
+              <span className="type-h4 px-(--gutter) pt-2.5">{tile.label}</span>
             </Link>
           ))}
         </div>

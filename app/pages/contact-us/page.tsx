@@ -3,43 +3,43 @@ import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/content/contact-form";
 import { ContentPage, ContentSection } from "@/components/content/content-page";
+import { shopConfig } from "@/lib/config";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
+
+const { contact } = shopConfig.site;
 
 const CHANNELS = [
   {
-    href: "tel:+918976064836",
+    href: contact.phoneHref,
     icon: Phone,
     label: "Call us",
-    lines: ["+91 89760 64836", "Monday – Sunday, 11AM to 8PM IST"],
+    lines: [contact.phone, "Monday – Sunday, 11AM to 8PM IST"],
   },
   {
-    href: "https://wa.me/918976064836",
+    href: contact.whatsappHref,
     icon: MessageCircle,
     label: "WhatsApp",
-    lines: ["+91 89760 64836", "Monday – Sunday, 11AM to 8PM IST"],
+    lines: [contact.phone, "Monday – Sunday, 11AM to 8PM IST"],
   },
   {
-    href: "mailto:hi@politesociety.in",
+    href: `mailto:${contact.email}`,
     icon: Mail,
     label: "Email",
-    lines: ["hi@politesociety.in", "We reply within one working day."],
+    lines: [contact.email, "We reply within one working day."],
   },
   {
-    href: "https://www.google.com/maps/place/Polite+Society/@19.0653993,72.8280942,17z",
+    href: contact.mapUrl,
     icon: MapPin,
     label: "Visit us",
-    lines: [
-      "Shop No. 1, Solace Apartment, 33rd Road, Bandra West, Mumbai",
-      "Open daily, 11am – 8pm",
-    ],
+    lines: [contact.address, "Open daily, 11am – 8pm"],
   },
 ];
 
 export const metadata: Metadata = {
   alternates: buildAlternates({ pathname: "/pages/contact-us" }),
-  description: "Contact Polite Society about orders, sizing, returns and appointments.",
+  description: `Contact ${shopConfig.site.name} about orders, sizing, returns and appointments.`,
   openGraph: buildOpenGraph({
-    description: "Contact Polite Society about orders, sizing, returns and appointments.",
+    description: `Contact ${shopConfig.site.name} about orders, sizing, returns and appointments.`,
     title: "Contact Us",
     type: "website",
     url: "/pages/contact-us",
@@ -57,7 +57,7 @@ export default function ContactPage() {
         </p>
       </ContentSection>
 
-      <div className="grid gap-8 sm:grid-cols-2">
+      <div className="grid gap-8 tablet:grid-cols-2">
         {CHANNELS.map((channel) => {
           const Icon = channel.icon;
           return (
@@ -68,15 +68,12 @@ export default function ContactPage() {
               rel={channel.href.startsWith("http") ? "noreferrer" : undefined}
               target={channel.href.startsWith("http") ? "_blank" : undefined}
             >
-              <span className="flex items-center gap-2 text-2xs uppercase tracking-wider">
+              <span className="type-label flex items-center gap-2">
                 <Icon className="size-4" strokeWidth={1.25} />
                 {channel.label}
               </span>
               {channel.lines.map((line) => (
-                <span
-                  className="text-sm font-light leading-[21px] tracking-wide text-muted-foreground"
-                  key={line}
-                >
+                <span className="type-body text-ink-muted" key={line}>
                   {line}
                 </span>
               ))}
@@ -87,9 +84,9 @@ export default function ContactPage() {
 
       <ContentSection heading="Send us a message">
         <ContactForm />
-        <p className="text-2xs leading-[18px] uppercase tracking-wider text-muted-foreground">
-          For career enquiries write to careers@politesociety.in, and for collaborations to
-          community@politesociety.in.
+        <p className="type-label text-ink-muted">
+          For career enquiries write to {contact.careersEmail}, and for collaborations to{" "}
+          {contact.communityEmail}.
         </p>
       </ContentSection>
     </ContentPage>

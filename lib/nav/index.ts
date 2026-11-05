@@ -26,7 +26,7 @@ export interface FooterColumn {
   title: string;
 }
 
-// Mirrors the live Polites Society menu. The collection handles are seeded by scripts/seed-catalog.mjs.
+// Mirrors the reference storefront menu. The collection handles are seeded by scripts/seed-catalog.mjs.
 export const MAIN_NAV: NavItem[] = [
   { href: "/collections/chapter-x", label: "New In" },
   {
@@ -101,7 +101,7 @@ export const MAIN_NAV: NavItem[] = [
         label: "Shirts & T-shirts",
       },
       {
-        href: "/collections/bottoms",
+        href: "/collections/bottoms-unisex",
         image: "/reference/editorial-elevated.jpg",
         label: "Bottoms",
       },
@@ -138,9 +138,9 @@ export const MAIN_NAV: NavItem[] = [
     ],
     tiles: [
       {
-        href: "/pages/about-us#founder",
-        image: "/reference/clone/about-founder.png",
-        label: "The Founder",
+        href: "/pages/about-us#studio",
+        image: "/reference/clone/about-craftsmanship.png",
+        label: "The Studio",
       },
       {
         href: "/pages/about-us#store",
@@ -181,9 +181,9 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: "Socials",
     links: [
-      { href: "https://www.instagram.com/politesociety_official/", label: "Instagram" },
-      { href: "https://www.facebook.com/politesocietyshop/", label: "Facebook" },
-      { href: "https://in.pinterest.com/politesociety_official/", label: "Pinterest" },
+      { href: "https://www.instagram.com/", label: "Instagram" },
+      { href: "https://www.facebook.com/", label: "Facebook" },
+      { href: "https://www.pinterest.com/", label: "Pinterest" },
     ],
   },
 ];

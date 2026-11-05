@@ -4,8 +4,8 @@ import { useSyncExternalStore } from "react";
 
 import type { ProductCard } from "@/lib/product/types";
 
-const STORAGE_KEY = "ps-wishlist";
-const CHANGE_EVENT = "ps-wishlist-change";
+const STORAGE_KEY = "wishlist";
+const CHANGE_EVENT = "wishlist-change";
 const EMPTY: WishlistItem[] = [];
 
 export interface WishlistItem {

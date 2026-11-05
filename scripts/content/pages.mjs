@@ -84,58 +84,49 @@ const LOOKBOOKS = [
 
 const PRESS = [
   {
-    href: "https://www.grazia.co.in/fashion/make-way-for-tailored-separates-and-handcrafted-leather-bags-6933-1.html",
     image: "/reference/clone/press-grazia.jpg",
     outlet: "Grazia",
     quote:
-      "Inspired by a triad of power, integrity, and sex, Jain's work focuses on sharp tailoring and corsetry.",
+      "Sharp tailoring, corsetry and handcrafted leather come together in a wardrobe built on structure and ease.",
   },
   {
-    href: "https://www.platform-mag.com/fashion/polite-society.html",
     image: "/reference/clone/press-platform.jpg",
     outlet: "Platform",
     quote:
-      "I'm going back in time and looking at my own life, I've realised the more personal the designs are, the lesser is the chance of getting lost in the sea of brands all around.",
+      "The more personal the design, the less likely it is to get lost in the sea of brands all around.",
   },
   {
-    href: "https://www.harpersbazaar.in/fashion/story/indias-trailblazing-street-style-designers-on-self-expression-breaking-the-rules-and-redefining-their-brand-ethos-629975-2023-08-14",
     image: "/reference/clone/press-bazaar.jpg",
     outlet: "Harper's Bazaar",
     quote:
-      "Instead of relying on androgynous silhouettes, I want to experiment with daring cuts and body-fitted silhouettes while also ensuring that design innovation remains at the forefront of everything we do.",
+      "Instead of relying on androgynous silhouettes, the collection experiments with daring cuts and body-fitted silhouettes while keeping design innovation at the forefront.",
   },
   {
-    href: "https://www.vogue.in/fashion/content/selling-sexy-in-2022",
     image: "/reference/clone/press-vogue.jpg",
     outlet: "Vogue",
     quote:
       "Feeling sexy has a lot to do with how a garment falls on your body — one can be clad up from head-to-toe and still feel empowered because they love how their outfit feels on the body.",
   },
   {
-    href: "https://in.fashionnetwork.com/news/Polite-society-launches-first-upcycled-line,1544434.html",
     image: "/reference/clone/press-fashion-network.jpg",
     outlet: "Fashion Network",
     quote:
-      "The gender neutral line is named 'Poli-morph', will be evergreen, and is designed to contribute to a circular economy.",
+      "The gender-neutral line is designed to be evergreen and to contribute to a circular economy.",
   },
   {
-    href: "https://www.vogue.in/vogue-closet/collection/sobhita-dhulipala-polite-society-bodysuit-low-rise-bottoms",
-    image: "/reference/clone/press-vogue-sobhita.webp",
+    image: "/reference/clone/press-vogue-evening.webp",
     outlet: "Vogue",
-    quote:
-      "Sobhita Dhulipala is the ultimate fashion girl in her Polite Society bodysuit and low-rise trousers.",
+    quote: "A bodysuit and low-rise trousers make an easy, confident evening look.",
   },
   {
-    href: "https://elle.in/coordinated-separates-for-summer/",
     image: "/reference/clone/press-elle.jpg",
     outlet: "Elle",
     quote: "If you're into oversized, genderless fits — this look is tailor-made for you.",
   },
   {
-    href: "https://homegrown.co.in/homegrown-supply/polite-societys-provocative-collections-are-shaped-by-sustainability-nonconformity",
     image: "/reference/clone/press-homegrown.jpg",
     outlet: "Homegrown",
-    quote: "Polite Society's Provocative Collections Are Shaped By Nonconformity & Culture.",
+    quote: "Provocative collections shaped by nonconformity and culture.",
   },
 ];
 
@@ -150,7 +141,7 @@ const FAQS = [
   ],
   [
     "Can I change or cancel my order?",
-    "Write to hi@politesociety.in as soon as possible with your order number. We can change or cancel an order before it is processed or shipped.",
+    "Write to hello@loremipsum.example as soon as possible with your order number. We can change or cancel an order before it is processed or shipped.",
   ],
   [
     "When will my order be dispatched?",
@@ -158,7 +149,7 @@ const FAQS = [
   ],
   [
     "How can I track my order?",
-    "Once your order ships, we email a tracking link. You can also contact us on WhatsApp at +91 89760 64836 with your order number.",
+    "Once your order ships, we email a tracking link. You can also contact us on WhatsApp at +91 90000 00000 with your order number.",
   ],
   [
     "Do you ship internationally?",
@@ -170,7 +161,7 @@ const FAQS = [
   ],
   [
     "How do I make a return or exchange?",
-    "Use the contact page or email hi@politesociety.in with your order number and the item you want to return. Wait for approval before sending anything back.",
+    "Use the contact page or email hello@loremipsum.example with your order number and the item you want to return. Wait for approval before sending anything back.",
   ],
   [
     "When will I receive my refund?",
@@ -178,7 +169,7 @@ const FAQS = [
   ],
   [
     "My order arrived faulty or incorrect. What should I do?",
-    "Email hi@politesociety.in within 24 hours of delivery with your order number, photos of the item and photos of the packaging. Do not wear, wash or alter the item before contacting us.",
+    "Email hello@loremipsum.example within 24 hours of delivery with your order number, photos of the item and photos of the packaging. Do not wear, wash or alter the item before contacting us.",
   ],
   [
     "How do I find my size?",
@@ -194,11 +185,11 @@ const FAQS = [
   ],
   [
     "Where can I visit you?",
-    "Visit us at Shop No. 1, Solace Apartment, 33rd Road, Bandra West, Mumbai. We are open daily, 11am – 8pm.",
+    "Visit us at 123 Example Street, Mumbai, India. We are open daily, 11am – 8pm.",
   ],
   [
     "How do I contact customer care?",
-    "Call or WhatsApp +91 89760 64836, email hi@politesociety.in, or use the contact form. We reply within one working day.",
+    "Call or WhatsApp +91 90000 00000, email hello@loremipsum.example, or use the contact form. We reply within one working day.",
   ],
 ];
 
@@ -233,46 +224,42 @@ export const PAGES = [
   {
     body: `
       ${p(
-        "Polite Society is a Mumbai-based everyday luxury label that blends tailoring with a nonconformist spirit. Designed to transcend seasons and trends, our collections balance femininity, craftsmanship, and wearability.",
+        "Lorem Ipsum is a Mumbai-based everyday luxury label that blends tailoring with a nonconformist spirit. Designed to transcend seasons and trends, our collections balance femininity, craftsmanship, and wearability.",
         "Every piece is thoughtfully created with a focus on fit, fabric, and finish, becoming a lasting part of an everyday wardrobe.",
       )}
-      <h2>Founder</h2>
-      ${image(
-        "/reference/clone/about-founder.png",
-        "Surmai Jain, founder of Polite Society",
-        "Surmai Jain, founder",
-      )}
+      <h2 id="studio">Studio</h2>
+      ${image("/reference/clone/about-craftsmanship.png", "Lorem Ipsum Studio", "Lorem Ipsum Studio")}
       ${p(
-        "Surmai Jain studied Marketing &amp; Communication at NIFT Mumbai &amp; FIT New York. She grew up across varied cultures in India and Armenia, and noticed how society's expectations often overshadow individuality. Through the brand, she wanted to make space for people to feel like the best, most honest version of themselves.",
+        "Lorem Ipsum Studio is a Mumbai-based design practice working across tailoring, corsetry and everyday wear. The studio grew out of a belief that clothing should make space for individuality, and each collection is developed in-house from first sketch to final stitch.",
       )}
       <h2>Brand Philosophy</h2>
       ${VALUES.map(([src, label]) => image(src, label, label)).join("\n")}
-      <h2>Flagship Store</h2>
+      <h2 id="store">Flagship Store</h2>
       ${image(
         "/reference/clone/about-store.png",
-        "Polite Society flagship store in Bandra West",
-        "Flagship store, Bandra West",
+        "Lorem Ipsum flagship store in Mumbai",
+        "Flagship store, Mumbai",
       )}
       ${p(
-        "An extension of the Polite Society world. A space to experience the collections up close, discover the details and find pieces that become part of your everyday.",
-        "Shop No. 1, Solace Apartment, 33rd Road, Bandra West, Mumbai<br />Monday – Sunday, 11am – 8pm",
+        "An extension of the Lorem Ipsum world. A space to experience the collections up close, discover the details and find pieces that become part of your everyday.",
+        "123 Example Street, Mumbai, India<br />Monday – Sunday, 11am – 8pm",
       )}
       <h2>Atelier</h2>
-      ${image("/reference/clone/about-atelier.png", "Inside the Polite Society atelier")}
-      ${image("/reference/clone/about-studio.png", "Pattern making at the Polite Society studio")}
+      ${image("/reference/clone/about-atelier.png", "Inside the Lorem Ipsum atelier")}
+      ${image("/reference/clone/about-studio.png", "Pattern making at the Lorem Ipsum studio")}
       ${p(
-        "Where the clothes take shape. Our atelier is where ideas become garments. From the first cut to the final stitch, each piece moves through a considered process of pattern, construction and finishing, bringing together skilled hands, precise craftsmanship and an attention to detail that defines Polite Society.",
+        "Where the clothes take shape. Our atelier is where ideas become garments. From the first cut to the final stitch, each piece moves through a considered process of pattern, construction and finishing, bringing together skilled hands, precise craftsmanship and an attention to detail that defines Lorem Ipsum.",
       )}
       <h2>Archive</h2>
       ${ARCHIVE.map(([src, label]) => image(src, label, label)).join("\n")}
-      <p>Polite Society · Mumbai</p>
+      <p>Lorem Ipsum · Mumbai</p>
     `,
     handle: "about-us",
     title: "About Us",
   },
   {
     body: `
-      ${p("Polite Society lookbooks, chapter by chapter.")}
+      ${p("Lorem Ipsum lookbooks, chapter by chapter.")}
       ${LOOKBOOKS.map(
         (chapter) => `
         <h2 id="${chapter.id}">${chapter.label}</h2>
@@ -286,13 +273,12 @@ export const PAGES = [
   },
   {
     body: `
-      ${p("Polite Society in the press.")}
+      ${p("Lorem Ipsum in the press.")}
       ${PRESS.map(
         (entry) => `
         <h2>${entry.outlet}</h2>
         ${image(entry.image, `${entry.outlet} press feature`)}
         <blockquote>${p(`&ldquo;${entry.quote}&rdquo;`)}</blockquote>
-        <p><a href="${entry.href}" rel="noreferrer" target="_blank">Read the feature</a></p>
       `,
       ).join("\n")}
     `,
@@ -301,7 +287,7 @@ export const PAGES = [
   },
   {
     body: `
-      ${p("Answers about orders, shipping, returns, sizing and care at Polite Society.")}
+      ${p("Answers about orders, shipping, returns, sizing and care at Lorem Ipsum.")}
       ${FAQS.map(
         ([question, answer]) => `<details><summary>${question}</summary>${p(answer)}</details>`,
       ).join("\n")}
@@ -311,21 +297,21 @@ export const PAGES = [
   },
   {
     body: `
-      ${image("/reference/clone/care-guide.jpg", "Polite Society care guide")}
+      ${image("/reference/clone/care-guide.jpg", "Lorem Ipsum care guide")}
       ${p(
         "Our pieces are designed to be worn, lived in and kept for a long time. Follow the care instructions below to help preserve their shape, colour, texture and finish. For the most accurate instructions, always refer to the care label on your garment.",
       )}
       ${CARE.map((group) => `<h2>${group.label}</h2>${list(group.items)}`).join("\n")}
-      ${p("Questions? Write to hi@politesociety.in or visit the flagship store in Bandra West.")}
+      ${p("Questions? Write to hello@loremipsum.example or visit the flagship store at 123 Example Street, Mumbai.")}
     `,
     handle: "care-guide",
-    title: "Polite Care Guide",
+    title: "Lorem Ipsum Care Guide",
   },
   {
     body: `
       <h2>Domestic orders (within India)</h2>
       ${p(
-        "We offer free standard shipping for orders above INR 5,000 across India. A flat fee of INR 100 is charged on orders below INR 5,000. Express shipping charges vary by parcel weight and are available for metro cities. To opt for express shipping, WhatsApp us at +91 89760 64836 or email hi@politesociety.in. Express requests can be accepted or declined subject to product availability.",
+        "We offer free standard shipping for orders above INR 5,000 across India. A flat fee of INR 100 is charged on orders below INR 5,000. Express shipping charges vary by parcel weight and are available for metro cities. To opt for express shipping, WhatsApp us at +91 90000 00000 or email hello@loremipsum.example. Express requests can be accepted or declined subject to product availability.",
       )}
       <h2>Delivery time frame</h2>
       ${p(
@@ -338,7 +324,7 @@ export const PAGES = [
       )}
       <h2>Service delays</h2>
       ${p(
-        "Polite Society is not responsible for unexpected delays caused by bad weather, natural disasters or clearance delays. Contact the courier directly with the tracking number for updates.",
+        "Lorem Ipsum is not responsible for unexpected delays caused by bad weather, natural disasters or clearance delays. Contact the courier directly with the tracking number for updates.",
       )}
       <h2>International orders (outside India)</h2>
       ${p(
@@ -347,7 +333,7 @@ export const PAGES = [
       )}
       <h2>Failed delivery</h2>
       ${p(
-        "Polite Society is not responsible for charges related to return shipment when delivery fails because of an incorrect address, contact details, repeated failed attempts or refusal to pay customs fees. If the order is returned and must be sent again, shipping fees are payable again.",
+        "Lorem Ipsum is not responsible for charges related to return shipment when delivery fails because of an incorrect address, contact details, repeated failed attempts or refusal to pay customs fees. If the order is returned and must be sent again, shipping fees are payable again.",
       )}
       <h2>Returns &amp; exchanges</h2>
       ${p(
@@ -389,7 +375,7 @@ export const PAGES = [
       ${p("All sale orders are final sale and cannot be returned or exchanged.")}
       <h2>Wrong, damaged or faulty items</h2>
       ${p(
-        "Email hi@politesociety.in within 24 hours of delivery, whether the order is domestic or international. Include your order number, photos or videos of the item, photos clearly showing the issue, and photos of the packaging if it arrived damaged. Do not wear, wash or alter the item before contacting us.",
+        "Email hello@loremipsum.example within 24 hours of delivery, whether the order is domestic or international. Include your order number, photos or videos of the item, photos clearly showing the issue, and photos of the packaging if it arrived damaged. Do not wear, wash or alter the item before contacting us.",
         "Once we review the issue we will arrange a replacement, exchange, store credit or refund depending on the circumstances. Approved refunds are processed within 8–10 business days after we receive and inspect the item.",
       )}
       <h2>How to return or exchange</h2>
@@ -408,7 +394,7 @@ export const PAGES = [
       )}
       <h2>Order cancellations</h2>
       ${p(
-        "Contact us as soon as possible at hi@politesociety.in with your order number. We may not be able to cancel or change an order once it has been processed or shipped.",
+        "Contact us as soon as possible at hello@loremipsum.example with your order number. We may not be able to cancel or change an order once it has been processed or shipped.",
       )}
     `,
     handle: "returns-exchanges",
@@ -418,7 +404,7 @@ export const PAGES = [
     body: `
       <h2>Overview</h2>
       ${p(
-        "This website is operated by politesocietyshop. Throughout the site, the terms “we”, “us” and “our” refer to politesocietyshop. We offer this website, including all information, tools and services available from it, conditioned on your acceptance of the terms, conditions, policies and notices stated here.",
+        "This website is operated by Lorem Ipsum Studio. Throughout the site, the terms “we”, “us” and “our” refer to Lorem Ipsum Studio. We offer this website, including all information, tools and services available from it, conditioned on your acceptance of the terms, conditions, policies and notices stated here.",
         "By visiting our site or purchasing something from us, you engage in our “Service” and agree to be bound by these Terms of Service, including additional terms and policies referenced here or available by hyperlink. Read these terms carefully before using the site.",
         "Our store is hosted on Shopify Inc. They provide the online e-commerce platform that allows us to sell our products and services to you.",
       )}
@@ -455,13 +441,13 @@ export const PAGES = [
       <h2>Sections 11–13 — Errors, prohibited uses, liability</h2>
       ${p(
         "We reserve the right to correct errors, inaccuracies or omissions and to change or update information or cancel orders if information is inaccurate at any time without prior notice. You are prohibited from using the site for unlawful purposes, to violate laws, to infringe rights, to harass or discriminate, to submit false information, to upload malicious code, to collect or track the personal information of others, to spam or phish, or to interfere with security features.",
-        "Your use of the service is at your sole risk. The service and all products are provided “as is” and “as available,” without warranties of any kind, express or implied. In no case shall politesocietyshop, its directors, officers, employees, affiliates, agents, contractors, suppliers or licensors be liable for any injury, loss, claim or direct, indirect, incidental, punitive, special or consequential damages arising from your use of the service or any product.",
+        "Your use of the service is at your sole risk. The service and all products are provided “as is” and “as available,” without warranties of any kind, express or implied. In no case shall Lorem Ipsum Studio, its directors, officers, employees, affiliates, agents, contractors, suppliers or licensors be liable for any injury, loss, claim or direct, indirect, incidental, punitive, special or consequential damages arising from your use of the service or any product.",
       )}
       <h2>Sections 14–20 — Indemnification to contact</h2>
       ${p(
-        "You agree to indemnify and hold harmless politesocietyshop and its affiliates, partners, officers, directors, agents, contractors, licensors, service providers and employees from any claim or demand, including reasonable attorneys' fees, arising from your breach of these terms or violation of any law or third-party right.",
+        "You agree to indemnify and hold harmless Lorem Ipsum Studio and its affiliates, partners, officers, directors, agents, contractors, licensors, service providers and employees from any claim or demand, including reasonable attorneys' fees, arising from your breach of these terms or violation of any law or third-party right.",
         "If any provision is found unlawful, void or unenforceable, that portion is severed and the remaining provisions stay in effect. These terms are effective until terminated by you or us. You may terminate by notifying us or by ceasing to use the site. We may terminate if you fail to comply.",
-        "These terms and any policies posted on this site constitute the entire agreement between you and us. They are governed by the laws of India. We may update these terms by posting changes on this page. Questions may be sent to surmaijain@gmail.com.",
+        "These terms and any policies posted on this site constitute the entire agreement between you and us. They are governed by the laws of India. We may update these terms by posting changes on this page. Questions may be sent to legal@loremipsum.example.",
       )}
     `,
     handle: "terms-of-service",
@@ -470,12 +456,12 @@ export const PAGES = [
   {
     body: `
       ${p(
-        "Polite Society is a Mumbai-based fashion and lifestyle brand operated by Surmai Design Studio LLP (“Polite Society”, “we”, “us” or “our”). This policy explains how we collect, use, store, disclose and otherwise process personal information when you visit or purchase through www.politesocietyshop.com, contact customer support or otherwise engage with our services.",
+        "Lorem Ipsum is a Mumbai-based fashion and lifestyle brand operated by Lorem Ipsum Studio (“Lorem Ipsum”, “we”, “us” or “our”). This policy explains how we collect, use, store, disclose and otherwise process personal information when you visit or purchase through www.loremipsum.example, contact customer support or otherwise engage with our services.",
         "By accessing or using the website you acknowledge that you have read and understood this policy.",
       )}
       <h2>1. Who we are</h2>
       ${p(
-        "Polite Society is operated by Surmai Design Studio LLP, A-105, Trade Square, Saki Naka, Mumbai, Maharashtra, India. Email: hi@politesociety.in. Website: www.politesocietyshop.com. Surmai Design Studio LLP determines how and why personal information is processed.",
+        "Lorem Ipsum is operated by Lorem Ipsum Studio, 123 Example Street, Mumbai, India. Email: legal@loremipsum.example. Website: www.loremipsum.example. Lorem Ipsum Studio determines how and why personal information is processed.",
       )}
       <h2>2. Personal information we collect</h2>
       ${p(
@@ -503,11 +489,11 @@ export const PAGES = [
       <h2>7. Your privacy rights</h2>
       ${p(
         "Depending on your location and applicable law, you may have the right to request information about the personal information we process, correct inaccurate information, request deletion where applicable, withdraw consent, raise a grievance, opt out of marketing and exercise other rights available under law.",
-        "For individuals whose personal information is governed by India's Digital Personal Data Protection framework, applicable rights will be provided in accordance with the Digital Personal Data Protection Act, 2023 and the Digital Personal Data Protection Rules, 2025 as they come into force. Exercise rights by writing to hi@politesociety.in. We may need to verify your identity before processing certain requests.",
+        "For individuals whose personal information is governed by India's Digital Personal Data Protection framework, applicable rights will be provided in accordance with the Digital Personal Data Protection Act, 2023 and the Digital Personal Data Protection Rules, 2025 as they come into force. Exercise rights by writing to legal@loremipsum.example. We may need to verify your identity before processing certain requests.",
       )}
       <h2>8. Marketing communications</h2>
       ${p(
-        "If you opt in, we may contact you by email, SMS, WhatsApp or other channels for which you provided contact information. You can unsubscribe using the instructions in the communication or by writing to hi@politesociety.in. Opting out does not prevent essential transactional or service messages such as order, payment, shipping, return or exchange updates.",
+        "If you opt in, we may contact you by email, SMS, WhatsApp or other channels for which you provided contact information. You can unsubscribe using the instructions in the communication or by writing to legal@loremipsum.example. Opting out does not prevent essential transactional or service messages such as order, payment, shipping, return or exchange updates.",
       )}
       <h2>9–14. Third parties, children, do not track, security and changes</h2>
       ${p(
@@ -517,8 +503,8 @@ export const PAGES = [
       )}
       <h2>15. Contact us</h2>
       ${p(
-        "Questions about this policy, privacy rights or grievances: Surmai Design Studio LLP, A-105, Trade Square, Saki Naka, Mumbai, Maharashtra, India. Email: hi@politesociety.in. Website: www.politesocietyshop.com. We will review and respond within the time periods required by applicable law.",
-        "© Surmai Design Studio LLP. All rights reserved.",
+        "Questions about this policy, privacy rights or grievances: Lorem Ipsum Studio, 123 Example Street, Mumbai, India. Email: legal@loremipsum.example. Website: www.loremipsum.example. We will review and respond within the time periods required by applicable law.",
+        "© Lorem Ipsum Studio. All rights reserved.",
       )}
     `,
     handle: "privacy-policies",

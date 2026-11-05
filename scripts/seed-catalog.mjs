@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Seeds a Shopify store with the fashion catalog used by the Polite Society design study.
+ * Seeds a Shopify store with a high-fashion catalog for the Lorem Ipsum storefront template.
  *
  * Requires an Admin app with:
  *   read_products, write_products, read_publications, write_publications, read_files, write_files
@@ -71,6 +71,7 @@ async function admin(query, variables = {}) {
   return payload.data;
 }
 
+// Reference CDN assets for demo only; replace with your own product imagery before publishing.
 const image = (path, width = 1600) =>
   `https://politesocietyshop.com/cdn/shop/files/${path}?width=${width}`;
 
@@ -206,11 +207,11 @@ const PRODUCTS = [
     collections: ["tops", "new-in", "essentials"],
     descriptionHtml:
       "<p>Second-skin top with a high neck and clean finish. Cut for a close fit.</p><p>Fabric &amp; Care:<br>- Main: 90% Modal, 10% Elastane<br>- Care: Machine wash cold</p>",
-    handle: "naked-polite-top",
+    handle: "naked-knit-top",
     images: ["Blue_Naked_Top_003.jpg", "Blue_Naked_Top_004.jpg"],
     price: "95.00",
     productType: "Tops",
-    title: "Naked Polite Top",
+    title: "Naked Knit Top",
     variants: [
       { color: "Blue", hex: "#7d9ed1", image: 0 },
       { color: "Black", hex: "#111111", image: 0 },
@@ -234,13 +235,13 @@ const PRODUCTS = [
     collections: ["outerwear", "unisex-1", "new-in", "work-wear"],
     descriptionHtml:
       "<p>Relaxed overshirt cut from striped cotton with a boxy shoulder and metal buttons. Wear it open over a corset or closed as a light layer.</p><p>Fabric &amp; Care:<br>- Main: 100% Cotton<br>- Care: Dry clean</p>",
-    handle: "poli-morph-overshirt",
+    handle: "striped-overshirt",
     images: [
       "BACK_CUTOUT_STRIPED_BLAZER_-_Polite_Society-4663448_115067a6-8941-4bd5-a68b-85e6425e8116.jpg",
     ],
     price: "210.00",
     productType: "Outerwear",
-    title: "Poli-Morph Overshirt",
+    title: "Striped Overshirt",
     variants: [
       { color: "Black Stripe", hex: "#1b1b1b", image: 0 },
       { color: "Ivory", hex: "#efe9dc", image: 0 },
@@ -301,8 +302,8 @@ const COLLECTION_MEMBERS = {
     "lilith-corset",
     "lolita-slip-dress",
     "mexi-corset-playsuit",
-    "naked-polite-top",
-    "poli-morph-overshirt",
+    "naked-knit-top",
+    "striped-overshirt",
     "rati-corset",
     "rosa-corset-top",
     "solapur-corset",
@@ -313,13 +314,13 @@ const COLLECTION_MEMBERS = {
   "co-ord-sets": ["draped-trousers", "mexi-corset-playsuit"],
   evening: ["bustier-belt", "lilith-corset", "lolita-slip-dress", "rati-corset", "solapur-corset"],
   festive: ["alma-lace-corset-top", "bustier-belt", "gulnar-corset-top", "lilith-corset"],
-  knits: ["naked-polite-top"],
-  outerwear: ["poli-morph-overshirt"],
-  "shirts-and-tshirts": ["naked-polite-top"],
+  knits: ["naked-knit-top"],
+  outerwear: ["striped-overshirt"],
+  "shirts-and-tshirts": ["naked-knit-top"],
   "unisex-1": ALL_PRODUCT_HANDLES,
-  weekend: ["draped-trousers", "naked-polite-top", "rosa-corset-top"],
+  weekend: ["draped-trousers", "naked-knit-top", "rosa-corset-top"],
   women: ALL_PRODUCT_HANDLES,
-  "work-wear": ["draped-trousers", "naked-polite-top", "poli-morph-overshirt"],
+  "work-wear": ["draped-trousers", "naked-knit-top", "striped-overshirt"],
 };
 
 const PRODUCT_SET = `#graphql
@@ -484,7 +485,7 @@ function productInput(product) {
     tags: product.collections,
     title: product.title,
     variants,
-    vendor: "Polite Society",
+    vendor: "Lorem Ipsum",
   };
 }
 

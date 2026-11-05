@@ -68,9 +68,18 @@ export const shopConfig = {
     },
   },
   site: {
-    description:
-      "Everyday luxury clothing, made in India. A design-study storefront built on Vercel Shop.",
-    name: "Polite Society",
+    contact: {
+      address: "123 Example Street, Mumbai, India",
+      careersEmail: "careers@loremipsum.example",
+      communityEmail: "community@loremipsum.example",
+      email: "hello@loremipsum.example",
+      mapUrl: "https://maps.google.com",
+      phone: "+91 90000 00000",
+      phoneHref: "tel:+919000000000",
+      whatsappHref: "https://wa.me/919000000000",
+    },
+    description: "A high-fashion Shopify storefront template built with Next.js and Eve.",
+    name: "Lorem Ipsum",
     url: defaultUrl,
   },
 } satisfies ShopConfig;

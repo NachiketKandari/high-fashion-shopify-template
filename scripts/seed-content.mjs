@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Seeds Shopify pages and journal articles for the Polite Society storefront.
+ * Seeds Shopify pages and journal articles for the Lorem Ipsum storefront.
  *
  * Requires an Admin app with write_online_store_pages and write_files.
  * Authenticate with a Dev Dashboard app (client ID + secret) or SHOPIFY_ADMIN_ACCESS_TOKEN.
@@ -282,7 +282,7 @@ async function createBlog() {
 
 async function createArticle(blogId, article, imageUrl) {
   const input = {
-    author: { name: "Polite Society" },
+    author: { name: "Lorem Ipsum" },
     blogId,
     body: article.body,
     handle: article.handle,
@@ -311,7 +311,7 @@ async function createArticle(blogId, article, imageUrl) {
 
 async function updateArticle(id, article, imageUrl) {
   const input = {
-    author: { name: "Polite Society" },
+    author: { name: "Lorem Ipsum" },
     body: article.body,
     handle: article.handle,
     isPublished: true,

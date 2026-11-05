@@ -73,7 +73,7 @@ export function ProductDetailSection({
           { name: product.title, path: `/products/${product.handle}` },
         ]}
       />
-      <div className="grid grid-cols-1 items-start lg:grid-cols-2">
+      <div className="grid grid-cols-1 items-start desktop:grid-cols-2">
         <ProductMediaArea product={product} selectedOptionsPromise={selectedOptionsPromise} />
         <ProductInfoArea product={product} variantPromise={variantPromise} />
       </div>
@@ -175,14 +175,12 @@ function ProductInfoArea({
     vendor: product.vendor,
   };
   return (
-    <div className="px-5 py-7 lg:sticky lg:top-[76px] lg:max-h-[calc(100svh-76px)] lg:self-start lg:overflow-y-auto lg:px-0 lg:pb-6 lg:pt-[64px]">
+    <div className="px-(--gutter) py-7 desktop:sticky desktop:top-[76px] desktop:max-h-[calc(100svh-76px)] desktop:self-start desktop:overflow-y-auto desktop:px-0 desktop:pb-6 desktop:pt-[64px]">
       <div className="mx-auto grid w-full max-w-[408px] gap-7">
         <div className="grid gap-2" data-slot="product-info-header">
           <div className="flex items-start justify-between gap-4">
-            <h1 className="text-[22px] uppercase leading-[29px] tracking-wider text-foreground">
-              {product.title}
-            </h1>
-            <WishlistButton product={wishlistProduct} />
+            <h1 className="type-display text-ink">{product.title}</h1>
+            <WishlistButton product={wishlistProduct} variant="inline" />
           </div>
           {product.hasUniformPricing ? (
             <ProductPrice
@@ -227,10 +225,10 @@ function ProductInfoArea({
 
           <ProductTabs descriptionHtml={descriptionHtml} />
 
-          <div className="flex justify-end">
+          <div className="sticky bottom-0 flex justify-end bg-paper py-2">
             <a
-              className="text-2xs uppercase tracking-wider underline underline-offset-4"
-              href="mailto:hi@politesociety.in"
+              className="type-control focus-ring flex h-9 items-center underline underline-offset-4"
+              href={`mailto:${shopConfig.site.contact.email}`}
             >
               Need help?
             </a>
@@ -363,14 +361,14 @@ function GiftCardPurchaseFormFallback() {
           <Label>Message</Label>
           <Textarea rows={3} disabled placeholder="Write a personal note (optional)" />
         </div>
-        <div className="grid gap-3 rounded-lg border p-3">
+        <div className="grid gap-3 border p-3">
           <div className="flex items-center justify-between gap-2.5">
             <Label>Schedule for later</Label>
-            <span className="inline-flex h-[1.15rem] w-8 items-center rounded-full bg-input opacity-50" />
+            <span className="inline-flex h-5 w-9 items-center border border-input bg-surface opacity-50" />
           </div>
         </div>
       </div>
-      <div className="flex h-12 w-full cursor-not-allowed items-center justify-center rounded-lg bg-primary text-sm font-medium text-primary-foreground opacity-50">
+      <div className="type-control flex h-9 w-full cursor-not-allowed items-center justify-center bg-ink text-inverse opacity-50">
         Add to Cart
       </div>
     </div>
@@ -381,7 +379,7 @@ function QuantityPickerFallback() {
   return (
     <div
       aria-hidden="true"
-      className="grid h-9 w-24 shrink-0 grid-cols-[2rem_2rem_2rem] border border-rule bg-background"
+      className="grid h-9 w-24 shrink-0 grid-cols-[2.25rem_1.5rem_2.25rem] border border-rule bg-paper"
     >
       <span className="flex size-9 items-center justify-center opacity-50">
         <MinusIcon className="size-3 shrink-0" />
@@ -417,14 +415,14 @@ function BuyButtonsFallback({
       ) : null}
       <div className="flex flex-wrap gap-2.5">
         {shopConfig.pdp.quantityPicker.isEnabled ? <QuantityPickerFallback /> : null}
-        <div className="flex h-9 min-w-0 flex-1 items-center justify-center border border-foreground text-2xs uppercase tracking-wider text-foreground">
+        <div className="type-control flex h-9 min-w-0 flex-1 items-center justify-center border border-ink text-ink">
           {showLabel ? (allInStock ? "Add to Cart" : "Out of Stock") : null}
         </div>
       </div>
       {shopConfig.pdp.buyWithShop.isEnabled && !selectedPlan && !variant?.requiresSellingPlan ? (
         <div
           className={cn(
-            "flex h-9 items-center justify-center bg-foreground px-4 text-2xs uppercase tracking-wider text-background",
+            "type-control flex h-9 items-center justify-center bg-ink px-4 text-inverse",
             !allInStock && "invisible",
           )}
         >
@@ -437,12 +435,12 @@ function BuyButtonsFallback({
 
 export function ProductDetailSkeleton() {
   return (
-    <div aria-busy="true" className="grid grid-cols-1 items-start lg:grid-cols-2">
+    <div aria-busy="true" className="grid grid-cols-1 items-start desktop:grid-cols-2">
       <div>
-        <div className="aspect-[2/3] w-full bg-accent lg:hidden" />
-        <div className="hidden aspect-[2/3] w-full bg-accent lg:block" />
+        <div className="aspect-[2/3] w-full bg-surface desktop:hidden" />
+        <div className="hidden aspect-[2/3] w-full bg-surface desktop:block" />
       </div>
-      <div className="px-5 py-7 lg:sticky lg:top-[76px] lg:px-0 lg:pt-[64px]">
+      <div className="px-(--gutter) py-7 desktop:sticky desktop:top-[76px] desktop:px-0 desktop:pt-[64px]">
         <div className="mx-auto grid w-full max-w-[408px] gap-7">
           <div className="grid gap-2">
             <Skeleton className="h-7 w-3/4" />

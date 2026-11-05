@@ -42,10 +42,10 @@ export const JOURNAL_ARTICLES = [
       <p>Instagram: @slinkandbardot</p>
     `,
     excerpt:
-      "Eight rooms, one city, and the pieces that feel right in each of them — a Polite Society guide to Bombay after dark.",
+      "Eight rooms, one city, and the pieces that feel right in each of them — a Lorem Ipsum guide to Bombay after dark.",
     handle: "guide-to-bombay-after-dark",
     image: {
-      altText: "A Polite Society guide to Bombay after dark",
+      altText: "A Lorem Ipsum guide to Bombay after dark",
       height: 649,
       url: "/reference/clone/journal-bombay.png",
       width: 900,
@@ -53,10 +53,10 @@ export const JOURNAL_ARTICLES = [
     publishedAt: PUBLISHED_AT,
     seo: {
       description:
-        "Eight rooms, one city, and the pieces that feel right in each of them — a Polite Society guide to Bombay after dark.",
-      title: "A Polite Society Guide to Bombay After Dark",
+        "Eight rooms, one city, and the pieces that feel right in each of them — a Lorem Ipsum guide to Bombay after dark.",
+      title: "A Lorem Ipsum Guide to Bombay After Dark",
     },
-    title: "A Polite Society Guide to Bombay After Dark",
+    title: "A Lorem Ipsum Guide to Bombay After Dark",
   },
   {
     blogHandle: BLOG_HANDLE,
@@ -126,10 +126,10 @@ export const JOURNAL_ARTICLES = [
       <p><em>We recommend: a silk shirt, red lipstick and a well-made martini.</em></p>
     `,
     excerpt:
-      "Films for slow evenings, long romances and the art of making something well — the Polite Society watchlist.",
-    handle: "the-polite-society-watchlist",
+      "Films for slow evenings, long romances and the art of making something well — the Lorem Ipsum watchlist.",
+    handle: "the-lorem-ipsum-watchlist",
     image: {
-      altText: "The Polite Society watchlist",
+      altText: "The Lorem Ipsum watchlist",
       height: 462,
       url: "/reference/clone/journal-watchlist.png",
       width: 900,
@@ -137,9 +137,9 @@ export const JOURNAL_ARTICLES = [
     publishedAt: PUBLISHED_AT,
     seo: {
       description:
-        "Films for slow evenings, long romances and the art of making something well — the Polite Society watchlist.",
-      title: "The Polite Society Watchlist",
+        "Films for slow evenings, long romances and the art of making something well — the Lorem Ipsum watchlist.",
+      title: "The Lorem Ipsum Watchlist",
     },
-    title: "The Polite Society Watchlist",
+    title: "The Lorem Ipsum Watchlist",
   },
 ];
