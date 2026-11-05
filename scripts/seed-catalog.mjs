@@ -13,6 +13,8 @@
  *   SHOPIFY_CLIENT_ID=... SHOPIFY_CLIENT_SECRET=... \
  *   NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com \
  *   node scripts/seed-catalog.mjs
+ *
+ * Add UNPUBLISH_OTHERS=1 to unpublish demo products and collections from the Headless channel.
  */
 
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
@@ -276,6 +278,32 @@ const PUBLISHABLE_PUBLISH = `#graphql
   }
 `;
 
+const PUBLISHABLE_UNPUBLISH = `#graphql
+  mutation PublishableUnpublish($id: ID!, $input: [PublicationInput!]!) {
+    publishableUnpublish(id: $id, input: $input) {
+      userErrors { field message }
+    }
+  }
+`;
+
+const PUBLISHED_PRODUCTS = `#graphql
+  query PublishedProducts($first: Int!, $after: String, $publicationId: ID!) {
+    products(first: $first, after: $after) {
+      nodes { id handle publishedOnPublication(publicationId: $publicationId) }
+      pageInfo { hasNextPage endCursor }
+    }
+  }
+`;
+
+const PUBLISHED_COLLECTIONS = `#graphql
+  query PublishedCollections($first: Int!, $after: String, $publicationId: ID!) {
+    collections(first: $first, after: $after) {
+      nodes { id handle publishedOnPublication(publicationId: $publicationId) }
+      pageInfo { hasNextPage endCursor }
+    }
+  }
+`;
+
 const PUBLICATIONS = `#graphql
   query {
     publications(first: 20) {
@@ -344,12 +372,15 @@ async function findCollection(handle) {
 }
 
 function productInput(product) {
-  const files = product.images.map((path, index) => ({
-    alt: `${product.title} image ${index + 1}`,
-    contentType: "IMAGE",
-    filename: `${product.handle}-${index + 1}.jpg`,
-    originalSource: image(path),
-  }));
+  const files = product.images.map((path, index) => {
+    const extension = path.split("?")[0].split(".").pop()?.toLowerCase() ?? "jpg";
+    return {
+      alt: `${product.title} image ${index + 1}`,
+      contentType: "IMAGE",
+      filename: `${product.handle}-${index + 1}.${extension}`,
+      originalSource: image(path),
+    };
+  });
   const variants = product.variants.flatMap((variant) =>
     sizes.map((size) => ({
       inventoryItem: { sku: `${product.handle}-${variant.color}-${size}`, tracked: false },
@@ -376,6 +407,49 @@ function productInput(product) {
     variants,
     vendor: "Polite Society",
   };
+}
+
+async function unpublishOthers() {
+  const publication = await getPublicationId();
+  if (!publication) return;
+
+  const resources = [
+    {
+      connection: "products",
+      keep: new Set([...PRODUCTS.map(({ handle }) => handle), "gift-card"]),
+      label: "product",
+      query: PUBLISHED_PRODUCTS,
+    },
+    {
+      connection: "collections",
+      keep: new Set(COLLECTIONS.map(({ handle }) => handle)),
+      label: "collection",
+      query: PUBLISHED_COLLECTIONS,
+    },
+  ];
+
+  for (const resource of resources) {
+    let after = null;
+    do {
+      const data = await admin(resource.query, {
+        after,
+        first: 100,
+        publicationId: publication,
+      });
+      const connection = data[resource.connection];
+      for (const node of connection.nodes) {
+        if (!node.publishedOnPublication || resource.keep.has(node.handle)) continue;
+        const result = await admin(PUBLISHABLE_UNPUBLISH, {
+          id: node.id,
+          input: [{ publicationId: publication }],
+        });
+        const errors = result.publishableUnpublish.userErrors;
+        if (errors.length) throw new Error(`unpublish ${node.handle}: ${JSON.stringify(errors)}`);
+        console.log(`unpublished ${resource.label} ${node.handle}`);
+      }
+      after = connection.pageInfo.hasNextPage ? connection.pageInfo.endCursor : null;
+    } while (after);
+  }
 }
 
 async function main() {
@@ -432,6 +506,8 @@ async function main() {
     if (errors.length) throw new Error(`${collection.handle}: ${JSON.stringify(errors)}`);
     console.log(`added ${productIds.length} products to ${collection.handle}`);
   }
+
+  if (process.env.UNPUBLISH_OTHERS === "1") await unpublishOthers();
 }
 
 main().catch((error) => {

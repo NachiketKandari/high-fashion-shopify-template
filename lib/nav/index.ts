@@ -26,111 +26,111 @@ export interface FooterColumn {
   title: string;
 }
 
-// Links point at the live catalog until the Shopify catalog is seeded with the reference collections.
+// Seeded Shopify collections: corsets, dresses-and-jumpsuits, tops, bottoms, new-in, core, essentials, signature.
 export const MAIN_NAV: NavItem[] = [
-  { href: "/collections/all", label: "New In" },
+  { href: "/collections/new-in", label: "New In" },
   {
-    href: "/collections/all",
+    href: "/collections/new-in",
     label: "Woman",
     columns: [
       {
         title: "Shop Woman",
         links: [
-          { href: "/collections/all", label: "All" },
-          { href: "/collections/all", label: "Tops" },
-          { href: "/collections/all", label: "Corsets" },
-          { href: "/collections/all", label: "Dresses & Jumpsuits" },
-          { href: "/collections/all", label: "Co-ord Sets" },
-          { href: "/collections/all", label: "Knitwear" },
-          { href: "/collections/all", label: "Bottoms" },
-          { href: "/collections/all", label: "Accessories" },
+          { href: "/collections/new-in", label: "All" },
+          { href: "/collections/tops", label: "Tops" },
+          { href: "/collections/corsets", label: "Corsets" },
+          { href: "/collections/dresses-and-jumpsuits", label: "Dresses & Jumpsuits" },
+          { href: "/collections/new-in", label: "Co-ord Sets" },
+          { href: "/collections/tops", label: "Knitwear" },
+          { href: "/collections/bottoms", label: "Bottoms" },
+          { href: "/collections/new-in", label: "Accessories" },
         ],
       },
       {
         title: "Shop by Occasion",
         links: [
-          { href: "/collections/all", label: "Work Wear" },
-          { href: "/collections/all", label: "Evening" },
-          { href: "/collections/all", label: "Weekend" },
-          { href: "/collections/all", label: "Festive" },
+          { href: "/collections/new-in", label: "Work Wear" },
+          { href: "/collections/signature", label: "Evening" },
+          { href: "/collections/essentials", label: "Weekend" },
+          { href: "/collections/signature", label: "Festive" },
         ],
       },
       {
         title: "Shop by Category",
         links: [
-          { href: "/collections/all", label: "Core" },
-          { href: "/collections/all", label: "Essentials" },
-          { href: "/collections/all", label: "Elevated" },
+          { href: "/collections/core", label: "Core" },
+          { href: "/collections/essentials", label: "Essentials" },
+          { href: "/collections/signature", label: "Elevated" },
         ],
       },
     ],
     tiles: [
-      { href: "/collections/all", image: "/reference/editorial-corsets.jpg", label: "Corsets" },
+      { href: "/collections/corsets", image: "/reference/editorial-corsets.jpg", label: "Corsets" },
       {
-        href: "/collections/all",
+        href: "/collections/dresses-and-jumpsuits",
         image: "/reference/editorial-dresses.jpg",
         label: "Dresses & Jumpsuits",
       },
     ],
   },
   {
-    href: "/collections/all",
+    href: "/collections/new-in",
     label: "Unisex",
     columns: [
       {
         title: "Shop Unisex",
         links: [
-          { href: "/collections/all", label: "All" },
-          { href: "/collections/all", label: "Shirts & T-shirts" },
-          { href: "/collections/all", label: "Bottoms" },
-          { href: "/collections/all", label: "Outerwear" },
-          { href: "/collections/all", label: "Accessories" },
+          { href: "/collections/new-in", label: "All" },
+          { href: "/collections/tops", label: "Shirts & T-shirts" },
+          { href: "/collections/bottoms", label: "Bottoms" },
+          { href: "/collections/new-in", label: "Outerwear" },
+          { href: "/collections/new-in", label: "Accessories" },
         ],
       },
       {
         title: "Shop by Category",
         links: [
-          { href: "/collections/all", label: "Core" },
-          { href: "/collections/all", label: "Essentials" },
-          { href: "/collections/all", label: "Elevated" },
+          { href: "/collections/core", label: "Core" },
+          { href: "/collections/essentials", label: "Essentials" },
+          { href: "/collections/signature", label: "Elevated" },
         ],
       },
     ],
     tiles: [
-      { href: "/collections/all", image: "/reference/editorial-core.jpg", label: "Core" },
+      { href: "/collections/core", image: "/reference/editorial-core.jpg", label: "Core" },
       {
-        href: "/collections/all",
+        href: "/collections/signature",
         image: "/reference/editorial-elevated.jpg",
         label: "Elevated",
       },
     ],
   },
   {
-    href: "/collections/all",
+    href: "/collections/new-in",
     label: "Edit",
     columns: [
       {
         title: "The Edit",
         links: [
-          { href: "/collections/all", label: "New Arrivals" },
-          { href: "/collections/all", label: "Bestsellers" },
-          { href: "/collections/all", label: "Back in Stock" },
-          { href: "/collections/all", label: "The Lookbook" },
+          { href: "/collections/new-in", label: "New Arrivals" },
+          { href: "/collections/new-in", label: "Bestsellers" },
+          { href: "/collections/new-in", label: "Back in Stock" },
+          { href: "/blogs/news", label: "The Lookbook" },
         ],
       },
       {
         title: "Styles",
         links: [
-          { href: "/collections/all", label: "Everyday" },
-          { href: "/collections/all", label: "Occasion" },
-          { href: "/collections/all", label: "Layering" },
+          { href: "/collections/core", label: "Everyday" },
+          { href: "/collections/signature", label: "Occasion" },
+          { href: "/collections/essentials", label: "Layering" },
         ],
       },
     ],
     tiles: [
-      { href: "/collections/all", image: "/reference/tile-journal.jpg", label: "Journal" },
+      { href: "/blogs/news", image: "/reference/tile-journal.jpg", label: "Journal" },
       {
-        href: "/collections/all",
+        href: "/pages/contact",
         image: "/reference/tile-careguide.jpg",
         label: "Polite Careguide",
       },

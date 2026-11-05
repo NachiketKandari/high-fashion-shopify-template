@@ -8,18 +8,22 @@ import { shopConfig } from "@/lib/config";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 
 const EDITORIAL_TILES = [
-  { href: "/collections/all", image: "/reference/editorial-corsets.jpg", label: "Corsets" },
+  { href: "/collections/corsets", image: "/reference/editorial-corsets.jpg", label: "Corsets" },
   {
-    href: "/collections/all",
+    href: "/collections/dresses-and-jumpsuits",
     image: "/reference/editorial-dresses.jpg",
     label: "Dresses & Jumpsuits",
   },
 ];
 
 const COLLECTION_TILES = [
-  { href: "/collections/all", image: "/reference/editorial-core.jpg", label: "Core" },
-  { href: "/collections/all", image: "/reference/editorial-essentials.jpg", label: "Essentials" },
-  { href: "/collections/all", image: "/reference/editorial-elevated.jpg", label: "Elevated" },
+  { href: "/collections/core", image: "/reference/editorial-core.jpg", label: "Core" },
+  {
+    href: "/collections/essentials",
+    image: "/reference/editorial-essentials.jpg",
+    label: "Essentials",
+  },
+  { href: "/collections/signature", image: "/reference/editorial-elevated.jpg", label: "Elevated" },
 ];
 
 const LINK_TILES = [
@@ -51,7 +55,7 @@ export default function HomePage() {
       <h1 className="sr-only">Polite Society | Everyday Luxury Clothing | Made In India</h1>
 
       <section aria-label="Campaign">
-        <Link className="block" href="/collections/all">
+        <Link className="block" href="/collections/new-in">
           <div className="relative h-[calc(100svh-91px)] overflow-hidden md:h-auto md:aspect-[1440/784]">
             <Image
               alt="Polite Society campaign"

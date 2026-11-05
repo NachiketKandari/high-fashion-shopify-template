@@ -41,7 +41,10 @@ export function ProductCard({
   const sizes = sizeOption?.values.map((value) => value.name).slice(0, 6) ?? [];
 
   return (
-    <article className={cn("group/card relative flex h-full flex-col", className)}>
+    <article
+      className={cn("group/card relative flex h-full flex-col", className)}
+      data-slot="product-card"
+    >
       <Link
         aria-hidden="true"
         className="relative block aspect-[2/3] overflow-hidden bg-surface"
