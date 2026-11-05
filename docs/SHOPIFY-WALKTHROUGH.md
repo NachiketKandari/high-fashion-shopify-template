@@ -661,6 +661,8 @@ pointing at `/api/webhooks/shopify` and `SHOPIFY_WEBHOOK_SECRET` matching.
 
 ## 18. Reading list
 
+- [`SHOPIFY-TUTORIAL.md`](./SHOPIFY-TUTORIAL.md): merchant and developer tutorial, labs and curated
+  Shopify resources.
 - [`AGENTS.md`](../AGENTS.md): the binding architecture rules for this repository.
 - [`reference/DESIGN.md`](./reference/DESIGN.md): extracted design tokens and page anatomy.
 - [`reference/FLOWS.md`](./reference/FLOWS.md): screenshot index for every captured flow.
