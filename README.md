@@ -1,16 +1,24 @@
-# Polite Society Clone
+# High-Fashion Shopify Template
 
-A high-fidelity clone of the Polite Society storefront, built on Vercel Shop with Shopify, Next.js
-and Eve. This is a private design study; the reference photography and wordmark are not licensed for
-redistribution.
+A high-fashion Shopify storefront template built on Vercel Shop with Shopify, Next.js and Eve. The
+storefront brand is Lorem Ipsum.
+
+## Reference
+
+The design system and reference measurements were derived from a live high-fashion storefront;
+reference notes retain source URLs and measured reference labels for provenance. The reference
+photography and press imagery are not licensed for redistribution.
 
 - **Shopify owns commerce.** Catalog, cart, checkout, customer accounts, predictive search, and policies come from Shopify through the framework-agnostic Hydrogen SDK (not the Hydrogen React Router framework).
 - **Next.js owns the app.** Routing, Server Components, caching and invalidation, metadata, and the storefront's machine-readable surface for answer engines: Markdown representations, `/llms.txt`, structured data, and the sitemap.
 - **Eve owns the agent.** Shop Agent's sessions, tools, and connections; its tools call Shopify directly.
 
+Product titles, vendor, pages, policies and menus come from Shopify. Update them in Shopify admin, or
+reseed a fresh store with `pnpm seed:catalog` and `pnpm seed:content`.
+
 See [vercel.shop](https://vercel.shop) for full documentation.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fshop&project-name=shop&repository-name=shop&demo-title=Vercel+Shop&demo-url=https%3A%2F%2Fshop-template.vercel.app&env=NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN%2CNEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN%2CNEXT_PUBLIC_SHOPIFY_SHOP_ID&envDescription=Required%20Shopify%20store%20domain%2C%20Storefront%20API%20token%2C%20and%20shop%20ID&envLink=https%3A%2F%2Fvercel.shop%2Fdocs%2Freference%2Fenv-vars)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fshop&project-name=high-fashion-shopify-template&repository-name=high-fashion-shopify-template&demo-title=High-Fashion+Shopify+Template&demo-url=https%3A%2F%2Fshop-template.vercel.app&env=NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN%2CNEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN%2CNEXT_PUBLIC_SHOPIFY_SHOP_ID&envDescription=Required%20Shopify%20store%20domain%2C%20Storefront%20API%20token%2C%20and%20shop%20ID&envLink=https%3A%2F%2Fvercel.shop%2Fdocs%2Freference%2Fenv-vars)
 
 Vercel prompts for the three required Shopify values before the first deployment.
 
@@ -81,16 +89,32 @@ pnpm dlx skills add vercel/shop --skill '*' --yes
 
 Use the plain skill names below. Shopify AI Toolkit is separate external tooling for authoritative Shopify documentation, API schemas, and operation validation; the Shop skills do not include it. If it is unavailable, use official Shopify documentation and validation tooling.
 
-| Skill                       | Description                                                           |
-| --------------------------- | --------------------------------------------------------------------- |
-| `init-vercel-shop`          | Scaffold a storefront and configure Shopify credentials               |
-| `build-shop`                | Build or adapt storefront routes with Vercel Shop patterns            |
-| `shopify-graphql-reference` | Add Shopify-validated GraphQL operations in the template's layout     |
-| `enable-analytics`          | Add Vercel Analytics, Speed Insights, and Google Tag Manager          |
-| `enable-i18n`               | Locale-prefixed URL routing + next-intl message catalogs (no Markets) |
-| `enable-shopify-markets`    | Multi-locale support with Shopify Markets and next-intl               |
-| `enable-shopify-menus`      | Replace hardcoded nav/footer links with Shopify-managed menus         |
-| `update-shop`               | Keep a storefront current with template changes                       |
+| Skill                       | Description                                                                 |
+| --------------------------- | --------------------------------------------------------------------------- |
+| `init-vercel-shop`          | Scaffold a storefront and configure Shopify credentials                     |
+| `build-shop`                | Build or adapt storefront routes with Vercel Shop patterns                  |
+| `shopify-graphql-reference` | Add Shopify-validated GraphQL operations in the template's layout           |
+| `enable-analytics`          | Add Vercel Analytics, Speed Insights, and Google Tag Manager                |
+| `enable-i18n`               | Locale-prefixed URL routing + next-intl message catalogs (no Markets)       |
+| `enable-shopify-markets`    | Multi-locale support with Shopify Markets and next-intl                     |
+| `enable-shopify-menus`      | Replace hardcoded nav/footer links with Shopify-managed menus               |
+| `update-shop`               | Keep a storefront current with template changes                             |
+| `ux-explorer`               | Explore a storefront with Playwright and write an evidence-backed UX report |
+
+## Design system checks
+
+`app/globals.css` is the canonical token layer. `pnpm lint` includes a static drift gate, and the
+Playwright contracts exercise computed type, geometry, targets, keyboard behaviour, reduced motion
+and the main commerce flows:
+
+```sh
+pnpm lint             # oxlint, formatting and scripts/check-design.mjs
+pnpm test:design      # computed-style, ARIA, motion and flow contracts
+pnpm audit:reference  # with the template running, measure it and the reference storefront
+```
+
+`pnpm exec playwright install chromium` installs the browser once. The reference audit uses fresh
+contexts and writes screenshots to `.playwright/compare/`.
 
 ## Documentation
 
@@ -98,10 +122,14 @@ Full documentation is available at [vercel.shop](https://vercel.shop).
 
 Project-specific runbooks:
 
-- [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md) — the canonical Polite Society tokens, layout, brand, component, motion and accessibility system.
-- [`docs/DESIGN-SYSTEM-AUDIT.md`](./docs/DESIGN-SYSTEM-AUDIT.md) — the current implementation gap, migration plan and Playwright verification protocol.
+- [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md) — the canonical template tokens, layout, brand, component, motion and accessibility system.
+- [`docs/DESIGN-SYSTEM-ENFORCEMENT.md`](./docs/DESIGN-SYSTEM-ENFORCEMENT.md) — the token, lint, computed-contract and governance system that keeps the storefront on-system.
+- [`docs/DESIGN-SYSTEM-AUDIT.md`](./docs/DESIGN-SYSTEM-AUDIT.md) — the historical gap analysis, migration record and current exceptions.
+- [`docs/reference/PLAYWRIGHT-COMPARISON.md`](./docs/reference/PLAYWRIGHT-COMPARISON.md) — the latest reference-versus-template measurement.
+- [`docs/UX-RECON-2026-11-05.md`](./docs/UX-RECON-2026-11-05.md) — the first-time-shopper UX reconnaissance.
 - [`docs/SHOPIFY-WALKTHROUGH.md`](./docs/SHOPIFY-WALKTHROUGH.md) — the Shopify, Next.js and Eve stack map.
-- [`docs/IMPLEMENTATION.md`](./docs/IMPLEMENTATION.md) — what the Polite Society replica implements and what remains.
+- [`docs/IMPLEMENTATION.md`](./docs/IMPLEMENTATION.md) — what the template implements and what remains.
+- [`docs/CATALOG-IMPORT.md`](./docs/CATALOG-IMPORT.md) — catalog import result, verification and remaining gaps.
 - [`docs/CONTENT.md`](./docs/CONTENT.md) — content ownership, Shopify seeding and invalidation rules.
 - [`docs/SHOPIFY-APP-SCOPES.md`](./docs/SHOPIFY-APP-SCOPES.md) — the seeding app's Admin API scopes and how to change them.
 - [`docs/SHIPROCKET.md`](./docs/SHIPROCKET.md) — shipping and fulfilment integration options.

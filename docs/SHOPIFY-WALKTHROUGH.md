@@ -629,13 +629,13 @@ pointing at `/api/webhooks/shopify` and `SHOPIFY_WEBHOOK_SECRET` matching.
 | Customer account redirect loops              | Missing refresh path or session secret   | `/account/refresh`, `CUSTOMER_ACCOUNT_SESSION_SECRET`   |
 | Markdown URL returns HTML                    | Negotiation or rewrite missed            | `proxy.ts`, `lib/markdown/representation`               |
 
-## 16. Current state of this clone
+## 16. Current state of this template
 
 - Store: `Dummy Store`, USD.
 - Catalog: 10 fashion products across 8 collections, seeded through the Admin API; demo snowboards
   unpublished from the Headless channel and kept in the Shopify admin.
-- Design: Polite Society reference, rebuilt in `app/` and `components/`.
-- Reference photography and wordmark: `public/reference/`, private prototype use only.
+- Design: reference storefront, rebuilt in `app/` and `components/`.
+- Reference photography: `public/reference/`; placeholder wordmark: `public/brand/wordmark.svg`.
 - GA4: `G-SQVPB589E7` loads and sends `page_view`.
 - Seeder credentials: Dev Dashboard app `Catalog Seeder`, stored in `.env.local` and exchanged for a
   24-hour token at run time.

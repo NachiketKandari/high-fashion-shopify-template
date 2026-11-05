@@ -61,7 +61,7 @@ serve the Shopify blog.
     shop policies become the source, update the navigation links, remove the page copies, and
     never keep both editable.
 12. **Deleted routes stay deleted.** If a Shopify page is removed, add a redirect or a 404; do not
-    restore a local static replica. The exception is an app-owned tool that was never Shopify
+    restore a local static route. The exception is an app-owned tool that was never Shopify
     content.
 
 ## Seeding commands

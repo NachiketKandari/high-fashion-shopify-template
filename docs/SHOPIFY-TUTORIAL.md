@@ -1,8 +1,9 @@
 # Shopify tutorial: merchant fundamentals and the developer path
 
 A practical tutorial for learning Shopify from both sides: the merchant admin that runs the store,
-and the APIs and tools that a headless storefront uses. It uses this repository's store as the
-worked example, so every concept has a concrete counterpart in the running app.
+and the APIs and tools that a headless storefront uses. It uses the High-Fashion Shopify Template's
+Lorem Ipsum store as the worked example, so every concept has a concrete counterpart in the running
+app.
 
 - If you are merchandising, read Part 1 and the labs.
 - If you are building, read Part 0, Part 2 and the labs.

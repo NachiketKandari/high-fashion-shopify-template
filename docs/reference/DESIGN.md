@@ -1,4 +1,4 @@
-# Polite Society design reference
+# High-fashion design reference
 
 Source: <https://politesocietyshop.com/>. Captured on 4 November 2026 with Playwright at
 1440 × 1000, 768 × 1024 and 390 × 844. Values below are computed styles read from the live
@@ -8,10 +8,13 @@ indexed in [FLOWS.md](./FLOWS.md).
 > This file records the original measurement pass. The canonical implementation contract is
 > [`../DESIGN-SYSTEM.md`](../DESIGN-SYSTEM.md). A 5 November 2026 re-measurement found live drift in
 > editorial captions and grids, the product-card ratio, the rail heading size and PDP top spacing;
-> those values are recorded in [`../DESIGN-SYSTEM-AUDIT.md`](../DESIGN-SYSTEM-AUDIT.md).
+> those values are recorded in [`../DESIGN-SYSTEM-AUDIT.md`](../DESIGN-SYSTEM-AUDIT.md). The latest
+> reproducible live-versus-clone measurement is
+> [`PLAYWRIGHT-COMPARISON.md`](./PLAYWRIGHT-COMPARISON.md).
 
-This is a design study for a private prototype. The photography, wordmark and brand copy belong
-to Polite Society; replace them before publishing or distributing the clone.
+This is a design study for a private prototype. The reference wordmark is a trademark of its owner;
+the photography and brand copy belong to the reference brand. Replace them before publishing or
+distributing the template.
 
 ## 1. Foundations
 
@@ -161,7 +164,7 @@ Full-height white panel under the 56px header, sliding from the right.
 Centred white card, `448px` wide, no radius, thin 1px border/shadow.
 
 - 14px × close at top right.
-- Heading `JOIN POLITE SOCIETY` in 14px uppercase.
+- Heading `JOIN THE NEWSLETTER` in 14px uppercase.
 - Body copy: “Get 5% off your first order, and first access to new chapters, campaigns,
   restocks and more.”
 - Underlined email field with `Your e-mail` placeholder and `SUBSCRIBE` label on the right.
@@ -185,7 +188,7 @@ White, full-bleed, `~361px` tall at 1440. Top rule, four zones on one row:
 5. Socials: Instagram, Facebook, Pinterest.
 6. Newsletter: “Subscribe to Our Newsletter”, underlined email field, `SUBSCRIBE`.
 
-Bottom row: copyright and “Website by Embed Studios” on the left, payment marks (Amex,
+Bottom row: copyright and “Website by UniPlus” on the left, payment marks (Amex,
 Diners, Mastercard, RuPay, Visa) on the right. All links 12px, `#4d4d4d`; headings 11px
 uppercase black. On mobile the columns stack with 32px gaps.
 
@@ -204,7 +207,7 @@ uppercase black. On mobile the columns stack with 32px gaps.
 4. **Three-up editorial** — three images, `480 × 557` (aspect 0.86), 3px gap, labels bottom-left
    in white uppercase (`CORE`, `ESSENTIALS`, `ELEVATED`).
 5. **Link tiles** — four equal square images (`360 × 360`), 3px gap, label below each in 11px
-   uppercase (`FLAGSHIP STORE`, `JOURNAL`, `POLITE CAREGUIDE`, `OUR WORLD`).
+   uppercase (`FLAGSHIP STORE`, `JOURNAL`, `CARE GUIDE`, `OUR WORLD`).
 6. Footer.
 
 ## 4. Collection page

@@ -38,12 +38,12 @@ point at the production store.
 
 ### Required
 
-| Variable                                      | Scope      | Notes                                                                                                     |
-| --------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN`            | All        | `your-store.myshopify.com`                                                                                |
-| `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | All        | Public Storefront API token                                                                               |
-| `NEXT_PUBLIC_SHOPIFY_SHOP_ID`                 | All        | Numeric shop ID                                                                                           |
-| `NEXT_PUBLIC_SITE_URL`                        | Production | Canonical URL, e.g. `https://politesociety.example`. Without it, metadata uses the Vercel production URL. |
+| Variable                                      | Scope      | Notes                                                                                                  |
+| --------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------ |
+| `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN`            | All        | `your-store.myshopify.com`                                                                             |
+| `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | All        | Public Storefront API token                                                                            |
+| `NEXT_PUBLIC_SHOPIFY_SHOP_ID`                 | All        | Numeric shop ID                                                                                        |
+| `NEXT_PUBLIC_SITE_URL`                        | Production | Canonical URL, e.g. `https://your-store.example`. Without it, metadata uses the Vercel production URL. |
 
 ### Recommended for production
 

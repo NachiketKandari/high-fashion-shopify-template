@@ -1,18 +1,19 @@
-# Rebuilding the Polite Society storefront
+# Rebuilding the reference storefront
 
-This document records how the Polite Society replica in this repository was built. It is for a
+This document records how the reference storefront was rebuilt in this repository. It is for a
 developer who needs to reproduce the build, extend it, or audit it against the live reference at
 <https://politesocietyshop.com>.
 
 ## Purpose and scope
 
-This is a private design study. The reference photography, wordmark, product copy and brand assets
-belong to Polite Society. They are here only to reproduce layout and interaction during
-development. Replace them with licensed or original assets before public distribution. The same
-restriction appears in `docs/reference/DESIGN.md` and `docs/reference/ASSETS.md`.
+This is a private design study. The reference photography, product copy and brand assets belong to
+the reference brand. They are here only to reproduce layout and interaction during development.
+Replace them with licensed or original assets before public distribution. The placeholder wordmark
+in `public/brand/wordmark.svg` is the template mark. The same restriction appears in
+`docs/reference/DESIGN.md` and `docs/reference/ASSETS.md`.
 
-The replica uses a Shopify development store and the Headless sales channel. Shopify checkout,
-customer authentication and order management are not cloned; those remain Shopify-hosted.
+The template uses a Shopify development store and the Headless sales channel. Shopify checkout,
+customer authentication and order management are not rebuilt locally; those remain Shopify-hosted.
 
 ## Evidence gathering
 
@@ -33,8 +34,8 @@ explicitly rather than storing a duplicate image.
 
 The live sitemap (`https://politesocietyshop.com/sitemap.xml`) was used to choose the page list.
 On the checked snapshot, it listed 29 page URLs (including duplicate size charts, a test page and an
-account page), 41 collection URLs, one blog (`journal-2`) and three articles. The clone rebuilt the
-pages below, not every URL. The raw sitemap XML is not committed; that is an evidence gap, not a
+account page), 41 collection URLs, one blog (`journal-2`) and three articles. This repository rebuilt
+the pages below, not every URL. The raw sitemap XML is not committed; that is an evidence gap, not a
 runtime dependency.
 
 ## Architecture
@@ -100,7 +101,7 @@ and never publicly cached.
 - Three collection tiles linking to `/collections/core`, `/collections/essentials` and
   `/collections/signature`.
 - Four square link tiles: Flagship Store (`/pages/about-us#store`), Journal
-  (`/blogs/journal-2`), Polite Careguide (`/pages/care-guide`) and Our World (`/pages/about-us`).
+  (`/blogs/journal-2`), Care Guide (`/pages/care-guide`) and Our World (`/pages/about-us`).
 
 ### Collection pages
 
@@ -185,11 +186,11 @@ The live blog sitemap contained only `journal-2`, and the article sitemap contai
 articles rebuilt here. All three now live in the Shopify blog `journal-2` and render through the
 generic `app/blogs/[blogHandle]` and `app/blogs/[blogHandle]/[articleHandle]` routes.
 
-| Article                                     | Handle                         |
-| ------------------------------------------- | ------------------------------ |
-| A Polite Society Guide to Bombay After Dark | `guide-to-bombay-after-dark`   |
-| In Conversation with Neetta                 | `in-conversation-with-neetta`  |
-| The Polite Society Watchlist                | `the-polite-society-watchlist` |
+| Article                                  | Handle                        |
+| ---------------------------------------- | ----------------------------- |
+| A Lorem Ipsum Guide to Bombay After Dark | `guide-to-bombay-after-dark`  |
+| In Conversation with Neetta              | `in-conversation-with-neetta` |
+| The Lorem Ipsum Watchlist                | `the-lorem-ipsum-watchlist`   |
 
 Bodies, excerpts, images and SEO fields were seeded from `scripts/content/journal.mjs`; the runtime
 reads them from Shopify. `app/blogs/journal-2` and `lib/content/journal.ts` were deleted after the
@@ -250,9 +251,9 @@ inventory-tracked.
 | Lolita Slip Dress    | Dresses & Jumpsuits | 180.00 |
 | Gulnar Corset Top    | Corsets             | 155.00 |
 | Lilith Corset        | Corsets             | 165.00 |
-| Naked Polite Top     | Tops                |  95.00 |
+| Naked Knit Top       | Tops                |  95.00 |
 | Draped Trousers      | Bottoms             | 140.00 |
-| Poli-Morph Overshirt | Outerwear           | 210.00 |
+| Striped Overshirt    | Outerwear           | 210.00 |
 | Bustier Belt         | Accessories         |  95.00 |
 
 The script creates 23 collections:
@@ -297,7 +298,7 @@ seed includes each one.
 
 Known differences from the reference are deliberate or environmental:
 
-| Area          | Reference                               | This replica                                                             |
+| Area          | Reference                               | This template                                                            |
 | ------------- | --------------------------------------- | ------------------------------------------------------------------------ |
 | Currency      | INR default with a 55-currency selector | USD from the trial store; static `USD` label, no selector                |
 | Product rail  | Five cards in the measured design       | Up to eight `bestsellers` cards in `HomeProductRail`                     |
@@ -312,14 +313,15 @@ Known differences from the reference are deliberate or environmental:
 | Location                  | Contents                                                                                                                          |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `docs/reference/`         | 26 live-site JPG captures, plus `DESIGN.md`, `FLOWS.md` and `ASSETS.md`.                                                          |
-| `public/reference/`       | 12 original design-study assets used by the shell and homepage: wordmark, hero, editorial images and link tiles.                  |
+| `public/reference/`       | 11 original design-study assets used by the shell and homepage: hero, editorial images and link tiles.                            |
 | `public/reference/clone/` | 40 reference images used as seed input for Shopify content: about, press, lookbook/archive, journal, care guide and size diagram. |
 | Shopify Files / CDN       | Seeded product and content photography, served through `cdn.shopify.com`; `next.config.ts` allows that remote host.               |
 
-The `public/reference/` files are the reference brand's assets. `public/reference/clone/` has the
-same restriction: it exists for the private study and must be replaced before launch. Product and
-content photography is uploaded to Shopify Files by the seeders; the `public/` copies are seed input
-and app-owned design assets, not the runtime source for migrated content.
+The placeholder wordmark lives in `public/brand/wordmark.svg` and is the template mark. The
+`public/reference/` files are the reference brand's assets. `public/reference/clone/` has the same
+restriction: it exists for the private study and must be replaced before launch. Product and content photography is uploaded to
+Shopify Files by the seeders; the `public/` copies are seed input and app-owned design assets, not the
+runtime source for migrated content.
 
 Every `next/image` usage in the rebuilt surfaces passes `sizes="100vw"`, including thumbnails, as
 required by `AGENTS.md`. `next.config.ts` sets `deviceSizes: [1320, 1920]` and `imageSizes: []`, so
@@ -409,10 +411,10 @@ verification.
   send mail, create a Shopify customer or post to a marketing provider.
 - **Hosted commerce surfaces:** checkout, payment failure, order status and customer account sign-in
   are Shopify-hosted. Customer accounts are disabled by default.
-- **Wishlist:** saves products in `localStorage` under `ps-wishlist`; it is per-browser and is not
+- **Wishlist:** saves products in `localStorage` under `wishlist`; it is per-browser and is not
   synced to a customer account.
 - **Currency:** the trial store is priced in USD, so the storefront shows USD. The reference defaults
-  to INR and exposes a currency selector; this replica has only a static USD label.
+  to INR and exposes a currency selector; this template has only a static USD label.
 - **Catalog imagery:** accessories and outerwear use editorial or press imagery from the reference
   rather than dedicated product photography. The seeder does not add new photography.
-- **Brand assets:** the wordmark, reference photography and copied brand copy must be replaced before public distribution. The current assets are licensed for this private study only.
+- **Brand assets:** reference photography and copied brand copy must be replaced before public distribution. The placeholder wordmark is the template mark; the reference imagery is licensed for this private study only.

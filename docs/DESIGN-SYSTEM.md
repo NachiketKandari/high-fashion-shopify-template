@@ -1,18 +1,18 @@
-# Polite Society design system
+# High-fashion storefront design system
 
-This is the canonical presentation contract for the Polite Society storefront. It defines the
-tokens, layout rules, brand mark, component anatomy, motion and accessibility behaviour that every
-storefront surface must share.
+This is the canonical presentation contract for the High-Fashion Shopify Template and its Lorem
+Ipsum storefront. It defines the tokens, layout rules, brand mark, component anatomy, motion and
+accessibility behaviour that every storefront surface must share.
 
 It is normative for presentation only. Commerce facts — prices, availability, currency, cart totals,
 checkout and customer identity — always come from Shopify. The system is built from the live
 reference measured on 4 November 2026 and re-measured on 5 November 2026; see
-[`reference/DESIGN.md`](./reference/DESIGN.md) for the measurement log and
-[`DESIGN-SYSTEM-AUDIT.md`](./DESIGN-SYSTEM-AUDIT.md) for the current implementation gap and migration
-plan.
+[`reference/DESIGN.md`](./reference/DESIGN.md) for the measurement log,
+[`DESIGN-SYSTEM-AUDIT.md`](./DESIGN-SYSTEM-AUDIT.md) for the historical gap analysis, and
+[`DESIGN-SYSTEM-ENFORCEMENT.md`](./DESIGN-SYSTEM-ENFORCEMENT.md) for the checks that keep the
+implementation on-system.
 
-The reference photography, wordmark and brand copy are licensed for this private design study only.
-Replace them with licensed assets before publishing.
+Reference photography and press imagery remain placeholders; replace them before publishing.
 
 ## 1. Principles
 
@@ -34,11 +34,16 @@ Replace them with licensed assets before publishing.
 
 Tokens live in [`app/globals.css`](../app/globals.css):
 
-- `@theme inline` exposes tokens as Tailwind utilities (`bg-ink`, `text-h2`, `ease-polite`).
+- `@theme inline` exposes tokens as Tailwind utilities (`bg-ink`, `text-h2`, `ease-standard`); the
+  composed role utilities (`type-h2`) are defined beside them.
 - `:root` and media queries hold values that change with viewport or runtime state.
 - `lib/config/` holds brand and commerce configuration, never visual values.
 - Components consume utilities and CSS variables. `components/ui/` primitives take primitive props
   only and contain no domain data.
+- Type roles are `type-display`, `type-h2`, `type-h3`, `type-h4`, `type-label`, `type-body`,
+  `type-body-sm`, `type-control`, `type-chip`, `type-tab` and `type-nav`. Each sets size, line
+  height, weight, tracking and case together, so a component cannot inherit the body's 300 weight
+  into a heading or control by accident.
 
 A target registry is shown below. It normalises the current theme and the values measured from the
 live reference. The audit maps the current implementation to this registry.
@@ -72,26 +77,26 @@ DM Sans, weights 300/400/500. Body copy is 300; headings, labels and controls ar
 for tabular emphasis such as a selected filter count. All letter spacing is `0.05em` unless stated.
 There is no monospace role on storefront surfaces; the wordmark is an SVG, not type.
 
-| Token          | Size / line | Weight | Case      | Use                                        |
-| -------------- | ----------- | ------ | --------- | ------------------------------------------ |
-| `text-display` | 22 / 29     | 400    | uppercase | PDP title, price, large editorial heading  |
-| `text-h2`      | 18 / 23     | 400    | uppercase | Collection title, rail title, modal title  |
-| `text-h3`      | 14 / 18     | 400    | uppercase | Section labels, cart drawer title          |
-| `text-h4`      | 12 / 16     | 400    | uppercase | Mega-menu links, option labels, card title |
-| `text-label`   | 9 / 14      | 400    | uppercase | Micro labels, payment marks                |
-| `text-body`    | 14 / 21     | 300    | sentence  | Default copy, descriptions                 |
-| `text-body-sm` | 12 / 18     | 300    | sentence  | Secondary copy, footer links               |
-| `text-control` | 11 / 14     | 400    | uppercase | Buttons, small links, helper labels        |
-| `text-chip`    | 12 / 18     | 400    | uppercase | Chips, sort, toolbar                       |
-| `text-tab`     | 11 / 16     | 400    | uppercase | PDP tabs                                   |
-| `text-nav`     | 13 / 18     | 400    | uppercase | Desktop nav, utility links                 |
+| Token          | Role utility   | Size / line | Weight | Case      | Use                                        |
+| -------------- | -------------- | ----------- | ------ | --------- | ------------------------------------------ |
+| `text-display` | `type-display` | 22 / 29     | 400    | uppercase | PDP title, price, large editorial heading  |
+| `text-h2`      | `type-h2`      | 18 / 23     | 400    | uppercase | Collection title, rail title, modal title  |
+| `text-h3`      | `type-h3`      | 14 / 18     | 400    | uppercase | Section labels, cart drawer title          |
+| `text-h4`      | `type-h4`      | 12 / 16     | 400    | uppercase | Mega-menu links, option labels, card title |
+| `text-label`   | `type-label`   | 9 / 14      | 400    | uppercase | Micro labels, payment marks                |
+| `text-body`    | `type-body`    | 14 / 21     | 300    | sentence  | Default copy, descriptions                 |
+| `text-body-sm` | `type-body-sm` | 12 / 18     | 300    | sentence  | Secondary copy, footer links               |
+| `text-control` | `type-control` | 11 / 14     | 400    | uppercase | Buttons, small links, helper labels        |
+| `text-chip`    | `type-chip`    | 12 / 18     | 400    | uppercase | Chips, sort, toolbar                       |
+| `text-tab`     | `type-tab`     | 11 / 16     | 400    | uppercase | PDP tabs                                   |
+| `text-nav`     | `type-nav`     | 13 / 18     | 400    | uppercase | Desktop nav, utility links                 |
 
 Rules:
 
 - Headings and controls must set `font-weight: 400`. The body's 300 must never leak into a heading,
   nav item, button, chip or tab.
 - Do not rely on Tailwind's default negative heading tracking. The theme must not attach negative
-  letter spacing to `text-lg`/`text-xl`; Polite Society tracks positively.
+  letter spacing to `text-lg`/`text-xl`; the storefront tracks positively.
 - Type utilities should include their line height in the token (`--text-h2--line-height`) so a
   component does not repeat `leading-[23px]`.
 - Use rem values in the registry. The current 14px body is 0.875rem.
@@ -143,7 +148,7 @@ template leftover and should be removed unless it is the single modal elevation.
 
 | Token                | Value                         | Use                                    |
 | -------------------- | ----------------------------- | -------------------------------------- |
-| `--ease-polite`      | `cubic-bezier(.2, .6, .2, 1)` | All authored motion                    |
+| `--ease-standard`    | `cubic-bezier(.2, .6, .2, 1)` | All authored motion                    |
 | `--motion-fast`      | 100ms                         | Press feedback, colour tweaks          |
 | `--motion-base`      | 300ms                         | Header, mega menu, drawers, dialogs    |
 | `--motion-long`      | 500ms                         | Announcement swap, image crossfade     |
@@ -162,8 +167,9 @@ component contract. Do not use Tailwind's default 150ms timing function for auth
 | `desktop` | 1100px | 30px gutter, large home masthead, full nav, mega menu, 4-column grid |
 | `wide`    | 1440px | Reference capture width; no separate layout                          |
 
-Tailwind's `xl` (1280px) is not the desktop breakpoint. Register `desktop: 68.75rem` and migrate the
-header, nav, gutter and grid rules to it.
+Tailwind's `xl` (1280px) is not the desktop breakpoint. `@theme` registers `desktop: 68.75rem`,
+`tablet: 46.875rem` and `wide: 90rem`; header, nav, gutter and grid rules use `desktop:`. The
+static check rejects `sm:`, `md:`, `lg:` and `xl:` so the four system breakpoints stay authoritative.
 
 ### 2.7 Z-index
 
@@ -183,17 +189,17 @@ Lucide icons, 1.25 stroke, sizes 12/14/16/20. Icons inherit current colour. Icon
 
 ## 3. Brand mark
 
-The wordmark is the only logo lockup. It is a single SVG, `public/reference/ps-wordmark.svg`, with an
-intrinsic viewBox of `149.354 × 12.054` (ratio 12.39:1). It is black, has no clear-space padding in
-the file, and must never be recreated as text.
+The wordmark is the only logo lockup. It is the placeholder wordmark, a single SVG at
+`public/brand/wordmark.svg`, rendered at `149.354 × 12.054` (ratio 12.39:1). Its viewBox uses the
+same ratio and includes clear space around the outlined lettering. It is black and must never be
+recreated as text. `components/brand/wordmark.tsx` owns every instance.
 
-| Variant          | Rendered size | Where                                     |
-| ---------------- | ------------- | ----------------------------------------- |
-| `masthead`       | 1016 × 82     | Homepage large header at 1440             |
-| `compact`        | 342 × 27.6    | Desktop header on every other route/state |
-| `compact-mobile` | 170 × 13.7    | Mobile header                             |
-| `menu`           | 210 × 16.9    | Mobile menu panel                         |
-| `footer`         | 315 × 25.4    | Footer                                    |
+| Variant    | Rendered size                         | Where                             |
+| ---------- | ------------------------------------- | --------------------------------- |
+| `masthead` | 1016 × 82                             | Homepage large header at 1440     |
+| `compact`  | 342 × 27.6 desktop, 170 × 13.7 mobile | Header on every other route/state |
+| `menu`     | 210 × 16.9                            | Mobile menu panel                 |
+| `footer`   | 315 × 25.4                            | Footer                            |
 
 Rules:
 
@@ -202,14 +208,17 @@ Rules:
 - The masthead width is `min(1016px, calc(100vw - 2 * var(--gutter)))`; it scales below 1440.
 - Derive height from the 12.39:1 ratio. Do not declare 342 × 28, 315 × 25 or another rounded pair;
   those introduce a 1–2% squash.
-- The current SVG contains a white background rect. Remove it, or render the mark only on paper.
-- The mark links to `/` with `aria-label="Polite Society"`; the image alt is `Polite Society`.
-- Load the above-the-fold header mark with `priority`. Footer and menu marks are lazy.
+- The SVG paints no background. Keep the mark on paper.
+- The mark links to `/` with `aria-label` and `alt` from `shopConfig.site.name`.
+- Load the compact header mark with `priority` on non-home routes. The homepage hero is the LCP,
+  so the masthead is not preloaded twice; footer and menu marks are lazy.
 - Keep the measured reference at 342px on desktop and 170px on mobile. The current live mobile header
   uses 210px, but 170px is the right choice when utility icons meet the 36px target; record that as a
   deliberate accessibility decision.
 - Clear space is at least the gutter on the outside and 14px from adjacent controls.
-- Replace the asset with the production mark before launch. The reference mark is unlicensed.
+- The app icon and favicon use the LI monogram in `app/icon.svg`; regenerate `public/icons/*.png` and
+  `app/apple-icon.png` from that source when the mark changes.
+- Replace the placeholder wordmark with the production mark before launch.
 
 ## 4. Layout primitives
 
@@ -257,7 +266,7 @@ tokens. Do not move domain types into `components/ui/`.
 
 - Sticky white header. Home: 110px masthead + 76px bar at ≥1100. Other routes: 56px mobile /
   76px desktop bar. The home header reserves 186px in flow so content does not jump on collapse.
-- Collapses after 24px of scroll over 300ms with `--ease-polite`; the compact wordmark fades in as
+- Collapses after 24px of scroll over 300ms with `--ease-standard`; the compact wordmark fades in as
   the masthead leaves. The compact bar stays 76px.
 - Nav: 13/18 400 uppercase, 25px gap, 12px vertical padding. Active/hover underline is a 1px scaleX
   line that grows from the left over 350ms.
@@ -270,7 +279,7 @@ tokens. Do not move domain types into `components/ui/`.
 - Full-width white panel directly below the bar, 1440 × 496 at the reference. 36px top / 30px side /
   40px bottom padding; link columns + two 260 × 418 portrait tiles at 60px gap.
 - Opens on hover and `:focus-visible`, closes on leave, focus-out, Escape and route change.
-- 300ms opacity + 4px translate with `--ease-polite`; trigger underline stays active.
+- 300ms opacity + 4px translate with `--ease-standard`; trigger underline stays active.
 - Escape returns focus to the trigger. The trigger is a disclosure button (`aria-expanded`,
   `aria-controls`), not a menu item unless the panel adopts a menu keyboard model.
 - Disabled at <1100px; the mobile menu owns that range.
@@ -282,7 +291,7 @@ tokens. Do not move domain types into `components/ui/`.
 - 14/18 400 uppercase rows, 38px row height, 20px gutter. Nested groups use native `<details>` with
   a rotating chevron.
 - Bottom row pinned to the viewport: currency left, account right when enabled.
-- 300ms translate with `--ease-polite`; overlay fades in at the same duration.
+- 300ms translate with `--ease-standard`; overlay fades in at the same duration.
 
 **Search**
 
@@ -317,7 +326,7 @@ tokens. Do not move domain types into `components/ui/`.
 **Product card**
 
 - Media 2:3, `bg-surface` placeholder, second image crossfades on hover/focus over 500ms.
-- Featured image scales 1.03 over 600ms with `--ease-polite`; reduced motion disables the scale.
+- Featured image scales 1.03 over 600ms with `--ease-standard`; reduced motion disables the scale.
 - Colour dots 10px, 8px gap, 14px top/right inset, each with a visually hidden colour name.
 - Info inset 8px. Title 12/16 400 uppercase truncates on one line; price 12/16 300 muted on its own
   line for the rail and on the title baseline for the grid when space allows. Sizes 12/18 300 muted.
@@ -370,7 +379,7 @@ tokens. Do not move domain types into `components/ui/`.
 | Surface               | Trigger             | Motion                                         |
 | --------------------- | ------------------- | ---------------------------------------------- |
 | Announcement          | 3s timer            | 500ms opacity + 4px translate                  |
-| Header collapse       | scroll > 24px       | 300ms height/opacity with `--ease-polite`      |
+| Header collapse       | scroll > 24px       | 300ms height/opacity with `--ease-standard`    |
 | Nav/utility underline | hover/focus/open    | 350ms scaleX from the left                     |
 | Mega menu             | hover/focus-visible | 300ms opacity + 4px translate                  |
 | Drawers and dialogs   | open/close          | 300ms transform/opacity; overlay 300ms opacity |
@@ -431,7 +440,8 @@ Interaction rules:
 - Buttons use verbs: `Add to cart`, `Buy it now`, `View all`, `Apply`, `Clear all`.
 - Empty states say what happened and what to do next in one short sentence.
 - Prices, currency and availability are formatted from Shopify responses, never from local maps.
-- The wordmark, reference photography and copied brand copy are placeholders for this study.
+- The wordmark, reference photography and press imagery remain placeholders; replace them before
+  publishing.
 
 ## 10. Governance
 
@@ -442,7 +452,13 @@ A change is on-system only when:
 - it has hover, focus-visible, active, disabled and loading states;
 - it has a keyboard path and a reduced-motion path;
 - it preserves the 36px target and the reserved image geometry;
-- it passes the Playwright verification protocol in the audit document.
+- it passes the computed-style, target, motion, accessibility and flow checks in `tests/design/`.
+
+`pnpm lint` runs `scripts/check-design.mjs` against the token manifest and the source. `pnpm
+test:design` runs the Playwright contracts. `pnpm audit:reference` measures the template and the
+reference storefront and writes [`reference/PLAYWRIGHT-COMPARISON.md`](./reference/PLAYWRIGHT-COMPARISON.md).
+The enforcement strategy and its research are in
+[`DESIGN-SYSTEM-ENFORCEMENT.md`](./DESIGN-SYSTEM-ENFORCEMENT.md).
 
 Exceptions are recorded in the component contract with the reason and the owner. One-off values in a
 feature file are not exceptions; they are drift.

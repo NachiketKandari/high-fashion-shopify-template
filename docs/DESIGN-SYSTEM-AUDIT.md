@@ -1,30 +1,32 @@
 # Design system audit and migration plan
 
-**Status:** planning only. No application code was changed for this audit.
+**Status:** implemented. The detailed findings below are the pre-implementation record; the current
+contract is verified by `pnpm lint:design` and `pnpm test:design`.
 **Date:** 5 November 2026
 **Scope:** presentation, motion, accessibility and design-system integration across the storefront.
 **Canonical specification:** [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md).
+**Current verification:** [`DESIGN-SYSTEM-ENFORCEMENT.md`](./DESIGN-SYSTEM-ENFORCEMENT.md),
+`tests/design/`, and [`reference/PLAYWRIGHT-COMPARISON.md`](./reference/PLAYWRIGHT-COMPARISON.md).
 
-The codebase changed while this audit ran. Two commits landed: `feat: rebuild the Polite Society
-storefront clone` and `feat(content): migrate editorial pages and journal to Shopify`. The editorial
-and journal routes now render from Shopify, so findings that depended on those local route files are
-flagged or removed. The audit is against the current content-migrated HEAD; the wider content
-migration is out of scope.
+The codebase changed while this audit ran. Two commits landed: the storefront rebuild and the
+content migration. The editorial and journal routes now render from Shopify, so findings that
+depended on those local route files are flagged or removed. The audit is against the current
+content-migrated HEAD; the wider content migration is out of scope.
 
 **The short version**
 
-- The visual foundation is close, but headings, nav, chips and tabs inherit the 300 body weight; the
-  reference uses 400.
-- The gutter and desktop nav switch at the wrong breakpoints (768/1280 instead of 1100), and the
-  wordmark is copied into five components instead of being one brand component.
-- The UI is still partly shadcn/base: buttons are 14px/500 with radius, badges are pills, sheets
-  carry shadows and 500ms openings, and green/amber/red commerce accents break the monochrome rule.
-- Motion exists on almost every reference flow, but durations/easing are mixed and reduced-motion
-  support is limited.
-- The release blockers are accessibility: PDP tabs are not keyboard-operable, primary inputs remove
-  focus, and many targets are below 36px.
-- The migration plan is token-first, then primitives, shell, commerce surfaces, motion, and a final
-  Playwright verification pass.
+- The token layer now registers colour, type roles, spacing, breakpoints, motion, focus and
+  reduced-motion behaviour in `app/globals.css`; headings, nav, chips and tabs compute 400.
+- The gutter, header, nav, grids and PDP split switch at the 1100px `desktop` breakpoint, and one
+  `Wordmark` component owns every brand-mark instance.
+- Primitives use the zero-radius, hairline, 36px-target contract; green/amber/red commerce accents
+  and the Shop purple are gone.
+- Drawers and dialogs use 300ms `--ease-standard`, and the global reduced-motion layer stops authored
+  transition, autoplay and smooth scrolling.
+- PDP tabs implement the ARIA tabs pattern, inputs keep a visible focus ring, and every checked
+  interactive target is at least 36px.
+- Static drift checks, computed-style contracts and the reference comparison keep the system from
+  drifting again.
 
 ## 1. What was checked
 
@@ -48,23 +50,23 @@ the empty/filled cart states.
 
 ## 2. Scorecard
 
-| Area                  | Status  | Summary                                                                                                                               |
-| --------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Token foundation      | Partial | Colour and body type are close; heading weight, type scale, tracking, input border, breakpoint and motion tokens are not centralised. |
-| Layout and spacing    | Partial | Gutter switches at 768 instead of 1100; page/section spacing is inconsistent; editorial and rail gaps differ from the reference.      |
-| Brand mark            | Partial | Correct asset, but five inline copies, three distorted aspect ratios and double priority loading; no shared `Wordmark`.               |
-| Shell                 | Partial | Header, mega menu, search, contact, cart and footer exist; mobile menu and utility targets diverge.                                   |
-| Product cards / rails | Partial | Core interaction exists; typography, gap, quick-shop, swatch names and hover states diverge.                                          |
-| Collection            | Partial | Grid geometry is close; title/chips weight, filter footer, search and sort target sizes diverge.                                      |
-| Product detail        | Partial | Split, gallery, sticky info and forms exist; title/tab weight, tab keyboard model and size-guide content diverge.                     |
-| Cart                  | Partial | Drawer/page and checkout hand-off work; title weight, line-item target sizes and progress semantics diverge.                          |
-| Motion                | Partial | Most interactions exist; durations, easing, reduced motion and several enter/exit states are inconsistent.                            |
-| Accessibility         | Fail    | Keyboard tabs, focus removal, sub-36px targets and missing reduced-motion behaviour are release blockers.                             |
-| Performance           | Pass*   | Image rules follow `AGENTS.md`; two hero images are prioritised, and Next warns about `sizes="100vw"` by design.                      |
-| Code-system integrity | Partial | Raw px/hex values, template radii/shadows, unused primitives and a leaked `compact` prop remain.                                      |
+| Area                  | Status | Current verification                                                                                                  |
+| --------------------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| Token foundation      | Pass   | Colour, type roles, spacing, breakpoints, motion, focus and reduced motion are registered and asserted.               |
+| Layout and spacing    | Pass   | Gutter 20/30 at 1100, page top 24, section gap 40/60, grid gaps 3 and 24/20.                                          |
+| Brand mark            | Pass   | One `Wordmark`, one intrinsic ratio, one priority rule, five rendered sizes.                                          |
+| Shell                 | Pass*  | Header, mega menu, mobile menu, search, contact, cart and footer follow the system; currency is intentionally static. |
+| Product cards / rails | Pass   | 2:3 media, 10px swatches with names, 12/16 type, 8px inset, hover/focus reveal and quick shop.                        |
+| Collection            | Pass*  | Grid, chips, 36px toolbar and sticky filter footer; filter application remains immediate rather than draft.           |
+| Product detail        | Pass*  | Split, gallery, sticky info, tabs key model, 36px controls and the shared find-my-size size guide.                    |
+| Cart                  | Pass   | 440px drawer, 14/18 title, 36px quantity controls, progressbar and live message.                                      |
+| Motion                | Pass   | 300ms `--ease-standard` overlays, 350ms underline, 600ms image zoom and a global reduced-motion layer.                |
+| Accessibility         | Pass*  | Automated tab, focus, aria-modal, target and reduced-motion checks pass; screen reader remains manual.                |
+| Performance           | Pass*  | One hero image is prioritised; `sizes="100vw"` warnings are the accepted repository policy.                           |
+| Code-system integrity | Pass   | The static checker rejects template radii/shadows, weight 500+, spectral colours and arbitrary type.                  |
 
-\* Performance passes the repository's explicit image policy, but the two priority hero images and
-the pending LCP wordmark warning need review.
+\* The starred items retain the product decisions and content dependencies in §7. Automated checks
+cover the computed contract; they do not replace a screen-reader pass.
 
 ## 3. Measured deltas
 
@@ -136,6 +138,9 @@ These are computed values from the live reference and the local clone at 1440px 
 
 ## 4. Findings
 
+> Historical record. These findings describe the pre-implementation HEAD and are retained as
+> evidence for the migration. They are not a current gap list; use the verification commands above.
+
 ### P0 — release blockers
 
 **P0.1 Heading and control weights leak 300.**
@@ -185,7 +190,7 @@ Remove the background rect or render the mark on paper only.
 200ms (`components/ui/dialog.tsx:25,47`). The reference design token is 300ms with
 `cubic-bezier(.2,.6,.2,1)`.
 
-Fix direction: use `--motion-base` and `--ease-polite` on the overlay and popup; keep a documented
+Fix direction: use `--motion-base` and `--ease-standard` on the overlay and popup; keep a documented
 exception if the cart's longer reference duration is preferred.
 
 **P0.6 Sheet/Dialog titles inherit `font-semibold`.**
@@ -369,7 +374,7 @@ Fix direction: replace them role by role; do not add more size aliases.
 - `app/globals.css:47-50` zeroes radii, but `rounded-lg`, `rounded-md`, `rounded-full`, `shadow-xs`
   and `shadow-lg` remain across primitives and feature files. Most render as zero radius but
   communicate the wrong intent.
-- `components/ui/button.tsx:7` uses `text-sm font-medium` and `rounded-lg`; the Polite Society button
+- `components/ui/button.tsx:7` uses `text-sm font-medium` and `rounded-lg`; the storefront button
   is 11px/14 400 uppercase with no radius.
 - `components/ui/sheet.tsx:67` uses `rounded-t-3xl` on the bottom sheet, which conflicts with the
   zero-radius system.
@@ -389,6 +394,9 @@ Fix direction: replace them role by role; do not add more size aliases.
 
 ## 5. Migration plan
 
+> Historical record. This is the plan that was executed; current work is gated by
+> `scripts/check-design.mjs` and `tests/design/`.
+
 The plan is ordered so each phase reduces the next phase's work. Do not start with page-by-page
 polish; the token and primitive layers are the root causes.
 
@@ -399,7 +407,7 @@ polish; the token and primitive layers are the root causes.
 3. Set the input border to `#cccccc`; keep `#e1e1e1` for rules; set error tokens and remove
    `--positive` and `--color-shop` from storefront surfaces.
 4. Add `--gutter`, `--page-top`, `--section-gap`, `--grid-gap`, `--grid-row-gap`, `--card-inset`.
-5. Add `--ease-polite`, `--motion-*`, `desktop` and `tablet` breakpoints.
+5. Add `--ease-standard`, `--motion-*`, `desktop` and `tablet` breakpoints.
 6. Add one focus-ring utility and one reduced-motion layer.
 7. Zero every rectangular radius, remove template shadows, and remove the unearned `ring-3`
    focus treatment.
@@ -412,7 +420,7 @@ line height; no negative tracking on headings.
 
 1. `Button`: variants `solid`, `outline`, `link`; sizes 36/40; 11/14 400 uppercase; zero radius.
 2. `Input`, `Textarea`, `Select`: one border token, one focus ring, 35/36px height.
-3. `Sheet`, `Dialog`: 300ms `--ease-polite`, `aria-modal`, title weight from the caller, 36px close,
+3. `Sheet`, `Dialog`: 300ms `--ease-standard`, `aria-modal`, title weight from the caller, 36px close,
    sticky-header support for long sheets.
 4. `Swatch`: visual 10px, interactive wrapper 36px, visible selected ring and hidden name.
 5. `Badge`, `Tabs`, `Skeleton` and any retained `Accordion`: remove template radii/shadows; add
@@ -451,7 +459,7 @@ or control; no interactive target is below 36px.
 
 ### Phase 4 — Motion and completeness
 
-1. Replace 150/200/500ms defaults with the motion tokens; use `--ease-polite` on authored motion.
+1. Replace 150/200/500ms defaults with the motion tokens; use `--ease-standard` on authored motion.
 2. Add reduced-motion handling to announcement, rails, gallery, drawers, dialogs and loading.
 3. Implement the missing interactions: search groups + keyboard, filter footer, infinite-load status,
    quick shop, rail drag, wishlist feedback, recently viewed.
@@ -485,7 +493,7 @@ const probe = {
   body: getComputedStyle(document.body).font,
   h2: getComputedStyle(document.querySelector("main h2")).font,
   gutter: root.getPropertyValue("--gutter"),
-  ease: root.getPropertyValue("--ease-polite"),
+  ease: root.getPropertyValue("--ease-standard"),
 };
 ```
 
@@ -531,7 +539,7 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
 1. **Live drift.** The current live site uses 18px 2-up labels, 13px 3-up labels, 0 editorial gaps,
    2:3 mobile editorial images, 2:3 product cards (not 3:4), an 18/23 rail heading (not 16px) and a
    64px PDP info top (not 24px); the 4 November capture recorded the older values. Adopt the current
-   live values for those specifics, because the user asked to follow the Polite Society system, and
+   live values for those specifics, because the user asked to follow the reference storefront system, and
    record the change in `reference/DESIGN.md`.
 2. **Desktop breakpoint.** Adopt 1100px, not Tailwind `xl`. This changes the 768–1279px experience and
    is the largest visible layout correction.
@@ -551,20 +559,38 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
    content may still move; do not couple the design system to local route files. The shell and
    commerce components are the priority.
 
-## 8. Verification status
+## 8. Current exceptions and residual risks
 
-| Check                         | Result                                                             |
-| ----------------------------- | ------------------------------------------------------------------ |
-| Live reference measurements   | Complete at 1440 and 390; 768 reviewed against the reference rules |
-| Local clone measurements      | Complete at 1440 and 390 for the same routes                       |
-| Interactive Playwright checks | Home, mega menu, mobile menu, search, cart add, filter, PDP tabs   |
-| `pnpm typecheck`              | Passes                                                             |
-| `pnpm lint`                   | Passes                                                             |
-| `pnpm build`                  | Not run for this planning pass                                     |
-| Reduced-motion pass           | Not run across every component; audit found the gaps above         |
-| Screen-reader pass            | Not run; findings are static and Playwright-derived                |
-| Checkout completion           | Not exercised; Shopify-hosted and out of scope                     |
+1. **Newsletter width.** The system specifies a 448px modal; the live reference now renders 720px on
+   desktop. The clone keeps 448px so the modal stays a narrow interruption.
+2. **Immediate filters.** The filter drawer has the sticky header and Clear all/Apply footer, but
+   facets still apply immediately rather than as a draft. A draft needs a separate browse-state
+   model; styling does not fix it.
+3. **Rail drag.** The product rail supports arrows, keyboard arrows and smooth scrolling, not pointer
+   drag. Native overflow remains the fallback.
+4. **Size-guide content.** The drawer now reuses the shared size-guide component: category tabs,
+   find-my-size, conversion table and measurement diagram. Keep it aligned with the Shopify
+   size-guide page when that copy changes.
+5. **Reference drift.** The live PDP uses normal title tracking and a 16px mobile collection title;
+   the clone keeps the system's 0.05em tracking and 18/23 collection title.
+6. **Runtime surfaces.** Home, collection, PDP, search, mega menu, mobile menu, cart drawer, filter
+   drawer and newsletter are covered by Playwright. Account and Shop Agent pages are type-checked and
+   on-system but not part of the automated flow suite.
+7. **Screen reader.** Automated ARIA, focus, tab-key, target and reduced-motion checks pass; a
+   screen-reader pass remains manual.
+8. **Checkout.** Shopify-hosted and out of scope.
 
-No application files were modified for this audit. The only changes are this document,
-[`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md), the documentation links in `README.md`, and the pointer at
-the top of [`reference/DESIGN.md`](./reference/DESIGN.md).
+## 9. Verification status
+
+| Check                         | Result                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| Live reference measurements   | Complete at 1440 and 390; written by `pnpm audit:reference`             |
+| Local clone measurements      | Complete at 1440 and 390; written by `pnpm audit:reference`             |
+| Interactive Playwright checks | Home, mega menu, mobile menu, search, cart add, filter, newsletter, PDP |
+| `pnpm typecheck`              | Passes                                                                  |
+| `pnpm lint`                   | Passes, including the static design check                               |
+| `pnpm test:design`            | 16 tests pass                                                           |
+| `pnpm build`                  | Passes                                                                  |
+| Reduced-motion pass           | Playwright assertion for announcement and authored transitions          |
+| Screen-reader pass            | Not run; findings are static and Playwright-derived                     |
+| Checkout completion           | Not exercised; Shopify-hosted and out of scope                          |

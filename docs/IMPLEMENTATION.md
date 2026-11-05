@@ -1,4 +1,4 @@
-# Polite Society replica — implementation notes
+# Storefront implementation notes
 
 The storefront in this repository now reproduces the design system and page anatomy captured in
 [`docs/reference/DESIGN.md`](./reference/DESIGN.md). For the stack map — which Shopify API owns
@@ -23,7 +23,7 @@ was verified, and what still depends on Shopify credentials or production decisi
 | Cart          | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                    |
 | Footer        | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                  |
 | Newsletter    | Modal after five seconds with 30-day local dismissal; footer form.                                                                                                                                                          |
-| Our World     | About Us page with founder, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                   |
+| Our World     | About Us page with studio, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                    |
 | Help          | Shopify care guide, size guide with a find-my-size form and measurement tables, Shopify FAQ with native details/summary, contact channels and message form, shipping and returns pages.                                     |
 | Policies      | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                        |
 
@@ -56,20 +56,28 @@ The integration is present and active, not just installed. The only production s
 
 ## Shopify catalog
 
-Seeded on 5 November 2026 through the Shopify Admin API. The storefront now shows the fashion
-catalog the design was built for instead of the Hydrogen demo catalog:
+Imported on 5 November 2026 through the Shopify Admin API from the live reference storefront
+with `scripts/import-live-catalog.mjs` (`pnpm import:catalog`). The storefront now mirrors the
+published reference catalog:
 
-- 12 products across corsets, dresses and jumpsuits, tops, bottoms, outerwear and accessories.
-- 23 collections: the eight editorial collections (`corsets`, `dresses-and-jumpsuits`, `tops`,
-  `bottoms`, `new-in`, `core`, `essentials`, `signature`) plus the live-site navigation handles
-  (`chapter-x`, `women`, `unisex-1`, `bestsellers`, `co-ord-sets`, `knits`, `bottoms-women`,
-  `bottoms-unisex`, `accessories`, `work-wear`, `evening`, `weekend`, `festive`,
-  `shirts-and-tshirts`, `outerwear`).
-- 12–18 variants per product (colour × XS–XXL), priced in USD.
-- Product photography imported from the reference CDN into Shopify Files.
-- Demo snowboards unpublished from the **Dummy Store Headless** publication. They remain in the
-  Shopify admin and on the Online Store; the gift card stays published.
-- Navigation, editorial tiles and the “Our Picks” rail now point at the seeded collection handles.
+- 95 products, 880 variants and 709 images across 41 collections.
+- Every published product, option value, variant combination, image count and price was checked
+  against the Storefront API; the import and verification report is written under
+  `.catalog-import/`.
+- Reference prices are INR. This store is USD, so prices use the live storefront's approximate USD
+  display (₹94.83 per USD, rounded to whole dollars). The reference shows the same approximate USD
+  values when its currency selector is set to USD.
+- Product photography is imported from the reference CDN into Shopify Files, including variant
+  images so colour selection changes the gallery.
+- Colour option values use the reference theme's flat swatch palette in
+  `lib/product/color-swatches.ts`; Shopify exposes no swatch value for these products.
+- Demo products, the gift card, stale curated products and non-catalog collections are unpublished
+  from **Dummy Store Headless**. They remain in the Shopify admin.
+- Inventory quantities are not mirrored: the seeding app lacks `read_locations` and
+  `write_inventory`, so variants are untracked and available. Add those scopes and pass
+  `--location-id` to mirror sold-out variants.
+- Product descriptions come from the reference `body_html`. Per-product Fabric and Fit tab copy is
+  not imported yet; the PDP renders its current static copy for those tabs.
 
 ### Credentials: source and storage
 
@@ -100,13 +108,19 @@ ever exposed — a screenshot, a chat, a log — rotate it under **Settings → 
 ### Commands
 
 ```bash
-DRY_RUN=1 corepack pnpm seed:catalog                 # print one product input, no API calls
-corepack pnpm seed:catalog                           # create missing products and collections
-UNPUBLISH_OTHERS=1 corepack pnpm seed:catalog        # also unpublish demo catalog from the Headless channel
+corepack pnpm import:catalog                         # upsert the cached live catalog and collections
+corepack pnpm import:catalog -- --refresh            # refetch the reference catalog first
+corepack pnpm import:catalog -- --skip-imported      # skip products whose counts already match
+corepack pnpm import:catalog -- --collections-only   # resync collection membership only
+corepack pnpm import:catalog -- --dry-run --limit=1  # print one transformed product
+UNPUBLISH_OTHERS=1 corepack pnpm import:catalog       # unpublish non-catalog products and collections
 ```
 
-The script is idempotent: it looks up each handle, skips what exists, and re-publishes to the
-Headless channel on every run.
+`import:catalog` upserts by handle, replaces product media, attaches variant images, and resyncs
+collection membership. Re-running without `--skip-imported` refreshes changed products;
+`--skip-imported` is the fast path when only collections changed. The older
+`pnpm seed:catalog` still seeds the original twelve-product design-study subset and is not the
+source of the full catalog.
 
 ## Verification
 
@@ -115,13 +129,14 @@ Headless channel on every run.
 - `corepack pnpm build` — passes; all storefront routes prerender.
 - Browser checks with Playwright MCP at desktop and mobile sizes, including header collapse,
   mega menu, search, contact, filter, PDP tabs, cart drawer and cart page.
-- Seeded catalog: `/collections/corsets` renders six corsets, `/collections/all` renders the twelve
-  fashion products plus the gift card, the home rail renders `bestsellers`, Shopify CDN imagery
-  loads at full resolution, and add-to-cart puts `Alma Lace Corset Top` (Brown / XS, $185) in the
-  drawer.
-- Seeded navigation collections: every collection handle in `MAIN_NAV` returns `200` and includes
-  at least one product. `accessories` uses the Bustier Belt and `outerwear` uses the Poli-Morph
-  Overshirt, both seeded from reference editorial imagery.
+- Imported catalog: the Storefront API returns 95 of 95 published products with no missing handles,
+  no extra products, and no variant, image, option, price or collection-membership mismatches
+  against the reference catalog.
+- `/collections/corsets` renders 19 corsets, `/collections/all` lists all 95 published products,
+  the home rail renders the 24-product `bestsellers` collection, and add-to-cart puts
+  `Alma Lace Corset Top` (Brown / XS, $158) in the drawer.
+- Navigation collections: every collection handle in `MAIN_NAV` returns `200` and includes at
+  least one product; `accessories` has 2 live products and `outerwear` has 3.
 - Content routes: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`, `/pages/press-v2`,
   `/pages/faqs`, `/pages/shipping-returns`, `/pages/returns-exchanges`,
   `/pages/terms-of-service`, `/pages/privacy-policies`, `/blogs/journal-2` and all three articles
@@ -184,18 +199,22 @@ edits need an explicit `/api/revalidate` call or a shorter content `cacheLife`. 
 [`CONTENT.md`](./CONTENT.md) for the ownership rules, invalidation options and verification
 checklist.
 
-The collection handles in the live menu are seeded by `scripts/seed-catalog.mjs`:
+The collection handles in the live menu are imported by `scripts/import-live-catalog.mjs`:
 `chapter-x`, `women`, `unisex-1`, `bestsellers`, `co-ord-sets`, `knits`, `bottoms-women`,
 `bottoms-unisex`, `accessories`, `work-wear`, `evening`, `weekend`, `festive`,
-`shirts-and-tshirts` and `outerwear`. Each handle contains at least one of the seeded products so
-the navigation has no empty destinations. The accessories and outerwear entries use editorial and
-press imagery because the trial catalog has no dedicated shots for those categories.
+`shirts-and-tshirts` and `outerwear`. Each handle contains at least one published reference
+product so the navigation has no empty destinations. Accessories and outerwear use the reference
+product photography imported into Shopify Files.
 
 ## Known gaps
 
-- **Catalog**: seeded; the design-system assets in `public/reference/` are licensed for this
-  private prototype only and must be replaced before distribution. The accessories and outerwear
-  products use editorial and press imagery rather than dedicated product photography.
+- **Catalog**: 95 published products imported from the reference; the design-system assets in
+  `public/reference/` are licensed for this private prototype only and must be replaced before
+  distribution. Inventory availability and per-product Fabric/Fit copy are not imported yet; the
+  PDP renders static copy for those tabs and all variants are untracked.
+- **Collection facets**: only the built-in Price facet is configured in this store. Product type,
+  colour and fabric facets need the Search & Discovery app configured in Shopify admin; the
+  Storefront API exposes only configured filters.
 - **Content ownership**: the editorial and policy pages plus the journal now live in Shopify.
   Contact, size guide and wishlist remain Next.js because they need forms, local state or a
   client-side size finder. Do not add a local static route for a Shopify handle; see
@@ -211,5 +230,5 @@ press imagery because the trial catalog has no dedicated shots for those categor
 - **Shipping**: no Shiprocket code ships in this repository. See
   [`SHIPROCKET.md`](./SHIPROCKET.md) for the two integration paths.
 - **Payment marks** are typographic, not brand logo assets.
-- **Header wordmark and editorial photography** are the reference brand's assets. Replace them
-  before a public launch.
+- **Editorial photography** is reference imagery. Replace it before a public launch. The placeholder
+  wordmark in `public/brand/wordmark.svg` is the template mark.

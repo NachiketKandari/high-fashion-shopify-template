@@ -1,6 +1,6 @@
-# Polite Society Clone
+# High-Fashion Shopify Template
 
-Polite Society Clone is a Next.js storefront for Shopify, deployed to Vercel, with agent skills in `.agents/skills/`.
+High-Fashion Shopify Template is a Next.js storefront for Shopify, deployed to Vercel, with agent skills in `.agents/skills/`.
 
 ## Three owners
 
@@ -107,6 +107,14 @@ Use the `build-shop` skill for route-specific workflow and audits.
 - **Cart ownership.** Cart tools bind the cart from the browser cookie through channel auth context, and the browser refreshes Hydrogen only after turns settle. The channel has no per-user authorization. Never write cart IDs or replay mutations from restored messages. Interrupted writes have no deduplication; never claim exactly-once behavior or retry an uncertain mutation.
 - **Bounded work.** Before changing framework behavior, read `node_modules/eve/docs/README.md` and the page it routes to; package-manager links can hide files from recursive searches. Stop discovery once the location, imports, and API shape are clear. Edit authored instructions for copy changes and keep the selected model unless asked. Check `pnpm exec eve registry search <query> --json` before adding an integration, prefer a native integration to a custom transport, and keep the Next.js deployment through `withEve`. Shopify's catalog and policy search are the exception: MCP connections cannot shape results, so authored tools call them through `callShopifyMcpTool`.
 - **Verify what the shopper sees.** For conversation or catalog changes, run several product-search turns in one browser session against real Shopify data and confirm the cards, follow-ups, and token usage; a build or tool result is not proof. For session controls, check restoration, Stop and Clear, and failures; pending input must not look like an empty success. Debug empty responses from the full event stream, pending input, tool outputs, and usage before changing rendering, and keep model-facing catalog data compact without dropping constraints, pagination, or errors. Say which checks were mocked, local, or against a preview; keep diagnostic credentials out of source and output, and default to read-only probes.
+
+## Design system
+
+- `app/globals.css` is the only token source. Use `type-*` role utilities for type, never raw `text-[…]`, `leading-[…]`, `font-medium` or a heading size utility.
+- Use `desktop:` (1100px) and `tablet:` (750px), not `xl:`/`md:`, for the storefront breakpoints. Use `--gutter`, `--page-top`, `--section-gap`, `--grid-*` and `--motion-*` rather than one-off values.
+- Rectangular controls and surfaces have zero radius; `rounded-full` is only for counts, colour dots and gallery indicators. Modal elevation is `shadow-modal`; every other template shadow is a defect.
+- `pnpm lint` runs the static drift gate (`scripts/check-design.mjs`); `pnpm test:design` runs the Playwright computed-style, target, ARIA, reduced-motion and flow contracts. Do not add a second styling system, bypass the gate, or add an exception without an owner, reason and expiry.
+- Read `docs/DESIGN-SYSTEM-ENFORCEMENT.md` before changing the token layer, a primitive or the test contract. Use the `ux-explorer` skill for live-reference research and `pnpm audit:reference` for repeatable measurements.
 
 ## Testing (temporary policy)
 

@@ -15,7 +15,7 @@ Use this when the goal is to ship real orders without adding a second order syst
 2. **Install the Shiprocket app** from the Shopify App Store and connect the store. The Shopify
    channel reads orders from Shopify Admin and writes fulfilment and tracking back to the order.
 3. **Configure the basics** in Shiprocket:
-   - Primary pickup location: `Shop No. 1, Solace Apartment, 33rd Road, Bandra West, Mumbai`.
+   - Primary pickup location: `123 Example Street, Mumbai, India`.
    - Default package weight and dimensions. Use the packed weight, not the product weight.
    - Courier allocation: automatic for launch; manual once the lane data is known.
    - COD: enable only if Shopify checkout offers COD for the market.
