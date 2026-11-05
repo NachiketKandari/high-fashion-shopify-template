@@ -1,10 +1,8 @@
-import type { BlogArticle } from "@/lib/blog/types";
-
 const BLOG_HANDLE = "journal-2";
 const BLOG_TITLE = "Journal";
 const PUBLISHED_AT = "2026-08-11T00:00:00.000Z";
 
-export const JOURNAL_ARTICLES: BlogArticle[] = [
+export const JOURNAL_ARTICLES = [
   {
     blogHandle: BLOG_HANDLE,
     blogTitle: BLOG_TITLE,
@@ -145,7 +143,3 @@ export const JOURNAL_ARTICLES: BlogArticle[] = [
     title: "The Polite Society Watchlist",
   },
 ];
-
-export function getJournalArticle(handle: string) {
-  return JOURNAL_ARTICLES.find((article) => article.handle === handle);
-}

@@ -24,7 +24,7 @@ was verified, and what still depends on Shopify credentials or production decisi
 | Footer        | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                  |
 | Newsletter    | Modal after five seconds with 30-day local dismissal; footer form.                                                                                                                                                          |
 | Our World     | About Us page with founder, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                   |
-| Help          | Care guide tabs, size guide with a find-my-size form and measurement tables, FAQ accordion, contact channels and message form, shipping and returns pages.                                                                  |
+| Help          | Shopify care guide, size guide with a find-my-size form and measurement tables, Shopify FAQ with native details/summary, contact channels and message form, shipping and returns pages.                                     |
 | Policies      | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                        |
 
 ## Flows and screenshots
@@ -123,43 +123,43 @@ Headless channel on every run.
   at least one product. `accessories` uses the Bustier Belt and `outerwear` uses the Poli-Morph
   Overshirt, both seeded from reference editorial imagery.
 - Content routes: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`, `/pages/press-v2`,
-  `/pages/faqs`, `/pages/contact-us`, `/pages/size-guide`, `/pages/shipping-returns`,
-  `/pages/returns-exchanges`, `/pages/terms-of-service`, `/pages/privacy-policies`,
-  `/pages/wishlist`, `/blogs/journal-2` and all three articles return `200`.
-- Interactive checks: size finder returns a size, FAQ panels expand, contact form shows its local
-  success state, and the journal links resolve.
+  `/pages/faqs`, `/pages/shipping-returns`, `/pages/returns-exchanges`,
+  `/pages/terms-of-service`, `/pages/privacy-policies`, `/blogs/journal-2` and all three articles
+  return `200` from Shopify content. `/pages/contact-us`, `/pages/size-guide` and `/pages/wishlist`
+  remain Next.js routes.
+- Seeded content: 9 Shopify pages, the `journal-2` blog, 3 articles and 38 images in Shopify Files.
+- Interactive checks: size finder returns a size, FAQ `<details>` panels expand, contact form shows
+  its local success state, and the journal links resolve.
 - GA4 network verification as above.
 
 ## Reference content routes
 
-The live site's content is not fully present in the trial Shopify store: the store has the
-`contact` page and an empty `news` blog. The Dev Dashboard seeding app holds
-`read_online_store_pages`/`write_online_store_pages` for pages, blogs and articles,
-`read_online_store_navigation`/`write_online_store_navigation` for menus, and
-`read_legal_policies`/`write_legal_policies` for legal policies; see
-[`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md). The scopes are granted but no content migration
-has run, so the replica still serves the public content routes from local, versioned content while
-keeping the Shopify page route for pages that do exist:
+The reference content now lives in Shopify. `scripts/seed-content.mjs` created the pages, the
+`journal-2` blog and its three articles, and uploaded 38 images to Shopify Files. The local route
+directories were deleted after the Shopify routes returned `200`. The dynamic
+`app/pages/[handle]`, `app/blogs/[blogHandle]` and `app/blogs/[blogHandle]/[articleHandle]` routes
+are the only handlers for these URLs, and `getPage` / `getBlog` / `getBlogArticle` cache the
+Storefront API reads.
 
-| Route                      | Source                                  |
-| -------------------------- | --------------------------------------- |
-| `/pages/about-us`          | Local editorial page                    |
-| `/pages/lookbooks`         | Local chapter gallery                   |
-| `/pages/care-guide`        | Local care guide                        |
-| `/pages/press-v2`          | Local press grid                        |
-| `/pages/faqs`              | Local FAQ accordion                     |
-| `/pages/contact-us`        | Local contact page and form             |
-| `/pages/size-guide`        | Local size charts and find-my-size form |
-| `/pages/shipping-returns`  | Local shipping copy                     |
-| `/pages/returns-exchanges` | Local returns copy                      |
-| `/pages/terms-of-service`  | Local terms copy                        |
-| `/pages/privacy-policies`  | Local privacy copy                      |
-| `/pages/wishlist`          | Existing local-storage wishlist         |
-| `/blogs/journal-2`         | Local journal index                     |
-| `/blogs/journal-2/*`       | Three local articles                    |
-| `/pages/[handle]`          | Shopify page, when the handle exists    |
+| Route                      | Source                                 |
+| -------------------------- | -------------------------------------- |
+| `/pages/about-us`          | Shopify page                           |
+| `/pages/lookbooks`         | Shopify page                           |
+| `/pages/care-guide`        | Shopify page                           |
+| `/pages/press-v2`          | Shopify page                           |
+| `/pages/faqs`              | Shopify page with `<details>` elements |
+| `/pages/shipping-returns`  | Shopify page                           |
+| `/pages/returns-exchanges` | Shopify page                           |
+| `/pages/terms-of-service`  | Shopify page                           |
+| `/pages/privacy-policies`  | Shopify page                           |
+| `/blogs/journal-2`         | Shopify blog                           |
+| `/blogs/journal-2/*`       | Shopify articles                       |
+| `/pages/contact-us`        | Next.js contact form                   |
+| `/pages/size-guide`        | Next.js size finder and tables         |
+| `/pages/wishlist`          | Next.js browser-local wishlist         |
+| `/pages/[handle]`          | Shopify page fallback                  |
 
-The granted scopes cover the mutation surfaces needed to move this content:
+The granted content scopes are:
 
 | Scope                                           | Unlocks                                                     |
 | ----------------------------------------------- | ----------------------------------------------------------- |
@@ -167,13 +167,22 @@ The granted scopes cover the mutation surfaces needed to move this content:
 | `write_online_store_navigation`                 | Menus, link lists and URL redirects                         |
 | `write_legal_policies`                          | `shopPolicyUpdate` for Terms, Privacy, Shipping and Returns |
 
-`write_files` is also granted, so page and article images can be uploaded to Shopify Files. The
-Storefront API token used by the app is read-only and cannot be used to create content.
+`write_files` is also granted, so page and article images are uploaded to Shopify Files. The
+Storefront API token used by the app is read-only and cannot create content.
 
-A content seeding or migration script still needs to be written and run before these routes can be
-deleted: it must create the pages, blog articles, navigation and policies in Shopify, and each route
-must render from Shopify before its local replica is removed. Do not keep two editable sources of
-the same page.
+`scripts/seed-content.mjs` is create-only by default so it cannot overwrite merchant edits. Use
+`UPDATE=1` only when intentionally replacing page or article bodies from `scripts/content/`.
+
+```bash
+DRY_RUN=1 corepack pnpm seed:content
+corepack pnpm seed:content
+UPDATE=1 corepack pnpm seed:content
+```
+
+Classic Shopify webhooks do not expose `pages/*`, `blogs/*` or `articles/*` topics, so content
+edits need an explicit `/api/revalidate` call or a shorter content `cacheLife`. See
+[`CONTENT.md`](./CONTENT.md) for the ownership rules, invalidation options and verification
+checklist.
 
 The collection handles in the live menu are seeded by `scripts/seed-catalog.mjs`:
 `chapter-x`, `women`, `unisex-1`, `bestsellers`, `co-ord-sets`, `knits`, `bottoms-women`,
@@ -187,12 +196,10 @@ press imagery because the trial catalog has no dedicated shots for those categor
 - **Catalog**: seeded; the design-system assets in `public/reference/` are licensed for this
   private prototype only and must be replaced before distribution. The accessories and outerwear
   products use editorial and press imagery rather than dedicated product photography.
-- **Content ownership**: the about, lookbook, help, policy and journal pages are local replicas,
-  not Shopify pages. The seeding app now has the page, navigation and legal-policy scopes, but no
-  content seeding or migration script has been written or run. The local routes remain until it
-  creates and verifies the Shopify content; see
-  [`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md). Move them to Shopify before giving the
-  merchant an editing surface.
+- **Content ownership**: the editorial and policy pages plus the journal now live in Shopify.
+  Contact, size guide and wishlist remain Next.js because they need forms, local state or a
+  client-side size finder. Do not add a local static route for a Shopify handle; see
+  [`CONTENT.md`](./CONTENT.md). Navigation remains code-owned in `lib/nav/index.ts`.
 - **Wishlist and account**: wishlist saves products in local storage and renders at
   `/pages/wishlist`; it is per-browser and not synced to a customer account. Account utilities
   render only when `shopConfig.auth.isEnabled` is turned on, matching the template's account gate.

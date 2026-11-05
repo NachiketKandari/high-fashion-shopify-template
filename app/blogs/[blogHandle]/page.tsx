@@ -11,8 +11,9 @@ import { PLACEHOLDER_HANDLE } from "@/lib/static-params";
 export async function generateStaticParams() {
   try {
     const { items } = await getShopifySitemapPage("BLOG", 1);
-    const first = items[0];
-    return [{ blogHandle: first ? first.handle : PLACEHOLDER_HANDLE }];
+    return items.length > 0
+      ? items.map(({ handle }) => ({ blogHandle: handle }))
+      : [{ blogHandle: PLACEHOLDER_HANDLE }];
   } catch {
     return [{ blogHandle: PLACEHOLDER_HANDLE }];
   }

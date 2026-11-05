@@ -3,26 +3,20 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { ArticlePage, ArticlePageSkeleton } from "@/components/blog/article-page";
-import { getBlog, getBlogArticle } from "@/lib/blog/server";
+import { getBlogArticle } from "@/lib/blog/server";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 import { getShopifySitemapPage } from "@/lib/seo/server";
 import { PLACEHOLDER_HANDLE } from "@/lib/static-params";
 
 export async function generateStaticParams() {
   try {
-    const { items } = await getShopifySitemapPage("BLOG", 1);
-    const firstBlog = items[0];
-    if (!firstBlog) {
-      return [{ blogHandle: PLACEHOLDER_HANDLE, articleHandle: PLACEHOLDER_HANDLE }];
-    }
-
-    const blog = await getBlog({ handle: firstBlog.handle, limit: 1 });
-    const firstArticle = blog?.articles[0];
-    return [
-      firstArticle
-        ? { blogHandle: blog.handle, articleHandle: firstArticle.handle }
-        : { blogHandle: PLACEHOLDER_HANDLE, articleHandle: PLACEHOLDER_HANDLE },
-    ];
+    const { items } = await getShopifySitemapPage("ARTICLE", 1);
+    return items.length > 0
+      ? items.map(({ blogHandle, handle }) => ({
+          articleHandle: handle,
+          blogHandle: blogHandle ?? PLACEHOLDER_HANDLE,
+        }))
+      : [{ articleHandle: PLACEHOLDER_HANDLE, blogHandle: PLACEHOLDER_HANDLE }];
   } catch {
     return [{ blogHandle: PLACEHOLDER_HANDLE, articleHandle: PLACEHOLDER_HANDLE }];
   }

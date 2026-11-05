@@ -24,6 +24,7 @@ dist/
 
 # misc
 .DS_Store
+.seed-content-cache.json
 *.pem
 
 # playwright mcp output

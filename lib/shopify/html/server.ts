@@ -30,7 +30,7 @@ const SHOPIFY_HTML_OPTIONS: sanitizeHtml.IOptions = {
       "text-decoration": [/^(line-through|none|underline)$/],
     },
   },
-  allowedTags: [...sanitizeHtml.defaults.allowedTags, "iframe", "img"],
+  allowedTags: [...sanitizeHtml.defaults.allowedTags, "details", "iframe", "img", "summary"],
   allowIframeRelativeUrls: false,
   // An iframe loses its src when the host is not allowlisted; drop it rather than render an empty frame.
   exclusiveFilter: (frame) => frame.tag === "iframe" && !frame.attribs.src,

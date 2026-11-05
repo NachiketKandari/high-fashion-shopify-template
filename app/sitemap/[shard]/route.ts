@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 
 import { shopConfig } from "@/lib/config";
-import { getShopPolicies } from "@/lib/policies/server";
 import { getShopifySitemapPage, getShopifySitemapPagesCount } from "@/lib/seo/server";
 import { type ShopifySitemapType } from "@/lib/shopify/operations/sitemap/types";
 
@@ -27,31 +26,11 @@ function xmlResponse(body: string): Response {
   });
 }
 
-const STATIC_CONTENT_PATHS = [
-  "/pages/about-us",
-  "/pages/lookbooks",
-  "/pages/care-guide",
-  "/pages/press-v2",
-  "/pages/faqs",
-  "/pages/contact-us",
-  "/pages/size-guide",
-  "/pages/shipping-returns",
-  "/pages/returns-exchanges",
-  "/pages/terms-of-service",
-  "/pages/privacy-policies",
-  "/blogs/journal-2",
-  "/blogs/journal-2/guide-to-bombay-after-dark",
-  "/blogs/journal-2/in-conversation-with-neetta",
-  "/blogs/journal-2/the-polite-society-watchlist",
-];
+// App-owned pages only; Shopify pages and articles come from their sitemap shards.
+const STATIC_CONTENT_PATHS = ["/pages/contact-us", "/pages/size-guide"];
 
 async function renderStatic(): Promise<Response> {
-  const policies = await getShopPolicies().catch(() => []);
-  const entries = [
-    "/",
-    ...STATIC_CONTENT_PATHS,
-    ...policies.map(({ handle }) => `/policies/${handle}`),
-  ]
+  const entries = ["/", ...STATIC_CONTENT_PATHS]
     .map((pathname) => `  <url><loc>${escapeXml(toAbsoluteUrl(pathname))}</loc></url>`)
     .join("\n");
   return xmlResponse(urlsetWrap(entries));

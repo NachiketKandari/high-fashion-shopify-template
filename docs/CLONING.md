@@ -153,35 +153,37 @@ state. `components/cart/summary.tsx` calls `useCheckout` from `lib/cart/client.t
 `prepareCheckoutAction` in `lib/cart/action.ts`. That action reads the existing `checkoutUrl` and
 does not mutate the cart; the browser then navigates to Shopify-hosted checkout.
 
-### Local content pages
+### Content pages
 
-The trial Shopify store has only a `contact` page and an empty `news` blog. The Dev Dashboard
-seeding app holds `write_online_store_pages`, `write_online_store_navigation` and
-`write_legal_policies`, so the Admin API can create pages, blog articles, navigation and legal
-policies, but no content migration has run. The public content routes are therefore still local,
-versioned replicas. The dynamic `app/pages/[handle]/page.tsx` still serves Shopify pages that exist
-(for example `/pages/contact`); static route directories take precedence for cloned paths.
+The trial Shopify store originally had only a `contact` page and an empty `news` blog. The Dev
+Dashboard seeding app now holds `write_online_store_pages`, `write_online_store_navigation` and
+`write_legal_policies`, and `scripts/seed-content.mjs` has created nine pages, the `journal-2` blog
+and three articles. Thirty-eight content images were uploaded to Shopify Files. The local React
+route directories were deleted after the Shopify routes returned `200`; the dynamic
+`app/pages/[handle]` route is now the only handler for those URLs.
 
-| Routes                                                | Files                                                                         |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `/pages/about-us`, `/pages/lookbooks`                 | `app/pages/about-us/page.tsx`, `app/pages/lookbooks/page.tsx`                 |
-| `/pages/care-guide`, `/pages/press-v2`                | `app/pages/care-guide/page.tsx`, `app/pages/press-v2/page.tsx`                |
-| `/pages/faqs`, `/pages/contact-us`                    | `app/pages/faqs/page.tsx`, `app/pages/contact-us/page.tsx`                    |
-| `/pages/size-guide`, `/pages/shipping-returns`        | `app/pages/size-guide/page.tsx`, `app/pages/shipping-returns/page.tsx`        |
-| `/pages/returns-exchanges`, `/pages/terms-of-service` | `app/pages/returns-exchanges/page.tsx`, `app/pages/terms-of-service/page.tsx` |
-| `/pages/privacy-policies`, `/pages/wishlist`          | `app/pages/privacy-policies/page.tsx`, `app/pages/wishlist/page.tsx`          |
+| Route                                                 | Source                         |
+| ----------------------------------------------------- | ------------------------------ |
+| `/pages/about-us`, `/pages/lookbooks`                 | Shopify pages                  |
+| `/pages/care-guide`, `/pages/press-v2`                | Shopify pages                  |
+| `/pages/faqs`, `/pages/shipping-returns`              | Shopify pages                  |
+| `/pages/returns-exchanges`, `/pages/terms-of-service` | Shopify pages                  |
+| `/pages/privacy-policies`                             | Shopify page                   |
+| `/pages/contact-us`                                   | Next.js contact form           |
+| `/pages/size-guide`                                   | Next.js size finder and tables |
+| `/pages/wishlist`                                     | Next.js browser-local wishlist |
 
-`app/wishlist/page.tsx` is a compatibility redirect to `/pages/wishlist`. The indexable local routes
-are listed in `STATIC_CONTENT_PATHS` in `app/sitemap/[shard]/route.ts`; `/pages/wishlist` is excluded.
-The content routes are not editable in Shopify. A content seeding or migration script still needs
-to be written and run before the static routes can be deleted; see
-[`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md) for the granted scopes.
+`app/wishlist/page.tsx` is a compatibility redirect to `/pages/wishlist`. `STATIC_CONTENT_PATHS` in
+`app/sitemap/[shard]/route.ts` now lists only the two app-owned indexable pages; Shopify's page and
+article sitemap shards cover the migrated content. The seeder is create-only by default so a rerun
+cannot overwrite merchant edits; `UPDATE=1` replaces bodies from `scripts/content/`. See
+[`CONTENT.md`](./CONTENT.md) for the ownership and invalidation rules.
 
 ### Journal
 
 The live blog sitemap contained only `journal-2`, and the article sitemap contained exactly the three
-articles rebuilt here. The index is `app/blogs/journal-2/page.tsx`; articles are
-`app/blogs/journal-2/[articleHandle]/page.tsx`.
+articles rebuilt here. All three now live in the Shopify blog `journal-2` and render through the
+generic `app/blogs/[blogHandle]` and `app/blogs/[blogHandle]/[articleHandle]` routes.
 
 | Article                                     | Handle                         |
 | ------------------------------------------- | ------------------------------ |
@@ -189,14 +191,12 @@ articles rebuilt here. The index is `app/blogs/journal-2/page.tsx`; articles are
 | In Conversation with Neetta                 | `in-conversation-with-neetta`  |
 | The Polite Society Watchlist                | `the-polite-society-watchlist` |
 
-Bodies, excerpts, images and SEO fields live in `lib/content/journal.ts`. The article page generates
-static params from `JOURNAL_ARTICLES`, sanitizes the body with `sanitizeShopifyHtml`, and links to the
-other two stories. The exported page component is synchronous and wraps the `params` read in
-`Suspense` with `JournalArticleSkeleton`; reading URL data outside that boundary triggers Next.js's
-Instant-navigation warning.
+Bodies, excerpts, images and SEO fields were seeded from `scripts/content/journal.mjs`; the runtime
+reads them from Shopify. `app/blogs/journal-2` and `lib/content/journal.ts` were deleted after the
+Shopify routes were verified. The generic blog route sanitizes `contentHtml` with
+`sanitizeShopifyHtml` and wraps the `params` read in `Suspense` with `ArticlePageSkeleton`.
 
-The generic `app/blogs/[blogHandle]` routes still serve Shopify blogs; the trial store's `news` blog
-is empty and renders its empty state.
+The trial store's `news` blog remains empty and renders its empty state.
 
 ## Catalog seeding
 
@@ -272,6 +272,10 @@ menu destination has at least one product.
 DRY_RUN=1 corepack pnpm seed:catalog   # print one product input; no API calls
 corepack pnpm seed:catalog             # create missing products and collections
 UNPUBLISH_OTHERS=1 corepack pnpm seed:catalog
+
+DRY_RUN=1 corepack pnpm seed:content   # list pages, articles and images
+corepack pnpm seed:content             # create missing Shopify content
+UPDATE=1 corepack pnpm seed:content    # replace existing page and article bodies
 ```
 
 ## Navigation and merchandising fidelity
@@ -305,16 +309,17 @@ Known differences from the reference are deliberate or environmental:
 
 ## Assets
 
-| Location                  | Contents                                                                                                                                         |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `docs/reference/`         | 26 live-site JPG captures, plus `DESIGN.md`, `FLOWS.md` and `ASSETS.md`.                                                                         |
-| `public/reference/`       | 12 original design-study assets used by the shell and homepage: wordmark, hero, editorial images and link tiles.                                 |
-| `public/reference/clone/` | 40 extra images downloaded from the reference CDN for local content pages: about, press, lookbook/archive, journal, care guide and size diagram. |
-| Shopify Files / CDN       | Seeded product photography, served through `cdn.shopify.com`; `next.config.ts` allows that remote host.                                          |
+| Location                  | Contents                                                                                                                          |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/reference/`         | 26 live-site JPG captures, plus `DESIGN.md`, `FLOWS.md` and `ASSETS.md`.                                                          |
+| `public/reference/`       | 12 original design-study assets used by the shell and homepage: wordmark, hero, editorial images and link tiles.                  |
+| `public/reference/clone/` | 40 reference images used as seed input for Shopify content: about, press, lookbook/archive, journal, care guide and size diagram. |
+| Shopify Files / CDN       | Seeded product and content photography, served through `cdn.shopify.com`; `next.config.ts` allows that remote host.               |
 
 The `public/reference/` files are the reference brand's assets. `public/reference/clone/` has the
-same restriction: it exists for the private study and must be replaced before launch. Product
-photography is not stored in `public/`; the seeder imports it into Shopify.
+same restriction: it exists for the private study and must be replaced before launch. Product and
+content photography is uploaded to Shopify Files by the seeders; the `public/` copies are seed input
+and app-owned design assets, not the runtime source for migrated content.
 
 Every `next/image` usage in the rebuilt surfaces passes `sizes="100vw"`, including thumbnails, as
 required by `AGENTS.md`. `next.config.ts` sets `deviceSizes: [1320, 1920]` and `imageSizes: []`, so
@@ -348,18 +353,18 @@ Checks run against the repository on 5 November 2026:
 | ------------------------- | ------------------------------------------------------------------------------- |
 | `corepack pnpm lint`      | Passes: oxlint completed without errors; oxfmt found no formatting differences. |
 | `corepack pnpm typecheck` | Passes: `next typegen` then `tsc --noEmit` with no errors.                      |
-| `corepack pnpm build`     | Passes: Next.js 16.4.3, 107/107 static pages generated.                         |
+| `corepack pnpm build`     | Passes: Next.js 16.4.3, all static pages generated.                             |
 
-The build output reported `Generating static pages (107/107)`. Use the output of a later build rather
-than treating 107 as a permanent target.
+The latest build reported `Generating static pages (106/106)`. Use the output of a later build rather
+than treating 106 as a permanent target.
 
 Route checks against the running storefront returned 200 for:
 
-- Every local content route: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`,
-  `/pages/press-v2`, `/pages/faqs`, `/pages/contact-us`, `/pages/size-guide`,
-  `/pages/shipping-returns`, `/pages/returns-exchanges`, `/pages/terms-of-service`,
-  `/pages/privacy-policies` and `/pages/wishlist`.
-- The journal index and all three articles under `/blogs/journal-2/`.
+- Every Shopify content route: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`,
+  `/pages/press-v2`, `/pages/faqs`, `/pages/shipping-returns`, `/pages/returns-exchanges`,
+  `/pages/terms-of-service` and `/pages/privacy-policies`.
+- The app-owned routes: `/pages/contact-us`, `/pages/size-guide` and `/pages/wishlist`.
+- The Shopify journal index and all three articles under `/blogs/journal-2/`.
 - All 23 seeded collection handles, plus `/collections/all`, `/products/alma-lace-corset-top`,
   `/cart`, `/search`, `/` and the Shopify `contact` page.
 - `/wishlist` returns a 307 redirect to `/pages/wishlist`, which returns 200.
@@ -395,13 +400,11 @@ verification.
 
 ## Known gaps
 
-- **Content ownership:** the about, lookbook, care, press, FAQ, contact, size, shipping, returns,
-  terms, privacy, wishlist and journal pages are local replicas, not Shopify pages. The trial store
-  has only a `contact` page and an empty `news` blog. The seed app has
-  `write_online_store_pages`, `write_online_store_navigation` and `write_legal_policies`, but no
-  content seeding or migration script has been written or run. The local routes remain until it
-  creates and verifies the Shopify pages, articles, menus and policies. The Storefront token is
-  read-only. See [`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md).
+- **Content ownership:** the editorial and policy pages plus the journal now live in Shopify and
+  render through the dynamic page, blog and article routes. Contact, size guide and wishlist remain
+  Next.js because they need forms, local state or a client-side size finder. Navigation remains
+  code-owned in `lib/nav/index.ts`. Do not add local static routes for Shopify handles; see
+  [`CONTENT.md`](./CONTENT.md).
 - **Forms:** the contact form and both newsletter forms only show a local success state. They do not
   send mail, create a Shopify customer or post to a marketing provider.
 - **Hosted commerce surfaces:** checkout, payment failure, order status and customer account sign-in

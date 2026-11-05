@@ -68,8 +68,8 @@ point at the production store.
 
 ### Do not set in production
 
-- `SHOPIFY_CLIENT_ID` / `SHOPIFY_CLIENT_SECRET` are for `pnpm seed:catalog` only. Keep them in a
-  local shell or a CI secret, not in the storefront runtime.
+- `SHOPIFY_CLIENT_ID` / `SHOPIFY_CLIENT_SECRET` are for `pnpm seed:catalog` and
+  `pnpm seed:content` only. Keep them in a local shell or a CI secret, not in the storefront runtime.
 - `SHOPIFY_ADMIN_ACCESS_TOKEN` is not read by the deployed storefront.
 - `UNPUBLISH_OTHERS` and `V0_CALLBACK_URL` are operational switches, not production settings.
 

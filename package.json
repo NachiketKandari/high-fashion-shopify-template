@@ -10,6 +10,7 @@
     "format": "oxfmt",
     "lint": "oxlint . && oxfmt --check",
     "seed:catalog": "node --env-file=.env.local scripts/seed-catalog.mjs",
+    "seed:content": "node --env-file=.env.local scripts/seed-content.mjs",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit"
   },
