@@ -1,6 +1,6 @@
-# Vercel Shop
+# Polite Society Clone
 
-Vercel Shop is a Next.js storefront for Shopify, deployed to Vercel, with agent skills in `.agents/skills/`.
+Polite Society Clone is a Next.js storefront for Shopify, deployed to Vercel, with agent skills in `.agents/skills/`.
 
 ## Three owners
 

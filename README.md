@@ -1,6 +1,8 @@
-# Vercel Shop
+# Polite Society Clone
 
-Agent-ready commerce, powered by Shopify, Next, and Eve.
+A high-fidelity clone of the Polite Society storefront, built on Vercel Shop with Shopify, Next.js
+and Eve. This is a private design study; the reference photography and wordmark are not licensed for
+redistribution.
 
 - **Shopify owns commerce.** Catalog, cart, checkout, customer accounts, predictive search, and policies come from Shopify through the framework-agnostic Hydrogen SDK (not the Hydrogen React Router framework).
 - **Next.js owns the app.** Routing, Server Components, caching and invalidation, metadata, and the storefront's machine-readable surface for answer engines: Markdown representations, `/llms.txt`, structured data, and the sitemap.
