@@ -96,6 +96,15 @@ Use the plain skill names below. Shopify AI Toolkit is separate external tooling
 
 Full documentation is available at [vercel.shop](https://vercel.shop).
 
+Project-specific runbooks:
+
+- [`docs/SHOPIFY-WALKTHROUGH.md`](./docs/SHOPIFY-WALKTHROUGH.md) — the Shopify, Next.js and Eve stack map.
+- [`docs/IMPLEMENTATION.md`](./docs/IMPLEMENTATION.md) — what the Polite Society replica implements and what remains.
+- [`docs/SHOPIFY-APP-SCOPES.md`](./docs/SHOPIFY-APP-SCOPES.md) — the seeding app's Admin API scopes and the content migration prerequisite.
+- [`docs/SHIPROCKET.md`](./docs/SHIPROCKET.md) — shipping and fulfilment integration options.
+- [`docs/VERCEL-DEPLOYMENT.md`](./docs/VERCEL-DEPLOYMENT.md) — production deployment, environment and webhook runbook.
+- [`docs/reference/DESIGN.md`](./docs/reference/DESIGN.md) — the measured design reference.
+
 ## License
 
 MIT

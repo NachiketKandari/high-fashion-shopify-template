@@ -31,7 +31,7 @@ export function Nav() {
           )}
           <Link
             className="hidden text-xs uppercase tracking-wider transition-opacity hover:opacity-60 xl:inline-flex"
-            href="/wishlist"
+            href="/pages/wishlist"
           >
             Wishlist
           </Link>

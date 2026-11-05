@@ -230,6 +230,36 @@ const PRODUCTS = [
       { color: "Sand", hex: "#c8b79d", image: 0 },
     ],
   },
+  {
+    collections: ["outerwear", "unisex-1", "new-in", "work-wear"],
+    descriptionHtml:
+      "<p>Relaxed overshirt cut from striped cotton with a boxy shoulder and metal buttons. Wear it open over a corset or closed as a light layer.</p><p>Fabric &amp; Care:<br>- Main: 100% Cotton<br>- Care: Dry clean</p>",
+    handle: "poli-morph-overshirt",
+    images: [
+      "BACK_CUTOUT_STRIPED_BLAZER_-_Polite_Society-4663448_115067a6-8941-4bd5-a68b-85e6425e8116.jpg",
+    ],
+    price: "210.00",
+    productType: "Outerwear",
+    title: "Poli-Morph Overshirt",
+    variants: [
+      { color: "Black Stripe", hex: "#1b1b1b", image: 0 },
+      { color: "Ivory", hex: "#efe9dc", image: 0 },
+    ],
+  },
+  {
+    collections: ["accessories", "new-in", "evening", "festive"],
+    descriptionHtml:
+      "<p>Structured bustier belt in smooth leather with a pointed front and an adjustable back strap. Cinch it over shirting or a slip dress.</p><p>Fabric &amp; Care:<br>- Main: 100% Leather<br>- Care: Wipe with a soft dry cloth</p>",
+    handle: "bustier-belt",
+    images: ["BUSTIER_BELT_-_Polite_Society-4664113_4ae13cb6-086c-41f8-864f-ae7d028180a3.jpg"],
+    price: "95.00",
+    productType: "Accessories",
+    title: "Bustier Belt",
+    variants: [
+      { color: "Black", hex: "#111111", image: 0 },
+      { color: "Brown", hex: "#4e3628", image: 0 },
+    ],
+  },
 ];
 
 const COLLECTIONS = [
@@ -241,7 +271,56 @@ const COLLECTIONS = [
   { handle: "core", title: "Core" },
   { handle: "essentials", title: "Essentials" },
   { handle: "signature", title: "Elevated" },
+  { handle: "chapter-x", title: "New In" },
+  { handle: "women", title: "Woman" },
+  { handle: "unisex-1", title: "Unisex" },
+  { handle: "bestsellers", title: "Bestsellers" },
+  { handle: "co-ord-sets", title: "Co-ord Sets" },
+  { handle: "knits", title: "Knitwear" },
+  { handle: "bottoms-women", title: "Bottoms" },
+  { handle: "bottoms-unisex", title: "Bottoms" },
+  { handle: "accessories", title: "Accessories" },
+  { handle: "work-wear", title: "Work Wear" },
+  { handle: "evening", title: "Evening" },
+  { handle: "weekend", title: "Weekend" },
+  { handle: "festive", title: "Festive" },
+  { handle: "shirts-and-tshirts", title: "Shirts & T-shirts" },
+  { handle: "outerwear", title: "Outerwear" },
 ];
+
+const ALL_PRODUCT_HANDLES = PRODUCTS.map(({ handle }) => handle);
+
+// Collections share the ten seeded products so every live-site navigation target resolves.
+const COLLECTION_MEMBERS = {
+  accessories: ["bustier-belt"],
+  bestsellers: [
+    "alma-lace-corset-top",
+    "bustier-belt",
+    "draped-trousers",
+    "gulnar-corset-top",
+    "lilith-corset",
+    "lolita-slip-dress",
+    "mexi-corset-playsuit",
+    "naked-polite-top",
+    "poli-morph-overshirt",
+    "rati-corset",
+    "rosa-corset-top",
+    "solapur-corset",
+  ],
+  "bottoms-unisex": ["draped-trousers"],
+  "bottoms-women": ["draped-trousers"],
+  "chapter-x": ALL_PRODUCT_HANDLES,
+  "co-ord-sets": ["draped-trousers", "mexi-corset-playsuit"],
+  evening: ["bustier-belt", "lilith-corset", "lolita-slip-dress", "rati-corset", "solapur-corset"],
+  festive: ["alma-lace-corset-top", "bustier-belt", "gulnar-corset-top", "lilith-corset"],
+  knits: ["naked-polite-top"],
+  outerwear: ["poli-morph-overshirt"],
+  "shirts-and-tshirts": ["naked-polite-top"],
+  "unisex-1": ALL_PRODUCT_HANDLES,
+  weekend: ["draped-trousers", "naked-polite-top", "rosa-corset-top"],
+  women: ALL_PRODUCT_HANDLES,
+  "work-wear": ["draped-trousers", "naked-polite-top", "poli-morph-overshirt"],
+};
 
 const PRODUCT_SET = `#graphql
   mutation ProductSet($input: ProductSetInput!, $synchronous: Boolean!) {
@@ -494,9 +573,12 @@ async function main() {
   }
 
   for (const collection of COLLECTIONS) {
-    const productIds = PRODUCTS.filter((product) => product.collections.includes(collection.handle))
-      .map((product) => idsByHandle.get(product.handle))
-      .filter(Boolean);
+    const handles =
+      COLLECTION_MEMBERS[collection.handle] ??
+      PRODUCTS.filter((product) => product.collections.includes(collection.handle)).map(
+        (product) => product.handle,
+      );
+    const productIds = handles.map((handle) => idsByHandle.get(handle)).filter(Boolean);
     if (productIds.length === 0) continue;
     const data = await admin(COLLECTION_ADD, {
       id: collectionIds.get(collection.handle),

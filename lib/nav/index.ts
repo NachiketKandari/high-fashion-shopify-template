@@ -26,33 +26,33 @@ export interface FooterColumn {
   title: string;
 }
 
-// Seeded Shopify collections: corsets, dresses-and-jumpsuits, tops, bottoms, new-in, core, essentials, signature.
+// Mirrors the live Polites Society menu. The collection handles are seeded by scripts/seed-catalog.mjs.
 export const MAIN_NAV: NavItem[] = [
-  { href: "/collections/new-in", label: "New In" },
+  { href: "/collections/chapter-x", label: "New In" },
   {
-    href: "/collections/new-in",
+    href: "/collections/women",
     label: "Woman",
     columns: [
       {
         title: "Shop Woman",
         links: [
-          { href: "/collections/new-in", label: "All" },
+          { href: "/collections/women", label: "All" },
           { href: "/collections/tops", label: "Tops" },
           { href: "/collections/corsets", label: "Corsets" },
           { href: "/collections/dresses-and-jumpsuits", label: "Dresses & Jumpsuits" },
-          { href: "/collections/new-in", label: "Co-ord Sets" },
-          { href: "/collections/tops", label: "Knitwear" },
-          { href: "/collections/bottoms", label: "Bottoms" },
-          { href: "/collections/new-in", label: "Accessories" },
+          { href: "/collections/co-ord-sets", label: "Co-ord Sets" },
+          { href: "/collections/knits", label: "Knitwear" },
+          { href: "/collections/bottoms-women", label: "Bottoms" },
+          { href: "/collections/accessories", label: "Accessories" },
         ],
       },
       {
         title: "Shop by Occasion",
         links: [
-          { href: "/collections/new-in", label: "Work Wear" },
-          { href: "/collections/signature", label: "Evening" },
-          { href: "/collections/essentials", label: "Weekend" },
-          { href: "/collections/signature", label: "Festive" },
+          { href: "/collections/work-wear", label: "Work Wear" },
+          { href: "/collections/evening", label: "Evening" },
+          { href: "/collections/weekend", label: "Weekend" },
+          { href: "/collections/festive", label: "Festive" },
         ],
       },
       {
@@ -74,17 +74,15 @@ export const MAIN_NAV: NavItem[] = [
     ],
   },
   {
-    href: "/collections/new-in",
+    href: "/collections/unisex-1",
     label: "Unisex",
     columns: [
       {
         title: "Shop Unisex",
         links: [
-          { href: "/collections/new-in", label: "All" },
-          { href: "/collections/tops", label: "Shirts & T-shirts" },
-          { href: "/collections/bottoms", label: "Bottoms" },
-          { href: "/collections/new-in", label: "Outerwear" },
-          { href: "/collections/new-in", label: "Accessories" },
+          { href: "/collections/shirts-and-tshirts", label: "Shirts & T-shirts" },
+          { href: "/collections/bottoms-unisex", label: "Bottoms" },
+          { href: "/collections/outerwear", label: "Outerwear" },
         ],
       },
       {
@@ -97,81 +95,95 @@ export const MAIN_NAV: NavItem[] = [
       },
     ],
     tiles: [
-      { href: "/collections/core", image: "/reference/editorial-core.jpg", label: "Core" },
       {
-        href: "/collections/signature",
+        href: "/collections/tops",
+        image: "/reference/editorial-core.jpg",
+        label: "Shirts & T-shirts",
+      },
+      {
+        href: "/collections/bottoms",
         image: "/reference/editorial-elevated.jpg",
-        label: "Elevated",
+        label: "Bottoms",
       },
     ],
   },
   {
-    href: "/collections/new-in",
+    href: "/pages/lookbooks",
     label: "Edit",
     columns: [
       {
         title: "The Edit",
         links: [
-          { href: "/collections/new-in", label: "New Arrivals" },
-          { href: "/collections/new-in", label: "Bestsellers" },
-          { href: "/collections/new-in", label: "Back in Stock" },
-          { href: "/blogs/news", label: "The Lookbook" },
-        ],
-      },
-      {
-        title: "Styles",
-        links: [
-          { href: "/collections/core", label: "Everyday" },
-          { href: "/collections/signature", label: "Occasion" },
-          { href: "/collections/essentials", label: "Layering" },
+          { href: "/pages/lookbooks", label: "Lookbooks" },
+          { href: "/blogs/journal-2", label: "Journal" },
         ],
       },
     ],
     tiles: [
-      { href: "/blogs/news", image: "/reference/tile-journal.jpg", label: "Journal" },
+      { href: "/pages/lookbooks", image: "/reference/tile-journal.jpg", label: "Lookbooks" },
+      { href: "/blogs/journal-2", image: "/reference/tile-our-world.jpg", label: "Journal" },
+    ],
+  },
+  {
+    href: "/pages/about-us",
+    label: "Our World",
+    columns: [
       {
-        href: "/pages/contact",
-        image: "/reference/tile-careguide.jpg",
-        label: "Polite Careguide",
+        title: "Our World",
+        links: [
+          { href: "/pages/about-us", label: "About Us" },
+          { href: "/pages/press-v2", label: "Press" },
+        ],
+      },
+    ],
+    tiles: [
+      {
+        href: "/pages/about-us#founder",
+        image: "/reference/clone/about-founder.png",
+        label: "The Founder",
+      },
+      {
+        href: "/pages/about-us#store",
+        image: "/reference/clone/about-store.png",
+        label: "Flagship Store",
       },
     ],
   },
-  { href: "/blogs/news", label: "Our World" },
 ];
 
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: "Help",
     links: [
-      { href: "/pages/contact", label: "Size Guide" },
-      { href: "/pages/contact", label: "Care Instructions" },
-      { href: "/pages/contact", label: "FAQ" },
-      { href: "/pages/contact", label: "Contact Us" },
+      { href: "/pages/size-guide", label: "Size Guide" },
+      { href: "/pages/care-guide", label: "Care Instructions" },
+      { href: "/pages/faqs", label: "FAQ" },
+      { href: "/pages/contact-us", label: "Contact Us" },
     ],
   },
   {
     title: "Policies",
     links: [
-      { href: "/policies/terms-of-service", label: "Terms & Conditions" },
-      { href: "/policies/privacy-policy", label: "Privacy" },
-      { href: "/policies/shipping-policy", label: "Shipping" },
-      { href: "/policies/refund-policy", label: "Returns & Exchange" },
+      { href: "/pages/terms-of-service", label: "Terms & Conditions" },
+      { href: "/pages/privacy-policies", label: "Privacy" },
+      { href: "/pages/shipping-returns", label: "Shipping" },
+      { href: "/pages/returns-exchanges", label: "Returns & Exchange" },
     ],
   },
   {
     title: "The Brand",
     links: [
-      { href: "/blogs/news", label: "Our World" },
-      { href: "/blogs/news", label: "Journal" },
-      { href: "/pages/contact", label: "Press" },
+      { href: "/pages/about-us", label: "Our World" },
+      { href: "/blogs/journal-2", label: "Journal" },
+      { href: "/pages/press-v2", label: "Press" },
     ],
   },
   {
     title: "Socials",
     links: [
-      { href: "https://instagram.com", label: "Instagram" },
-      { href: "https://facebook.com", label: "Facebook" },
-      { href: "https://pinterest.com", label: "Pinterest" },
+      { href: "https://www.instagram.com/politesociety_official/", label: "Instagram" },
+      { href: "https://www.facebook.com/politesocietyshop/", label: "Facebook" },
+      { href: "https://in.pinterest.com/politesociety_official/", label: "Pinterest" },
     ],
   },
 ];

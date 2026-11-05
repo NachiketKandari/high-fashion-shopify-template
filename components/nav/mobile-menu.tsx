@@ -102,7 +102,7 @@ export function MobileMenu() {
             <li>
               <Link
                 className="flex items-center justify-between py-3 text-13 uppercase tracking-wider"
-                href="/wishlist"
+                href="/pages/wishlist"
                 onClick={() => setOpen(false)}
               >
                 Wishlist

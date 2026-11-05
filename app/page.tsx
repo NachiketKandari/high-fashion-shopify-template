@@ -27,10 +27,10 @@ const COLLECTION_TILES = [
 ];
 
 const LINK_TILES = [
-  { href: "/pages/contact", image: "/reference/tile-flagship.jpg", label: "Flagship Store" },
-  { href: "/blogs/news", image: "/reference/tile-journal.jpg", label: "Journal" },
-  { href: "/pages/contact", image: "/reference/tile-careguide.jpg", label: "Polite Careguide" },
-  { href: "/blogs/news", image: "/reference/tile-our-world.jpg", label: "Our World" },
+  { href: "/pages/about-us#store", image: "/reference/tile-flagship.jpg", label: "Flagship Store" },
+  { href: "/blogs/journal-2", image: "/reference/tile-journal.jpg", label: "Journal" },
+  { href: "/pages/care-guide", image: "/reference/tile-careguide.jpg", label: "Polite Careguide" },
+  { href: "/pages/about-us", image: "/reference/tile-our-world.jpg", label: "Our World" },
 ];
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -55,7 +55,7 @@ export default function HomePage() {
       <h1 className="sr-only">Polite Society | Everyday Luxury Clothing | Made In India</h1>
 
       <section aria-label="Campaign">
-        <Link className="block" href="/collections/new-in">
+        <Link className="block" href="/collections/chapter-x">
           <div className="relative h-[calc(100svh-91px)] overflow-hidden md:h-auto md:aspect-[1440/784]">
             <Image
               alt="Polite Society campaign"

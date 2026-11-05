@@ -23,6 +23,9 @@ was verified, and what still depends on Shopify credentials or production decisi
 | Cart          | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                    |
 | Footer        | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                  |
 | Newsletter    | Modal after five seconds with 30-day local dismissal; footer form.                                                                                                                                                          |
+| Our World     | About Us page with founder, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                   |
+| Help          | Care guide tabs, size guide with a find-my-size form and measurement tables, FAQ accordion, contact channels and message form, shipping and returns pages.                                                                  |
+| Policies      | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                        |
 
 ## Flows and screenshots
 
@@ -42,18 +45,26 @@ The locally rebuilt flows were checked in a browser at 1440 × 1000, 768 × 1024
 
 `@next/third-parties` renders GA4 when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. The local environment
 uses `G-SQVPB589E7`. Verified in the browser network panel: `googletagmanager.com/gtag/js` loads
-and `google-analytics.com/g/collect` receives `en=page_view` for `/`, `/collections/all`,
-`/products/*`, and `/cart`. GTM takes precedence when `NEXT_PUBLIC_GTM_ID` is also set, matching
-`components/analytics/index.tsx`.
+and `google-analytics.com/g/collect` receives `en=page_view` for `/`, `/pages/about-us`,
+`/collections/all`, `/collections/*`, `/products/*`, `/cart` and `/pages/wishlist`. GTM takes
+precedence when `NEXT_PUBLIC_GTM_ID` is also set, matching `components/analytics/index.tsx`.
+
+The integration is present and active, not just installed. The only production step is to set
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` (or `NEXT_PUBLIC_GTM_ID`) in the Vercel project; see
+[`VERCEL-DEPLOYMENT.md`](./VERCEL-DEPLOYMENT.md#9-analytics). `shopConfig.analytics.vercel` and
+`shopConfig.analytics.speedInsights` are separate opt-in switches and do not control GA4.
 
 ## Shopify catalog
 
 Seeded on 5 November 2026 through the Shopify Admin API. The storefront now shows the fashion
 catalog the design was built for instead of the Hydrogen demo catalog:
 
-- 10 products across corsets, dresses and jumpsuits, tops and bottoms.
-- 8 collections: `corsets`, `dresses-and-jumpsuits`, `tops`, `bottoms`, `new-in`, `core`,
-  `essentials`, and `signature` (titled “Elevated”).
+- 12 products across corsets, dresses and jumpsuits, tops, bottoms, outerwear and accessories.
+- 23 collections: the eight editorial collections (`corsets`, `dresses-and-jumpsuits`, `tops`,
+  `bottoms`, `new-in`, `core`, `essentials`, `signature`) plus the live-site navigation handles
+  (`chapter-x`, `women`, `unisex-1`, `bestsellers`, `co-ord-sets`, `knits`, `bottoms-women`,
+  `bottoms-unisex`, `accessories`, `work-wear`, `evening`, `weekend`, `festive`,
+  `shirts-and-tshirts`, `outerwear`).
 - 12–18 variants per product (colour × XS–XXL), priced in USD.
 - Product photography imported from the reference CDN into Shopify Files.
 - Demo snowboards unpublished from the **Dummy Store Headless** publication. They remain in the
@@ -81,8 +92,10 @@ The two variables are read only by the seeder. They are not bundled into the sto
 use the `NEXT_PUBLIC_` prefix, and must never be committed. `.env.example` and
 `docs/SHOPIFY-WALKTHROUGH.md` hold placeholders and instructions, never values. If the secret is
 ever exposed — a screenshot, a chat, a log — rotate it under **Settings → Credentials**, update
-`.env.local`, and re-run the seed. The app scopes are `write_products`, `write_publications` and
-`write_files` (write includes read), and the target publication is **Dummy Store Headless**.
+`.env.local`, and re-run the seed. The product, publication and file scopes are `write_products`,
+`write_publications` and `write_files` (write includes read), and the target publication is
+**Dummy Store Headless**. The full granted scope list is in
+[`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md).
 
 ### Commands
 
@@ -102,21 +115,94 @@ Headless channel on every run.
 - `corepack pnpm build` — passes; all storefront routes prerender.
 - Browser checks with Playwright MCP at desktop and mobile sizes, including header collapse,
   mega menu, search, contact, filter, PDP tabs, cart drawer and cart page.
-- Seeded catalog: `/collections/corsets` renders six corsets, `/collections/all` renders the ten
-  fashion products plus the gift card, the home rail renders `new-in`, Shopify CDN imagery loads at
-  full resolution, and add-to-cart puts `Alma Lace Corset Top` (Brown / XS, $185) in the drawer.
+- Seeded catalog: `/collections/corsets` renders six corsets, `/collections/all` renders the twelve
+  fashion products plus the gift card, the home rail renders `bestsellers`, Shopify CDN imagery
+  loads at full resolution, and add-to-cart puts `Alma Lace Corset Top` (Brown / XS, $185) in the
+  drawer.
+- Seeded navigation collections: every collection handle in `MAIN_NAV` returns `200` and includes
+  at least one product. `accessories` uses the Bustier Belt and `outerwear` uses the Poli-Morph
+  Overshirt, both seeded from reference editorial imagery.
+- Content routes: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`, `/pages/press-v2`,
+  `/pages/faqs`, `/pages/contact-us`, `/pages/size-guide`, `/pages/shipping-returns`,
+  `/pages/returns-exchanges`, `/pages/terms-of-service`, `/pages/privacy-policies`,
+  `/pages/wishlist`, `/blogs/journal-2` and all three articles return `200`.
+- Interactive checks: size finder returns a size, FAQ panels expand, contact form shows its local
+  success state, and the journal links resolve.
 - GA4 network verification as above.
+
+## Reference content routes
+
+The live site's content is not fully present in the trial Shopify store: the store has the
+`contact` page and an empty `news` blog. The Dev Dashboard seeding app holds
+`read_online_store_pages`/`write_online_store_pages` for pages, blogs and articles,
+`read_online_store_navigation`/`write_online_store_navigation` for menus, and
+`read_legal_policies`/`write_legal_policies` for legal policies; see
+[`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md). The scopes are granted but no content migration
+has run, so the replica still serves the public content routes from local, versioned content while
+keeping the Shopify page route for pages that do exist:
+
+| Route                      | Source                                  |
+| -------------------------- | --------------------------------------- |
+| `/pages/about-us`          | Local editorial page                    |
+| `/pages/lookbooks`         | Local chapter gallery                   |
+| `/pages/care-guide`        | Local care guide                        |
+| `/pages/press-v2`          | Local press grid                        |
+| `/pages/faqs`              | Local FAQ accordion                     |
+| `/pages/contact-us`        | Local contact page and form             |
+| `/pages/size-guide`        | Local size charts and find-my-size form |
+| `/pages/shipping-returns`  | Local shipping copy                     |
+| `/pages/returns-exchanges` | Local returns copy                      |
+| `/pages/terms-of-service`  | Local terms copy                        |
+| `/pages/privacy-policies`  | Local privacy copy                      |
+| `/pages/wishlist`          | Existing local-storage wishlist         |
+| `/blogs/journal-2`         | Local journal index                     |
+| `/blogs/journal-2/*`       | Three local articles                    |
+| `/pages/[handle]`          | Shopify page, when the handle exists    |
+
+The granted scopes cover the mutation surfaces needed to move this content:
+
+| Scope                                           | Unlocks                                                     |
+| ----------------------------------------------- | ----------------------------------------------------------- |
+| `write_online_store_pages` (or `write_content`) | Page, blog, article and comment mutations                   |
+| `write_online_store_navigation`                 | Menus, link lists and URL redirects                         |
+| `write_legal_policies`                          | `shopPolicyUpdate` for Terms, Privacy, Shipping and Returns |
+
+`write_files` is also granted, so page and article images can be uploaded to Shopify Files. The
+Storefront API token used by the app is read-only and cannot be used to create content.
+
+A content seeding or migration script still needs to be written and run before these routes can be
+deleted: it must create the pages, blog articles, navigation and policies in Shopify, and each route
+must render from Shopify before its local replica is removed. Do not keep two editable sources of
+the same page.
+
+The collection handles in the live menu are seeded by `scripts/seed-catalog.mjs`:
+`chapter-x`, `women`, `unisex-1`, `bestsellers`, `co-ord-sets`, `knits`, `bottoms-women`,
+`bottoms-unisex`, `accessories`, `work-wear`, `evening`, `weekend`, `festive`,
+`shirts-and-tshirts` and `outerwear`. Each handle contains at least one of the seeded products so
+the navigation has no empty destinations. The accessories and outerwear entries use editorial and
+press imagery because the trial catalog has no dedicated shots for those categories.
 
 ## Known gaps
 
 - **Catalog**: seeded; the design-system assets in `public/reference/` are licensed for this
-  private prototype only and must be replaced before distribution.
-- **Wishlist and account**: wishlist saves products in local storage and renders at `/wishlist`;
-  it is per-browser and not synced to a customer account. Account utilities render only when
-  `shopConfig.auth.isEnabled` is turned on, matching the template's account gate.
+  private prototype only and must be replaced before distribution. The accessories and outerwear
+  products use editorial and press imagery rather than dedicated product photography.
+- **Content ownership**: the about, lookbook, help, policy and journal pages are local replicas,
+  not Shopify pages. The seeding app now has the page, navigation and legal-policy scopes, but no
+  content seeding or migration script has been written or run. The local routes remain until it
+  creates and verifies the Shopify content; see
+  [`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md). Move them to Shopify before giving the
+  merchant an editing surface.
+- **Wishlist and account**: wishlist saves products in local storage and renders at
+  `/pages/wishlist`; it is per-browser and not synced to a customer account. Account utilities
+  render only when `shopConfig.auth.isEnabled` is turned on, matching the template's account gate.
 - **Checkout, order status and payment failure** are Shopify-hosted.
-- **Newsletter submission** shows a local success state; it does not yet post to Shopify or a
-  marketing provider.
+- **Newsletter and contact submissions** show a local success state; the contact form does not
+  send mail yet, and the newsletter does not post to Shopify or a marketing provider.
+- **Currency**: the store is priced in USD, so the header shows USD. The reference defaults to INR.
+  Changing this is a Shopify store-currency and market decision, not a styling change.
+- **Shipping**: no Shiprocket code ships in this repository. See
+  [`SHIPROCKET.md`](./SHIPROCKET.md) for the two integration paths.
 - **Payment marks** are typographic, not brand logo assets.
 - **Header wordmark and editorial photography** are the reference brand's assets. Replace them
   before a public launch.

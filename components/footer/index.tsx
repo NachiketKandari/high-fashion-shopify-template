@@ -7,7 +7,7 @@ import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 import { FOOTER_COLUMNS } from "@/lib/nav";
 
-const PAYMENTS = ["AMEX", "DINERS", "MASTERCARD", "RUPAY", "VISA"];
+const PAYMENTS = ["AMEX", "DINERS", "MAESTRO", "MASTERCARD", "RUPAY", "VISA"];
 
 export function Footer() {
   return (

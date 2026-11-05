@@ -15,12 +15,12 @@ export function HomeProductRail() {
 }
 
 async function HomeProductRailContent() {
-  const { products } = await getCollectionResults({ handle: "new-in" });
+  const { products } = await getCollectionResults({ handle: "bestsellers" });
   if (products.length === 0) return null;
   return (
-    <ProductRail href="/collections/new-in" title="Our Picks">
+    <ProductRail href="/collections/bestsellers" title="Our Picks">
       {products.slice(0, 8).map((product) => (
-        <ProductCard className={CARD_CLASS} key={product.id} product={product} showSizes={false} />
+        <ProductCard className={CARD_CLASS} key={product.id} product={product} />
       ))}
     </ProductRail>
   );
@@ -28,7 +28,7 @@ async function HomeProductRailContent() {
 
 function HomeProductRailSkeleton() {
   return (
-    <ProductRail href="/collections/new-in" title="Our Picks">
+    <ProductRail href="/collections/bestsellers" title="Our Picks">
       {Array.from({ length: 5 }, (_, index) => (
         <div className={CARD_CLASS} key={index}>
           <div className="aspect-[2/3] animate-pulse bg-surface" />

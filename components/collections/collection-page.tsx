@@ -108,7 +108,16 @@ function CollectionChips({
   activeHandle: string;
   collections: Collection[];
 }) {
-  const visible = collections.filter((collection) => collection.handle !== "frontpage");
+  const chipHandles = new Set([
+    "bottoms-women",
+    "co-ord-sets",
+    "corsets",
+    "dresses-and-jumpsuits",
+    "knits",
+    "new-in",
+    "tops",
+  ]);
+  const visible = collections.filter((collection) => chipHandles.has(collection.handle));
   return (
     <nav
       aria-label="Collections"
