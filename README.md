@@ -75,7 +75,7 @@ Eve
 - Shop Agent for product discovery, store questions, and cart updates in a side drawer, opt-in
 - Shopify catalog and policy MCP connections plus Hydrogen cart handlers
 
-Customer authentication is disabled by default. Follow the [authentication guide](https://vercel.shop/docs/anatomy/authentication) to configure Shopify credentials and callback URLs before enabling `auth.isEnabled` in `lib/config/index.ts`.
+Customer authentication runs through Shopify's Customer Account API. Add the Headless sales channel's client ID and secret plus a generated session secret to the environment, and register the callback and logout URLs before deploying; see the [authentication guide](https://vercel.shop/docs/anatomy/authentication).
 
 Shop Agent is disabled by default. Set `agent.isEnabled` to `true` in `lib/config/index.ts` and follow the [Shop Agent guide](https://vercel.shop/docs/anatomy/agent) to configure AI Gateway access, turn on bot protection, and review privacy and spending safeguards before enabling public chat.
 

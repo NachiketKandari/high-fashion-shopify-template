@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   reactCompiler: true,
   turbopack: {
+    // Hydrogen's development entry and @shopify/hydrogen/customer-account load different cart-sync symbols; pin the core entry so dev matches production.
+    resolveAlias: {
+      "@shopify/hydrogen": "./node_modules/@shopify/hydrogen/dist/core/index.mjs",
+    },
     rules: {
       "*.css": {
         as: "*.css",

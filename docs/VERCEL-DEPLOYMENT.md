@@ -147,11 +147,11 @@ the usual set.
 
 ### Customer accounts
 
-When `shopConfig.auth.isEnabled` is turned on, configure the Customer Account API client in the
-Shopify Dev Dashboard and add the production callback URL. The Hydrogen customer-account routes
-are served by `proxy.ts`; the default authorize path is `/account/authorize`. Add both the
-production and preview domains while testing. The three `CUSTOMER_ACCOUNT_*` values are
-server-only.
+Customer accounts are enabled. Configure the Customer Account API client in the Headless sales
+channel and add the production callback URL. The Hydrogen customer-account routes are served by
+`proxy.ts`; the authorize path is `/account/authorize`. Add both the production and preview
+domains while testing. The Customer Account API credentials and
+`CUSTOMER_ACCOUNT_SESSION_SECRET` are server-only.
 
 ### Checkout
 

@@ -224,7 +224,7 @@ The ordered closure plan, with dependencies and acceptance checks, is in
   [`CONTENT.md`](./CONTENT.md). Navigation remains code-owned in `lib/nav/index.ts`.
 - **Wishlist and account**: wishlist saves products in local storage and renders at
   `/pages/wishlist`; it is per-browser and not synced to a customer account. Account utilities
-  render only when `shopConfig.auth.isEnabled` is turned on, matching the template's account gate.
+  render through Shopify's Customer Account API, and `/account` requires a signed-in session.
 - **Checkout, order status and payment failure** are Shopify-hosted.
 - **Newsletter and contact submissions** show a local success state; the contact form does not
   send mail yet, and the newsletter does not post to Shopify or a marketing provider.

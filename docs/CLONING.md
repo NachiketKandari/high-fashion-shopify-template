@@ -304,7 +304,7 @@ Known differences from the reference are deliberate or environmental:
 | Product rail  | Five cards in the measured design       | Up to eight `bestsellers` cards in `HomeProductRail`                     |
 | Product image | 3:4 card media in `DESIGN.md`           | 2:3 media in `components/product-card/product-card.tsx`                  |
 | Desktop nav   | Desktop starts at 1100px                | Nav uses Tailwind `xl` (1280px); 768–1279px uses the compact header/menu |
-| Account       | Visible account utility                 | Hidden while `shopConfig.auth.isEnabled` is false                        |
+| Account       | Visible account utility                 | Visible; signed-in state comes from Shopify's Customer Account API       |
 | Shipping copy | INR-denominated shipping thresholds     | Same INR copy retained while the store and cart are priced in USD        |
 | Payment marks | Brand logo assets                       | Typographic labels in `components/footer/index.tsx`                      |
 
@@ -410,7 +410,8 @@ verification.
 - **Forms:** the contact form and both newsletter forms only show a local success state. They do not
   send mail, create a Shopify customer or post to a marketing provider.
 - **Hosted commerce surfaces:** checkout, payment failure, order status and customer account sign-in
-  are Shopify-hosted. Customer accounts are disabled by default.
+  are Shopify-hosted. Customer accounts use Shopify's Customer Account API and require credentials
+  plus registered callback URLs.
 - **Wishlist:** saves products in `localStorage` under `wishlist`; it is per-browser and is not
   synced to a customer account.
 - **Currency:** the trial store is priced in USD, so the storefront shows USD. The reference defaults
