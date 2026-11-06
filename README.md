@@ -128,6 +128,8 @@ Project-specific runbooks:
 - [`docs/reference/PLAYWRIGHT-COMPARISON.md`](./docs/reference/PLAYWRIGHT-COMPARISON.md) — the latest reference-versus-template measurement.
 - [`docs/UX-RECON-2026-11-05.md`](./docs/UX-RECON-2026-11-05.md) — the first-time-shopper UX reconnaissance.
 - [`docs/SHOPIFY-WALKTHROUGH.md`](./docs/SHOPIFY-WALKTHROUGH.md) — the Shopify, Next.js and Eve stack map.
+- [`docs/HYDROGEN-USAGE.md`](./docs/HYDROGEN-USAGE.md) — the Hydrogen SDK surface in use, and what is deliberately app-owned.
+- [`docs/OBSERVABILITY.md`](./docs/OBSERVABILITY.md) — logging, analytics, error reporting, health checks and the current gaps.
 - [`docs/IMPLEMENTATION.md`](./docs/IMPLEMENTATION.md) — what the template implements and what remains.
 - [`docs/CATALOG-IMPORT.md`](./docs/CATALOG-IMPORT.md) — catalog import result, verification and remaining gaps.
 - [`docs/CONTENT.md`](./docs/CONTENT.md) — content ownership, Shopify seeding and invalidation rules.
