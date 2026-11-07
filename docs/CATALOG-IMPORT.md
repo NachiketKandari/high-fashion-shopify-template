@@ -114,3 +114,10 @@ The live-site and clone interaction audits are in
 
 The ready-to-read design-specific findings and open questions are in those reports; the catalog
 gaps above are the only catalog-level follow-ups.
+
+## UniPlus draft catalog
+
+The client UniPlus workbook has a separate normalized source and importer. It creates 39 products
+and 354 variants as DRAFT, uploads 86 local image slots, and never publishes or modifies the
+Polite Society catalog. See [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md) for commands and
+[`CATALOG-AUDIT-UNIPLUS.md`](./CATALOG-AUDIT-UNIPLUS.md) for the client-input list.
