@@ -18,18 +18,38 @@ change. No leading system relies on documentation alone.
 | Reference comparison           | `scripts/compare-reference.mjs`                                    | `pnpm audit:reference`                  |
 | Browser runner                 | `playwright.config.ts`                                             | `pnpm exec playwright install chromium` |
 
-The current gate rejects rectangular radius utilities, template shadows, weight 500+, arbitrary text
-or leading values, spectral palette classes, `dark:` variants, raw hex classes, `next/link` outside
-`components/ui/link.tsx`, and domain imports from `components/ui/`. Alias usage is ratcheted against
-`design/drift-baseline.json`: it can fall, not grow. `pnpm lint` runs the gate, so the normal review
-path cannot skip it. Add an exception only with an owner, a reason and an expiry; `scripts/check-design.mjs` fails on an expired entry.
+The gate scans `app/**/*.{ts,tsx}` and `components/**/*.{ts,tsx}`, not `lib/`, `agent/`, `tests/` or
+`scripts/`. It asserts the manifest's exact colour values; type size and line height (not weight,
+tracking or case); six base spacing tokens and three desktop spacing overrides (matched anywhere in
+the stylesheet, not inside the media query); motion and breakpoint values. It rejects the named
+`rounded-xs`–`rounded-4xl` and `shadow-xs`–`shadow-2xl` utilities,
+`font-medium`/`semibold`/`bold`, `text-2xl`–`text-7xl`, arbitrary text/leading/radius, `dark:`,
+`sm:`/`md:`/`lg:`/`xl:` (not `2xl:`), `text-3xs`, `text-2xs`, `text-xxs`, `text-13`, `font-mono`, the
+named spectral palette classes, raw hex `bg`/`text`/`border` classes, `next/link` outside
+`components/ui/link.tsx`, and the UI import list in §3. It does not catch bare `rounded`, directional
+radius utilities, bare or arbitrary shadow, `drop-shadow`, `text-xs`–`text-xl`, `font-light`,
+arbitrary tracking or layout pixels, `outline-none`, opacity modifiers, or the default Tailwind
+palette namespaces. Alias usage is ratcheted against `design/drift-baseline.json`: it can fall, not
+grow. `pnpm lint` runs the gate, so the normal review path cannot skip it. Exceptions match file,
+rule and an optional `expires`; owner, reason and scope are documentation, not validated, and an
+expired entry fails.
+
+`app/globals.css` keeps the default palette, radius and shadow namespaces; `@theme inline` aliases do
+not emit `:root` variables, so runtime values live in `:root`. The Playwright suite is a contract
+sample, not full-surface coverage: it covers shell geometry, collection and PDP contracts, a
+six-route target sweep, search-dialog ARIA and focus, announcement and transition reduced motion, and
+five flows. Search results and empty state, the contact drawer, lightbox, quick shop, gift card,
+bundles, selling plans, the discount form, wishlist, account, agent, blog, policies, error pages,
+currency conversion, free-shipping copy, footer marks, tablet widths, screenshots, focus traps and
+computed radius/shadow are not covered.
 
 ## 1. The 2026 baseline
 
 - DTCG **2025.10** is the first stable token format (28 Oct 2025): `$value`, `$type`, `$description`, aliases,
   `$extensions`, and `$deprecated`. Style Dictionary, Tokens Studio, and Terrazzo are reference implementations. [1]
-- Tailwind 4 is CSS-first: `@theme` tokens become utilities and CSS variables; `@theme inline` aliases a token
-  to a variable; `:root` holds runtime values; `--*: initial` removes a default namespace. [3]
+- Tailwind 4 is CSS-first: `@theme` tokens become utilities and CSS variables; `@theme inline`
+  substitutes a variable reference without emitting its own `:root` variable; `:root` holds runtime
+  values; `--*: initial` removes a default namespace. [3]
 - Linting is split by file type. Stylelint sees CSS, not Tailwind classes in TSX. Class-string policy needs a
   JS/TS linter; Oxlint now runs ESLint-compatible JS plugins (alpha) with per-path `overrides`. [10][11]
 - Visual/a11y testing is commodity: Playwright screenshots, computed styles, and axe; Storybook + Chromatic
@@ -47,9 +67,10 @@ path cannot skip it. Add an exception only with an owner, a reason and an expiry
 Style Dictionary 4 has first-class DTCG support; v5's full 2025.10 support is still in progress. [2] Tokens
 Studio exports DTCG and syncs two-way with GitHub; its docs say tokens in code are the source of truth. [4]
 
-**For this repo:** keep `app/globals.css` canonical for the MVP. Add a generated `design/tokens.manifest.json`
-and `lib/design/tokens.ts` so scripts and types share token names. Move to DTCG + Style Dictionary only when
-Figma write-back or a second consumer appears. Never run both sources.
+**For this repo:** keep `app/globals.css` canonical for the MVP. Keep `design/tokens.manifest.json`
+beside it as the script's expected values, and add `lib/design/tokens.ts` when scripts and types need
+shared token names. Move to DTCG + Style Dictionary only when Figma write-back or a second consumer
+appears. Never run both sources.
 
 **Rules that prevent drift**
 
@@ -62,8 +83,8 @@ Figma write-back or a second consumer appears. Never run both sources.
    outside utilities. Use `@theme static` if all CSS variables must be emitted. [3]
 4. **Remove the default palette.** `@theme { --color-*: initial; ... }` makes `bg-red-500` generate no CSS; the
    lint rule explains why it is wrong instead of silently rendering nothing.
-5. **Generate, then diff.** `pnpm tokens:build && git diff --exit-code app/tokens.generated.css
-   lib/design/tokens.ts` fails when a token changes without regeneration.
+5. **Generate, then diff.** When the DTCG build lands, `pnpm tokens:build && git diff --exit-code
+   app/tokens.generated.css lib/design/tokens.ts` fails when a token changes without regeneration.
 6. **Lint the token layer.** `$type` required, kebab-case names, aliases resolve, no circular refs, no orphans,
    no duplicate values without a reason, no new use of `$deprecated`.
 7. **Deprecate in data.** DTCG `$deprecated` carries a string reason; `design/deprecated-tokens.json` carries
@@ -73,14 +94,17 @@ Figma write-back or a second consumer appears. Never run both sources.
 
 ## 3. Static enforcement
 
-| Layer             | Mechanism                                                                 | Concrete rule                                                                                                   |
-| ----------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| CSS               | Stylelint 16/17 + v4 syntax config + `stylelint-declaration-strict-value` | No raw hex/rgb outside `@theme`/`:root`; no arbitrary values; no `@apply` outside `globals.css`                 |
-| TSX class strings | Oxlint + `@evilmartians/design-lint` (or `check-design.mjs`)              | No spectral/raw colors, undefined tokens, arbitrary type/radius, `dark:`, opacity modifiers                     |
-| Banned utilities  | Tailwind namespace removal + lint                                         | `bg-red-*`, `rounded-lg`, `shadow-*`, `font-medium`, `text-[13px]`, `tracking-wider`, `xl:`                     |
-| Imports           | Oxlint `no-restricted-imports` + `overrides`                              | `components/ui` cannot import `lib/shopify`; `lib/shopify` cannot import `next/cache` or `components`           |
-| TypeScript        | CVA + primitive props + Base UI `useRender`                               | `VariantProps` unions, `data-slot`, no domain types in `components/ui`, no color/type overrides via `className` |
-| Scripts           | `check-tokens`, `check-design`, `design-report`                           | Baseline ratchet, exceptions with expiry, generated-file diff                                                   |
+Only `check-design.mjs` enforces class strings in this repo today; the Stylelint, Oxlint and Tailwind
+namespace-removal rows below are the target stack.
+
+| Layer             | Mechanism                                                                 | Concrete rule                                                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| CSS               | Stylelint 16/17 + v4 syntax config + `stylelint-declaration-strict-value` | No raw hex/rgb outside `@theme`/`:root`; no arbitrary values; no `@apply` outside `globals.css`                                                                                            |
+| TSX class strings | Oxlint + `@evilmartians/design-lint` (or `check-design.mjs`)              | No spectral/raw colors, undefined tokens, arbitrary type/radius, `dark:`, opacity modifiers                                                                                                |
+| Banned utilities  | Tailwind namespace removal + lint                                         | `bg-red-*`, `rounded-lg`, `shadow-*`, `font-medium`, `text-[13px]`, `tracking-wider`, `xl:`                                                                                                |
+| Imports           | `check-design.mjs`; Oxlint overrides when added                           | `components/ui` cannot import `@/lib/shopify`, `@/lib/cart`, `@/lib/product`, `@/lib/collections`, `next/navigation`, `next/headers` or `next/cache`; the `lib/shopify` side is unenforced |
+| TypeScript        | CVA + primitive props + Base UI `useRender`                               | `VariantProps` unions, `data-slot`, no domain types in `components/ui`, no color/type overrides via `className`                                                                            |
+| Scripts           | `check-design.mjs`; future `check-tokens` and report                      | Baseline ratchet, exceptions with expiry; generated-file diff when the token build lands                                                                                                   |
 
 **Stylelint** is right for `app/globals.css` and future CSS modules. Use
 `@dreamsicle.io/stylelint-config-tailwindcss` so v4 directives parse, then `stylelint-declaration-strict-value`
@@ -100,13 +124,15 @@ and suppressed violations. [12] It needs `oxlint.config.ts`; merge `.oxlintrc.js
 JS-plugin rules are not supported yet, so keep token/boundary rules syntactic; pin Oxlint because the plugin API
 is explicitly outside semver.
 
-**Banned utilities, first ten.** Raw hex (`bg-[#fff]`), spectral colors (`bg-red-500`), arbitrary type
+**Banned utilities, first ten (target policy).** Raw hex (`bg-[#fff]`), spectral colors (`bg-red-500`), arbitrary type
 (`text-[13px]`, `leading-[23px]`), arbitrary radius (`rounded-[6px]`), `font-medium`/`semibold`/`bold`,
 `shadow-*` except the modal, `rounded-*` except `rounded-full` on counts/dots, `dark:*`, `xl:`/`lg:` for the
 desktop breakpoint (use `desktop:`), and `outline-none` without a `focus-visible` replacement.
 
-**Import boundaries.** In `.oxlintrc.json` overrides: `lib/shopify/**` bans `next/cache`, `@/components/*`,
-`@/app/*`; `components/ui/**` bans `@/lib/shopify/*`, `@/lib/cart/*`, `next/navigation`. Oxlint supports both
+**Import boundaries.** `scripts/check-design.mjs` enforces the UI side only: `components/ui/**` may not
+import `@/lib/shopify`, `@/lib/cart`, `@/lib/product`, `@/lib/collections`, `next/navigation`,
+`next/headers` or `next/cache`. The `lib/shopify/**` side — no `next/cache`, `@/components/*`,
+`@/app/*` — is not enforced yet; add it through `.oxlintrc.json` overrides, which support both
 `overrides` and `no-restricted-imports`. [11]
 
 **TypeScript/primitive API.** `components/ui/button.tsx` already shows the pattern: `cva` + `VariantProps` +
@@ -155,7 +181,8 @@ not deviation from the spec; pair it with computed contracts and the measured au
   (context, decision, alternatives, consequences): token source of truth, visual tool, primitive API. [19][20]
 - **Deprecation.** `$deprecated` names the replacement; lint blocks new uses; keep two minor releases; ship a
   codemod; remove and note it. Atlassian's `no-deprecated-design-token-usage` is the model. [7]
-- **Exceptions.** `design/exceptions.json` entries carry `owner`, `reason`, `expires`, `scope`. Expired
+- **Exceptions.** `design/exceptions.json` entries match on `file` and `rule` with an optional
+  `expires`; `owner`, `reason` and `scope` are recorded for review but not validated. Expired
   exceptions fail CI; better than permanent inline disables.
 - **Drift report.** Weekly (monthly with AI-generated code): token coverage, raw values, primitive bypasses,
   deprecated tokens, exceptions, visual diffs, axe violations. Baseline + fail-on-regression burns down the
@@ -178,11 +205,12 @@ not deviation from the spec; pair it with computed contracts and the measured au
 
 1. **Token contract.** `app/globals.css` is canonical and `design/tokens.manifest.json` records the
    expected values. `scripts/check-design.mjs` checks the declarations, forbidden tokens and values.
-2. **Design lint.** The same script rejects the banned utility list, `sm:`/`md:`/`lg:`/`xl:`, raw
-   hex classes and domain imports from `components/ui`; it writes `design/drift-report.json`.
+2. **Design lint.** The same script applies the rules in §0, including `sm:`/`md:`/`lg:`/`xl:`, raw
+   hex classes and the listed `components/ui` imports; it writes `design/drift-report.json`.
 3. **Ratchet.** `design/drift-baseline.json` records legacy alias counts. Alias usage can fall, not grow.
-4. **Boundaries.** `components/ui` may not import Shopify, cart, product, collection, navigation,
-   header or cache modules; `next/link` is restricted to `components/ui/link.tsx`.
+4. **Boundaries.** `components/ui` may not import `@/lib/shopify`, `@/lib/cart`, `@/lib/product`,
+   `@/lib/collections`, `next/navigation`, `next/headers` or `next/cache`; `next/link` is restricted
+   to `components/ui/link.tsx`. The `lib/shopify` side is not enforced yet.
 5. **Contracts.** `tests/design/{tokens,contracts,a11y,flows}.spec.ts` assert computed type, geometry,
    targets, ARIA, reduced motion, keyboard paths and the shell/commerce flows.
 6. **Process.** The owner is the Next.js presentation owner. Extend the contracts with any new
@@ -190,7 +218,7 @@ not deviation from the spec; pair it with computed contracts and the measured au
    and reason. A CI workflow should run `pnpm lint`, `pnpm typecheck`, `pnpm build` and `pnpm test:design`.
 
 **7.2 Advanced (only when it earns its keep).** DTCG `design/tokens/*.tokens.json` → Style Dictionary → generated
-CSS/TS; Tokens Studio GitHub sync opens PRs; `pnpm tokens:build` diff gate. `oxlint.config.ts` + `design-lint`
+CSS/TS; Tokens Studio GitHub sync opens PRs; a future `pnpm tokens:build` diff gate. `oxlint.config.ts` + `design-lint`
 strict + a local Oxlint plugin for repo rules. Storybook + Chromatic for `components/ui` with
 `a11y.test = "error"` and required UI Review. Deprecation codemods, quarterly audit, drift dashboard.
 
@@ -219,8 +247,8 @@ pnpm test:design
 ```
 
 Make `verify` required. Add a `chromatic` job only when Storybook lands; require it for `components/ui` PRs.
-A nightly `pnpm audit:reference` can publish the comparison as an artifact without blocking work. Schedule `pnpm design:report` nightly and commit it weekly so drift stays visible when no
-one changes the system.
+A nightly `pnpm audit:reference` can publish the comparison as an artifact without blocking work. Schedule `pnpm lint:design` nightly and commit `design/drift-report.json` weekly so drift stays
+visible when no one changes the system.
 
 **7.5 Rollout order.** Freeze the token vocabulary and remove duplicate colour names (aliases, then codemod).
 Add checks in warn mode + baseline; fix P0 items (heading weights, focus rings, 36px targets). Make checks

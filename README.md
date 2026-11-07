@@ -11,16 +11,19 @@ photography and press imagery are not licensed for redistribution.
 
 - **Shopify owns commerce.** Catalog, cart, checkout, customer accounts, predictive search, and policies come from Shopify through the framework-agnostic Hydrogen SDK (not the Hydrogen React Router framework).
 - **Next.js owns the app.** Routing, Server Components, caching and invalidation, metadata, and the storefront's machine-readable surface for answer engines: Markdown representations, `/llms.txt`, structured data, and the sitemap.
-- **Eve owns the agent.** Shop Agent's sessions, tools, and connections; its tools call Shopify directly.
+- **Eve owns the agent.** Shop Agent's sessions, channels, tools, and instructions; its tools call Shopify directly.
 
-Product titles, vendor, pages, policies and menus come from Shopify. Update them in Shopify admin, or
-reseed a fresh store with `pnpm seed:catalog` and `pnpm seed:content`.
+Product titles, vendor, pages, and policies come from Shopify. Navigation and footer links are
+code-owned in `lib/nav/index.ts`. Update commerce content in Shopify admin, or reseed a fresh store
+with `pnpm import:catalog` and `pnpm seed:content`.
 
 See [vercel.shop](https://vercel.shop) for full documentation.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fshop&project-name=high-fashion-shopify-template&repository-name=high-fashion-shopify-template&demo-title=High-Fashion+Shopify+Template&demo-url=https%3A%2F%2Fshop-template.vercel.app&env=NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN%2CNEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN%2CNEXT_PUBLIC_SHOPIFY_SHOP_ID&envDescription=Required%20Shopify%20store%20domain%2C%20Storefront%20API%20token%2C%20and%20shop%20ID&envLink=https%3A%2F%2Fvercel.shop%2Fdocs%2Freference%2Fenv-vars)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fshop&project-name=high-fashion-shopify-template&repository-name=high-fashion-shopify-template&demo-title=High-Fashion+Shopify+Template&demo-url=https%3A%2F%2Fshop-template.vercel.app&env=NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN%2CNEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN%2CNEXT_PUBLIC_SHOPIFY_SHOP_ID%2CCUSTOMER_ACCOUNT_SESSION_SECRET%2CSHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID%2CSHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_SECRET&envDescription=Required%20Shopify%20store%20values%20and%20the%20Customer%20Account%20API%20credentials%20used%20by%20the%20default%20configuration&envLink=https%3A%2F%2Fvercel.shop%2Fdocs%2Freference%2Fenv-vars)
 
-Vercel prompts for the three required Shopify values before the first deployment.
+Vercel prompts for the three Shopify values and the three Customer Account API values. Auth is
+enabled by default; if you disable `shopConfig.auth.isEnabled`, the three account values are no
+longer required.
 
 ## Getting Started
 
@@ -42,7 +45,16 @@ cp .env.example .env.local
 NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
 NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-token
 NEXT_PUBLIC_SHOPIFY_SHOP_ID=123456789
+
+CUSTOMER_ACCOUNT_SESSION_SECRET=your-generated-session-secret
+SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID=your-client-id
+SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_SECRET=your-client-secret
 ```
+
+The last three are required while `shopConfig.auth.isEnabled` is `true`, which is the default in
+this repository. Generate the session secret yourself; it is not the Shopify client secret. Customer
+Account OAuth requires an HTTPS origin, so local sign-in runs through `pnpm dev:portless` or a
+tunnel. Set `shopConfig.auth.isEnabled` to `false` to run without accounts.
 
 3. Start the development server:
 
@@ -60,7 +72,7 @@ Shopify
 
 - Product, collection, search, blog, page, and policy content from the Storefront API with typed GraphQL
 - Optimistic cart with Hydrogen forms, shared cart state, and server handlers
-- Customer accounts through the Customer Account API, opt-in
+- Customer accounts through the Customer Account API, enabled by default
 - Shopify analytics, consent, and WebMCP tool registration, opt-in
 
 Next.js
@@ -73,11 +85,14 @@ Next.js
 Eve
 
 - Shop Agent for product discovery, store questions, and cart updates in a side drawer, opt-in
-- Shopify catalog and policy MCP connections plus Hydrogen cart handlers
+- Shopify catalog and policy MCP tools called by authored Eve tools, plus Hydrogen cart handlers
 
-Customer authentication runs through Shopify's Customer Account API. Add the Headless sales channel's client ID and secret plus a generated session secret to the environment, and register the callback and logout URLs before deploying; see the [authentication guide](https://vercel.shop/docs/anatomy/authentication).
+Customer authentication runs through Shopify's Customer Account API and is enabled by default. Add the Headless sales channel's client ID and secret plus a generated session secret to the environment, and register the callback and logout URLs before deploying; see the [authentication guide](https://vercel.shop/docs/anatomy/authentication).
 
-Shop Agent is disabled by default. Set `agent.isEnabled` to `true` in `lib/config/index.ts` and follow the [Shop Agent guide](https://vercel.shop/docs/anatomy/agent) to configure AI Gateway access, turn on bot protection, and review privacy and spending safeguards before enabling public chat.
+Shop Agent is disabled by default. Set `shopConfig.agent.isEnabled` to `true` in
+`lib/config/index.ts`, set `shopConfig.botid.isEnabled` for bot protection, and follow the
+[Shop Agent guide](https://vercel.shop/docs/anatomy/agent) to configure AI Gateway access, Firewall
+rate limits, spending controls, and privacy review before enabling public chat.
 
 ## Skills
 
@@ -122,6 +137,7 @@ Full documentation is available at [vercel.shop](https://vercel.shop).
 
 Project-specific runbooks:
 
+- [`docs/FRONTEND-ARCHITECTURE.md`](./docs/FRONTEND-ARCHITECTURE.md) — the full frontend map: routes, components, data flow, caching, configuration, owners and pending work.
 - [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md) — the canonical template tokens, layout, brand, component, motion and accessibility system.
 - [`docs/DESIGN-SYSTEM-ENFORCEMENT.md`](./docs/DESIGN-SYSTEM-ENFORCEMENT.md) — the token, lint, computed-contract and governance system that keeps the storefront on-system.
 - [`docs/DESIGN-SYSTEM-AUDIT.md`](./docs/DESIGN-SYSTEM-AUDIT.md) — the historical gap analysis, migration record and current exceptions.

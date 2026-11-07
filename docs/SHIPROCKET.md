@@ -54,7 +54,7 @@ Admin.
 | ------------------ | ------------------------------------------------------------- | --------------------------------------------- |
 | Shiprocket client  | Token cache, order create, AWB, pickup, label, tracking       | `lib/shipping/server.ts`                      |
 | Domain types       | Serviceability quote, shipment record, tracking event         | `lib/shipping/types.ts`                       |
-| Route handler      | Receive tracking webhooks, verify `x-api-key`, return `200`   | `app/api/webhooks/shiprocket/route.ts`        |
+| Route handler      | Receive tracking webhooks, verify `x-api-key`, return `200`   | `app/api/webhooks/shipping/route.ts`          |
 | Shopify fulfilment | Write AWB, courier and tracking URL back to the Shopify order | server-only Admin API call                    |
 | Optional UI        | Pincode check and delivery estimate on the cart page          | `components/cart/` + `lib/shipping/action.ts` |
 

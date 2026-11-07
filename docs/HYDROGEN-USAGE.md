@@ -5,7 +5,8 @@ use the Hydrogen React Router framework, Oxygen, MiniOxygen or the Hydrogen Vite
 owns routing, rendering, caching and deployment; Hydrogen owns the Shopify clients, cart protocol,
 customer sessions, route handlers and Shopify-specific UI state.
 
-77 source files import Hydrogen directly, through 91 import statements:
+77 source files across `app/`, `components/`, `lib/`, `agent/` and `proxy.ts` import Hydrogen
+directly, through 91 import statements:
 
 | Module                                         | Import statements |
 | ---------------------------------------------- | ----------------- |
@@ -19,21 +20,24 @@ customer sessions, route handlers and Shopify-specific UI state.
 
 ### Storefront API client and GraphQL
 
-`lib/shopify/storefront/server.ts` creates a public `createStorefrontClient` per request and locale
-pair. Hydrogen overrides `$country` and `$language` variables from client config, so one client
-cannot serve multiple locale pairs. The client uses a 10-second timeout and a custom fetch that:
+`lib/shopify/storefront/server.ts` creates a public `createStorefrontClient` for each request and
+locale pair it needs. Hydrogen overrides `$country` and `$language` variables from client config, so
+one client cannot serve multiple locale pairs; the factory is not memoized across calls. The client
+uses a 10-second timeout and a custom fetch that:
 
 - annotates the URL with `?operation=<name>` for external tracing;
 - sets `Accept-Encoding: gzip, br`;
 - logs duration and operation through `logShopifyDebug` when `DEBUG_SHOPIFY` is enabled.
 
 `createShopifyRequestContext` carries the request, country and language. `storefront.request()` wraps
-`client.graphql()` and returns `{ data, errors }` without throwing. Domain operations decide how to
-handle errors through `assertStorefrontOk`.
+`client.graphql()` and returns `{ data, errors }` for GraphQL responses. HTTP, network and timeout
+failures throw Hydrogen's `StorefrontApiError` / `StorefrontTimeoutError`; domain operations handle
+returned GraphQL errors through `assertStorefrontOk`.
 
 GraphQL documents use `gql()` from the API-specific entry point: `@shopify/hydrogen` for Storefront
-and `@shopify/hydrogen/customer-account` for Customer Account. Response types come from
-`ResultOf<typeof DOC>`; no Shopify response types are handwritten. Fragments under
+and `@shopify/hydrogen/customer-account` for Customer Account. Response types come from the
+repository's `ResultOf<typeof DOC>` in `lib/shopify/types.ts`; no Shopify response types are
+handwritten. Fragments under
 `lib/shopify/fragments/` are composed through `gql()`'s second argument. `flattenConnection`,
 `parseSortByValue`, `ProductFilter` and the generated Storefront schema types come from Hydrogen.
 
@@ -50,7 +54,8 @@ and `@shopify/hydrogen/customer-account` for Customer Account. Response types co
   `components/cart/*`, `components/agent/shopping-results.tsx` and the product forms.
 - `getCartId`, `createCartCookie` and `cartQueries.cartCreate` are used for cookie binding and for
   creating an empty cart before the agent's first mutation.
-- `seedCartData` shares one per-request promise; carts never enter the Next.js data cache.
+- The repository's `seedCartData` in `lib/cart/server.ts` shares one per-request React `cache()`
+  promise; carts never enter the Next.js data cache. It is not a Hydrogen export.
 
 ### Customer accounts
 
@@ -124,7 +129,8 @@ Hydrogen's packaged skills remain the SDK reference in
 ## Boundaries to preserve
 
 - Keep Shopify transports in `lib/shopify/**` and return domain models, never raw Shopify responses.
-- Keep `fetch*` operations uncached and Next.js `get*` wrappers cached, as described in `AGENTS.md`.
+- Keep `fetch*` operations free of Next.js cache directives and Next.js `get*` wrappers cached, as
+  described in `AGENTS.md`.
 - Keep cart writes in Hydrogen handlers behind `proxy.ts`; do not add cart Server Actions or
   cache-tag invalidation for cart changes.
 - Use `gql()` from the correct API package and derive response types with `ResultOf`.

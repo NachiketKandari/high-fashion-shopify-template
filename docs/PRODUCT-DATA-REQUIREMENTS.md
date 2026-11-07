@@ -29,7 +29,7 @@ is asking for are either missing, hidden inside description HTML, or not structu
 | Area                  | Polite Society today                                                | This template today                                      | What the client brief needs                            |
 | --------------------- | ------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------ |
 | Product name          | H1 on the PDP                                                       | H1 on the PDP                                            | Required                                               |
-| Price                 | INR by default; 56-currency display selector                        | USD only; static label                                   | Required; decide market/currency model                 |
+| Price                 | INR by default; 56-currency display selector                        | USD store; display-only USD/INR selector                 | Required; decide market/currency model                 |
 | Quantity              | Quantity stepper                                                    | Quantity stepper                                         | UI only; client supplies inventory and purchase limits |
 | Product code / SKU    | Exists in product data, **not visible** on the PDP                  | Read for schema, **not visible** on the PDP              | Required per variant; visible display optional         |
 | Description           | Rich text; includes Fabric & Care                                   | Rich text; includes imported Fabric & Care               | Required; keep structured fields separate              |
@@ -49,8 +49,8 @@ is asking for are either missing, hidden inside description HTML, or not structu
 | Manufacturer/importer | **Not shown**                                                       | **Not shown**                                            | Required for EU GPSR and similar                       |
 | Reviews / ratings     | **Not shown**                                                       | **Not shown**                                            | Optional                                               |
 | SEO                   | Meta title, description and Open Graph                              | Same                                                     | Recommended                                            |
-| Filters               | Product type, Colour, Fabric and Price; **no Size facet**           | Code supports facets; only Price configured              | Required; add Size and configure Search & Discovery    |
-| Currency              | INR default; display-only selector; checkout currency not verified  | USD only; no selector                                    | Decision: real Markets currency or display-only        |
+| Filters               | Product type, Colour, Fabric and Price; **no Size facet**           | Code supports facets; Availability and Price configured  | Required; add Size and configure Search & Discovery    |
+| Currency              | INR default; display-only selector; checkout currency not verified  | Display-only USD/INR selector; checkout remains USD      | Decision: real Markets currency or display-only        |
 | Search                | Predictive drawer plus results page                                 | Predictive drawer plus results page with filter plumbing | Filter link and configured facets                      |
 
 **What this means**

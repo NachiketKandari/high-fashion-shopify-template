@@ -1,8 +1,10 @@
 # Storefront implementation notes
 
 The storefront in this repository now reproduces the design system and page anatomy captured in
-[`docs/reference/DESIGN.md`](./reference/DESIGN.md). For the stack map — which Shopify API owns
-what, and where Hydrogen, Next.js and Vercel fit — read
+[`docs/reference/DESIGN.md`](./reference/DESIGN.md). For the full frontend map — routes, components,
+data flow, caching and pending work — read
+[`docs/FRONTEND-ARCHITECTURE.md`](./FRONTEND-ARCHITECTURE.md). For the stack map — which Shopify API
+owns what, and where Hydrogen, Next.js and Vercel fit — read
 [`docs/SHOPIFY-WALKTHROUGH.md`](./SHOPIFY-WALKTHROUGH.md). For a broader Shopify tutorial with
 merchant and developer tracks, labs and curated resources, read
 [`docs/SHOPIFY-TUTORIAL.md`](./SHOPIFY-TUTORIAL.md). This file records what is implemented, how it
@@ -10,22 +12,22 @@ was verified, and what still depends on Shopify credentials or production decisi
 
 ## Implemented
 
-| Surface       | What changed                                                                                                                                                                                                                |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Global system | DM Sans, 300/400/500; 14px/21px body; 0.05em tracking; black, white, `#4d4d4d` and `#e1e1e1`; zero radii; 20px mobile / 30px desktop gutters.                                                                               |
-| Announcement  | Two rotating messages, pause on hover, 30px desktop / 35px mobile.                                                                                                                                                          |
-| Header        | Large homepage masthead (`1016 × 82` at 1440), compact header elsewhere, sticky collapse on scroll, desktop nav with hover/focus mega menus, two-up editorial tiles, mobile menu drawer.                                    |
-| Utilities     | Currency label, search drawer, help/contact drawer, cart count, mobile icon row.                                                                                                                                            |
-| Search        | 440px right drawer with predictive products, recent products when empty, clear and view-all actions.                                                                                                                        |
-| Homepage      | Full-bleed campaign hero, 2-up editorial, “Our Picks” scroll rail, 3-up collection edits, 4 link tiles.                                                                                                                     |
-| Collection    | 18px uppercase title, chips row, inline desktop toolbar, 2/3/4-column responsive grid, 2:3 product images, 3px column gap, colour swatches, size list, wishlist toggle, hover image, filter drawer, sort, infinite loading. |
-| Product       | 50/50 split, stacked 2:3 gallery, mobile snap gallery, 408px centred info column, inline colour and size selectors, size-guide drawer, quantity, outlined add-to-cart, black buy-now, four description tabs, related rail.  |
-| Cart          | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                    |
-| Footer        | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                  |
-| Newsletter    | Modal after five seconds with 30-day local dismissal; footer form.                                                                                                                                                          |
-| Our World     | About Us page with studio, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                    |
-| Help          | Shopify care guide, size guide with a find-my-size form and measurement tables, Shopify FAQ with native details/summary, contact channels and message form, shipping and returns pages.                                     |
-| Policies      | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                        |
+| Surface       | What changed                                                                                                                                                                                                                        |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Global system | DM Sans, 300/400/500; 14px/21px body; 0.05em tracking; black, white, `#4d4d4d` and `#e1e1e1`; zero radii; 20px mobile / 30px desktop gutters.                                                                                       |
+| Announcement  | Two rotating messages, pause on hover, 30px desktop / 35px mobile.                                                                                                                                                                  |
+| Header        | Large homepage masthead (`1016 × 82` at 1440), compact header elsewhere, sticky collapse on scroll, desktop nav with hover/focus mega menus, mobile menu drawer.                                                                    |
+| Utilities     | Currency selector, search drawer, help/contact drawer, cart count, mobile icon row.                                                                                                                                                 |
+| Search        | 440px right drawer with predictive products, recent products when empty, clear and view-all actions.                                                                                                                                |
+| Homepage      | Full-bleed campaign hero, two-up editorial tiles, “Our Picks” scroll rail, 3-up collection edits, 4 link tiles.                                                                                                                     |
+| Collection    | 18px uppercase title, chips row, inline desktop toolbar, 2/3/4-column responsive grid, 2:3 product images, 3px column gap, colour swatches, size list, wishlist toggle, hover image, filter drawer, sort, infinite loading.         |
+| Product       | 50/50 split, stacked 2:3 gallery, mobile snap gallery, 408px centred info column, inline colour and size selectors, size-guide drawer, quantity, outlined add-to-cart, black buy-now, four description tabs, related-products grid. |
+| Cart          | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                            |
+| Footer        | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                          |
+| Newsletter    | Modal after five seconds with 30-day local dismissal; footer form.                                                                                                                                                                  |
+| Our World     | About Us page with studio, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                            |
+| Help          | Shopify care guide, size guide with a find-my-size form and measurement tables, Shopify FAQ with native details/summary, contact channels and message form, shipping and returns pages.                                             |
+| Policies      | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                                |
 
 ## Flows and screenshots
 
@@ -96,8 +98,9 @@ The seeder authenticates with a **Dev Dashboard app**, not a legacy admin custom
 4. `scripts/seed-catalog.mjs` exchanges them at run time with the client credentials grant. The
    resulting Admin API token expires after 24 hours and is never written to disk.
 
-The two variables are read only by the seeder. They are not bundled into the storefront, must never
-use the `NEXT_PUBLIC_` prefix, and must never be committed. `.env.example` and
+The two variables are read by all three offline scripts (`seed-catalog.mjs`,
+`import-live-catalog.mjs` and `seed-content.mjs`). They are not bundled into the storefront, must
+never use the `NEXT_PUBLIC_` prefix, and must never be committed. `.env.example` and
 `docs/SHOPIFY-WALKTHROUGH.md` hold placeholders and instructions, never values. If the secret is
 ever exposed — a screenshot, a chat, a log — rotate it under **Settings → Credentials**, update
 `.env.local`, and re-run the seed. The product, publication and file scopes are `write_products`,
@@ -133,8 +136,8 @@ source of the full catalog.
   no extra products, and no variant, image, option, price or collection-membership mismatches
   against the reference catalog.
 - `/collections/corsets` renders 19 corsets, `/collections/all` lists all 95 published products,
-  the home rail renders the 24-product `bestsellers` collection, and add-to-cart puts
-  `Alma Lace Corset Top` (Brown / XS, $158) in the drawer.
+  the home rail renders the first eight products of the 24-product `bestsellers` collection, and
+  add-to-cart puts `Alma Lace Corset Top` (Brown / XS, $158) in the drawer.
 - Navigation collections: every collection handle in `MAIN_NAV` returns `200` and includes at
   least one product; `accessories` has 2 live products and `outerwear` has 3.
 - Content routes: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`, `/pages/press-v2`,
@@ -143,6 +146,8 @@ source of the full catalog.
   return `200` from Shopify content. `/pages/contact-us`, `/pages/size-guide` and `/pages/wishlist`
   remain Next.js routes.
 - Seeded content: 9 Shopify pages, the `journal-2` blog, 3 articles and 38 images in Shopify Files.
+  The store currently serves 11 published page resources because Shopify's pre-existing `contact`
+  and `data-sharing-opt-out` pages also render through `/pages/[handle]`.
 - Interactive checks: size finder returns a size, FAQ `<details>` panels expand, contact form shows
   its local success state, and the journal links resolve.
 - GA4 network verification as above.
@@ -215,9 +220,9 @@ The ordered closure plan, with dependencies and acceptance checks, is in
   `public/reference/` are licensed for this private prototype only and must be replaced before
   distribution. Inventory availability and per-product Fabric/Fit copy are not imported yet; the
   PDP renders static copy for those tabs and all variants are untracked.
-- **Collection facets**: only the built-in Price facet is configured in this store. Product type,
-  colour and fabric facets need the Search & Discovery app configured in Shopify admin; the
-  Storefront API exposes only configured filters.
+- **Collection facets**: Availability and Price are configured in this store. Product type, colour
+  and fabric facets need the Search & Discovery app configured in Shopify admin; the Storefront API
+  exposes only configured filters.
 - **Content ownership**: the editorial and policy pages plus the journal now live in Shopify.
   Contact, size guide and wishlist remain Next.js because they need forms, local state or a
   client-side size finder. Do not add a local static route for a Shopify handle; see
@@ -228,10 +233,12 @@ The ordered closure plan, with dependencies and acceptance checks, is in
 - **Checkout, order status and payment failure** are Shopify-hosted.
 - **Newsletter and contact submissions** show a local success state; the contact form does not
   send mail yet, and the newsletter does not post to Shopify or a marketing provider.
-- **Currency**: the store is priced in USD, so the header shows USD. The reference defaults to INR.
-  Changing this is a Shopify store-currency and market decision, not a styling change.
+- **Currency**: the store is priced in USD. A display-only USD/INR selector converts rendered prices
+  at a fixed rate; Shopify cart totals and checkout remain USD. Making presentment currency
+  authoritative is a Shopify Markets decision, not a styling change.
 - **Shipping**: no Shiprocket code ships in this repository. See
   [`SHIPROCKET.md`](./SHIPROCKET.md) for the two integration paths.
-- **Payment marks** are typographic, not brand logo assets.
+- **Payment marks** are inline SVG brand marks in `components/footer/payment-marks.tsx` (American
+  Express, Diners Club, Maestro, Mastercard, RuPay and Visa), not typographic labels.
 - **Editorial photography** is reference imagery. Replace it before a public launch. The placeholder
   wordmark in `public/brand/wordmark.svg` is the template mark.

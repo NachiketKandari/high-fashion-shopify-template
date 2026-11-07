@@ -50,27 +50,27 @@ the empty/filled cart states.
 
 ## 2. Scorecard
 
-| Area                  | Status | Current verification                                                                                                  |
-| --------------------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
-| Token foundation      | Pass   | Colour, type roles, spacing, breakpoints, motion, focus and reduced motion are registered and asserted.               |
-| Layout and spacing    | Pass   | Gutter 20/30 at 1100, page top 24, section gap 40/60, grid gaps 3 and 24/20.                                          |
-| Brand mark            | Pass   | One `Wordmark`, one intrinsic ratio, one priority rule, five rendered sizes.                                          |
-| Shell                 | Pass*  | Header, mega menu, mobile menu, search, contact, cart and footer follow the system; currency is intentionally static. |
-| Product cards / rails | Pass   | 2:3 media, 10px swatches with names, 12/16 type, 8px inset, hover/focus reveal and quick shop.                        |
-| Collection            | Pass*  | Grid, chips, 36px toolbar and sticky filter footer; filter application remains immediate rather than draft.           |
-| Product detail        | Pass*  | Split, gallery, sticky info, tabs key model, 36px controls and the shared find-my-size size guide.                    |
-| Cart                  | Pass   | 440px drawer, 14/18 title, 36px quantity controls, progressbar and live message.                                      |
-| Motion                | Pass   | 300ms `--ease-standard` overlays, 350ms underline, 600ms image zoom and a global reduced-motion layer.                |
-| Accessibility         | Pass*  | Automated tab, focus, aria-modal, target and reduced-motion checks pass; screen reader remains manual.                |
-| Performance           | Pass*  | One hero image is prioritised; `sizes="100vw"` warnings are the accepted repository policy.                           |
-| Code-system integrity | Pass   | The static checker rejects template radii/shadows, weight 500+, spectral colours and arbitrary type.                  |
+| Area                  | Status | Current verification                                                                                                                        |
+| --------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Token foundation      | Pass   | Colour, type roles, spacing, breakpoints, motion, focus and reduced motion are registered and asserted.                                     |
+| Layout and spacing    | Pass   | Gutter 20/30 at 1100, page top 24, section gap 40/60, grid gaps 3 and 24/20.                                                                |
+| Brand mark            | Pass   | One `Wordmark`, one intrinsic ratio, one priority rule; four variants, three in use, `menu` unused.                                         |
+| Shell                 | Pass*  | Header, mega menu, mobile menu, search, contact, cart and footer follow the system; currency is display-only USD/INR.                       |
+| Product cards / rails | Pass   | 2:3 media, 10px swatches with names, 12/16 type, 8px inset, hover/focus reveal and quick shop.                                              |
+| Collection            | Pass*  | Grid, chips, 36px toolbar and sticky filter footer; filter application remains immediate rather than draft.                                 |
+| Product detail        | Pass*  | Split, gallery, sticky info, tabs key model, 36px controls and the shared find-my-size size guide.                                          |
+| Cart                  | Pass   | 440px drawer, 14/18 title, 36px quantity controls, progressbar and live message.                                                            |
+| Motion                | Pass   | 300ms `--ease-standard` overlays, 350ms underline, 600ms image zoom and a global reduced-motion layer.                                      |
+| Accessibility         | Pass*  | Automated tab, focus, aria-modal, target and reduced-motion checks pass; screen reader remains manual.                                      |
+| Performance           | Pass*  | One hero image is prioritised; `sizes="100vw"` warnings are the accepted repository policy.                                                 |
+| Code-system integrity | Pass   | The static checker rejects named radius/shadow utilities, 500–700 weights, spectral colours and arbitrary type in `app/` and `components/`. |
 
 \* The starred items retain the product decisions and content dependencies in §7. Automated checks
 cover the computed contract; they do not replace a screen-reader pass.
 
 ## 3. Measured deltas
 
-These are computed values from the live reference and the local clone at 1440px unless stated.
+These are pre-implementation computed values from the live reference and the local clone at 1440px unless stated.
 
 ### 3.1 Foundations
 
@@ -343,10 +343,11 @@ Sold-out variants remain links marked with a line-through; the reference keeps a
 pointer drag. Add drag with keyboard/arrow fallback and reduced-motion instant scrolling.
 
 **P1.15 Currency and grid density.**
-The header currency is a static `USD` label (`components/nav/index.tsx:19-22`) and the mobile bottom
-row is a static span (`components/nav/mobile-menu.tsx:114-116`). The grid density buttons are
-non-interactive (`components/collections/toolbar.tsx:86-92`). These are reference behaviours that
-need a product decision, not a styling patch.
+At audit time, the header currency was a static `USD` label (`components/nav/index.tsx:19-22`) and
+the mobile bottom row was a static span (`components/nav/mobile-menu.tsx:114-116`). The currency is
+now the display-only USD/INR selector described in §7.7. The grid density buttons remain
+non-interactive (`components/collections/toolbar.tsx:86-92`); grid density is still a reference-only
+control that needs a product decision, not a styling patch.
 
 **P1.16 Several surfaces use type outside the scale.**
 Blog and listing headings use 20–48px with template tracking (`components/blog/article-card.tsx:33-42`,
@@ -359,7 +360,8 @@ are 8px (`:73`); the newsletter modal uses 14/20 for its heading and 11/18 for b
 (`components/product/price.tsx:14`).
 
 Fix direction: map every storefront heading to `text-display`/`text-h2`/`text-h3`/`text-h4`; keep
-editorial long-form at 14/21 or a documented 22/29 maximum, not 48px.
+editorial long-form at 14/21 or a documented 22/29 maximum, not 48px. Current `PaymentMarks` renders
+six SVG brand marks (Amex, Diners, Maestro, Mastercard, RuPay, Visa), not type.
 
 **P1.17 The type system is still utility string driven.**
 Compiled usage shows 76 `text-2xs`, 6 `text-13`, 114 `tracking-wider`, 7 `tracking-wide`,
@@ -552,9 +554,12 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
    named `--motion-drawer-slow: 500ms` exception for the cart only; do not mix anonymous durations.
 6. **Quick shop.** Wire the existing `QuickShop` component into the card hover/focus action rather
    than writing a second implementation.
-7. **Currency and grid density.** These are product decisions. The current store currency is USD and
-   the reference exposes 55 currencies; grid density is a reference control with no storefront
-   behaviour yet. Do not fake either with styling.
+7. **Currency and grid density.** The store currency is USD and checkout stays in USD, but the
+   storefront has a display-only USD/INR selector (`lib/money/display.ts`, `components/currency/*`)
+   using fixed display rates; this is the recorded exception to "do not fake currency" because it
+   never changes the Shopify currency. The reference exposes 55 currencies; broader support still
+   needs a product decision. Grid density is a reference control with no storefront behaviour yet.
+   Do not extend the display-only conversion to checkout or present it as Shopify Markets.
 8. **Content migration.** The content migration commit moved the editorial pages and journal to Shopify. Remaining
    content may still move; do not couple the design system to local route files. The shell and
    commerce components are the priority.
@@ -573,24 +578,30 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
    size-guide page when that copy changes.
 5. **Reference drift.** The live PDP uses normal title tracking and a 16px mobile collection title;
    the clone keeps the system's 0.05em tracking and 18/23 collection title.
-6. **Runtime surfaces.** Home, collection, PDP, search, mega menu, mobile menu, cart drawer, filter
-   drawer and newsletter are covered by Playwright. Account and Shop Agent pages are type-checked and
-   on-system but not part of the automated flow suite.
+6. **Runtime surfaces.** Home, collection, PDP, the search dialog's focus/ARIA, mega menu, mobile
+   menu, cart drawer, filter drawer and newsletter are covered by Playwright. Search results and
+   empty state, the contact drawer, lightbox, quick shop, gift card, bundles, selling plans, the
+   discount form, wishlist, account, Shop Agent, blog, policies, error pages, currency conversion
+   and free-shipping copy are on-system but not part of the automated flow suite. Tablet widths,
+   visual screenshots, focus traps and computed radius/shadow are also unasserted.
 7. **Screen reader.** Automated ARIA, focus, tab-key, target and reduced-motion checks pass; a
    screen-reader pass remains manual.
 8. **Checkout.** Shopify-hosted and out of scope.
+9. **Display-only currency.** `lib/money/display.ts` and `components/currency/*` convert storefront
+   prices to INR at fixed display rates and persist the choice in the browser. Checkout and Shopify's
+   recorded totals remain in USD; this is not Shopify Markets and does not change the store currency.
 
 ## 9. Verification status
 
-| Check                         | Result                                                                  |
-| ----------------------------- | ----------------------------------------------------------------------- |
-| Live reference measurements   | Complete at 1440 and 390; written by `pnpm audit:reference`             |
-| Local clone measurements      | Complete at 1440 and 390; written by `pnpm audit:reference`             |
-| Interactive Playwright checks | Home, mega menu, mobile menu, search, cart add, filter, newsletter, PDP |
-| `pnpm typecheck`              | Passes                                                                  |
-| `pnpm lint`                   | Passes, including the static design check                               |
-| `pnpm test:design`            | 16 tests pass                                                           |
-| `pnpm build`                  | Passes                                                                  |
-| Reduced-motion pass           | Playwright assertion for announcement and authored transitions          |
-| Screen-reader pass            | Not run; findings are static and Playwright-derived                     |
-| Checkout completion           | Not exercised; Shopify-hosted and out of scope                          |
+| Check                         | Result                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------- |
+| Live reference measurements   | Complete at 1440 and 390; written by `pnpm audit:reference`                               |
+| Local clone measurements      | Complete at 1440 and 390; written by `pnpm audit:reference`                               |
+| Interactive Playwright checks | Home, mega menu, mobile menu, search-dialog focus/ARIA, cart add, filter, newsletter, PDP |
+| `pnpm typecheck`              | Passes                                                                                    |
+| `pnpm lint`                   | Passes, including the static design check                                                 |
+| `pnpm test:design`            | 16 tests pass                                                                             |
+| `pnpm build`                  | Passes                                                                                    |
+| Reduced-motion pass           | Playwright assertion for announcement and authored transitions                            |
+| Screen-reader pass            | Not run; findings are static and Playwright-derived                                       |
+| Checkout completion           | Not exercised; Shopify-hosted and out of scope                                            |

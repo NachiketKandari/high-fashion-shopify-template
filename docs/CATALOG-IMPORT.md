@@ -58,9 +58,15 @@ pnpm import:catalog                         # upsert from the cached catalog
 pnpm import:catalog -- --refresh            # refetch the live catalog first
 pnpm import:catalog -- --skip-imported      # skip products whose counts already match
 pnpm import:catalog -- --collections-only   # resync collection membership only
+pnpm import:catalog -- --resume             # continue after a partial run
+pnpm import:catalog -- --no-media           # skip media uploads
+pnpm import:catalog -- --location-id=123    # mirror inventory for a location
 pnpm import:catalog -- --dry-run --limit=1  # print one transformed product
 UNPUBLISH_OTHERS=1 pnpm import:catalog       # unpublish products/collections outside the catalog
 ```
+
+`--ref` and `--rate` override the reference URL and INR→USD rate. Each run deletes and re-uploads
+product media for products it updates, so a full refresh is slower than a collections-only pass.
 
 The script is `scripts/import-live-catalog.mjs`; the original twelve-product design-study seeder
 `scripts/seed-catalog.mjs` remains available but is no longer the catalog source.
@@ -77,18 +83,20 @@ and acceptance checks, is in [`GAP-CLOSURE-PLAN.md`](./GAP-CLOSURE-PLAN.md):
    The sold-out branch itself renders correctly when tested with an out-of-stock demo product.
 2. **Fabric and Fit tab copy is static.** Per-product values were not imported. The PDP uses
    `components/product-detail/product-tabs.tsx` static copy for those two tabs.
-3. **Collection facets are only partially configured.** The target store exposes only the built-in
-   Price facet. Product type, colour, and fabric facets need the Search & Discovery app configured
-   in Shopify admin; the Storefront API returns only configured filters. The clone renders colour
+3. **Collection facets are only partially configured.** The target store exposes Availability and
+   Price. Product type, colour, and fabric facets need the Search & Discovery app configured in
+   Shopify admin; the Storefront API returns only configured filters. The clone renders colour
    swatches for any configured facet via `lib/product/color-swatches.ts`.
 4. **Checkout stops at the store password.** The cart handoff reaches
    `https://dummy-store-f0ejfuh9.myshopify.com`, but the development store's Online Store password
    gate redirects to `/password`. Disable password protection in Shopify admin to complete the
    checkout test.
-5. **Currency UI differs.** The reference has a client-side 56-currency selector; the clone shows
-   the configured static `USD` label.
+5. **Currency UI differs in scope.** The reference has a client-side 56-currency selector; the clone
+   has a two-currency display selector (USD/INR at a fixed rate). Prices convert in the browser;
+   Shopify cart totals and checkout remain in the store currency, USD.
 6. **Gallery presentation differs.** The reference stacks the desktop gallery and opens a lightbox;
-   the clone uses its own gallery with thumbnails. Image URLs now request a 1920 px Shopify CDN
+   the clone uses a stacked desktop grid, a mobile snap carousel and a lightbox with no thumbnail
+   strip, previous/next controls or image counter. Image URLs now request a 1920 px Shopify CDN
    rendition so oversized source images do not time out the image optimizer.
 7. **Checkout provider differs.** The reference's India traffic uses a GoKwik overlay; the clone
    hands off to Shopify checkout.

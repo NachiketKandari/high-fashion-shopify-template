@@ -1,7 +1,9 @@
 # Gap closure plan
 
-Status: 5 November 2026. The catalog import is complete; this plan closes the remaining catalog,
-store-configuration, checkout and parity gaps without re-importing products unnecessarily.
+Status: 7 November 2026. The catalog import is complete; this plan closes the remaining catalog,
+store-configuration, checkout and parity gaps without re-importing products unnecessarily. The
+current frontend map and pending-work summary is
+[`FRONTEND-ARCHITECTURE.md`](./FRONTEND-ARCHITECTURE.md).
 
 ## Baseline
 
@@ -14,7 +16,7 @@ store-configuration, checkout and parity gaps without re-importing products unne
 | Storefront checks   | 0 missing, 0 extra, 0 product issues, 0 collection issues                     |
 | Admin checks        | 41/41 collection memberships match the reference, including unpublished items |
 | Reference reports   | Four live interaction audits plus `clone-flows.md`                            |
-| Code checks         | `pnpm lint` and `pnpm typecheck` pass; changes are uncommitted                |
+| Code checks         | `pnpm lint` and `pnpm typecheck` pass; working tree clean                     |
 | Published catalogue | “Dummy Store Headless” publication                                            |
 
 The 221 sold-out variants are the largest remaining catalog difference: 50 products are partially
@@ -23,17 +25,17 @@ in this store is currently available because inventory is untracked.
 
 ## Gap inventory
 
-| ID  | Gap                                          | Owner   | Type                | Blocker                                      | Effort           |
-| --- | -------------------------------------------- | ------- | ------------------- | -------------------------------------------- | ---------------- |
-| G1  | Inventory availability not mirrored          | Shopify | Code + app scopes   | `read_locations`, `write_inventory` approval | 2–3 h + approval |
-| G2  | Fabric and Fit tabs are static               | Shopify | Code + Admin API    | None                                         | 4–6 h            |
-| G3  | Collection facets show only Price            | Shopify | Store config + code | Search & Discovery admin setup               | 2–4 h + 15 min   |
-| G4  | Colour palette has a missing `POLITE BLUE`   | Next.js | Code                | None                                         | 30 min           |
-| G5  | Checkout stops at the store password         | Shopify | Store config + test | Online Store password setting                | 30 min + 1 h     |
-| G6  | Currency selector differs from the reference | Next.js | Decision + code     | Product decision                             | 0 h or 1–2 days  |
-| G7  | Gallery is close but not fully at parity     | Next.js | Decision + code     | Product decision                             | 0 h or 4–6 h     |
-| G8  | Reference uses GoKwik, clone uses Shopify    | Shopify | Decision            | Product decision                             | 0 h or separate  |
-| G9  | Docs and final verification drift            | Both    | Docs + verification | None                                         | 2 h              |
+| ID  | Gap                                                | Owner   | Type                | Blocker                                      | Effort           |
+| --- | -------------------------------------------------- | ------- | ------------------- | -------------------------------------------- | ---------------- |
+| G1  | Inventory availability not mirrored                | Shopify | Code + app scopes   | `read_locations`, `write_inventory` approval | 2–3 h + approval |
+| G2  | Fabric and Fit tabs are static                     | Shopify | Code + Admin API    | None                                         | 4–6 h            |
+| G3  | Collection facets show only Availability and Price | Shopify | Store config + code | Search & Discovery admin setup               | 2–4 h + 15 min   |
+| G4  | Colour palette has a missing `POLITE BLUE`         | Next.js | Code                | None                                         | 30 min           |
+| G5  | Checkout stops at the store password               | Shopify | Store config + test | Online Store password setting                | 30 min + 1 h     |
+| G6  | Currency selector differs from the reference       | Next.js | Decision + code     | Product decision                             | 0 h or 1–2 days  |
+| G7  | Gallery is close but not fully at parity           | Next.js | Decision + code     | Product decision                             | 0 h or 4–6 h     |
+| G8  | Reference uses GoKwik, clone uses Shopify          | Shopify | Decision            | Product decision                             | 0 h or separate  |
+| G9  | Docs and final verification drift                  | Both    | Docs + verification | None                                         | 2 h              |
 
 ## G1 — Mirror inventory availability
 
@@ -44,11 +46,13 @@ in this store is currently available because inventory is untracked.
 2. Mint a fresh client-credentials token and confirm both handles with
    `currentAppInstallation { accessScopes { handle } }`.
 3. Query the active location ID.
-4. Extend `scripts/import-live-catalog.mjs` with `--inventory-only` and `--location-id`:
+4. Extend `scripts/import-live-catalog.mjs` with `--inventory-only`. `--location-id` and the
+   quantity code already exist:
    - resolve each catalog variant by product handle plus selected options/SKU;
    - set `inventoryItem.tracked = true` and `inventoryPolicy = DENY`;
    - set `available` to 100 for reference-available variants and 0 for sold-out variants;
-   - skip product/media/collection writes.
+   - skip product/media/collection writes;
+   - preserve existing inventory fields when a later import omits `--location-id`.
 5. Invalidate product caches after the run (`REVALIDATE_URL` with the `products` and
    `products-index` tags, or restart the local dev server).
 6. Verify the Storefront API and the PDP:
@@ -116,8 +120,9 @@ because of a missing metafield.
 
 **Goal:** every colour option resolves to a swatch.
 
-1. Add the missing `POLITE BLUE` alias (`#005BD3`) to `lib/product/color-swatches.ts`. Keep the
-   existing `LOREM BLUE` alias while the template rebrand is in flight.
+1. Add the missing `POLITE BLUE` alias (`#005BD3`) to `lib/product/color-swatches.ts`. The template
+   rebrand is complete; keep the existing `LOREM BLUE` alias only if older product data still uses
+   it.
 2. Re-scrape the four PDPs that timed out (`meira-corset-mini-dress-black`,
    `ira-pintucked-shorts`, `baby-tee-1`, `greasy-denim-biker-jacket-beige`) with a longer timeout
    or the collection card’s `data-colours` payload.
@@ -149,9 +154,13 @@ without changing the cart, checkout or order currency. Three options:
 
 | Option                        | What it means                                                                                            | Recommendation                                                          |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| A. Keep USD only              | Static `USD` label, one currency everywhere. Remove this from the gap list and document the choice.      | **Recommended** for a single-currency template.                         |
+| A. Keep USD only              | Static `USD` label, one currency everywhere. Remove this from the gap list and document the choice.      | Recommended for a single-currency template.                             |
 | B. Shopify Markets            | Configure markets and presentment currencies, add a country/currency selector, and localize prices/cart. | Choose only if multi-currency commerce is a real requirement. 1–2 days. |
-| C. Reference-style FX display | Convert displayed prices client-side; cart and checkout stay USD.                                        | Not recommended: the shopper sees one currency and pays in another.     |
+| C. Reference-style FX display | Convert displayed prices client-side; cart and checkout stay USD.                                        | Not recommended for commerce correctness, but currently implemented.    |
+
+**Current status:** option C has shipped. `lib/money/display.ts` defines USD/INR at a fixed 94.62
+rate, and the selector appears in the header, mobile menu and footer. Cart totals and checkout
+remain USD. The practical choice is now to keep and harden C, remove it for A, or replace it with B.
 
 If B is chosen, use the `enable-shopify-markets` skill and verify that product, collection, cart,
 checkout and order currencies agree.
@@ -183,8 +192,9 @@ explicitly needs that provider.
 3. Browser-check the changed surfaces: PDP tabs, colour chips, filter sheet, sold-out PDP, cart and
    checkout handoff.
 4. Run `pnpm lint`, `pnpm typecheck` and `pnpm build`.
-5. Update `docs/CATALOG-IMPORT.md`, `docs/IMPLEMENTATION.md`, `docs/SHOPIFY-APP-SCOPES.md` and
-   `docs/reference/interactions/clone-flows.md` with the final state.
+5. Update `docs/FRONTEND-ARCHITECTURE.md`, `docs/CATALOG-IMPORT.md`, `docs/IMPLEMENTATION.md`,
+   `docs/SHOPIFY-APP-SCOPES.md` and `docs/reference/interactions/clone-flows.md` with the final
+   state.
 6. Commit the tracked code and docs; keep `.catalog-import/` and `.playwright-mcp/` ignored.
 
 ## Sequence and critical path

@@ -7,19 +7,19 @@ always-on backend telemetry.
 
 ## Current coverage
 
-| Signal                  | Current state                                                                                                                           | Always on                               |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Shopify API errors      | GraphQL partial errors are warned; Storefront failures throw with `{ errors, operation }`.                                              | Yes                                     |
-| Shopify API timings     | Storefront, Customer Account and MCP transports log `durationMs` and `operation`.                                                       | No — only when `DEBUG_SHOPIFY=1`/`true` |
-| Application exceptions  | Uncaught server errors reach the platform log; client errors are not reported anywhere.                                                 | Server: platform only. Client: no.      |
-| Error boundaries        | Root, account and global boundaries render a retry surface. They do not log or report the error.                                        | UI yes, reporting no                    |
-| Request correlation     | None. Shopify request IDs are deliberately blanked; no request ID is generated or propagated.                                           | No                                      |
-| Webhook deliveries      | Invalid signatures and payload parse failures are logged. Successful deliveries and invalidations are not.                              | Failures only                           |
-| Cache invalidation      | `revalidateTag` calls and results are not logged.                                                                                       | No                                      |
-| Product analytics       | GA4 or GTM when configured by env; Vercel Analytics, Speed Insights and Shopify analytics are opt-in and off by default.                | Only GA4/GTM when env vars are set      |
-| RUM / Web Vitals        | Speed Insights when enabled; no `useReportWebVitals` or custom metric reporting.                                                        | No                                      |
-| Storefront health check | No `/api/health` or `/status` route. Eve exposes `/eve/v1/health` only when the agent is enabled.                                       | No                                      |
-| Agent telemetry         | Eve's platform records sessions, model calls and tool calls as Agent Runs and OpenTelemetry traces. The app does not read or emit them. | Platform only, and only when Eve is on  |
+| Signal                  | Current state                                                                                                                                                                             | Always on                               |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| Shopify API errors      | GraphQL partial errors are warned; Storefront failures throw with `{ errors, operation }`.                                                                                                | Yes                                     |
+| Shopify API timings     | Storefront, Customer Account and MCP transports log `durationMs` and `operation`.                                                                                                         | No — only when `DEBUG_SHOPIFY=1`/`true` |
+| Application exceptions  | Uncaught server errors reach the platform log; client errors are not reported anywhere.                                                                                                   | Server: platform only. Client: no.      |
+| Error boundaries        | Root, account and global boundaries render a retry surface. They do not log or report the error.                                                                                          | UI yes, reporting no                    |
+| Request correlation     | None. Shopify request IDs are deliberately blanked; no request ID is generated or propagated.                                                                                             | No                                      |
+| Webhook deliveries      | Invalid signatures and payload parse failures are logged. Successful deliveries and invalidations are not.                                                                                | Failures only                           |
+| Cache invalidation      | `revalidateTag` calls and results are not logged.                                                                                                                                         | No                                      |
+| Product analytics       | GA4 or GTM when configured by env; Vercel Analytics, Speed Insights and Shopify analytics are opt-in and off by default.                                                                  | Only GA4/GTM when env vars are set      |
+| RUM / Web Vitals        | Speed Insights when enabled; no `useReportWebVitals` or custom metric reporting.                                                                                                          | No                                      |
+| Storefront health check | No `/api/health` or `/status` route. Eve exposes `/eve/v1/health` only when the agent is enabled.                                                                                         | No                                      |
+| Agent telemetry         | When the Vercel project has Agent Runs and trace sampling enabled, Eve records sessions, model calls and tool calls there. The app emits no custom OpenTelemetry or Agent Runs telemetry. | Platform only, and only when Eve is on  |
 
 ## Logging
 
@@ -68,8 +68,9 @@ fallbacks, and the `503` returned when `app/api/agent/session` cannot prepare a 
   `shopConfig.shopify.webmcp`. When enabled, `components/analytics/shopify-client.tsx` mounts
   `ShopifyScripts` and the Hydrogen analytics bus.
 - `components/analytics/trackers.tsx` publishes `PAGE_VIEWED`, `PRODUCT_VIEWED`, `COLLECTION_VIEWED`,
-  `SEARCH_VIEWED` and `CART_VIEWED`. No custom Vercel events, GTM `dataLayer` pushes or server-side
-  conversion events are implemented.
+  `SEARCH_VIEWED` and `CART_VIEWED`. The tracker components mount regardless of the Shopify script
+  flags, but they no-op until `ShopifyScripts` has mounted the Hydrogen analytics bus. No custom
+  Vercel events, GTM `dataLayer` pushes or server-side conversion events are implemented.
 - `lib/analytics/client.ts` exposes `addAnalyticsDestination()`, but no destination is registered.
 
 ## Webhooks and cache invalidation

@@ -395,7 +395,7 @@ formatting money in the client.
 This is a separate, customer-scoped API. It needs OAuth, a session and a customer access token.
 Use it for profile, addresses and order history; do not use the Admin API to read a shopper's
 orders. In this repo it lives behind `lib/shopify/customer-account/` and `lib/auth/`, and is
-disabled by default.
+enabled by default through `shopConfig.auth.isEnabled`.
 
 ### 2.7 Webhooks and cache invalidation
 
@@ -495,19 +495,20 @@ appear, even if they exist in the admin.
 This repository already ran the equivalent of:
 
 ```bash
-DRY_RUN=1 corepack pnpm seed:catalog
-corepack pnpm seed:catalog
-UNPUBLISH_OTHERS=1 corepack pnpm seed:catalog
+DRY_RUN=1 corepack pnpm import:catalog
+corepack pnpm import:catalog
+UNPUBLISH_OTHERS=1 corepack pnpm import:catalog
 ```
 
 Results:
 
-- 10 products, 8 collections, 126 variants and 20 images created.
-- 14 demo products and 3 demo collections unpublished from the Headless channel.
+- 95 products, 41 collections, 880 variants and 709 images imported from the published reference catalog.
+- 7 stale demo products and 2 non-catalog collections unpublished from the Headless channel.
 - 0 records deleted; everything remains in the admin.
 
-The script is idempotent: it skips existing handles and re-publishes on every run. Read it at
-`scripts/seed-catalog.mjs`.
+The importer is idempotent: it upserts by handle and can skip products whose counts already match.
+Read it at `scripts/import-live-catalog.mjs`. The older `pnpm seed:catalog` still seeds the original
+12-product, 23-collection design study and is not the current catalog source.
 
 ### Lab 4 — Add to cart and reach checkout
 
@@ -667,10 +668,12 @@ supplements rather than references.
 ### Commands in this repo
 
 ```bash
-corepack pnpm dev                    # local storefront
-corepack pnpm seed:catalog           # Admin API seeding
-DRY_RUN=1 corepack pnpm seed:catalog # print one input, no writes
-UNPUBLISH_OTHERS=1 corepack pnpm seed:catalog
+corepack pnpm dev                     # local storefront
+corepack pnpm import:catalog          # import the full reference catalog
+corepack pnpm seed:content            # create Shopify pages, blog and articles
+corepack pnpm seed:catalog            # original 12-product design study
+DRY_RUN=1 corepack pnpm import:catalog # print one input, no writes
+UNPUBLISH_OTHERS=1 corepack pnpm import:catalog
 corepack pnpm lint
 corepack pnpm typecheck
 corepack pnpm build

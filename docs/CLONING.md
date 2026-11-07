@@ -51,7 +51,7 @@ The app runs Next.js 16 App Router with React 19 and Tailwind CSS 4. The install
 `@shopify/hydrogen` 2026.10.2, the framework-independent SDK rather than the Hydrogen React Router
 framework. There are no React Router loaders, actions or Oxygen setup here.
 
-`lib/config/index.ts` sets US/EN commerce context, enables search, and disables customer auth,
+`lib/config/index.ts` sets US/EN commerce context, enables search and customer auth, and disables
 Shopify analytics and the Eve agent. The Storefront token in `.env.local` is the public Headless
 channel token, not an Admin token.
 
@@ -82,7 +82,7 @@ and never publicly cached.
 | Search       | `components/nav/search-modal.tsx`                                                             | 440px right drawer; Cmd/Ctrl+K toggles it; predictive product results, recently viewed products when empty, and View all results. |
 | Contact      | `components/nav/contact-drawer.tsx`                                                           | 440px drawer with WhatsApp, call, email and flagship-store rows.                                                                  |
 | Cart         | `components/cart/overlay.tsx`, `components/cart/context.tsx`, `components/cart/cart-page.tsx` | 440px drawer with $500 free-shipping progress; two-column cart page with line items, summary and checkout.                        |
-| Footer       | `components/footer/index.tsx`                                                                 | Address and wordmark, Help, Policies, The Brand, Socials, newsletter, copyright and typographic payment marks.                    |
+| Footer       | `components/footer/index.tsx`                                                                 | Address and wordmark, Help, Policies, The Brand, Socials, newsletter, currency selector, copyright and SVG payment marks.         |
 | Newsletter   | `components/newsletter/popup.tsx`, `components/newsletter/form.tsx`                           | Modal after 5s with a 30-day `localStorage` dismissal; footer form reuses the same form component.                                |
 
 ## Page rebuild
@@ -186,16 +186,18 @@ The live blog sitemap contained only `journal-2`, and the article sitemap contai
 articles rebuilt here. All three now live in the Shopify blog `journal-2` and render through the
 generic `app/blogs/[blogHandle]` and `app/blogs/[blogHandle]/[articleHandle]` routes.
 
-| Article                                  | Handle                        |
-| ---------------------------------------- | ----------------------------- |
-| A Lorem Ipsum Guide to Bombay After Dark | `guide-to-bombay-after-dark`  |
-| In Conversation with Neetta              | `in-conversation-with-neetta` |
-| The Lorem Ipsum Watchlist                | `the-lorem-ipsum-watchlist`   |
+| Article                                  | Handle                         |
+| ---------------------------------------- | ------------------------------ |
+| A Lorem Ipsum Guide to Bombay After Dark | `guide-to-bombay-after-dark`   |
+| In Conversation with Neetta              | `in-conversation-with-neetta`  |
+| The Polite Society Watchlist             | `the-polite-society-watchlist` |
 
 Bodies, excerpts, images and SEO fields were seeded from `scripts/content/journal.mjs`; the runtime
-reads them from Shopify. `app/blogs/journal-2` and `lib/content/journal.ts` were deleted after the
-Shopify routes were verified. The generic blog route sanitizes `contentHtml` with
-`sanitizeShopifyHtml` and wraps the `params` read in `Suspense` with `ArticlePageSkeleton`.
+reads them from Shopify. The live watchlist article uses the handle
+`the-polite-society-watchlist`; align the seeder source before re-running `pnpm seed:content` so a
+create-only run does not add a second article. `app/blogs/journal-2` and `lib/content/journal.ts`
+were deleted after the Shopify routes were verified. The generic blog route sanitizes `contentHtml`
+with `sanitizeShopifyHtml` and wraps the `params` read in `Suspense` with `ArticlePageSkeleton`.
 
 The trial store's `news` blog remains empty and renders its empty state.
 
@@ -235,10 +237,15 @@ The script is idempotent: it looks up each handle, skips creation when the resou
 re-publishes it, and re-applies collection membership. It does not delete or rewrite existing
 product content.
 
-### Seeded catalog
+### Legacy design-study seeder
 
-The catalog contains 12 products. Each has two or three colours, six sizes (XS–XXL) and 12–18
-variants; all variants are priced in USD, use `inventoryPolicy: "CONTINUE"` and are not
+The current store catalog is the 95-product, 41-collection import produced by
+`scripts/import-live-catalog.mjs` (`pnpm import:catalog`); see
+[`CATALOG-IMPORT.md`](./CATALOG-IMPORT.md). The `scripts/seed-catalog.mjs` dataset described below
+is the original 12-product design study and is no longer the catalog source.
+
+The design-study catalog contains 12 products. Each has two or three colours, six sizes (XS–XXL) and
+12–18 variants; all variants are priced in USD, use `inventoryPolicy: "CONTINUE"` and are not
 inventory-tracked.
 
 | Product              | Type                |    USD |
@@ -298,15 +305,15 @@ seed includes each one.
 
 Known differences from the reference are deliberate or environmental:
 
-| Area          | Reference                               | This template                                                            |
-| ------------- | --------------------------------------- | ------------------------------------------------------------------------ |
-| Currency      | INR default with a 55-currency selector | USD from the trial store; static `USD` label, no selector                |
-| Product rail  | Five cards in the measured design       | Up to eight `bestsellers` cards in `HomeProductRail`                     |
-| Product image | 3:4 card media in `DESIGN.md`           | 2:3 media in `components/product-card/product-card.tsx`                  |
-| Desktop nav   | Desktop starts at 1100px                | Nav uses Tailwind `xl` (1280px); 768–1279px uses the compact header/menu |
-| Account       | Visible account utility                 | Visible; signed-in state comes from Shopify's Customer Account API       |
-| Shipping copy | INR-denominated shipping thresholds     | Same INR copy retained while the store and cart are priced in USD        |
-| Payment marks | Brand logo assets                       | Typographic labels in `components/footer/index.tsx`                      |
+| Area          | Reference                               | This template                                                         |
+| ------------- | --------------------------------------- | --------------------------------------------------------------------- |
+| Currency      | INR default with a 55-currency selector | USD store; display-only USD/INR selector; cart and checkout stay USD  |
+| Product rail  | Five cards in the measured design       | Up to eight `bestsellers` cards in `HomeProductRail`                  |
+| Product image | 3:4 card media in `DESIGN.md`           | 2:3 media in `components/product-card/product-card.tsx`               |
+| Desktop nav   | Desktop starts at 1100px                | `desktop` breakpoint at 1100px; the compact header/menu runs below it |
+| Account       | Visible account utility                 | Visible; signed-in state comes from Shopify's Customer Account API    |
+| Shipping copy | INR-denominated shipping thresholds     | USD `$500` free-shipping threshold in the cart and product tabs       |
+| Payment marks | Brand logo assets                       | SVG brand marks in `components/footer/payment-marks.tsx`              |
 
 ## Assets
 
@@ -383,15 +390,19 @@ in the browser network panel as described above.
 2. Run `corepack pnpm install`.
 3. Copy the environment template with `cp .env.example .env.local` and fill the Shopify values:
    `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN`, `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN` and
-   `NEXT_PUBLIC_SHOPIFY_SHOP_ID`. Set `NEXT_PUBLIC_SITE_URL` for correct canonical URLs outside
-   Vercel. Keep `.env.local` out of git.
+   `NEXT_PUBLIC_SHOPIFY_SHOP_ID`. Customer accounts are enabled by default, so also set
+   `CUSTOMER_ACCOUNT_SESSION_SECRET`, `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID` and
+   `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_SECRET`, or disable `auth.isEnabled`. Set
+   `NEXT_PUBLIC_SITE_URL` for correct canonical URLs outside Vercel. Keep `.env.local` out of git.
 4. Add seed credentials: `SHOPIFY_CLIENT_ID` and `SHOPIFY_CLIENT_SECRET` from the Dev Dashboard app,
    or `SHOPIFY_ADMIN_ACCESS_TOKEN` as an alternative. Set `SHOPIFY_PUBLICATION_ID` when the Headless
    publication name is not detected automatically.
 5. Start the storefront with `corepack pnpm dev`.
-6. After the Headless channel exists, run `DRY_RUN=1 corepack pnpm seed:catalog`, then
-   `corepack pnpm seed:catalog`. Use `UNPUBLISH_OTHERS=1` only when the demo catalog should be
-   removed from the Headless channel.
+6. After the Headless channel exists, run `DRY_RUN=1 corepack pnpm import:catalog`, then
+   `corepack pnpm import:catalog` for the full reference catalog, and `corepack pnpm seed:content`
+   for editorial content. Use `DRY_RUN=1 corepack pnpm seed:catalog` and `corepack pnpm seed:catalog`
+   only for the legacy 12-product design study. Use `UNPUBLISH_OTHERS=1` only when products outside
+   the seeded catalog should be removed from the Headless channel.
 7. Verify the home page, a collection with products, a product page, add-to-cart, cart and checkout
    redirect. Run `corepack pnpm lint`, `corepack pnpm typecheck` and `corepack pnpm build` before
    handing the project on.
@@ -414,8 +425,9 @@ verification.
   plus registered callback URLs.
 - **Wishlist:** saves products in `localStorage` under `wishlist`; it is per-browser and is not
   synced to a customer account.
-- **Currency:** the trial store is priced in USD, so the storefront shows USD. The reference defaults
-  to INR and exposes a currency selector; this template has only a static USD label.
+- **Currency:** the store is priced in USD. A display-only USD/INR selector converts rendered prices
+  at a fixed rate; Shopify cart totals and checkout remain USD. The reference defaults to INR and
+  exposes a 55-currency selector.
 - **Catalog imagery:** accessories and outerwear use editorial or press imagery from the reference
   rather than dedicated product photography. The seeder does not add new photography.
 - **Brand assets:** reference photography and copied brand copy must be replaced before public distribution. The placeholder wordmark is the template mark; the reference imagery is licensed for this private study only.

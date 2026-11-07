@@ -48,19 +48,20 @@ mismatches.
 ## Mobile
 
 - 390 × 844: no horizontal page overflow (`scrollWidth === innerWidth`).
-- The menu drawer opens, exposes 61 navigation links, and shows the static `USD` label.
+- The menu drawer opens, exposes 61 navigation links, and shows the USD/INR currency selector.
 - Product cards show colour dots and size text; the PDP stacks the gallery as on the reference.
 
 ## Differences from the live reference
 
-- The live store uses a client-side currency selector (56 currencies); the clone intentionally
-  shows a static `USD` label.
+- The live store has a client-side 56-currency selector; the clone has a display-only USD/INR
+  selector. Rendered prices convert at a fixed rate, but cart totals and checkout remain USD.
 - The live India checkout opens GoKwik; the clone hands off to Shopify checkout.
-- The live PDP gallery is a stacked desktop column with a lightbox; the clone uses its own gallery
-  with thumbnails.
+- The live PDP gallery is a stacked desktop column with a lightbox; the clone uses a stacked desktop
+  grid, a mobile snap carousel and a lightbox with no thumbnail strip, previous/next controls or
+  image counter.
 - Inventory availability and per-product Fabric/Fit tab copy are not imported; all variants are
   untracked and the Fabric/Fit tabs use static copy.
-- The collection filter sheet exposes only the built-in Price facet. The live reference exposes
+- The collection filter sheet exposes Availability and Price. The live reference also exposes
   product type, colour and fabric facets because its Search & Discovery app is configured; those
   facets are store configuration, not catalog data, and must be set up in Shopify admin.
 - Search/cart/wishlist interaction details are recorded in the live reports beside this file.

@@ -28,8 +28,11 @@ runbook.
    supported LTS and change `engines.node` and `.nvmrc` in the same pull request; do not leave the
    deployment on a Node version the repository does not declare.
 
-The first build can succeed without Shopify credentials, but the rendered catalog will be empty.
-Add the environment variables before the first production deployment.
+The first build requires the three Shopify values. Because `shopConfig.auth.isEnabled` is `true` by
+default, it also requires `CUSTOMER_ACCOUNT_SESSION_SECRET`,
+`SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID` and `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_SECRET`.
+`lib/config/server.ts` throws during `next dev` and `next build` when any are missing; only
+`next typegen` is exempt. Set them before the first deployment, or disable `auth.isEnabled`.
 
 ## 3. Environment variables
 
@@ -44,6 +47,9 @@ point at the production store.
 | `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | All        | Public Storefront API token                                                                            |
 | `NEXT_PUBLIC_SHOPIFY_SHOP_ID`                 | All        | Numeric shop ID                                                                                        |
 | `NEXT_PUBLIC_SITE_URL`                        | Production | Canonical URL, e.g. `https://your-store.example`. Without it, metadata uses the Vercel production URL. |
+| `CUSTOMER_ACCOUNT_SESSION_SECRET`             | All        | Required while `auth.isEnabled` is true. App-generated, not the Shopify client secret.                 |
+| `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID`      | All        | Required while `auth.isEnabled` is true. Server-only.                                                  |
+| `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_SECRET`  | All        | Required while `auth.isEnabled` is true. Server-only.                                                  |
 
 ### Recommended for production
 
@@ -52,29 +58,31 @@ point at the production store.
 | `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ID` | All        | Required only when Shopify analytics or WebMCP is enabled.             |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID`     | All        | Loads GA4 directly. Leave unset when GTM sends GA4.                    |
 | `NEXT_PUBLIC_GTM_ID`                | All        | Loads Tag Manager; it owns the GA4 page view when set.                 |
-| `SHOPIFY_WEBHOOK_SECRET`            | Production | Verifies Shopify product, collection and metaobject webhooks.          |
-| `REVALIDATE_SECRET`                 | Production | Bearer token for `POST /api/revalidate` for pages, policies and menus. |
+| `SHOPIFY_WEBHOOK_SECRET`            | Production | Verifies Shopify product and collection webhooks.                      |
+| `REVALIDATE_SECRET`                 | Production | Bearer token for `POST /api/revalidate` for pages, policies and blogs. |
 | `SHOPIFY_API_VERSION`               | All        | Optional override; defaults to the Hydrogen-targeted version.          |
 
 ### Optional features
 
-| Variable                                                | Feature                                                                                                           |
-| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `AI_GATEWAY_API_KEY`                                    | Eve model access outside Vercel OIDC, such as local development. On Vercel, OIDC covers the default gateway path. |
-| `CUSTOMER_ACCOUNT_SESSION_SECRET`                       | Customer accounts. Must be an app-generated secret, not the Shopify client secret.                                |
-| `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID` / `..._SECRET` | Customer Account API OAuth. Server-only.                                                                          |
-| `UCP_AGENT_PROFILE_URL`                                 | Public Eve agent profile for UCP discovery.                                                                       |
-| `SHIPROCKET_*`                                          | Only when the custom shipping flow in `docs/SHIPROCKET.md` is implemented.                                        |
+| Variable                | Feature                                                                                                           |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `AI_GATEWAY_API_KEY`    | Eve model access outside Vercel OIDC, such as local development. On Vercel, OIDC covers the default gateway path. |
+| `UCP_AGENT_PROFILE_URL` | Optional override for the profile URL sent to Shopify catalog search. Leave unset to derive it from the site URL. |
+| `EVE_DEV`               | Set automatically by Eve's dev server; not a production setting.                                                  |
+| `SHIPROCKET_*`          | Only when the custom shipping flow in `docs/SHIPROCKET.md` is implemented.                                        |
 
 ### Do not set in production
 
-- `SHOPIFY_CLIENT_ID` / `SHOPIFY_CLIENT_SECRET` are for `pnpm seed:catalog` and
-  `pnpm seed:content` only. Keep them in a local shell or a CI secret, not in the storefront runtime.
+- `SHOPIFY_CLIENT_ID` / `SHOPIFY_CLIENT_SECRET` are for `pnpm seed:catalog`, `pnpm import:catalog`
+  and `pnpm seed:content` only. Keep them in a local shell or a CI secret, not in the storefront
+  runtime.
 - `SHOPIFY_ADMIN_ACCESS_TOKEN` is not read by the deployed storefront.
 - `UNPUBLISH_OTHERS` and `V0_CALLBACK_URL` are operational switches, not production settings.
 
 Every user-configurable variable must have a row in `.env.example` and an entry in `turbo.json`
-`globalEnv`. The repository already lists them; add the row before adding the read.
+`globalEnv`. The repository does not yet satisfy that rule for `UPDATE`, `UPLOAD_IMAGES`,
+`REVALIDATE_URL` and `V0_CALLBACK_URL`; add the missing declarations before relying on Turbo cache
+correctness.
 
 `NEXT_PUBLIC_*` values are embedded in the browser bundle. Never put an Admin token, customer
 account secret, Shiprocket password or webhook secret behind a `NEXT_PUBLIC_` name.
@@ -129,21 +137,23 @@ Create a Shopify webhook for each topic the storefront caches:
 | ---------------------------------------------------------------- | --------------------------------------- |
 | `products/create`, `products/update`, `products/delete`          | `https://<domain>/api/webhooks/shopify` |
 | `collections/create`, `collections/update`, `collections/delete` | `https://<domain>/api/webhooks/shopify` |
-| `metaobjects/create`, `metaobjects/update`, `metaobjects/delete` | `https://<domain>/api/webhooks/shopify` |
 
 Use the same `SHOPIFY_WEBHOOK_SECRET` that is set in Vercel. The handler verifies the
 `X-Shopify-Hmac-Sha256` header and invalidates tags; it returns `404` when the secret is unset.
+The handler also accepts metaobject topics and clears `metaobjects`/`metaobject-<handle>`, but no
+storefront read uses those tags today, so registering them has no cache effect.
 
-Pages, policies and menus do not send the topics this handler consumes. Call the revalidation
-endpoint after editing them:
+Pages, policies, blogs and articles do not send the topics this handler consumes. Call the
+revalidation endpoint after editing them:
 
 ```bash
 curl -X POST "https://<domain>/api/revalidate?tag=pages&tag=page-about-us" \
   -H "Authorization: Bearer $REVALIDATE_SECRET"
 ```
 
-Use the tags the page or route reads. `pages`, `policies`, `menus` and their per-handle tags are
-the usual set.
+Use the tags the page or route reads. `pages` and `page-<handle>`, `policies`, and `blogs`,
+`articles`, `blog-<handle>` and `article-<blog>-<article>` are the usual set. Navigation is
+code-owned and has no cache tag.
 
 ### Customer accounts
 
@@ -160,9 +170,10 @@ policies in Shopify Admin. The Vercel deployment never handles card data.
 
 ## 7. Caching on Vercel
 
-- Product, collection, page, policy, blog and article reads use `"use cache"` with `cacheLife` and
-  `cacheTag` wrappers. Filtered and sorted browse, Load more pages and search results bypass the
-  cache and read Shopify directly.
+- Product, collection, page, policy, blog and article reads use `"use cache: remote"` with
+  `cacheLife("max")` and `cacheTag` wrappers. Filtered and sorted browse, Load more pages, search
+  results, the selected product variant and all `fetch*` operations bypass the cache and read
+  Shopify directly.
 - `revalidateTag(tag, { expire: 0 })` is called from webhooks and `/api/revalidate`.
 - Cart state is per-request and cookie-bound. Never cache a cart response.
 - Preview deployments should use a staging store. Do not point a preview at production if the
@@ -179,8 +190,9 @@ following are true:
 1. `AI_GATEWAY_API_KEY` or Vercel OIDC model access is configured.
 2. Bot protection and rate limits are enabled. BotID is configured through `shopConfig.botid`;
    Firewall rules and AI Gateway spending controls live in Vercel.
-3. The public agent profile at `/agent/ucp-profile.json` points at the production URL through
-   `UCP_AGENT_PROFILE_URL`.
+3. The agent profile is reachable in production. `/agent/ucp-profile.json` always serves the static
+   profile; its URL in catalog search defaults to `<site>/agent/ucp-profile.json`. Set
+   `UCP_AGENT_PROFILE_URL` only when the profile is hosted elsewhere.
 4. The cart cookie flow has been tested against the production domain. The agent binds the cart
    from the browser cookie; it does not accept a cart ID from the model.
 5. Someone has reviewed the privacy and responsible-use text.
@@ -192,8 +204,10 @@ deploy:
 curl https://<domain>/eve/v1/health
 ```
 
-If the deployment uses Vercel Deployment Protection, set `VERCEL_AUTOMATION_BYPASS_SECRET` locally
-before connecting.
+If the deployment uses Vercel Deployment Protection, set `VERCEL_AUTOMATION_BYPASS_SECRET` in the
+calling tooling before connecting. It is not read by the application, so it does not belong in the
+storefront runtime environment. Shopify catalog search must also be able to fetch the agent
+profile, so protect the profile route or host the profile outside the protected deployment.
 
 ## 9. Analytics
 

@@ -10,6 +10,7 @@ and a Shopify page for the same handle.
 | ------------------------------------------------------------------------------ | ------------------------------------------------------ | --------------------------------------------------------------- |
 | About Us, Lookbooks, Press, FAQ, Care Guide, Shipping, Returns, Terms, Privacy | Shopify pages                                          | `/pages/[handle]`                                               |
 | Journal index and three articles                                               | Shopify blog `journal-2`                               | `/blogs/[blogHandle]` and `/blogs/[blogHandle]/[articleHandle]` |
+| `contact` and `data-sharing-opt-out` pages                                     | Shopify pages                                          | `/pages/[handle]`                                               |
 | Contact page and form                                                          | Next.js                                                | `/pages/contact-us`                                             |
 | Size guide and find-my-size form                                               | Next.js                                                | `/pages/size-guide`                                             |
 | Wishlist                                                                       | Next.js and browser storage                            | `/pages/wishlist`                                               |
@@ -20,7 +21,8 @@ and a Shopify page for the same handle.
 The migrated pages were seeded by `scripts/seed-content.mjs`. Their local React route directories
 were deleted after the Shopify routes returned `200`, so the dynamic `app/pages/[handle]` route is
 now the only handler for those URLs. `app/blogs/journal-2` was deleted; the generic blog routes
-serve the Shopify blog.
+serve the Shopify blog. The seeder creates nine pages; Shopify's pre-existing `contact` and
+`data-sharing-opt-out` pages bring the store to 11 published page resources.
 
 ## Rules
 
@@ -32,15 +34,18 @@ serve the Shopify blog.
 3. **Next.js owns interactive surfaces.** Contact forms, wishlists, size finders and other stateful
    tools stay as React routes. Do not move them into a Shopify page body; page bodies are HTML and
    cannot run React state or submit a form.
-4. **Seeding is create-only by default.** `scripts/seed-content.mjs` skips existing handles. Use
-   `UPDATE=1` only when intentionally replacing content, because it overwrites merchant edits.
+4. **Page and article writes are create-only by default.** `scripts/seed-content.mjs` skips existing
+   handles. Use `UPDATE=1` only when intentionally replacing content, because it overwrites merchant
+   edits. Image uploads happen before the page-existence check and are cached by source path, and a
+   run with `REVALIDATE_URL`/`REVALIDATE_SECRET` revalidates tags even when every page was skipped.
 5. **Upload content images to Shopify Files.** The seeder caches uploaded URLs in
    `.seed-content-cache.json` and rewrites page bodies to Shopify CDN URLs with width and `srcset`
    attributes. Do not commit local image paths into Shopify content unless the image is an
    app-owned design asset.
-6. **Sanitize every Shopify HTML body.** `sanitizeShopifyHtml` runs in `fetchPage`, `fetchBlog` and
-   `fetchBlogArticle`. Keep the allowlist narrow. `<details>` and `<summary>` are allowed so FAQ
-   content can be interactive without JavaScript.
+6. **Sanitize every Shopify HTML body.** `sanitizeShopifyHtml` runs in `fetchPage`, `fetchProduct`
+   (`descriptionHtml`) and `fetchBlogArticle`. `fetchBlog` selects only article summaries and no
+   HTML body, so it has nothing to sanitize. Keep the allowlist narrow. `<details>` and `<summary>`
+   are allowed so FAQ content can be interactive without JavaScript.
 7. **Cache content reads.** `getPage`, `getBlog` and `getBlogArticle` use `"use cache: remote"`,
    `cacheLife("max")` and tags. A Shopify page fetch should not run on every request.
 8. **Plan invalidation.** Classic Shopify webhooks do not expose `pages/*`, `blogs/*` or `articles/*`

@@ -21,16 +21,21 @@ the Hydrogen React Router framework. Next.js owns routing, rendering, caching, m
 markdown/answer-engine surface. Vercel hosts the Next.js app and its image optimizer. Eve is the
 optional shopping agent, and it reads the same catalog through the same operations.
 
-Nothing in the app reimplements a commerce fact. Prices, availability, currency, cart totals,
-discounts and customer identity always come from Shopify.
+Nothing in the app reimplements a commerce fact. Prices, availability, cart totals, discounts and
+customer identity always come from Shopify.
 
-## 2. The five layers
+One deliberate exception exists today: `lib/money/display.ts` provides a display-only USD/INR
+currency selector at a fixed rate. It converts rendered prices in the browser; Shopify cart totals,
+checkout, Schema.org, Markdown and Eve remain in the store currency, USD. See
+[`FRONTEND-ARCHITECTURE.md`](./FRONTEND-ARCHITECTURE.md#currency-display--an-explicit-exception).
+
+## 2. The stack
 
 | Layer                | What it is                                                         | Owns                                                                                                                        | Lives in                                                                                            |
 | -------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Shopify              | Commerce platform and database                                     | Products, variants, prices, inventory, collections, carts, checkout, customers, orders, policies, pages, blogs              | Outside the repo; configured in the Shopify admin                                                   |
 | Storefront API       | Shopify's public, read-oriented GraphQL API for custom storefronts | Catalog reads, predictive search, cart creation and mutations, policy/page/blog reads                                       | `lib/shopify/storefront/server.ts`, `lib/shopify/operations/**`                                     |
-| Admin API            | Shopify's private GraphQL API for store management                 | Creating and updating products, variants, images, collections, publications                                                 | `scripts/seed-catalog.mjs` only                                                                     |
+| Admin API            | Shopify's private GraphQL API for store management                 | Creating and updating products, variants, images, collections, publications, pages and articles                             | Offline scripts in `scripts/` only                                                                  |
 | Customer Account API | Shopify's customer-scoped GraphQL API                              | Signed-in customer profile, addresses, orders                                                                               | `lib/shopify/customer-account/server.ts`, `lib/auth/**`                                             |
 | Hydrogen             | Shopify's framework-agnostic storefront SDK                        | Storefront and Customer Account clients, cart server handlers, cart/product form bindings, predictive search, Shopify types | `@shopify/hydrogen` imports in `lib/` and `components/`; handlers registered in `proxy.ts`          |
 | Next.js              | The application framework                                          | Routing, Server Components, caching, metadata, SEO, markdown negotiation, sitemap, robots, images                           | `app/`, `components/`, `lib/<domain>/{index,server,client,action}.ts`, `proxy.ts`, `next.config.ts` |
@@ -65,13 +70,16 @@ It is not an admin credential.
   `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` and `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN`.
 - `storefront.request(doc, { locale })` injects `$country: CountryCode` and
   `$language: LanguageCode` from `shopConfig.localization`, and returns `{ data, errors }`.
-- `lib/shopify/operations/**/server.ts` holds one uncached `fetch*` function per operation. These
-  files never import `next/cache`.
+- `lib/shopify/operations/**/server.ts` holds request-bound reads and writes and never imports
+  `next/cache`. Most are Storefront `fetch*` operations; the customer folder also contains Customer
+  Account mutations and a React-`cache`d `getCustomerProfile`, and the catalog/policy folders call
+  Shopify MCP.
 - `proxy.ts` creates a per-request Storefront client for Hydrogen's route handlers.
 
 **What it can do.**
 
-- Read products, variants, collections, filters, search, pages, blogs, policies and menus.
+- Read products, variants, collections, filters, search, pages, blogs, policies and menus. This
+  template does not read Shopify menus: navigation and footer links live in `lib/nav/index.ts`.
 - Create a cart and mutate its lines, buyer identity, discount codes, attributes and delivery
   addresses.
 - Read a cart.
@@ -95,9 +103,10 @@ browser and must never be prefixed with `NEXT_PUBLIC_`.
 
 **Where it is used.**
 
-- `scripts/seed-catalog.mjs` only. The script creates products with `productSet`, collections with
-  `collectionCreate`, adds products with `collectionAddProducts`, and publishes both with
-  `publishablePublish`.
+- `scripts/seed-catalog.mjs` seeds the 12-product design-study subset.
+- `scripts/import-live-catalog.mjs` imports the full published reference catalog and is the current
+  catalog source.
+- `scripts/seed-content.mjs` creates pages, the blog and articles, and uploads content images.
 - Nothing in `app/`, `components/` or `lib/` calls the Admin API.
 
 **Why the seeder exists.** The Storefront API has no product mutations. Seeding a catalog is an
@@ -174,8 +183,10 @@ Oxygen setup.
 - `createPredictiveSearchServerHandlers` for the search endpoint.
 - `useProductForm` and `useCartForm`, which bind product selection and cart mutations to those
   handlers and to Shopify's optimistic cart store.
-- `seedCartData`, `createCartCookie` and cart cookie helpers.
-- GraphQL helpers: `gql()`, `ResultOf`, operation documents and Shopify's generated types.
+- `createCartCookie` and the cart-cookie helpers. `seedCartData` is repository code in
+  `lib/cart/server.ts`, built on React `cache()`, not a Hydrogen export.
+- GraphQL helpers: `gql()`, operation documents and Shopify's generated types. `ResultOf` is the
+  repository's type in `lib/shopify/types.ts`.
 
 **Where it is used.**
 
@@ -214,10 +225,14 @@ Next.js owns everything around the commerce call.
 
 **Data loading and caching.**
 
-- `lib/shopify/operations/**/server.ts` is uncached: `fetch*` only.
+- `lib/shopify/operations/**/server.ts` carries no Next.js data-cache directive. It contains
+  Storefront `fetch*` operations, Customer Account reads and mutations (including a React-`cache`d
+  `getCustomerProfile`), and MCP calls.
 - `lib/<domain>/server.ts` owns the cache: `get*` functions use `"use cache: remote"`,
   `cacheLife("max")` and `cacheTag(...)`.
-- Pages call `get*`. Eve tools call `fetch*`.
+- Pages call `get*` for cached reads. Request-time reads — the selected product variant, filtered
+  and sorted browse, Load more, search and quick shop — call `fetch*` directly from a Server
+  Component or Server Action. Eve tools always call `fetch*`.
 - Carts are never publicly cached. `seedCartData` shares a per-request promise, not a data-cache
   entry.
 - The default first page of a collection and of `/collections/all` is cached. Filtered and sorted
@@ -281,16 +296,21 @@ them as production-adjacent.
 Eve is optional and disabled in `shopConfig.agent`. When enabled, it is a third owner with its own
 boundaries.
 
-- Sessions, channels, tools, connections and model selection live in `agent/` and `lib/agent/`.
+- Sessions, channels, tools, instructions and model selection live in `agent/` and `lib/agent/`.
+  There are no Eve connections; catalog and policy access are authored tools that call Shopify's
+  MCP endpoints directly.
 - Product discovery is Shopify catalog search (`search_catalog` on `/api/ucp/mcp`), called through
   `fetchCatalogSearch` and rendered by `present-products`. There is no second Storefront search tool.
-- Cart tools bind the cart from the browser cookie through channel auth context. The browser
-  refreshes Hydrogen only after turns settle. Never replay cart mutations from restored messages.
+- Cart tools bind the cart from the browser cookie through channel session attributes. The browser
+  refreshes Hydrogen after each cart-write tool call settles, and keeps checkout blocked while that
+  write or its refresh is unresolved; it can refresh while the assistant is still streaming. Never
+  replay cart mutations from restored messages.
 - Eve calls uncached `fetch*` operations, not `get*`.
 - `app/api/agent/session` prepares the browser cart; `app/agent/ucp-profile.json` serves the agent's
   UCP profile. Those are the only Next.js routes Eve owns.
-- Public traffic can incur model charges, so BotID and deployment rate limits are the mitigations.
-  Do not add per-session token caps.
+- Public traffic can incur model charges. BotID is available but currently disabled; deployment
+  Firewall rate limits and AI Gateway spending controls are Vercel-side prerequisites, not enforced
+  by application code. Do not add per-session token caps.
 
 ## 8. End-to-end flows
 
@@ -350,13 +370,16 @@ Refreshable sessions are redirected through `/account/refresh` so Hydrogen can c
 ### 8.5 Seeding the catalog
 
 ```
-scripts/seed-catalog.mjs
+scripts/import-live-catalog.mjs        (pnpm import:catalog)
   → client credentials grant or static token
-  → Admin API productSet / collectionCreate / collectionAddProducts
+  → Admin API productSet / collectionCreate / collectionAddProducts / file upload
   → publishablePublish to the Headless publication
   → Storefront API can now read the new catalog
   → Next.js cache tags invalidate, or the cache expires
 ```
+
+`scripts/seed-catalog.mjs` remains available for the original 12-product design study and is not
+the source of the current catalog.
 
 ### 8.6 Webhook invalidation
 
@@ -364,35 +387,42 @@ scripts/seed-catalog.mjs
 Shopify webhook
   → POST /api/webhooks/shopify
   → HMAC verification with SHOPIFY_WEBHOOK_SECRET
-  → revalidateTag("product-…", "products-index", …)
+  → one revalidateTag(<tag>, { expire: 0 }) call per derived tag
 ```
 
-Pages, policies and menus send no webhook, so `POST /api/revalidate` with `REVALIDATE_SECRET` covers
-them.
+Product topics invalidate `product-<handle>`, `recommendations-<handle>` and the numeric product
+tag; `products/create` and `products/delete` also clear `products-index`. Collection topics work the
+same way with `collection-<handle>`, the numeric collection tag and `collections-index`. The
+metaobject branch clears tags no read currently uses.
+
+Pages, policies, blogs and articles send no Shopify webhook, so `POST /api/revalidate` with
+`REVALIDATE_SECRET` covers them. Navigation is code-owned and changes with a deployment.
 
 ## 9. Tokens and environment variables
 
-| Variable                                      | Used by              | Secret?              | Notes                                                   |
-| --------------------------------------------- | -------------------- | -------------------- | ------------------------------------------------------- |
-| `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN`            | App, script          | No                   | `your-store.myshopify.com`                              |
-| `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | App                  | No, public by design | Read-only catalog and cart access                       |
-| `NEXT_PUBLIC_SHOPIFY_SHOP_ID`                 | Customer Account API | No                   | Numeric shop ID                                         |
-| `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ID`           | Hydrogen             | No                   | Optional storefront ID                                  |
-| `SHOPIFY_API_VERSION`                         | App, script          | No                   | Defaults to the version Hydrogen targets                |
-| `SHOPIFY_ADMIN_ACCESS_TOKEN`                  | Seeder               | **Yes**              | Legacy static token; still supported                    |
-| `SHOPIFY_CLIENT_ID`                           | Seeder               | **Yes**              | Dev Dashboard app client ID                             |
-| `SHOPIFY_CLIENT_SECRET`                       | Seeder               | **Yes**              | Dev Dashboard app client secret                         |
-| `SHOPIFY_PUBLICATION_ID`                      | Seeder               | No                   | Only when the Headless publication is named differently |
-| `CUSTOMER_ACCOUNT_SESSION_SECRET`             | Auth                 | **Yes**              | App-generated, not the Shopify client secret            |
-| `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID`      | Auth                 | **Yes**              | Customer Account API client                             |
-| `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_SECRET`  | Auth                 | **Yes**              | Customer Account API secret                             |
-| `SHOPIFY_WEBHOOK_SECRET`                      | Webhooks             | **Yes**              | HMAC verification                                       |
-| `REVALIDATE_SECRET`                           | `/api/revalidate`    | **Yes**              | Bearer token                                            |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID`               | Analytics            | No                   | Direct GA4 tag                                          |
-| `NEXT_PUBLIC_GTM_ID`                          | Analytics            | No                   | GTM container; owns the page view when set              |
-| `AI_GATEWAY_API_KEY`                          | Eve                  | **Yes**              | Local model access without Vercel OIDC                  |
-| `VERCEL_PROJECT_PRODUCTION_URL`               | App                  | No                   | Injected by Vercel                                      |
-| `VERCEL_ENV`                                  | Eve profile          | No                   | Injected by Vercel                                      |
+| Variable                                      | Used by              | Secret?              | Notes                                                     |
+| --------------------------------------------- | -------------------- | -------------------- | --------------------------------------------------------- |
+| `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN`            | App, script          | No                   | `your-store.myshopify.com`                                |
+| `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN` | App                  | No, public by design | Read catalog/content; write carts and checkout            |
+| `NEXT_PUBLIC_SHOPIFY_SHOP_ID`                 | Customer Account API | No                   | Numeric shop ID                                           |
+| `NEXT_PUBLIC_SHOPIFY_STOREFRONT_ID`           | Hydrogen             | No                   | Optional storefront ID                                    |
+| `SHOPIFY_API_VERSION`                         | App, script          | No                   | Defaults to the version Hydrogen targets                  |
+| `SHOPIFY_ADMIN_ACCESS_TOKEN`                  | Seed scripts         | **Yes**              | Legacy static token; alternative to client credentials    |
+| `SHOPIFY_CLIENT_ID`                           | Seed scripts         | **Yes**              | Dev Dashboard app client ID                               |
+| `SHOPIFY_CLIENT_SECRET`                       | Seed scripts         | **Yes**              | Dev Dashboard app client secret                           |
+| `SHOPIFY_PUBLICATION_ID`                      | Seeder               | No                   | Only when the Headless publication is named differently   |
+| `CUSTOMER_ACCOUNT_SESSION_SECRET`             | Auth                 | **Yes**              | App-generated, not the Shopify client secret              |
+| `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID`      | Auth                 | **Yes**              | Customer Account API client                               |
+| `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_SECRET`  | Auth                 | **Yes**              | Customer Account API secret                               |
+| `SHOPIFY_WEBHOOK_SECRET`                      | Webhooks             | **Yes**              | HMAC verification                                         |
+| `REVALIDATE_SECRET`                           | `/api/revalidate`    | **Yes**              | Bearer token                                              |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID`               | Analytics            | No                   | Direct GA4 tag                                            |
+| `NEXT_PUBLIC_GTM_ID`                          | Analytics            | No                   | GTM container; owns the page view when set                |
+| `AI_GATEWAY_API_KEY`                          | Eve                  | **Yes**              | Local model access without Vercel OIDC                    |
+| `UCP_AGENT_PROFILE_URL`                       | Eve catalog search   | No                   | Overrides the profile URL sent to Shopify; leave unset    |
+| `EVE_DEV`                                     | Eve profile          | No                   | Set by Eve's dev server; selects the example profile      |
+| `VERCEL_PROJECT_PRODUCTION_URL`               | App                  | No                   | Injected by Vercel                                        |
+| `VERCEL_ENV`                                  | Eve profile          | No                   | Injected by Vercel; `preview` selects the example profile |
 
 **Rules.**
 
@@ -402,6 +432,8 @@ them.
   undeclared variables and leaves them out of cache keys.
 - Never prefix a secret with `NEXT_PUBLIC_`.
 - Never commit `.env.local`.
+- While `auth.isEnabled` is `true`, the three Customer Account variables are required for `next dev`
+  and `next build`, not merely optional features.
 
 ## 10. Where to do what
 
@@ -411,7 +443,7 @@ them.
 | ------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------- |
 | Change a price, title, description or image | Shopify admin, or Admin API for bulk                                         | Hardcoding it in Next.js                           |
 | Add one product                             | Shopify admin                                                                | Editing the seeder                                 |
-| Add or replace the whole catalog            | `scripts/seed-catalog.mjs`                                                   | Storefront API, Server Actions                     |
+| Add or replace the whole catalog            | `pnpm import:catalog` (`scripts/import-live-catalog.mjs`)                    | Storefront API, Server Actions                     |
 | Show a product, collection, page or policy  | Storefront API via `get*`                                                    | Admin API at request time                          |
 | Add a product filter or sort                | Storefront API search/facets via `fetch*`                                    | Computing filters in Next.js                       |
 | Add to cart, change quantity, remove a line | Hydrogen cart handlers via `/api/cart` and `useCartForm`                     | Server Actions, Storefront mutations in components |
@@ -433,7 +465,8 @@ them.
 - **Do not** call the Admin API from the browser or from a Server Component.
 - **Do not** add `next/cache` imports to `lib/shopify/operations/**`.
 - **Do not** cache carts or cart IDs.
-- **Do not** recompute prices, discounts or currency in the app.
+- **Do not** recompute prices, discounts or currency in the app, except the documented display-only
+  currency selector in `lib/money/display.ts`.
 - **Do not** add a second cart route or a second product-search tool.
 - **Do not** reimplement Shopify's `/api/mcp`, `/api/ucp/mcp` or `/.well-known/ucp`.
 - **Do not** use the Storefront API for writes it does not support; fix the design instead.
@@ -444,7 +477,8 @@ them.
 | Surface                                | Cached? | Where                       | Tags                                           |
 | -------------------------------------- | ------- | --------------------------- | ---------------------------------------------- |
 | Product page                           | Yes     | `getProduct`                | `products`, `product-<handle>`, `product-<id>` |
-| Product recommendations                | Yes     | `getProductRecommendations` | `recommendations-<handle>`                     |
+| Selected product variant               | No      | `fetchProductVariant`       | None                                           |
+| Product recommendations                | Yes     | `getProductRecommendations` | `products`, `recommendations-<handle>`         |
 | Collection page, default first page    | Yes     | `getCollectionResults`      | `collection-<handle>`, product tags            |
 | `/collections/all`, default first page | Yes     | `getAllProductsResults`     | `products-index`, product tags                 |
 | Filtered or sorted browse              | No      | `fetch*` directly           | None                                           |
@@ -457,7 +491,8 @@ them.
 Why filtered browse is uncached: cursor pagination plus Shopify Search & Discovery can reorder
 results without a webhook. A cached page two would drift from page one and duplicate products.
 
-`tagProducts` and `tagCollections` add both the handle and the numeric ID tag, because Shopify's
+`tagProducts` adds the numeric product tag; `getProduct` adds `product-<handle>` separately.
+`tagCollections` adds both the handle and the numeric ID tag. The pair exists because Shopify's
 delete payloads carry only the ID while renames carry only the new handle.
 
 ## 12. Dev Dashboard runbook (current Shopify app flow)
@@ -475,8 +510,10 @@ seeder needs credentials, or when any administrative script needs the Admin API.
 4. Open the app → **Versions** → **Create version**:
    - **App URL**: `https://shopify.dev/apps/default-app-home`
    - **Webhooks API version**: the newest
-   - **Scopes**: `write_products`, `write_publications`, `write_files` (a write scope includes its
-     read counterpart)
+   - **Scopes**: `write_products`, `write_publications`, `write_files` for the catalog, plus
+     `write_online_store_pages` for the content seeder (a write scope includes its read
+     counterpart). Add `write_online_store_navigation` and `write_legal_policies` only if those
+     surfaces move into Shopify.
    - **Release**
 5. **Install app** → select the store → **Install**. Approve the scopes.
 6. **Settings** (the docs call it **App settings**) → **Credentials** → copy **Client ID** and
@@ -491,17 +528,22 @@ seeder needs credentials, or when any administrative script needs the Admin API.
 8. Run the seeder:
 
    ```
-   corepack pnpm seed:catalog
+   corepack pnpm import:catalog     # full catalog
+   corepack pnpm seed:content       # pages, blog, articles, images
+   corepack pnpm seed:catalog       # original 12-product design study
    ```
 
-   The script exchanges the credentials for a 24-hour Admin API token on every run, so there is no
-   static token to rotate. Add `DRY_RUN=1` to print one product input without calling Shopify, or
-   `UNPUBLISH_OTHERS=1` to also unpublish demo products and collections from the Headless channel.
+   Each script exchanges the credentials for a 24-hour Admin API token on every run, so there is no
+   static token to rotate when client credentials are used. Add `DRY_RUN=1` to print what a script
+   would do without calling Shopify, or `UNPUBLISH_OTHERS=1` to also unpublish products and
+   collections that are not in the seeded catalog.
 
 ### Where the credentials come from and how they are stored
 
-The app created for this repository is **Catalog Seeder**; its scopes are `write_products`,
-`write_publications` and `write_files`, and it publishes to **Dummy Store Headless**.
+The catalog app created for this repository is **Catalog Seeder**; its catalog scopes are
+`write_products`, `write_publications` and `write_files`, and it publishes to **Dummy Store
+Headless**. The current store installation also grants the content and navigation scopes listed in
+[`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md).
 
 - **Source:** Dev Dashboard → **Apps** → `Catalog Seeder` → **Settings** → **Credentials**. The
   Client ID identifies the app; the Client secret is the credential.
@@ -510,12 +552,14 @@ The app created for this repository is **Catalog Seeder**; its scopes are `write
   the file is never committed.
 - **Template:** `.env.example` documents both variables with placeholders. It must never contain a
   real value.
-- **Readers:** only `scripts/seed-catalog.mjs`. The storefront bundle never reads either variable,
-  and neither is prefixed with `NEXT_PUBLIC_`.
-- **Tokens:** the script posts the credentials to
+- **Readers:** `scripts/seed-catalog.mjs`, `scripts/import-live-catalog.mjs` and
+  `scripts/seed-content.mjs`. The storefront bundle never reads either variable, and neither is
+  prefixed with `NEXT_PUBLIC_`.
+- **Tokens:** the scripts post the credentials to
   `https://{shop}.myshopify.com/admin/oauth/access_token` with `grant_type=client_credentials`.
   Shopify returns a token valid for 24 hours. It is held in memory for the run and never written to
-  disk, so there is no long-lived `shpat_…` token to rotate.
+  disk, so there is no long-lived `shpat_…` token to rotate. All three scripts also accept
+  `SHOPIFY_ADMIN_ACCESS_TOKEN` as a static alternative; that token must be rotated separately.
 - **Rotation:** if the secret is exposed in a screenshot, chat, log or commit, open
   **Settings → Credentials → Rotate secret**, update `.env.local`, and re-run the seed. Deleting the
   app revokes access immediately.
@@ -543,28 +587,45 @@ app/                         Next.js routes and route handlers
   api/agent/session/         Eve cart preparation
   agent/ucp-profile.json/    Eve UCP profile
   md/, llms.txt/             Markdown surface for answer engines
-agent/                       Eve agent, channels, tools
+  sitemap/, robots.ts        Sitemap shards and crawl policy
+agent/                       Eve agent, channels, tools, instructions
 components/                  Presentation; ui/ takes primitive props only
+  ui/                        Primitive-only building blocks
+  <domain>/                  Domain components (nav, cart, product, account, …)
 lib/
   shopify/
     storefront/              Storefront API client
     customer-account/        Customer Account API client
-    operations/              Uncached fetch* operations, one folder per domain
+    operations/              Uncached reads/writes and MCP calls, one folder per domain
     fragments/               gql() documents
     transforms/              Shopify response → domain models
     html/                    sanitizeShopifyHtml
+    logging/, errors/        Shopify transport logging and error helpers
+    mcp/                     Shopify MCP client
     routing/                 Hydrogen route templates
+    types.ts                 ResultOf and response wrappers
   <domain>/
     index.ts                 Universal transforms and helpers
-    server.ts                Cached get* wrappers, "use cache"
+    server.ts                Cached get* wrappers, "use cache: remote"
     client.ts                React client boundary
     action.ts                "use server" actions
     request.ts               Request-scoped handlers for proxy.ts
     types.ts                 Domain models
   cart/                      Hydrogen cart handlers, store, checkout
+  auth/                      Customer session adapter and read helpers
   config/                    shopConfig and env-derived flags
-  auth/                      Customer session helpers
-scripts/seed-catalog.mjs     Admin API catalog seeder
+  money/                     Money types and display-only currency conversion
+  seo/, markdown/            Metadata, sitemap and answer-engine helpers
+  nav/                       Code-owned navigation and footer links
+  wishlist/                  Browser-local wishlist
+scripts/
+  import-live-catalog.mjs    Full catalog importer (current catalog source)
+  seed-catalog.mjs           Original 12-product design-study seeder
+  seed-content.mjs           Pages, blog, articles and content images
+  check-design.mjs           Static design drift gate
+  compare-reference.mjs      Reference-versus-clone measurement
+design/                      Token manifest, drift baseline and exceptions
+tests/design/                Playwright computed-style, ARIA and flow contracts
 proxy.ts                     Request boundary: Shopify routes, rewrites, markdown
 next.config.ts               Next.js, BotID, Eve, images
 turbo.json                   globalEnv declarations
@@ -580,10 +641,12 @@ routes; no code change is required.
 
 ### Replace the catalog
 
-Fill `SHOPIFY_CLIENT_ID` and `SHOPIFY_CLIENT_SECRET`, run `DRY_RUN=1 corepack pnpm seed:catalog`,
-then `corepack pnpm seed:catalog`. The seeder skips existing handles, so it is safe to re-run. After
-seeding, repoint the hardcoded navigation and editorial links in `lib/nav/index.ts` and `app/page.tsx`
-to the seeded collection handles.
+Fill `SHOPIFY_CLIENT_ID` and `SHOPIFY_CLIENT_SECRET`, run
+`DRY_RUN=1 corepack pnpm import:catalog -- --limit=1`, then `corepack pnpm import:catalog`. The
+importer upserts by handle, so it is safe to re-run; use `--skip-imported` when only collection
+membership changed. The older `pnpm seed:catalog` seeds only the 12-product design study. After
+seeding, check the hardcoded navigation and editorial links in `lib/nav/index.ts` and
+`app/page.tsx`; they target collection handles that must exist in the new catalog.
 
 ### Change the navigation
 
@@ -633,17 +696,22 @@ pointing at `/api/webhooks/shopify` and `SHOPIFY_WEBHOOK_SECRET` matching.
 
 ## 16. Current state of this template
 
-- Store: `Dummy Store`, USD.
-- Catalog: 10 fashion products across 8 collections, seeded through the Admin API; demo snowboards
-  unpublished from the Headless channel and kept in the Shopify admin.
-- Design: reference storefront, rebuilt in `app/` and `components/`.
+- Store: **Lorem Ipsum** (`dummy-store-f0ejfuh9.myshopify.com`), store currency USD.
+- Catalog: **95 products, 880 variants, 709 images across 41 collections**, imported from the
+  published reference catalog by `scripts/import-live-catalog.mjs`. All 880 variants are currently
+  available because inventory is untracked. The original 12-product design-study seeder remains
+  available as `pnpm seed:catalog`.
+- Content: 11 published Shopify pages, the `journal-2` blog and three articles; contact, size guide
+  and wishlist remain app-owned routes.
+- Design: reference storefront, rebuilt in `app/` and `components/`; payment marks are SVG assets.
+- Currency: display-only USD/INR selector; cart and checkout remain USD.
 - Reference photography: `public/reference/`; placeholder wordmark: `public/brand/wordmark.svg`.
-- GA4: `G-SQVPB589E7` loads and sends `page_view`.
+- GA4: loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_GTM_ID` is set.
 - Seeder credentials: Dev Dashboard app `Catalog Seeder`, stored in `.env.local` and exchanged for a
   24-hour token at run time.
 - Customer accounts: enabled through Shopify's Customer Account API (`shopConfig.auth.isEnabled = true`).
-- Eve: disabled (`shopConfig.agent.isEnabled = false`).
-- Vercel Analytics and Speed Insights: disabled in `shopConfig`.
+- Eve: disabled (`shopConfig.agent.isEnabled = false`); BotID also disabled.
+- Vercel Analytics, Speed Insights, Shopify analytics, consent and WebMCP: disabled in `shopConfig`.
 - Checkout: verified to the Shopify redirect; no test order has been placed.
 
 ## 17. Glossary
@@ -663,6 +731,8 @@ pointing at `/api/webhooks/shopify` and `SHOPIFY_WEBHOOK_SECRET` matching.
 
 ## 18. Reading list
 
+- [`FRONTEND-ARCHITECTURE.md`](./FRONTEND-ARCHITECTURE.md): the consolidated frontend map and pending
+  work.
 - [`SHOPIFY-TUTORIAL.md`](./SHOPIFY-TUTORIAL.md): merchant and developer tutorial, labs and curated
   Shopify resources.
 - [`AGENTS.md`](../AGENTS.md): the binding architecture rules for this repository.
