@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import { ProductCard, ProductCardSkeleton } from "@/components/product-card/product-card";
-import { getProductRecommendations } from "@/lib/product/server";
+import type { ProductCard as ProductCardType } from "@/lib/product/types";
 
 const GRID_CLASS = "grid grid-cols-2 gap-x-(--grid-gap) gap-y-(--grid-row-gap) desktop:grid-cols-4";
 
@@ -18,8 +18,14 @@ function RelatedProductsSectionSkeleton({ limit }: { limit: number }) {
   );
 }
 
-async function Render({ handle, limit }: { handle: string; limit: number }) {
-  const related = await getProductRecommendations({ handle, intent: "RELATED" });
+async function Render({
+  limit,
+  productsPromise,
+}: {
+  limit: number;
+  productsPromise: Promise<ProductCardType[]>;
+}) {
+  const related = await productsPromise;
   if (related.length === 0) return null;
   return (
     <div className="grid gap-7">
@@ -33,10 +39,16 @@ async function Render({ handle, limit }: { handle: string; limit: number }) {
   );
 }
 
-export function RelatedProductsSection({ handle, limit }: { handle: string; limit: number }) {
+export function RelatedProductsSection({
+  limit,
+  productsPromise,
+}: {
+  limit: number;
+  productsPromise: Promise<ProductCardType[]>;
+}) {
   return (
     <Suspense fallback={<RelatedProductsSectionSkeleton limit={limit} />}>
-      <Render handle={handle} limit={limit} />
+      <Render limit={limit} productsPromise={productsPromise} />
     </Suspense>
   );
 }
