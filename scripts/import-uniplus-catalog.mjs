@@ -18,6 +18,8 @@
  *   --upload           Upload local images (default).
  *   --no-upload        Update products without replacing media.
  *   --publish          Publish products that have no launch blockers. Never publishes a blocked product.
+ *   --collections-only Sync collection membership without touching products or media.
+ *   --verify-only      Verify existing products and write the report without writing.
  *   --limit=<number>   Import the first N selected products.
  *   --only=<handles>   Comma-separated product handles.
  *   --report[=<path>]  Report path, default .catalog-import/uniplus-report.json.
@@ -35,6 +37,8 @@ const version = process.env.SHOPIFY_API_VERSION ?? "2026-10";
 const dryRun = Boolean(args["dry-run"]) || process.env.DRY_RUN === "1";
 const upload = args.upload !== false && !args["no-upload"];
 const publish = Boolean(args.publish);
+const collectionsOnly = Boolean(args["collections-only"]);
+const verifyOnly = Boolean(args["verify-only"]);
 const staticToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
 const clientId = process.env.SHOPIFY_CLIENT_ID;
 const clientSecret = process.env.SHOPIFY_CLIENT_SECRET;
@@ -178,6 +182,15 @@ const PRODUCT_SET = `#graphql
   }
 `;
 
+const LIST_PRODUCTS = `#graphql
+  query ListProducts($first: Int!, $after: String) {
+    products(first: $first, after: $after) {
+      nodes { id handle }
+      pageInfo { hasNextPage endCursor }
+    }
+  }
+`;
+
 const PRODUCT_DELETE_MEDIA = `#graphql
   mutation ProductDeleteMedia($productId: ID!, $mediaIds: [ID!]!) {
     productDeleteMedia(productId: $productId, mediaIds: $mediaIds) {
@@ -233,6 +246,14 @@ const COLLECTION_PRODUCTS = `#graphql
         nodes { id handle }
         pageInfo { hasNextPage endCursor }
       }
+    }
+  }
+`;
+
+const COLLECTION_BY_HANDLE = `#graphql
+  query CollectionByHandle($query: String!) {
+    collections(first: 2, query: $query) {
+      nodes { id handle }
     }
   }
 `;
@@ -425,6 +446,17 @@ async function stageImage(product, image) {
 async function findProduct(handle) {
   const data = await admin(PRODUCT_BY_HANDLE, { query: `handle:${handle}` });
   return data.products.nodes.find((node) => node.handle === handle) ?? null;
+}
+
+async function listProductIds() {
+  const ids = new Map();
+  let after = null;
+  do {
+    const data = await admin(LIST_PRODUCTS, { after, first: 250 });
+    for (const product of data.products.nodes) ids.set(product.handle, product.id);
+    after = data.products.pageInfo.hasNextPage ? data.products.pageInfo.endCursor : null;
+  } while (after);
+  return ids;
 }
 
 async function deleteMedia(product) {
@@ -694,20 +726,60 @@ async function verifyProducts(products) {
   return result;
 }
 
+async function verifyCollections(products) {
+  const result = {
+    checked: 0,
+    missingCollections: [],
+    missingMemberships: [],
+    passed: true,
+  };
+  for (const collection of JSON.parse(readFileSync(fixturePath, "utf8")).collections) {
+    const expected = products
+      .filter((product) => product.collections.includes(collection.sourceName))
+      .map((product) => product.handle);
+    if (expected.length === 0) continue;
+    const data = await admin(COLLECTION_BY_HANDLE, { query: `handle:${collection.handle}` });
+    const found = data.collections.nodes.find((node) => node.handle === collection.handle);
+    if (!found) {
+      result.missingCollections.push(collection.handle);
+      continue;
+    }
+    result.checked += 1;
+    const memberHandles = new Set();
+    let after = null;
+    do {
+      const members = await admin(COLLECTION_PRODUCTS, { after, id: found.id });
+      for (const member of members.collection.products.nodes) memberHandles.add(member.handle);
+      after = members.collection.products.pageInfo.hasNextPage
+        ? members.collection.products.pageInfo.endCursor
+        : null;
+    } while (after);
+    for (const handle of expected) {
+      if (!memberHandles.has(handle)) {
+        result.missingMemberships.push({ collection: collection.handle, handle });
+      }
+    }
+  }
+  result.passed = result.missingCollections.length === 0 && result.missingMemberships.length === 0;
+  return result;
+}
+
 async function main() {
   const startedAt = new Date().toISOString();
   const fixture = JSON.parse(readFileSync(fixturePath, "utf8"));
   const products = selectedProducts(fixture);
   if (products.length === 0) throw new Error("No products selected.");
 
-  if (!dryRun && upload && !existsSync(imageDir)) {
+  if (!dryRun && !verifyOnly && !collectionsOnly && upload && !existsSync(imageDir)) {
     throw new Error(`Image folder not found: ${imageDir}. Pass --image-dir.`);
   }
-  for (const product of products) {
-    for (const image of product.images) {
-      if (!image.localFile) throw new Error(`${product.handle}: ${image.uid} has no local file`);
-      if (upload && !existsSync(join(imageDir, image.localFile))) {
-        throw new Error(`${product.handle}: missing ${join(imageDir, image.localFile)}`);
+  if (!verifyOnly && !collectionsOnly) {
+    for (const product of products) {
+      for (const image of product.images) {
+        if (!image.localFile) throw new Error(`${product.handle}: ${image.uid} has no local file`);
+        if (upload && !existsSync(join(imageDir, image.localFile))) {
+          throw new Error(`${product.handle}: missing ${join(imageDir, image.localFile)}`);
+        }
       }
     }
   }
@@ -750,6 +822,24 @@ async function main() {
   report.shop = settings.shop;
   console.log(`shop ${settings.shop.name} (${settings.shop.currencyCode})`);
 
+  if (verifyOnly) {
+    report.mode = "verify-only";
+    report.verification = await verifyProducts(products);
+    report.verification.collections = await verifyCollections(products);
+    report.verification.passed =
+      report.verification.passed && report.verification.collections.passed;
+    report.images.assigned = products.reduce((total, product) => total + product.imageCount, 0);
+    report.products.draft = report.verification.passed ? products.length : 0;
+    report.finishedAt = new Date().toISOString();
+    mkdirSync(dirname(reportPath), { recursive: true });
+    writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+    console.log(`verification: ${report.verification.passed ? "passed" : "failed"}`);
+    console.log(JSON.stringify(report.verification.totals));
+    console.log(`wrote ${reportPath}`);
+    if (!report.verification.passed) process.exit(1);
+    return;
+  }
+
   const collections = fixture.collections.filter((collection) =>
     products.some((product) => product.collections.includes(collection.sourceName)),
   );
@@ -769,27 +859,36 @@ async function main() {
   }
 
   const productIdsByHandle = new Map();
-  for (const [index, product] of products.entries()) {
-    console.log(`[${index + 1}/${products.length}] ${product.handle}`);
-    try {
-      const result = await importProduct(product, { dryRun, publish, upload });
-      productIdsByHandle.set(product.handle, result.id);
-      report.images.uploaded += upload ? product.imageCount : 0;
-      report.images.assigned += product.imageCount;
-      report.metafields.set += result.metafields;
-      if (result.created) report.products.created += 1;
-      else report.products.updated += 1;
-      if (result.status === "DRAFT") report.products.draft += 1;
-      if (result.published) report.products.published += 1;
-      console.log(
-        `  ${result.created ? "created" : "updated"} ${product.handle} (${product.variants.length} variants, ${product.imageCount} images, ${result.status})`,
-      );
-    } catch (error) {
-      console.error(`failed ${product.handle}: ${error.message}`);
-      report.errors.push({ error: error.message, product: product.handle });
-      report.products.failed += 1;
+  if (collectionsOnly) {
+    const existingIds = await listProductIds();
+    for (const product of products) {
+      const id = existingIds.get(product.handle);
+      if (id) productIdsByHandle.set(product.handle, id);
     }
-    await sleep(300);
+    report.mode = "collections-only";
+  } else {
+    for (const [index, product] of products.entries()) {
+      console.log(`[${index + 1}/${products.length}] ${product.handle}`);
+      try {
+        const result = await importProduct(product, { dryRun, publish, upload });
+        productIdsByHandle.set(product.handle, result.id);
+        report.images.uploaded += upload ? product.imageCount : 0;
+        report.images.assigned += product.imageCount;
+        report.metafields.set += result.metafields;
+        if (result.created) report.products.created += 1;
+        else report.products.updated += 1;
+        if (result.status === "DRAFT") report.products.draft += 1;
+        if (result.published) report.products.published += 1;
+        console.log(
+          `  ${result.created ? "created" : "updated"} ${product.handle} (${product.variants.length} variants, ${product.imageCount} images, ${result.status})`,
+        );
+      } catch (error) {
+        console.error(`failed ${product.handle}: ${error.message}`);
+        report.errors.push({ error: error.message, product: product.handle });
+        report.products.failed += 1;
+      }
+      await sleep(300);
+    }
   }
 
   for (const collection of collections) {
@@ -820,6 +919,8 @@ async function main() {
 
   const imported = products.filter((product) => productIdsByHandle.has(product.handle));
   report.verification = await verifyProducts(imported);
+  report.verification.collections = await verifyCollections(imported);
+  report.verification.passed = report.verification.passed && report.verification.collections.passed;
   report.finishedAt = new Date().toISOString();
   mkdirSync(dirname(reportPath), { recursive: true });
   writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);

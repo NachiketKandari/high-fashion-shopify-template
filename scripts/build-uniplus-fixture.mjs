@@ -14,8 +14,9 @@
  *     --image-dir="/path/to/Lorum Ipsum resources"
  */
 
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { basename, dirname, extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -237,8 +238,8 @@ function readWorkbook(path) {
   for (const sheet of sheets) {
     const target = targets.get(sheet.relationshipId);
     if (!target) continue;
-    const path = target.startsWith("/") ? target.slice(1) : `xl/${target}`;
-    const xml = entries.get(path)?.toString("utf8");
+    const sheetPath = target.startsWith("/") ? target.slice(1) : `xl/${target}`;
+    const xml = entries.get(sheetPath)?.toString("utf8");
     if (xml) result[sheet.name] = parseWorksheet(xml);
   }
   return result;
@@ -322,7 +323,7 @@ function consistentValue(rows, column) {
   return values.length === 1 ? values[0] : values.length === 0 ? null : null;
 }
 
-function buildProduct(handle, rows, labels, imageDir) {
+function buildProduct(handle, rows, labels, photosDir) {
   const first = rows[0];
   const colourMap = new Map();
   for (const row of rows) {
@@ -353,7 +354,7 @@ function buildProduct(handle, rows, labels, imageDir) {
         continue;
       }
       const localFile = labels.localFileByUid.get(uid) ?? null;
-      const resolved = Boolean(localFile && existsSync(join(imageDir, localFile)));
+      const resolved = Boolean(localFile && existsSync(join(photosDir, localFile)));
       const key = uid;
       if (!imagesByUid.has(key)) {
         imagesByUid.set(key, {
@@ -651,6 +652,14 @@ function main() {
 
   mkdirSync(dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, `${JSON.stringify(fixture, null, 2)}\n`);
+  const formatter = join(
+    dirname(fileURLToPath(import.meta.url)),
+    "..",
+    "node_modules",
+    ".bin",
+    "oxfmt",
+  );
+  if (existsSync(formatter)) execFileSync(formatter, [outputPath], { stdio: "ignore" });
   console.log(`wrote ${outputPath}`);
   console.log(JSON.stringify(summary, null, 2));
   console.log(`header columns: ${Object.keys(header).length}`);

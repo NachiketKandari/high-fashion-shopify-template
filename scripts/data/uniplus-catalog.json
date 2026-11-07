@@ -71,26 +71,17 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "jackets"
-      ],
+      "collections": ["menswear", "jackets"],
       "colourways": [
         {
           "family": "BROWN",
           "hex": null,
-          "images": [
-            "U79"
-          ],
+          "images": ["U79"],
           "matchConfidence": "high",
-          "matchNotes": [
-            "Brown zip jacket clearly visible in men's shoot U79."
-          ],
+          "matchNotes": ["Brown zip jacket clearly visible in men's shoot U79."],
           "name": "Brown",
           "readiness": "partial",
-          "sourceNames": [
-            "Tucked jacket"
-          ],
+          "sourceNames": ["Tucked jacket"],
           "sourceQuantity": "4",
           "variants": [
             {
@@ -212,18 +203,14 @@
         {
           "family": "GREY",
           "hex": null,
-          "images": [
-            "U61"
-          ],
+          "images": ["U61"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Only a side-profile (SP) shot exists (U61); no front/back view of the grey jacket in the shoot."
           ],
           "name": "Grey",
           "readiness": "partial",
-          "sourceNames": [
-            "Tucked jacket"
-          ],
+          "sourceNames": ["Tucked jacket"],
           "sourceQuantity": "3",
           "variants": [
             {
@@ -345,18 +332,14 @@
         {
           "family": "PINK",
           "hex": null,
-          "images": [
-            "U59"
-          ],
+          "images": ["U59"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Dusty-pink zip jacket in men's shoot U59 matches 'Onion pink'; jacket style matches the brown one in U79."
           ],
           "name": "Onion Pink",
           "readiness": "partial",
-          "sourceNames": [
-            "Tucked jacket"
-          ],
+          "sourceNames": ["Tucked jacket"],
           "sourceQuantity": "1",
           "variants": [
             {
@@ -476,9 +459,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "cover-belted-pants"
-      ],
+      "completeTheLook": ["cover-belted-pants"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Tucked Jacket in Brown, from the UniPlus jackets range.</p>",
@@ -491,9 +472,7 @@
       "images": [
         {
           "alt": "Tucked Jacket in Brown, front view",
-          "colours": [
-            "Brown"
-          ],
+          "colours": ["Brown"],
           "localFile": "M_brown_jacket_black_tshirt_cream_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U79",
@@ -502,9 +481,7 @@
         },
         {
           "alt": "Tucked Jacket in Grey, styled view",
-          "colours": [
-            "Grey"
-          ],
+          "colours": ["Grey"],
           "localFile": "M_grey_jacket_cream_wide_leg_trousers_SP.jpeg",
           "resolved": true,
           "uid": "U61",
@@ -513,9 +490,7 @@
         },
         {
           "alt": "Tucked Jacket in Onion Pink, front view",
-          "colours": [
-            "Onion Pink"
-          ],
+          "colours": ["Onion Pink"],
           "localFile": "M_pink_zip_jacket_grey_wide_leg_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U59",
@@ -548,10 +523,7 @@
           "images_missing_front"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum",
-          "images_missing_front"
-        ],
+        "missing": ["images_below_minimum", "images_missing_front"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -573,16 +545,10 @@
       },
       "shortDescription": "Tucked Jacket in Brown, from the UniPlus jackets range.",
       "sizeChartCategory": "Outerwear",
-      "sourceNames": [
-        "Tucked jacket"
-      ],
+      "sourceNames": ["Tucked jacket"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "jackets",
-        "brown"
-      ],
+      "tags": ["men", "jackets", "brown"],
       "title": "Tucked Jacket",
       "trims": null,
       "variants": [
@@ -936,28 +902,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "womenswear",
-        "tshirts"
-      ],
+      "collections": ["menswear", "womenswear", "tshirts"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U58",
-            "U32"
-          ],
+          "images": ["U58", "U32"],
           "matchConfidence": "high",
           "matchNotes": [
             "Visually verified: the white graphic tee in U58 carries a large Dalmatian dog print ('Dawg'). U32 is the same graphic tee on the women's model. Quantity 15 taken from the Mens row (Women row blank). Merged (common) product."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Dawg tshirt (common); Dawg tshirst(common)"
-          ],
+          "sourceNames": ["Dawg tshirt (common); Dawg tshirst(common)"],
           "sourceQuantity": "15",
           "variants": [
             {
@@ -1077,9 +1034,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "pinstriped-pants"
-      ],
+      "completeTheLook": ["pinstriped-pants"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Dawg T-Shirt in White, from the UniPlus tshirts range.</p>",
@@ -1092,9 +1047,7 @@
       "images": [
         {
           "alt": "Dawg T-Shirt in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "M_white_graphic_tshirt_grey_wide_leg_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U58",
@@ -1103,9 +1056,7 @@
         },
         {
           "alt": "Dawg T-Shirt in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_graphic_oversized_tshirt_FP.jpeg",
           "resolved": true,
           "uid": "U32",
@@ -1135,9 +1086,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -1159,16 +1108,10 @@
       },
       "shortDescription": "Dawg T-Shirt in White, from the UniPlus tshirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Dawg tshirt (common); Dawg tshirst(common)"
-      ],
+      "sourceNames": ["Dawg tshirt (common); Dawg tshirst(common)"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "unisex",
-        "tshirts",
-        "white"
-      ],
+      "tags": ["unisex", "tshirts", "white"],
       "title": "Dawg T-Shirt",
       "trims": null,
       "variants": [
@@ -1294,26 +1237,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "tshirts"
-      ],
+      "collections": ["menswear", "tshirts"],
       "colourways": [
         {
           "family": "RED",
           "hex": null,
-          "images": [
-            "U71"
-          ],
+          "images": ["U71"],
           "matchConfidence": "low",
           "matchNotes": [
             "U71 is the only wine/maroon garment in the shoot and the colour is spot-on, but the garment is a short-sleeve camp-collar SHIRT, not a t-shirt - best guess only."
           ],
           "name": "Wine",
           "readiness": "partial",
-          "sourceNames": [
-            "Armani tshirt"
-          ],
+          "sourceNames": ["Armani tshirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -1446,9 +1382,7 @@
       "images": [
         {
           "alt": "Armani T-Shirt in Wine, back view",
-          "colours": [
-            "Wine"
-          ],
+          "colours": ["Wine"],
           "localFile": "M_maroon_shirt_beige_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U71",
@@ -1479,10 +1413,7 @@
           "images_missing_front"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum",
-          "images_missing_front"
-        ],
+        "missing": ["images_below_minimum", "images_missing_front"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -1504,16 +1435,10 @@
       },
       "shortDescription": "Armani T-Shirt in Wine, from the UniPlus tshirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Armani tshirt"
-      ],
+      "sourceNames": ["Armani tshirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "tshirts",
-        "red"
-      ],
+      "tags": ["men", "tshirts", "red"],
       "title": "Armani T-Shirt",
       "trims": null,
       "variants": [
@@ -1639,28 +1564,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "shirts"
-      ],
+      "collections": ["menswear", "shirts"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U62",
-            "U66",
-            "U67"
-          ],
+          "images": ["U62", "U66", "U67"],
           "matchConfidence": "medium",
           "matchNotes": [
             "White men's shirt in U62/U66 (same outfit, FP+BP). Alternate shoots of the same combo: U67/U74 (with grey trousers) and U77 (with black flared trousers)."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Tucked shirt"
-          ],
+          "sourceNames": ["Tucked shirt"],
           "sourceQuantity": "4",
           "variants": [
             {
@@ -1782,21 +1698,14 @@
         {
           "family": "ORANGE",
           "hex": null,
-          "images": [
-            "U75",
-            "U60",
-            "U63",
-            "U76"
-          ],
+          "images": ["U75", "U60", "U63", "U76"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Four yellow-shirt shots (U75 FP, U60 BP with back cutout, U63 close-up FP, U76 open-shirt FP). Colour reads plain yellow rather than pale lemon. Colour family: the doc's vocabulary has no YELLOW, mapped to nearest family ORANGE."
           ],
           "name": "Lemon Yellow",
           "readiness": "partial",
-          "sourceNames": [
-            "Tucked shirt"
-          ],
+          "sourceNames": ["Tucked shirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -1929,9 +1838,7 @@
       "images": [
         {
           "alt": "Tucked Shirt in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "M_white_shirt_black_wide_leg_jeans_FP.jpeg",
           "resolved": true,
           "uid": "U62",
@@ -1940,9 +1847,7 @@
         },
         {
           "alt": "Tucked Shirt in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "M_white_shirt_black_wide_leg_jeans_BP.jpeg",
           "resolved": true,
           "uid": "U66",
@@ -1951,9 +1856,7 @@
         },
         {
           "alt": "Tucked Shirt in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "M_white_shirt_grey_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U67",
@@ -1962,9 +1865,7 @@
         },
         {
           "alt": "Tucked Shirt in Lemon Yellow, front view",
-          "colours": [
-            "Lemon Yellow"
-          ],
+          "colours": ["Lemon Yellow"],
           "localFile": "M_yellow_shirt_red_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U75",
@@ -1973,9 +1874,7 @@
         },
         {
           "alt": "Tucked Shirt in Lemon Yellow, front view",
-          "colours": [
-            "Lemon Yellow"
-          ],
+          "colours": ["Lemon Yellow"],
           "localFile": "M_yellow_cutout_shirt_black_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U60",
@@ -1984,9 +1883,7 @@
         },
         {
           "alt": "Tucked Shirt in Lemon Yellow, front view",
-          "colours": [
-            "Lemon Yellow"
-          ],
+          "colours": ["Lemon Yellow"],
           "localFile": "M_yellow_shirt_black_wide_leg_trousers_closeup_FP.jpeg",
           "resolved": true,
           "uid": "U63",
@@ -1995,9 +1892,7 @@
         },
         {
           "alt": "Tucked Shirt in Lemon Yellow, front view",
-          "colours": [
-            "Lemon Yellow"
-          ],
+          "colours": ["Lemon Yellow"],
           "localFile": "M_yellow_open_shirt_grey_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U76",
@@ -2049,16 +1944,10 @@
       },
       "shortDescription": "Tucked Shirt in White, from the UniPlus shirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Tucked shirt"
-      ],
+      "sourceNames": ["Tucked shirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "shirts",
-        "white"
-      ],
+      "tags": ["men", "shirts", "white"],
       "title": "Tucked Shirt",
       "trims": null,
       "variants": [
@@ -2298,29 +2187,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "womenswear",
-        "shirts"
-      ],
+      "collections": ["menswear", "womenswear", "shirts"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U30",
-            "U24",
-            "U29"
-          ],
+          "images": ["U30", "U24", "U29"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Sleeveless white shirt (U30 FP / U29 SP) fits the shoulder-padded silhouette; U24 oversized white shirt BP as back. Alternates: white shirt in U50 and cropped white shirt in U21. Merged (common) product."
           ],
           "name": "Off White",
           "readiness": "partial",
-          "sourceNames": [
-            "Shoulder padded shirt (common); Shoulder padded shirt(common)"
-          ],
+          "sourceNames": ["Shoulder padded shirt (common); Shoulder padded shirt(common)"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -2442,18 +2321,14 @@
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U25"
-          ],
+          "images": ["U25"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Plain black shirt outfit U25 chosen; three black-shirt outfits (U25, U34, U40) had to cover three different black shirt products, so this is the best-guess split - see Big Collar shirts. Alternate: M black shirt U69."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Shoulder padded shirt (common); Shoulder padded shirt(common)"
-          ],
+          "sourceNames": ["Shoulder padded shirt (common); Shoulder padded shirt(common)"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -2586,9 +2461,7 @@
       "images": [
         {
           "alt": "Shoulder Padded Shirt in Off White, front view",
-          "colours": [
-            "Off White"
-          ],
+          "colours": ["Off White"],
           "localFile": "W_white_sleeveless_shirt_black_wide_leg_jeans_FP.jpeg",
           "resolved": true,
           "uid": "U30",
@@ -2597,9 +2470,7 @@
         },
         {
           "alt": "Shoulder Padded Shirt in Off White, front view",
-          "colours": [
-            "Off White"
-          ],
+          "colours": ["Off White"],
           "localFile": "W_white_oversized_shirt_BP.jpeg",
           "resolved": true,
           "uid": "U24",
@@ -2608,9 +2479,7 @@
         },
         {
           "alt": "Shoulder Padded Shirt in Off White, front view",
-          "colours": [
-            "Off White"
-          ],
+          "colours": ["Off White"],
           "localFile": "W_white_sleeveless_shirt_black_wide_leg_jeans_SP.jpeg",
           "resolved": true,
           "uid": "U29",
@@ -2619,9 +2488,7 @@
         },
         {
           "alt": "Shoulder Padded Shirt in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_shirt_white_wide_leg_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U25",
@@ -2652,9 +2519,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -2676,16 +2541,10 @@
       },
       "shortDescription": "Shoulder Padded Shirt in Off White, from the UniPlus shirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Shoulder padded shirt (common); Shoulder padded shirt(common)"
-      ],
+      "sourceNames": ["Shoulder padded shirt (common); Shoulder padded shirt(common)"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "unisex",
-        "shirts",
-        "white"
-      ],
+      "tags": ["unisex", "shirts", "white"],
       "title": "Shoulder Padded Shirt",
       "trims": null,
       "variants": [
@@ -2925,26 +2784,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "bottoms"
-      ],
+      "collections": ["menswear", "bottoms"],
       "colourways": [
         {
           "family": "MULTICOLOUR",
           "hex": null,
-          "images": [
-            "U58"
-          ],
+          "images": ["U58"],
           "matchConfidence": "medium",
           "matchNotes": [
             "'Blue&white' kept as ONE colourway (blue-and-white pinstripe pattern, not two colours). Visually verified: trousers in U58 are wide-leg drawstring pinstriped pants; stripes read blue-grey/white under studio light. Same photo as the Dawg tee (bottom piece)."
           ],
           "name": "Blue & White",
           "readiness": "partial",
-          "sourceNames": [
-            "Pinstriped pants"
-          ],
+          "sourceNames": ["Pinstriped pants"],
           "sourceQuantity": "3",
           "variants": [
             {
@@ -3064,9 +2916,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "dawg-t-shirt"
-      ],
+      "completeTheLook": ["dawg-t-shirt"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Pinstriped Pants in Blue &amp; White, from the UniPlus bottoms range.</p>",
@@ -3079,9 +2929,7 @@
       "images": [
         {
           "alt": "Pinstriped Pants in Blue & White, front view",
-          "colours": [
-            "Blue & White"
-          ],
+          "colours": ["Blue & White"],
           "localFile": "M_white_graphic_tshirt_grey_wide_leg_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U58",
@@ -3111,9 +2959,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -3135,16 +2981,10 @@
       },
       "shortDescription": "Pinstriped Pants in Blue & White, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Pinstriped pants"
-      ],
+      "sourceNames": ["Pinstriped pants"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "bottoms",
-        "multicolour"
-      ],
+      "tags": ["men", "bottoms", "multicolour"],
       "title": "Pinstriped Pants",
       "trims": null,
       "variants": [
@@ -3270,28 +3110,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "womenswear",
-        "bottoms"
-      ],
+      "collections": ["menswear", "womenswear", "bottoms"],
       "colourways": [
         {
           "family": "GREY",
           "hex": null,
-          "images": [
-            "U73",
-            "U65"
-          ],
+          "images": ["U73", "U65"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Drawstring grey trousers (U73 FP + U65 waistband close-up) are the most jogger-like grey bottom in the shoot. Many other grey wide-leg trousers exist as alternates (U40, U55, U59, U67/U74, U76). Merged (common) product."
           ],
           "name": "Grey",
           "readiness": "partial",
-          "sourceNames": [
-            "Formal joggers (common); Formal joggers(common)"
-          ],
+          "sourceNames": ["Formal joggers (common); Formal joggers(common)"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -3424,9 +3255,7 @@
       "images": [
         {
           "alt": "Formal Joggers in Grey, front view",
-          "colours": [
-            "Grey"
-          ],
+          "colours": ["Grey"],
           "localFile": "M_grey_drawstring_trousers_red_waistband_FP.jpeg",
           "resolved": true,
           "uid": "U73",
@@ -3435,9 +3264,7 @@
         },
         {
           "alt": "Formal Joggers in Grey, front view",
-          "colours": [
-            "Grey"
-          ],
+          "colours": ["Grey"],
           "localFile": "M_grey_drawstring_trousers_red_waistband_closeup_FP.jpeg",
           "resolved": true,
           "uid": "U65",
@@ -3467,9 +3294,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -3491,16 +3316,10 @@
       },
       "shortDescription": "Formal Joggers in Grey, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Formal joggers (common); Formal joggers(common)"
-      ],
+      "sourceNames": ["Formal joggers (common); Formal joggers(common)"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "unisex",
-        "bottoms",
-        "grey"
-      ],
+      "tags": ["unisex", "bottoms", "grey"],
       "title": "Formal Joggers",
       "trims": null,
       "variants": [
@@ -3626,27 +3445,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "bottoms"
-      ],
+      "collections": ["menswear", "bottoms"],
       "colourways": [
         {
           "family": "BEIGE",
           "hex": null,
-          "images": [
-            "U64",
-            "U78"
-          ],
+          "images": ["U64", "U78"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Cream/oat wide-leg trousers in U64 (+ second shot U78). Two oat men's pants products exist (this and Cover Belted) for several near-identical cream trousers - split is a judgment call. The black tee in these shots matches no sheet product."
           ],
           "name": "Oat",
           "readiness": "partial",
-          "sourceNames": [
-            "Box pleated pants"
-          ],
+          "sourceNames": ["Box pleated pants"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -3779,9 +3590,7 @@
       "images": [
         {
           "alt": "Box Pleated Pants in Oat, front view",
-          "colours": [
-            "Oat"
-          ],
+          "colours": ["Oat"],
           "localFile": "M_black_tshirt_cream_wide_leg_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U64",
@@ -3790,9 +3599,7 @@
         },
         {
           "alt": "Box Pleated Pants in Oat, front view",
-          "colours": [
-            "Oat"
-          ],
+          "colours": ["Oat"],
           "localFile": "M_black_tshirt_cream_wide_leg_trousers_FP_2.jpeg",
           "resolved": true,
           "uid": "U78",
@@ -3822,9 +3629,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -3846,16 +3651,10 @@
       },
       "shortDescription": "Box Pleated Pants in Oat, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Box pleated pants"
-      ],
+      "sourceNames": ["Box pleated pants"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "bottoms",
-        "beige"
-      ],
+      "tags": ["men", "bottoms", "beige"],
       "title": "Box Pleated Pants",
       "trims": null,
       "variants": [
@@ -3981,27 +3780,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "bottoms"
-      ],
+      "collections": ["menswear", "bottoms"],
       "colourways": [
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U77",
-            "U60"
-          ],
+          "images": ["U77", "U60"],
           "matchConfidence": "low",
           "matchNotes": [
             "Black wide-leg/flared trousers (U77 FP, U60 BP); rouching/gathering not clearly visible in either shot, so colour+type only."
           ],
           "name": "Jet Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Rouched black pants"
-          ],
+          "sourceNames": ["Rouched black pants"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -4134,9 +3925,7 @@
       "images": [
         {
           "alt": "Rouched Black Pants in Jet Black, front view",
-          "colours": [
-            "Jet Black"
-          ],
+          "colours": ["Jet Black"],
           "localFile": "M_white_shirt_black_flared_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U77",
@@ -4145,9 +3934,7 @@
         },
         {
           "alt": "Rouched Black Pants in Jet Black, front view",
-          "colours": [
-            "Jet Black"
-          ],
+          "colours": ["Jet Black"],
           "localFile": "M_yellow_cutout_shirt_black_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U60",
@@ -4177,9 +3964,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -4201,16 +3986,10 @@
       },
       "shortDescription": "Rouched Black Pants in Jet Black, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Rouched black pants"
-      ],
+      "sourceNames": ["Rouched black pants"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "bottoms",
-        "black"
-      ],
+      "tags": ["men", "bottoms", "black"],
       "title": "Rouched Black Pants",
       "trims": null,
       "variants": [
@@ -4336,26 +4115,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "bottoms"
-      ],
+      "collections": ["menswear", "bottoms"],
       "colourways": [
         {
           "family": "BEIGE",
           "hex": null,
-          "images": [
-            "U79"
-          ],
+          "images": ["U79"],
           "matchConfidence": "low",
           "matchNotes": [
             "Cream trousers in U79 are worn with a belt, but the belt may be styling rather than an attached cover belt; alternates U71 (beige trousers BP) and U69. See Box Pleated Pants note."
           ],
           "name": "Oat",
           "readiness": "partial",
-          "sourceNames": [
-            "Cover belted pants"
-          ],
+          "sourceNames": ["Cover belted pants"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -4475,9 +4247,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "tucked-jacket"
-      ],
+      "completeTheLook": ["tucked-jacket"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Cover Belted Pants in Oat, from the UniPlus bottoms range.</p>",
@@ -4490,9 +4260,7 @@
       "images": [
         {
           "alt": "Cover Belted Pants in Oat, front view",
-          "colours": [
-            "Oat"
-          ],
+          "colours": ["Oat"],
           "localFile": "M_brown_jacket_black_tshirt_cream_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U79",
@@ -4522,9 +4290,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -4546,16 +4312,10 @@
       },
       "shortDescription": "Cover Belted Pants in Oat, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Cover belted pants"
-      ],
+      "sourceNames": ["Cover belted pants"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "bottoms",
-        "beige"
-      ],
+      "tags": ["men", "bottoms", "beige"],
       "title": "Cover Belted Pants",
       "trims": null,
       "variants": [
@@ -4681,28 +4441,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "womenswear",
-        "bottoms"
-      ],
+      "collections": ["menswear", "womenswear", "bottoms"],
       "colourways": [
         {
           "family": "DENIM",
           "hex": null,
-          "images": [
-            "U11",
-            "U15"
-          ],
+          "images": ["U11", "U15"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Visually verified: the wide-leg jeans in U11/U15 are very dark ink-blue denim with a coated/velvet-like sheen (labelled 'black' in the photo names). Men's alternates: U62/U66 jeans. Quantity 4 from the Mens row. Merged (common) product."
           ],
           "name": "Ink Blue",
           "readiness": "partial",
-          "sourceNames": [
-            "Velvet denims (common)"
-          ],
+          "sourceNames": ["Velvet denims (common)"],
           "sourceQuantity": "4",
           "variants": [
             {
@@ -4822,9 +4573,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "shimmered-linen-bralette"
-      ],
+      "completeTheLook": ["shimmered-linen-bralette"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Velvet Denims in Ink Blue, from the UniPlus bottoms range.</p>",
@@ -4837,9 +4586,7 @@
       "images": [
         {
           "alt": "Velvet Denims in Ink Blue, front view",
-          "colours": [
-            "Ink Blue"
-          ],
+          "colours": ["Ink Blue"],
           "localFile": "W_white_crop_top_black_wide_leg_jeans_FP.jpeg",
           "resolved": true,
           "uid": "U11",
@@ -4848,9 +4595,7 @@
         },
         {
           "alt": "Velvet Denims in Ink Blue, front view",
-          "colours": [
-            "Ink Blue"
-          ],
+          "colours": ["Ink Blue"],
           "localFile": "W_white_crop_top_black_wide_leg_jeans_BP.jpeg",
           "resolved": true,
           "uid": "U15",
@@ -4880,9 +4625,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -4904,16 +4647,10 @@
       },
       "shortDescription": "Velvet Denims in Ink Blue, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Velvet denims (common)"
-      ],
+      "sourceNames": ["Velvet denims (common)"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "unisex",
-        "bottoms",
-        "denim"
-      ],
+      "tags": ["unisex", "bottoms", "denim"],
       "title": "Velvet Denims",
       "trims": null,
       "variants": [
@@ -5039,26 +4776,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "bottoms"
-      ],
+      "collections": ["menswear", "bottoms"],
       "colourways": [
         {
           "family": "MULTICOLOUR",
           "hex": null,
-          "images": [
-            "U70"
-          ],
+          "images": ["U70"],
           "matchConfidence": "low",
           "matchNotes": [
             "'Blue&white' kept as ONE colourway (pinstripe pattern). Visually verified: U70 wears white boxer-style shorts with fine dark pinstripes; stripes read grey/black on white in the photo, not obviously blue. Sheet groups boxers under the 'Bottoms' category, so product_type is BOTTOMS."
           ],
           "name": "Blue & White",
           "readiness": "partial",
-          "sourceNames": [
-            "Pinstriped boxers"
-          ],
+          "sourceNames": ["Pinstriped boxers"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -5191,9 +4921,7 @@
       "images": [
         {
           "alt": "Pinstriped Boxers in Blue & White, front view",
-          "colours": [
-            "Blue & White"
-          ],
+          "colours": ["Blue & White"],
           "localFile": "M_black_shirt_grey_striped_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U70",
@@ -5223,9 +4951,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -5247,16 +4973,10 @@
       },
       "shortDescription": "Pinstriped Boxers in Blue & White, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Pinstriped boxers"
-      ],
+      "sourceNames": ["Pinstriped boxers"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "bottoms",
-        "multicolour"
-      ],
+      "tags": ["men", "bottoms", "multicolour"],
       "title": "Pinstriped Boxers",
       "trims": null,
       "variants": [
@@ -5382,26 +5102,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "menswear",
-        "bottoms"
-      ],
+      "collections": ["menswear", "bottoms"],
       "colourways": [
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U68"
-          ],
+          "images": ["U68"],
           "matchConfidence": "low",
           "matchNotes": [
             "Black shorts in U68; check pattern not verifiable from the photo label. Sheet groups boxers under 'Bottoms', so product_type is BOTTOMS."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Black checkered boxers"
-          ],
+          "sourceNames": ["Black checkered boxers"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -5534,9 +5247,7 @@
       "images": [
         {
           "alt": "Black Checkered Boxers in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "M_black_shirt_black_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U68",
@@ -5566,9 +5277,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -5590,16 +5299,10 @@
       },
       "shortDescription": "Black Checkered Boxers in Black, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Black checkered boxers"
-      ],
+      "sourceNames": ["Black checkered boxers"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "men",
-        "bottoms",
-        "black"
-      ],
+      "tags": ["men", "bottoms", "black"],
       "title": "Black Checkered Boxers",
       "trims": null,
       "variants": [
@@ -5725,28 +5428,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "bottoms"
-      ],
+      "collections": ["womenswear", "bottoms"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U25",
-            "U31",
-            "U27"
-          ],
+          "images": ["U25", "U31", "U27"],
           "matchConfidence": "medium",
           "matchNotes": [
             "White wide-leg trousers recur across shoots: U25 FP (with black shirt), U27/U31 (with grey crop top). Alternates: trousers in U42, U43, U56. Denim fabric/pleats not verifiable from labels."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Box pleated denims"
-          ],
+          "sourceNames": ["Box pleated denims"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -5866,9 +5560,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "shoulder-padded-shirt"
-      ],
+      "completeTheLook": ["shoulder-padded-shirt"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Box Pleated Denims in White, from the UniPlus bottoms range.</p>",
@@ -5881,9 +5573,7 @@
       "images": [
         {
           "alt": "Box Pleated Denims in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_black_shirt_white_wide_leg_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U25",
@@ -5892,9 +5582,7 @@
         },
         {
           "alt": "Box Pleated Denims in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_grey_crop_top_white_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U31",
@@ -5903,9 +5591,7 @@
         },
         {
           "alt": "Box Pleated Denims in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_grey_crop_top_white_wide_leg_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U27",
@@ -5956,16 +5642,10 @@
       },
       "shortDescription": "Box Pleated Denims in White, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Box pleated denims"
-      ],
+      "sourceNames": ["Box pleated denims"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "bottoms",
-        "white"
-      ],
+      "tags": ["women", "bottoms", "white"],
       "title": "Box Pleated Denims",
       "trims": null,
       "variants": [
@@ -6091,10 +5771,7 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "bottoms"
-      ],
+      "collections": ["womenswear", "bottoms"],
       "colourways": [
         {
           "family": "BEIGE",
@@ -6106,9 +5783,7 @@
           ],
           "name": "Oat",
           "readiness": "blocked",
-          "sourceNames": [
-            "Cover belted slit pants"
-          ],
+          "sourceNames": ["Cover belted slit pants"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -6262,10 +5937,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -6287,16 +5959,10 @@
       },
       "shortDescription": "Cover Belted Slit Pants in Oat, from the UniPlus bottoms range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Cover belted slit pants"
-      ],
+      "sourceNames": ["Cover belted slit pants"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "bottoms",
-        "beige"
-      ],
+      "tags": ["women", "bottoms", "beige"],
       "title": "Cover Belted Slit Pants",
       "trims": null,
       "variants": [
@@ -6422,28 +6088,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "skirts"
-      ],
+      "collections": ["womenswear", "skirts"],
       "colourways": [
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U13",
-            "U46",
-            "U09"
-          ],
+          "images": ["U13", "U46", "U09"],
           "matchConfidence": "medium",
           "matchNotes": [
             "One black skirt style recurs: plain front (U13 FP, plus extra shots U44/U45) with a lace-up/tie back (U46 BP, U14 BP) - the lace-up back fits 'knotted back'. Length reads midi rather than maxi in photos. U12 shows the same skirt with the corset-back tee."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Knotted back maxi skirt"
-          ],
+          "sourceNames": ["Knotted back maxi skirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -6563,9 +6220,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "corset-back-elevated-t-shirt"
-      ],
+      "completeTheLook": ["corset-back-elevated-t-shirt"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Knotted Back Maxi Skirt in Black, from the UniPlus skirts range.</p>",
@@ -6578,9 +6233,7 @@
       "images": [
         {
           "alt": "Knotted Back Maxi Skirt in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_tshirt_midi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U13",
@@ -6589,9 +6242,7 @@
         },
         {
           "alt": "Knotted Back Maxi Skirt in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_tshirt_lace_up_midi_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U46",
@@ -6600,9 +6251,7 @@
         },
         {
           "alt": "Knotted Back Maxi Skirt in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_tank_top_midi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U09",
@@ -6653,16 +6302,10 @@
       },
       "shortDescription": "Knotted Back Maxi Skirt in Black, from the UniPlus skirts range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Knotted back maxi skirt"
-      ],
+      "sourceNames": ["Knotted back maxi skirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "skirts",
-        "black"
-      ],
+      "tags": ["women", "skirts", "black"],
       "title": "Knotted Back Maxi Skirt",
       "trims": null,
       "variants": [
@@ -6788,10 +6431,7 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "skirts"
-      ],
+      "collections": ["womenswear", "skirts"],
       "colourways": [
         {
           "family": "BROWN",
@@ -6803,9 +6443,7 @@
           ],
           "name": "Brown",
           "readiness": "blocked",
-          "sourceNames": [
-            "Mini chipped skirt"
-          ],
+          "sourceNames": ["Mini chipped skirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -6934,9 +6572,7 @@
           ],
           "name": "Black",
           "readiness": "blocked",
-          "sourceNames": [
-            "Mini chipped skirt"
-          ],
+          "sourceNames": ["Mini chipped skirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -7058,20 +6694,14 @@
         {
           "family": "MULTICOLOUR",
           "hex": null,
-          "images": [
-            "U07",
-            "U06",
-            "U38"
-          ],
+          "images": ["U07", "U06", "U38"],
           "matchConfidence": "high",
           "matchNotes": [
             "The black-and-white animal-print mini skirt: FP/BP as a co-ord set (U07/U06), plus a second styling with the black long-sleeve top (U38 FP, U36 BP) and a third back shot with a mint top (U41)."
           ],
           "name": "Black & White",
           "readiness": "partial",
-          "sourceNames": [
-            "Mini chipped skirt"
-          ],
+          "sourceNames": ["Mini chipped skirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -7204,9 +6834,7 @@
       "images": [
         {
           "alt": "Mini Chipped Skirt in Black & White, front view",
-          "colours": [
-            "Black & White"
-          ],
+          "colours": ["Black & White"],
           "localFile": "W_animal_print_crop_top_mini_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U07",
@@ -7215,9 +6843,7 @@
         },
         {
           "alt": "Mini Chipped Skirt in Black & White, front view",
-          "colours": [
-            "Black & White"
-          ],
+          "colours": ["Black & White"],
           "localFile": "W_animal_print_crop_top_mini_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U06",
@@ -7226,9 +6852,7 @@
         },
         {
           "alt": "Mini Chipped Skirt in Black & White, front view",
-          "colours": [
-            "Black & White"
-          ],
+          "colours": ["Black & White"],
           "localFile": "W_black_long_sleeve_top_animal_print_mini_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U38",
@@ -7261,10 +6885,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -7286,16 +6907,10 @@
       },
       "shortDescription": "Mini Chipped Skirt in Brown, from the UniPlus skirts range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Mini chipped skirt"
-      ],
+      "sourceNames": ["Mini chipped skirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "skirts",
-        "brown"
-      ],
+      "tags": ["women", "skirts", "brown"],
       "title": "Mini Chipped Skirt",
       "trims": null,
       "variants": [
@@ -7649,28 +7264,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "skirts"
-      ],
+      "collections": ["womenswear", "skirts"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U17",
-            "U16",
-            "U50"
-          ],
+          "images": ["U17", "U16", "U50"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Visually verified: the midi skirt in U17/U16 is sheer white mesh, and U50's skirt is likewise sheer ('sheer' in its label) - the only mesh skirts in the shoot. The opaque white wrap midi skirt in U18/U19 is a different garment and matches no sheet product."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Double Mesh skirt"
-          ],
+          "sourceNames": ["Double Mesh skirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -7799,9 +7405,7 @@
           ],
           "name": "Black",
           "readiness": "blocked",
-          "sourceNames": [
-            "Double Mesh skirt"
-          ],
+          "sourceNames": ["Double Mesh skirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -7921,9 +7525,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "two-way-bodysuit"
-      ],
+      "completeTheLook": ["two-way-bodysuit"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Double Mesh Skirt in White, from the UniPlus skirts range.</p>",
@@ -7936,9 +7538,7 @@
       "images": [
         {
           "alt": "Double Mesh Skirt in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_halter_top_midi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U17",
@@ -7947,9 +7547,7 @@
         },
         {
           "alt": "Double Mesh Skirt in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_halter_top_midi_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U16",
@@ -7958,9 +7556,7 @@
         },
         {
           "alt": "Double Mesh Skirt in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_shirt_white_sheer_midi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U50",
@@ -7992,10 +7588,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -8017,16 +7610,10 @@
       },
       "shortDescription": "Double Mesh Skirt in White, from the UniPlus skirts range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Double Mesh skirt"
-      ],
+      "sourceNames": ["Double Mesh skirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "skirts",
-        "white"
-      ],
+      "tags": ["women", "skirts", "white"],
       "title": "Double Mesh Skirt",
       "trims": null,
       "variants": [
@@ -8266,27 +7853,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "shorts"
-      ],
+      "collections": ["womenswear", "shorts"],
       "colourways": [
         {
           "family": "ORANGE",
           "hex": null,
-          "images": [
-            "U22",
-            "U28"
-          ],
+          "images": ["U22", "U28"],
           "matchConfidence": "low",
           "matchNotes": [
             "Visually verified: shorts in U22/U28 are tailored with small front pleats, but the colour reads cream/ivory, not butter yellow. Other cream-shorts outfits: U34, U37. Colour family: doc vocabulary has no YELLOW, mapped to ORANGE."
           ],
           "name": "Butter Yellow",
           "readiness": "partial",
-          "sourceNames": [
-            "Micro pleated shorts"
-          ],
+          "sourceNames": ["Micro pleated shorts"],
           "sourceQuantity": "10",
           "variants": [
             {
@@ -8406,9 +7985,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "two-way-bodysuit"
-      ],
+      "completeTheLook": ["two-way-bodysuit"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Micro Pleated Shorts in Butter Yellow, from the UniPlus shorts range.</p>",
@@ -8421,9 +7998,7 @@
       "images": [
         {
           "alt": "Micro Pleated Shorts in Butter Yellow, front view",
-          "colours": [
-            "Butter Yellow"
-          ],
+          "colours": ["Butter Yellow"],
           "localFile": "W_brown_halter_top_cream_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U22",
@@ -8432,9 +8007,7 @@
         },
         {
           "alt": "Micro Pleated Shorts in Butter Yellow, front view",
-          "colours": [
-            "Butter Yellow"
-          ],
+          "colours": ["Butter Yellow"],
           "localFile": "W_brown_halter_top_cream_shorts_BP.jpeg",
           "resolved": true,
           "uid": "U28",
@@ -8464,9 +8037,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -8488,16 +8059,10 @@
       },
       "shortDescription": "Micro Pleated Shorts in Butter Yellow, from the UniPlus shorts range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Micro pleated shorts"
-      ],
+      "sourceNames": ["Micro pleated shorts"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "shorts",
-        "orange"
-      ],
+      "tags": ["women", "shorts", "orange"],
       "title": "Micro Pleated Shorts",
       "trims": null,
       "variants": [
@@ -8623,28 +8188,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "shorts"
-      ],
+      "collections": ["womenswear", "shorts"],
       "colourways": [
         {
           "family": "GREY",
           "hex": null,
-          "images": [
-            "U20",
-            "U23",
-            "U21"
-          ],
+          "images": ["U20", "U23", "U21"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Grey shorts outfit U20 (FP) / U23 (BP); styled alternate U21. Further grey-shorts shots: U48/U49 (with green tops)."
           ],
           "name": "Grey",
           "readiness": "partial",
-          "sourceNames": [
-            "Macro box pleated shorts"
-          ],
+          "sourceNames": ["Macro box pleated shorts"],
           "sourceQuantity": "5",
           "variants": [
             {
@@ -8764,9 +8320,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "rouched-baby-tee"
-      ],
+      "completeTheLook": ["rouched-baby-tee"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Macro Box Pleated Shorts in Grey, from the UniPlus shorts range.</p>",
@@ -8779,9 +8333,7 @@
       "images": [
         {
           "alt": "Macro Box Pleated Shorts in Grey, front view",
-          "colours": [
-            "Grey"
-          ],
+          "colours": ["Grey"],
           "localFile": "W_white_crop_top_grey_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U20",
@@ -8790,9 +8342,7 @@
         },
         {
           "alt": "Macro Box Pleated Shorts in Grey, front view",
-          "colours": [
-            "Grey"
-          ],
+          "colours": ["Grey"],
           "localFile": "W_white_crop_top_grey_shorts_BP.jpeg",
           "resolved": true,
           "uid": "U23",
@@ -8801,9 +8351,7 @@
         },
         {
           "alt": "Macro Box Pleated Shorts in Grey, front view",
-          "colours": [
-            "Grey"
-          ],
+          "colours": ["Grey"],
           "localFile": "W_white_shirt_crop_top_grey_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U21",
@@ -8854,16 +8402,10 @@
       },
       "shortDescription": "Macro Box Pleated Shorts in Grey, from the UniPlus shorts range.",
       "sizeChartCategory": "Bottoms",
-      "sourceNames": [
-        "Macro box pleated shorts"
-      ],
+      "sourceNames": ["Macro box pleated shorts"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "shorts",
-        "grey"
-      ],
+      "tags": ["women", "shorts", "grey"],
       "title": "Macro Box Pleated Shorts",
       "trims": null,
       "variants": [
@@ -8989,27 +8531,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "dresses"
-      ],
+      "collections": ["womenswear", "dresses"],
       "colourways": [
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U05",
-            "U04"
-          ],
+          "images": ["U05", "U04"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Two black mini-dress shots (U05 backless BP, U04 sleeveless SP); neither label confirms a racer back, hence medium. No front view exists."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Racer back mini dress"
-          ],
+          "sourceNames": ["Racer back mini dress"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -9142,9 +8676,7 @@
       "images": [
         {
           "alt": "Racer Back Mini Dress in Black, styled view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_backless_mini_dress_BP.jpeg",
           "resolved": true,
           "uid": "U05",
@@ -9153,9 +8685,7 @@
         },
         {
           "alt": "Racer Back Mini Dress in Black, styled view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_sleeveless_mini_dress_SP.jpeg",
           "resolved": true,
           "uid": "U04",
@@ -9186,10 +8716,7 @@
           "images_missing_front"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum",
-          "images_missing_front"
-        ],
+        "missing": ["images_below_minimum", "images_missing_front"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -9211,16 +8738,10 @@
       },
       "shortDescription": "Racer Back Mini Dress in Black, from the UniPlus dresses range.",
       "sizeChartCategory": "Dresses",
-      "sourceNames": [
-        "Racer back mini dress"
-      ],
+      "sourceNames": ["Racer back mini dress"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "dresses",
-        "black"
-      ],
+      "tags": ["women", "dresses", "black"],
       "title": "Racer Back Mini Dress",
       "trims": null,
       "variants": [
@@ -9346,27 +8867,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "dresses"
-      ],
+      "collections": ["womenswear", "dresses"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U26",
-            "U33"
-          ],
+          "images": ["U26", "U33"],
           "matchConfidence": "medium",
           "matchNotes": [
             "White sleeveless maxi dress FP (U26) and white backless maxi dress BP (U33) - likely the same dress across two shoots; racer back not confirmed by labels."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Racer back maxi dress"
-          ],
+          "sourceNames": ["Racer back maxi dress"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -9499,9 +9012,7 @@
       "images": [
         {
           "alt": "Racer Back Maxi Dress in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_sleeveless_maxi_dress_FP.jpeg",
           "resolved": true,
           "uid": "U26",
@@ -9510,9 +9021,7 @@
         },
         {
           "alt": "Racer Back Maxi Dress in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_backless_maxi_dress_BP.jpeg",
           "resolved": true,
           "uid": "U33",
@@ -9542,9 +9051,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -9566,16 +9073,10 @@
       },
       "shortDescription": "Racer Back Maxi Dress in White, from the UniPlus dresses range.",
       "sizeChartCategory": "Dresses",
-      "sourceNames": [
-        "Racer back maxi dress"
-      ],
+      "sourceNames": ["Racer back maxi dress"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "dresses",
-        "white"
-      ],
+      "tags": ["women", "dresses", "white"],
       "title": "Racer Back Maxi Dress",
       "trims": null,
       "variants": [
@@ -9701,10 +9202,7 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "bralettes"
-      ],
+      "collections": ["womenswear", "bralettes"],
       "colourways": [
         {
           "family": "MULTICOLOUR",
@@ -9716,9 +9214,7 @@
           ],
           "name": "Blue & White",
           "readiness": "blocked",
-          "sourceNames": [
-            "Pinstriped bralette"
-          ],
+          "sourceNames": ["Pinstriped bralette"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -9872,10 +9368,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -9897,16 +9390,10 @@
       },
       "shortDescription": "Pinstriped Bralette in Blue & White, from the UniPlus bralettes range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Pinstriped bralette"
-      ],
+      "sourceNames": ["Pinstriped bralette"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "bralettes",
-        "multicolour"
-      ],
+      "tags": ["women", "bralettes", "multicolour"],
       "title": "Pinstriped Bralette",
       "trims": null,
       "variants": [
@@ -10032,10 +9519,7 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "bralettes"
-      ],
+      "collections": ["womenswear", "bralettes"],
       "colourways": [
         {
           "family": "BEIGE",
@@ -10047,9 +9531,7 @@
           ],
           "name": "Creme",
           "readiness": "blocked",
-          "sourceNames": [
-            "Crush linen bralette"
-          ],
+          "sourceNames": ["Crush linen bralette"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -10203,10 +9685,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -10228,16 +9707,10 @@
       },
       "shortDescription": "Crush Linen Bralette in Creme, from the UniPlus bralettes range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Crush linen bralette"
-      ],
+      "sourceNames": ["Crush linen bralette"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "bralettes",
-        "beige"
-      ],
+      "tags": ["women", "bralettes", "beige"],
       "title": "Crush Linen Bralette",
       "trims": null,
       "variants": [
@@ -10363,27 +9836,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "bralettes"
-      ],
+      "collections": ["womenswear", "bralettes"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U11",
-            "U15"
-          ],
+          "images": ["U11", "U15"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Visually verified: U11/U15 top is a white scoop-neck bralette (labelled 'crop top'); linen/shimmer texture not verifiable. Same photos as Velvet Denims (bottom piece)."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Shimmered linen bralette"
-          ],
+          "sourceNames": ["Shimmered linen bralette"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -10503,9 +9968,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "velvet-denims"
-      ],
+      "completeTheLook": ["velvet-denims"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Shimmered Linen Bralette in White, from the UniPlus bralettes range.</p>",
@@ -10518,9 +9981,7 @@
       "images": [
         {
           "alt": "Shimmered Linen Bralette in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_crop_top_black_wide_leg_jeans_FP.jpeg",
           "resolved": true,
           "uid": "U11",
@@ -10529,9 +9990,7 @@
         },
         {
           "alt": "Shimmered Linen Bralette in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_crop_top_black_wide_leg_jeans_BP.jpeg",
           "resolved": true,
           "uid": "U15",
@@ -10561,9 +10020,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -10585,16 +10042,10 @@
       },
       "shortDescription": "Shimmered Linen Bralette in White, from the UniPlus bralettes range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Shimmered linen bralette"
-      ],
+      "sourceNames": ["Shimmered linen bralette"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "bralettes",
-        "white"
-      ],
+      "tags": ["women", "bralettes", "white"],
       "title": "Shimmered Linen Bralette",
       "trims": null,
       "variants": [
@@ -10720,10 +10171,7 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "bralettes"
-      ],
+      "collections": ["womenswear", "bralettes"],
       "colourways": [
         {
           "family": "BROWN",
@@ -10735,9 +10183,7 @@
           ],
           "name": "Brown",
           "readiness": "blocked",
-          "sourceNames": [
-            "Animal poplin bralette"
-          ],
+          "sourceNames": ["Animal poplin bralette"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -10861,14 +10307,10 @@
           "hex": null,
           "images": [],
           "matchConfidence": "unmatched",
-          "matchNotes": [
-            "No solid black animal-print bralette in the shoot."
-          ],
+          "matchNotes": ["No solid black animal-print bralette in the shoot."],
           "name": "Black",
           "readiness": "blocked",
-          "sourceNames": [
-            "Animal poplin bralette"
-          ],
+          "sourceNames": ["Animal poplin bralette"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -10990,19 +10432,14 @@
         {
           "family": "MULTICOLOUR",
           "hex": null,
-          "images": [
-            "U07",
-            "U06"
-          ],
+          "images": ["U07", "U06"],
           "matchConfidence": "high",
           "matchNotes": [
             "The animal-print crop top (bralette cut, wide straps, scoop neck) from the co-ord set U07/U06 - same photos as the Mini Chipped Skirt B&W (top piece). Print tones are black/white/brown; colourway named for the sheet's 'black&white' entry."
           ],
           "name": "Black & White",
           "readiness": "partial",
-          "sourceNames": [
-            "Animal poplin bralette"
-          ],
+          "sourceNames": ["Animal poplin bralette"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -11135,9 +10572,7 @@
       "images": [
         {
           "alt": "Animal Poplin Bralette in Black & White, front view",
-          "colours": [
-            "Black & White"
-          ],
+          "colours": ["Black & White"],
           "localFile": "W_animal_print_crop_top_mini_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U07",
@@ -11146,9 +10581,7 @@
         },
         {
           "alt": "Animal Poplin Bralette in Black & White, front view",
-          "colours": [
-            "Black & White"
-          ],
+          "colours": ["Black & White"],
           "localFile": "W_animal_print_crop_top_mini_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U06",
@@ -11182,11 +10615,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "images_below_minimum",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "images_below_minimum", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -11208,16 +10637,10 @@
       },
       "shortDescription": "Animal Poplin Bralette in Brown, from the UniPlus bralettes range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Animal poplin bralette"
-      ],
+      "sourceNames": ["Animal poplin bralette"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "bralettes",
-        "brown"
-      ],
+      "tags": ["women", "bralettes", "brown"],
       "title": "Animal Poplin Bralette",
       "trims": null,
       "variants": [
@@ -11571,27 +10994,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "bodysuits"
-      ],
+      "collections": ["womenswear", "bodysuits"],
       "colourways": [
         {
           "family": "MULTICOLOUR",
           "hex": null,
-          "images": [
-            "U22",
-            "U28"
-          ],
+          "images": ["U22", "U28"],
           "matchConfidence": "low",
           "matchNotes": [
             "Reversible colourway kept as ONE (two sides of one garment). The brown halter top in U22/U28 is visually a bodysuit silhouette worn tucked into shorts - read as the brown side; the teal side is not photographed. The shoot's halter tops are the only bodysuit candidates; they may be standalone tops."
           ],
           "name": "Teal / Brown (reversible)",
           "readiness": "partial",
-          "sourceNames": [
-            "Two way bodysuit"
-          ],
+          "sourceNames": ["Two way bodysuit"],
           "sourceQuantity": "10",
           "variants": [
             {
@@ -11713,19 +11128,14 @@
         {
           "family": "MULTICOLOUR",
           "hex": null,
-          "images": [
-            "U51",
-            "U39"
-          ],
+          "images": ["U51", "U39"],
           "matchConfidence": "low",
           "matchNotes": [
             "Black halter bodysuit-style tops (U51 FP, U39 BP) read as the black side; butterscotch side not photographed. See Teal/Brown note."
           ],
           "name": "Black / Butterscotch (reversible)",
           "readiness": "partial",
-          "sourceNames": [
-            "Two way bodysuit"
-          ],
+          "sourceNames": ["Two way bodysuit"],
           "sourceQuantity": "10",
           "variants": [
             {
@@ -11847,20 +11257,14 @@
         {
           "family": "MULTICOLOUR",
           "hex": null,
-          "images": [
-            "U17",
-            "U56",
-            "U43"
-          ],
+          "images": ["U17", "U56", "U43"],
           "matchConfidence": "low",
           "matchNotes": [
             "White halter top (U17 FP, U56 BP) read as the white side and the green halter top (U43 BP) as the green side of the same reversible bodysuit. Speculative - see Teal/Brown note."
           ],
           "name": "Green / White (reversible)",
           "readiness": "partial",
-          "sourceNames": [
-            "Two way bodysuit"
-          ],
+          "sourceNames": ["Two way bodysuit"],
           "sourceQuantity": "10",
           "variants": [
             {
@@ -11980,9 +11384,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "micro-pleated-shorts"
-      ],
+      "completeTheLook": ["micro-pleated-shorts"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Two Way Bodysuit in Teal / Brown (reversible), from the UniPlus bodysuits range.</p>",
@@ -11995,9 +11397,7 @@
       "images": [
         {
           "alt": "Two Way Bodysuit in Teal / Brown (reversible), front view",
-          "colours": [
-            "Teal / Brown (reversible)"
-          ],
+          "colours": ["Teal / Brown (reversible)"],
           "localFile": "W_brown_halter_top_cream_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U22",
@@ -12006,9 +11406,7 @@
         },
         {
           "alt": "Two Way Bodysuit in Teal / Brown (reversible), front view",
-          "colours": [
-            "Teal / Brown (reversible)"
-          ],
+          "colours": ["Teal / Brown (reversible)"],
           "localFile": "W_brown_halter_top_cream_shorts_BP.jpeg",
           "resolved": true,
           "uid": "U28",
@@ -12017,9 +11415,7 @@
         },
         {
           "alt": "Two Way Bodysuit in Black / Butterscotch (reversible), front view",
-          "colours": [
-            "Black / Butterscotch (reversible)"
-          ],
+          "colours": ["Black / Butterscotch (reversible)"],
           "localFile": "W_black_halter_top_white_maxi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U51",
@@ -12028,9 +11424,7 @@
         },
         {
           "alt": "Two Way Bodysuit in Black / Butterscotch (reversible), front view",
-          "colours": [
-            "Black / Butterscotch (reversible)"
-          ],
+          "colours": ["Black / Butterscotch (reversible)"],
           "localFile": "W_black_halter_top_grey_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U39",
@@ -12039,9 +11433,7 @@
         },
         {
           "alt": "Two Way Bodysuit in Green / White (reversible), front view",
-          "colours": [
-            "Green / White (reversible)"
-          ],
+          "colours": ["Green / White (reversible)"],
           "localFile": "W_white_halter_top_midi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U17",
@@ -12050,9 +11442,7 @@
         },
         {
           "alt": "Two Way Bodysuit in Green / White (reversible), front view",
-          "colours": [
-            "Green / White (reversible)"
-          ],
+          "colours": ["Green / White (reversible)"],
           "localFile": "W_white_halter_top_white_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U56",
@@ -12061,9 +11451,7 @@
         },
         {
           "alt": "Two Way Bodysuit in Green / White (reversible), front view",
-          "colours": [
-            "Green / White (reversible)"
-          ],
+          "colours": ["Green / White (reversible)"],
           "localFile": "W_green_halter_top_white_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U43",
@@ -12095,9 +11483,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -12119,16 +11505,10 @@
       },
       "shortDescription": "Two Way Bodysuit in Teal / Brown (reversible), from the UniPlus bodysuits range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Two way bodysuit"
-      ],
+      "sourceNames": ["Two way bodysuit"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "bodysuits",
-        "multicolour"
-      ],
+      "tags": ["women", "bodysuits", "multicolour"],
       "title": "Two Way Bodysuit",
       "trims": null,
       "variants": [
@@ -12482,27 +11862,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "tshirts"
-      ],
+      "collections": ["womenswear", "tshirts"],
       "colourways": [
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U13",
-            "U12"
-          ],
+          "images": ["U13", "U12"],
           "matchConfidence": "medium",
           "matchNotes": [
             "U12's label literally reads 'black tee corset' (BP) and pairs with the U13 FP of the black tee + midi skirt outfit (extra shots U44/U45; U46 shows the tee with the lace-up skirt)."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Corset back elevated tshirt"
-          ],
+          "sourceNames": ["Corset back elevated tshirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -12624,18 +11996,14 @@
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U42"
-          ],
+          "images": ["U42"],
           "matchConfidence": "medium",
           "matchNotes": [
             "White cropped t-shirt seen from the back (U42) - the only white tee back shot, fitting the corset-back style; corset lacing not confirmed by the label. No front view."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Corset back elevated tshirt"
-          ],
+          "sourceNames": ["Corset back elevated tshirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -12755,9 +12123,7 @@
           ]
         }
       ],
-      "completeTheLook": [
-        "knotted-back-maxi-skirt"
-      ],
+      "completeTheLook": ["knotted-back-maxi-skirt"],
       "composition": null,
       "countryOfOrigin": "India",
       "descriptionHtml": "<p>Corset Back Elevated T-Shirt in Black, from the UniPlus tshirts range.</p>",
@@ -12770,9 +12136,7 @@
       "images": [
         {
           "alt": "Corset Back Elevated T-Shirt in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_tshirt_midi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U13",
@@ -12781,9 +12145,7 @@
         },
         {
           "alt": "Corset Back Elevated T-Shirt in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_tee_corset_midi_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U12",
@@ -12792,9 +12154,7 @@
         },
         {
           "alt": "Corset Back Elevated T-Shirt in White, back view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_crop_tshirt_white_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U42",
@@ -12826,10 +12186,7 @@
           "images_missing_front"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum",
-          "images_missing_front"
-        ],
+        "missing": ["images_below_minimum", "images_missing_front"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -12851,16 +12208,10 @@
       },
       "shortDescription": "Corset Back Elevated T-Shirt in Black, from the UniPlus tshirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Corset back elevated tshirt"
-      ],
+      "sourceNames": ["Corset back elevated tshirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "tshirts",
-        "black"
-      ],
+      "tags": ["women", "tshirts", "black"],
       "title": "Corset Back Elevated T-Shirt",
       "trims": null,
       "variants": [
@@ -13100,10 +12451,7 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "tshirts"
-      ],
+      "collections": ["womenswear", "tshirts"],
       "colourways": [
         {
           "family": "MULTICOLOUR",
@@ -13115,9 +12463,7 @@
           ],
           "name": "Cowhide & Black",
           "readiness": "blocked",
-          "sourceNames": [
-            "Corset back hide tshirt"
-          ],
+          "sourceNames": ["Corset back hide tshirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -13271,10 +12617,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -13296,16 +12639,10 @@
       },
       "shortDescription": "Corset Back Hide T-Shirt in Cowhide & Black, from the UniPlus tshirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Corset back hide tshirt"
-      ],
+      "sourceNames": ["Corset back hide tshirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "tshirts",
-        "multicolour"
-      ],
+      "tags": ["women", "tshirts", "multicolour"],
       "title": "Corset Back Hide T-Shirt",
       "trims": null,
       "variants": [
@@ -13431,27 +12768,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "racer backs"
-      ],
+      "collections": ["womenswear", "racer backs"],
       "colourways": [
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U09",
-            "U14"
-          ],
+          "images": ["U09", "U14"],
           "matchConfidence": "low",
           "matchNotes": [
             "Plain black tank tops (U09 FP, U14 BP) are the only unassigned black sleeveless tops; labels do not confirm a racer back or rolled/twisted straps. The black halter tops were read as bodysuits instead."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Rolled&twisted racer back"
-          ],
+          "sourceNames": ["Rolled&twisted racer back"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -13580,9 +12909,7 @@
           ],
           "name": "Brown",
           "readiness": "blocked",
-          "sourceNames": [
-            "Rolled&twisted racer back"
-          ],
+          "sourceNames": ["Rolled&twisted racer back"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -13715,9 +13042,7 @@
       "images": [
         {
           "alt": "Rolled & Twisted Racer Back in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_tank_top_midi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U09",
@@ -13726,9 +13051,7 @@
         },
         {
           "alt": "Rolled & Twisted Racer Back in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_tank_top_lace_up_midi_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U14",
@@ -13761,11 +13084,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "images_below_minimum",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "images_below_minimum", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -13787,16 +13106,10 @@
       },
       "shortDescription": "Rolled & Twisted Racer Back in Black, from the UniPlus racer backs range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Rolled&twisted racer back"
-      ],
+      "sourceNames": ["Rolled&twisted racer back"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "racer backs",
-        "black"
-      ],
+      "tags": ["women", "racer backs", "black"],
       "title": "Rolled & Twisted Racer Back",
       "trims": null,
       "variants": [
@@ -14036,26 +13349,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "racer backs"
-      ],
+      "collections": ["womenswear", "racer backs"],
       "colourways": [
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U47"
-          ],
+          "images": ["U47"],
           "matchConfidence": "high",
           "matchNotes": [
             "Labelled black racerback top (U47 BP); ribbing not verifiable but it is the only black racerback shot. No front view."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Ribbed racer back"
-          ],
+          "sourceNames": ["Ribbed racer back"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -14177,18 +13483,14 @@
         {
           "family": "RED",
           "hex": null,
-          "images": [
-            "U53"
-          ],
+          "images": ["U53"],
           "matchConfidence": "high",
           "matchNotes": [
             "Labelled red racerback top (U53 BP) - the only red top in the shoot. The matching red shorts match no sheet product."
           ],
           "name": "Red",
           "readiness": "partial",
-          "sourceNames": [
-            "Ribbed racer back"
-          ],
+          "sourceNames": ["Ribbed racer back"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -14310,18 +13612,14 @@
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U55"
-          ],
+          "images": ["U55"],
           "matchConfidence": "medium",
           "matchNotes": [
             "White racerback crop top (U55 BP) assigned to Off White; the other white racerback outfit (U52/U57) assigned to Formal Racer Back - the split between the two white racerback products is a judgment call."
           ],
           "name": "Off White",
           "readiness": "partial",
-          "sourceNames": [
-            "Ribbed racer back"
-          ],
+          "sourceNames": ["Ribbed racer back"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -14454,9 +13752,7 @@
       "images": [
         {
           "alt": "Ribbed Racer Back in Black, back view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_racerback_top_white_maxi_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U47",
@@ -14465,9 +13761,7 @@
         },
         {
           "alt": "Ribbed Racer Back in Red, back view",
-          "colours": [
-            "Red"
-          ],
+          "colours": ["Red"],
           "localFile": "W_red_racerback_top_red_shorts_BP.jpeg",
           "resolved": true,
           "uid": "U53",
@@ -14476,9 +13770,7 @@
         },
         {
           "alt": "Ribbed Racer Back in Off White, back view",
-          "colours": [
-            "Off White"
-          ],
+          "colours": ["Off White"],
           "localFile": "W_white_racerback_crop_top_grey_wide_leg_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U55",
@@ -14511,10 +13803,7 @@
           "images_missing_front"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum",
-          "images_missing_front"
-        ],
+        "missing": ["images_below_minimum", "images_missing_front"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -14536,16 +13825,10 @@
       },
       "shortDescription": "Ribbed Racer Back in Black, from the UniPlus racer backs range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Ribbed racer back"
-      ],
+      "sourceNames": ["Ribbed racer back"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "racer backs",
-        "black"
-      ],
+      "tags": ["women", "racer backs", "black"],
       "title": "Ribbed Racer Back",
       "trims": null,
       "variants": [
@@ -14899,27 +14182,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "racer backs"
-      ],
+      "collections": ["womenswear", "racer backs"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U57",
-            "U52"
-          ],
+          "images": ["U57", "U52"],
           "matchConfidence": "medium",
           "matchNotes": [
             "White racerback top with black wide-leg jeans, FP (U57) + BP (U52) of the same outfit. See Ribbed Racer Back Off White note on the split."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Formal racer back"
-          ],
+          "sourceNames": ["Formal racer back"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -15052,9 +14327,7 @@
       "images": [
         {
           "alt": "Formal Racer Back in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_racerback_top_black_wide_leg_jeans_FP.jpeg",
           "resolved": true,
           "uid": "U57",
@@ -15063,9 +14336,7 @@
         },
         {
           "alt": "Formal Racer Back in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_racerback_top_black_wide_leg_jeans_BP.jpeg",
           "resolved": true,
           "uid": "U52",
@@ -15095,9 +14366,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -15119,16 +14388,10 @@
       },
       "shortDescription": "Formal Racer Back in White, from the UniPlus racer backs range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Formal racer back"
-      ],
+      "sourceNames": ["Formal racer back"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "racer backs",
-        "white"
-      ],
+      "tags": ["women", "racer backs", "white"],
       "title": "Formal Racer Back",
       "trims": null,
       "variants": [
@@ -15254,26 +14517,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "racer backs"
-      ],
+      "collections": ["womenswear", "racer backs"],
       "colourways": [
         {
           "family": "BEIGE",
           "hex": null,
-          "images": [
-            "U54"
-          ],
+          "images": ["U54"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Visually verified: U54's satin racerback top reads ivory/champagne (beige-gold), not bright white, despite 'white' in its photo label. Back view only."
           ],
           "name": "Beige Gold",
           "readiness": "partial",
-          "sourceNames": [
-            "Delicate satin racer back"
-          ],
+          "sourceNames": ["Delicate satin racer back"],
           "sourceQuantity": "3",
           "variants": [
             {
@@ -15395,18 +14651,14 @@
         {
           "family": "BLUE",
           "hex": null,
-          "images": [
-            "U37"
-          ],
+          "images": ["U37"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Pale-blue racerback top (U37 BP) is the only blue top in the shoot; satin finish not verifiable. Back view only."
           ],
           "name": "Powder Blue",
           "readiness": "partial",
-          "sourceNames": [
-            "Delicate satin racer back"
-          ],
+          "sourceNames": ["Delicate satin racer back"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -15539,9 +14791,7 @@
       "images": [
         {
           "alt": "Delicate Satin Racer Back in Beige Gold, back view",
-          "colours": [
-            "Beige Gold"
-          ],
+          "colours": ["Beige Gold"],
           "localFile": "W_white_satin_racerback_top_black_trousers_BP.jpeg",
           "resolved": true,
           "uid": "U54",
@@ -15550,9 +14800,7 @@
         },
         {
           "alt": "Delicate Satin Racer Back in Powder Blue, back view",
-          "colours": [
-            "Powder Blue"
-          ],
+          "colours": ["Powder Blue"],
           "localFile": "W_pale_blue_racerback_top_cream_shorts_BP.jpeg",
           "resolved": true,
           "uid": "U37",
@@ -15584,10 +14832,7 @@
           "images_missing_front"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum",
-          "images_missing_front"
-        ],
+        "missing": ["images_below_minimum", "images_missing_front"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -15609,16 +14854,10 @@
       },
       "shortDescription": "Delicate Satin Racer Back in Beige Gold, from the UniPlus racer backs range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Delicate satin racer back"
-      ],
+      "sourceNames": ["Delicate satin racer back"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "racer backs",
-        "beige"
-      ],
+      "tags": ["women", "racer backs", "beige"],
       "title": "Delicate Satin Racer Back",
       "trims": null,
       "variants": [
@@ -15858,27 +15097,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "tops"
-      ],
+      "collections": ["womenswear", "tops"],
       "colourways": [
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U18",
-            "U19"
-          ],
+          "images": ["U18", "U19"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Visually verified: the off-white long-sleeve top in U19 (BP) has two slit cutouts at the back - matches 'slit back'. Polo collar not verifiable. The outfit's opaque white wrap midi skirt matches no sheet product."
           ],
           "name": "Off White",
           "readiness": "partial",
-          "sourceNames": [
-            "Slit back polo top"
-          ],
+          "sourceNames": ["Slit back polo top"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -16000,19 +15231,14 @@
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U38",
-            "U36"
-          ],
+          "images": ["U38", "U36"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Black long-sleeve top, same style family as the off-white one; a cutout detail is visible in the BP shot (U36). Polo collar not verifiable."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Slit back polo top"
-          ],
+          "sourceNames": ["Slit back polo top"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -16145,9 +15371,7 @@
       "images": [
         {
           "alt": "Slit Back Polo Top in Off White, front view",
-          "colours": [
-            "Off White"
-          ],
+          "colours": ["Off White"],
           "localFile": "W_white_long_sleeve_top_midi_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U18",
@@ -16156,9 +15380,7 @@
         },
         {
           "alt": "Slit Back Polo Top in Off White, front view",
-          "colours": [
-            "Off White"
-          ],
+          "colours": ["Off White"],
           "localFile": "W_white_long_sleeve_top_midi_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U19",
@@ -16167,9 +15389,7 @@
         },
         {
           "alt": "Slit Back Polo Top in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_long_sleeve_top_animal_print_mini_skirt_FP.jpeg",
           "resolved": true,
           "uid": "U38",
@@ -16178,9 +15398,7 @@
         },
         {
           "alt": "Slit Back Polo Top in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_long_sleeve_top_animal_print_mini_skirt_BP.jpeg",
           "resolved": true,
           "uid": "U36",
@@ -16211,9 +15429,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -16235,16 +15451,10 @@
       },
       "shortDescription": "Slit Back Polo Top in Off White, from the UniPlus tops range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Slit back polo top"
-      ],
+      "sourceNames": ["Slit back polo top"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "tops",
-        "white"
-      ],
+      "tags": ["women", "tops", "white"],
       "title": "Slit Back Polo Top",
       "trims": null,
       "variants": [
@@ -16484,26 +15694,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "tops"
-      ],
+      "collections": ["womenswear", "tops"],
       "colourways": [
         {
           "family": "BROWN",
           "hex": null,
-          "images": [
-            "U35"
-          ],
+          "images": ["U35"],
           "matchConfidence": "low",
           "matchNotes": [
             "Brown women's t-shirt (U35 FP); reads as a plain tee - rouching and baby-tee crop not confirmed."
           ],
           "name": "Brown",
           "readiness": "partial",
-          "sourceNames": [
-            "Rouched baby tee"
-          ],
+          "sourceNames": ["Rouched baby tee"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -16625,19 +15828,14 @@
         {
           "family": "WHITE",
           "hex": null,
-          "images": [
-            "U20",
-            "U23"
-          ],
+          "images": ["U20", "U23"],
           "matchConfidence": "medium",
           "matchNotes": [
             "White cropped tee in the grey-shorts outfit (U20 FP / U23 BP) - same photos as Macro Box Pleated Shorts (bottom piece). Rouching not verifiable."
           ],
           "name": "White",
           "readiness": "partial",
-          "sourceNames": [
-            "Rouched baby tee"
-          ],
+          "sourceNames": ["Rouched baby tee"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -16770,9 +15968,7 @@
       "images": [
         {
           "alt": "Rouched Baby Tee in Brown, front view",
-          "colours": [
-            "Brown"
-          ],
+          "colours": ["Brown"],
           "localFile": "W_brown_tshirt_cream_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U35",
@@ -16781,9 +15977,7 @@
         },
         {
           "alt": "Rouched Baby Tee in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_crop_top_grey_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U20",
@@ -16792,9 +15986,7 @@
         },
         {
           "alt": "Rouched Baby Tee in White, front view",
-          "colours": [
-            "White"
-          ],
+          "colours": ["White"],
           "localFile": "W_white_crop_top_grey_shorts_BP.jpeg",
           "resolved": true,
           "uid": "U23",
@@ -16825,9 +16017,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -16849,16 +16039,10 @@
       },
       "shortDescription": "Rouched Baby Tee in Brown, from the UniPlus tops range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Rouched baby tee"
-      ],
+      "sourceNames": ["Rouched baby tee"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "tops",
-        "brown"
-      ],
+      "tags": ["women", "tops", "brown"],
       "title": "Rouched Baby Tee",
       "trims": null,
       "variants": [
@@ -17098,27 +16282,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "tops"
-      ],
+      "collections": ["womenswear", "tops"],
       "colourways": [
         {
           "family": "GREEN",
           "hex": null,
-          "images": [
-            "U49",
-            "U48"
-          ],
+          "images": ["U49", "U48"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Green sleeveless tops with grey shorts: U49 FP and U48 BP (lace-up back). The green halter top U43 was read as the bodysuit's green side instead."
           ],
           "name": "Green",
           "readiness": "partial",
-          "sourceNames": [
-            "Rouched baby tee sleeveless"
-          ],
+          "sourceNames": ["Rouched baby tee sleeveless"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -17251,9 +16427,7 @@
       "images": [
         {
           "alt": "Rouched Baby Tee Sleeveless in Green, front view",
-          "colours": [
-            "Green"
-          ],
+          "colours": ["Green"],
           "localFile": "W_green_sleeveless_top_grey_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U49",
@@ -17262,9 +16436,7 @@
         },
         {
           "alt": "Rouched Baby Tee Sleeveless in Green, front view",
-          "colours": [
-            "Green"
-          ],
+          "colours": ["Green"],
           "localFile": "W_green_lace_up_top_grey_shorts_BP.jpeg",
           "resolved": true,
           "uid": "U48",
@@ -17294,9 +16466,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -17318,16 +16488,10 @@
       },
       "shortDescription": "Rouched Baby Tee Sleeveless in Green, from the UniPlus tops range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Rouched baby tee sleeveless"
-      ],
+      "sourceNames": ["Rouched baby tee sleeveless"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "tops",
-        "green"
-      ],
+      "tags": ["women", "tops", "green"],
       "title": "Rouched Baby Tee Sleeveless",
       "trims": null,
       "variants": [
@@ -17453,10 +16617,7 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "shirts"
-      ],
+      "collections": ["womenswear", "shirts"],
       "colourways": [
         {
           "family": "ORANGE",
@@ -17468,9 +16629,7 @@
           ],
           "name": "Lemon Yellow",
           "readiness": "blocked",
-          "sourceNames": [
-            "Slit racer back shirt"
-          ],
+          "sourceNames": ["Slit racer back shirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -17624,10 +16783,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -17649,16 +16805,10 @@
       },
       "shortDescription": "Slit Racer Back Shirt in Lemon Yellow, from the UniPlus shirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Slit racer back shirt"
-      ],
+      "sourceNames": ["Slit racer back shirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "shirts",
-        "orange"
-      ],
+      "tags": ["women", "shirts", "orange"],
       "title": "Slit Racer Back Shirt",
       "trims": null,
       "variants": [
@@ -17784,26 +16934,19 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "shirts"
-      ],
+      "collections": ["womenswear", "shirts"],
       "colourways": [
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U34"
-          ],
+          "images": ["U34"],
           "matchConfidence": "low",
           "matchNotes": [
             "Oversized black shirt (U34). Three black-shirt outfits (U25/U34/U40) cover three black shirt products - this split is a best guess; lacing/big collar not verifiable from labels."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Big collar laced shirt"
-          ],
+          "sourceNames": ["Big collar laced shirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -17936,9 +17079,7 @@
       "images": [
         {
           "alt": "Big Collar Laced Shirt in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_oversized_shirt_cream_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U34",
@@ -17968,9 +17109,7 @@
           "images_below_minimum"
         ],
         "launchReady": false,
-        "missing": [
-          "images_below_minimum"
-        ],
+        "missing": ["images_below_minimum"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -17992,16 +17131,10 @@
       },
       "shortDescription": "Big Collar Laced Shirt in Black, from the UniPlus shirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Big collar laced shirt"
-      ],
+      "sourceNames": ["Big collar laced shirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "shirts",
-        "black"
-      ],
+      "tags": ["women", "shirts", "black"],
       "title": "Big Collar Laced Shirt",
       "trims": null,
       "variants": [
@@ -18127,10 +17260,7 @@
       "badges": null,
       "care": null,
       "careWarnings": null,
-      "collections": [
-        "womenswear",
-        "shirts"
-      ],
+      "collections": ["womenswear", "shirts"],
       "colourways": [
         {
           "family": "BROWN",
@@ -18142,9 +17272,7 @@
           ],
           "name": "Brown",
           "readiness": "blocked",
-          "sourceNames": [
-            "Big collar slit racer back shirt"
-          ],
+          "sourceNames": ["Big collar slit racer back shirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -18266,18 +17394,14 @@
         {
           "family": "BLACK",
           "hex": null,
-          "images": [
-            "U40"
-          ],
+          "images": ["U40"],
           "matchConfidence": "low",
           "matchNotes": [
             "Oversized black shirt with grey trousers (U40). See Big Collar Laced Shirt note on the three-way black-shirt split."
           ],
           "name": "Black",
           "readiness": "partial",
-          "sourceNames": [
-            "Big collar slit racer back shirt"
-          ],
+          "sourceNames": ["Big collar slit racer back shirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -18399,19 +17523,14 @@
         {
           "family": "MULTICOLOUR",
           "hex": null,
-          "images": [
-            "U08",
-            "U10"
-          ],
+          "images": ["U08", "U10"],
           "matchConfidence": "medium",
           "matchNotes": [
             "Animal-print shirt (U08 FP / U10 BP) is the only printed shirt in the shoot, matching the 'black&white' colourway of this shirt. The matching animal-print shorts in the same outfit match no sheet product."
           ],
           "name": "Black & White",
           "readiness": "partial",
-          "sourceNames": [
-            "Big collar slit racer back shirt"
-          ],
+          "sourceNames": ["Big collar slit racer back shirt"],
           "sourceQuantity": null,
           "variants": [
             {
@@ -18544,9 +17663,7 @@
       "images": [
         {
           "alt": "Big Collar Slit Racer Back Shirt in Black, front view",
-          "colours": [
-            "Black"
-          ],
+          "colours": ["Black"],
           "localFile": "W_black_oversized_shirt_grey_wide_leg_trousers_FP.jpeg",
           "resolved": true,
           "uid": "U40",
@@ -18555,9 +17672,7 @@
         },
         {
           "alt": "Big Collar Slit Racer Back Shirt in Black & White, front view",
-          "colours": [
-            "Black & White"
-          ],
+          "colours": ["Black & White"],
           "localFile": "W_animal_print_shirt_shorts_FP.jpeg",
           "resolved": true,
           "uid": "U08",
@@ -18566,9 +17681,7 @@
         },
         {
           "alt": "Big Collar Slit Racer Back Shirt in Black & White, front view",
-          "colours": [
-            "Black & White"
-          ],
+          "colours": ["Black & White"],
           "localFile": "W_animal_print_shirt_shorts_BP.jpeg",
           "resolved": true,
           "uid": "U10",
@@ -18602,11 +17715,7 @@
           "colour_unmatched"
         ],
         "launchReady": false,
-        "missing": [
-          "images_missing_colour",
-          "images_below_minimum",
-          "colour_unmatched"
-        ],
+        "missing": ["images_missing_colour", "images_below_minimum", "colour_unmatched"],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -18628,16 +17737,10 @@
       },
       "shortDescription": "Big Collar Slit Racer Back Shirt in Brown, from the UniPlus shirts range.",
       "sizeChartCategory": "Tops",
-      "sourceNames": [
-        "Big collar slit racer back shirt"
-      ],
+      "sourceNames": ["Big collar slit racer back shirt"],
       "status": "DRAFT",
       "stylingNotes": null,
-      "tags": [
-        "women",
-        "shirts",
-        "brown"
-      ],
+      "tags": ["women", "shirts", "brown"],
       "title": "Big Collar Slit Racer Back Shirt",
       "trims": null,
       "variants": [
@@ -19149,14 +18252,7 @@
       }
     ],
     "sheet": "Catalog",
-    "sizeOrder": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "XXL"
-    ],
+    "sizeOrder": ["XS", "S", "M", "L", "XL", "XXL"],
     "workbook": "UniPlus_Product_Catalog.xlsx",
     "workbookSha256": "5edc07dab952067fb4d65b5f2f7c9b3bfd064e4a6f6da8d529dd36e9da567089"
   },
@@ -19175,14 +18271,7 @@
     "productsReady": 0,
     "productsWithImages": 34,
     "productsWithoutImages": 5,
-    "sizes": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "XXL"
-    ],
+    "sizes": ["XS", "S", "M", "L", "XL", "XXL"],
     "uniqueLocalImages": 70,
     "variants": 354
   }
