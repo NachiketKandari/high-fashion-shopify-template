@@ -89,6 +89,5 @@ export function useCheckout() {
     isCartMutating,
     isCheckingOut,
     isCheckoutDisabled,
-    isUpdatingCart,
   };
 }

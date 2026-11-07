@@ -41,11 +41,11 @@ import type { ProductDetails, ProductVariant } from "@/lib/product/types";
 
 export function ProductDetailSection({
   product,
-  selectedOptionsPromise,
+  selectedOptions,
   variantPromise,
 }: {
   product: ProductDetails;
-  selectedOptionsPromise: Promise<SelectedOptions>;
+  selectedOptions: SelectedOptions;
   variantPromise: Promise<ProductVariant | undefined>;
 }) {
   return (
@@ -75,7 +75,7 @@ export function ProductDetailSection({
         ]}
       />
       <div className="grid grid-cols-1 items-start desktop:grid-cols-2">
-        <ProductMediaArea product={product} selectedOptionsPromise={selectedOptionsPromise} />
+        <ProductMediaArea product={product} selectedOptions={selectedOptions} />
         <ProductInfoArea product={product} variantPromise={variantPromise} />
       </div>
     </>
@@ -84,66 +84,24 @@ export function ProductDetailSection({
 
 function ProductMediaArea({
   product,
-  selectedOptionsPromise,
+  selectedOptions,
 }: {
   product: ProductDetails;
-  selectedOptionsPromise: Promise<SelectedOptions>;
+  selectedOptions: SelectedOptions;
 }) {
   if (!hasColorImagePartitioning(product.options)) {
     return <ProductMedia media={product.media} title={product.title} />;
   }
 
+  const image = getSelectedColorImage(product, selectedOptions);
   return (
     <ProductMedia
       media={getSharedMedia(product.media, product.options)}
       title={product.title}
-      desktopSlot={
-        // Color image is the LCP slot; a pulsing skeleton flashes harder than an empty image canvas.
-        <Suspense fallback={<div className="aspect-[2/3] w-full" />}>
-          <ResolvedColorImageGrid
-            product={product}
-            selectedOptionsPromise={selectedOptionsPromise}
-          />
-        </Suspense>
-      }
-      mobileSlot={
-        <Suspense
-          fallback={
-            <div className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-[2/3]" />
-          }
-        >
-          <ResolvedColorImageCarousel
-            product={product}
-            selectedOptionsPromise={selectedOptionsPromise}
-          />
-        </Suspense>
-      }
+      desktopSlot={image ? <ColorImageGrid images={[image]} title={product.title} /> : null}
+      mobileSlot={image ? <ColorImageCarouselItems images={[image]} title={product.title} /> : null}
     />
   );
-}
-
-async function ResolvedColorImageGrid({
-  product,
-  selectedOptionsPromise,
-}: {
-  product: ProductDetails;
-  selectedOptionsPromise: Promise<SelectedOptions>;
-}) {
-  const image = getSelectedColorImage(product, await selectedOptionsPromise);
-  if (!image) return null;
-  return <ColorImageGrid images={[image]} title={product.title} />;
-}
-
-async function ResolvedColorImageCarousel({
-  product,
-  selectedOptionsPromise,
-}: {
-  product: ProductDetails;
-  selectedOptionsPromise: Promise<SelectedOptions>;
-}) {
-  const image = getSelectedColorImage(product, await selectedOptionsPromise);
-  if (!image) return null;
-  return <ColorImageCarouselItems images={[image]} title={product.title} />;
 }
 
 function ProductInfoArea({

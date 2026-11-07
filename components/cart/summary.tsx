@@ -92,10 +92,8 @@ export function CartCheckout({ label = "Checkout" }: CartCheckoutProps) {
         type="button"
         variant="outline"
       >
-        {isCheckingOut || isCartMutating ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-        ) : null}
-        {isCheckingOut ? "Redirecting..." : isCartMutating ? "Updating cart..." : label}
+        {isCheckingOut ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
+        {isCheckingOut ? "Redirecting..." : label}
       </Button>
       {checkoutError ? (
         <p className="type-body-sm text-error-rule" id={checkoutErrorId} role="alert">

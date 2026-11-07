@@ -8,6 +8,7 @@ import {
   ProductDetailSkeleton,
 } from "@/components/product-detail/product-detail-section";
 import { RecentlyViewedRecorder } from "@/components/product-detail/recently-viewed";
+import { DeferredRelatedProducts } from "@/components/product/deferred-related-products";
 import { RelatedProductsSection } from "@/components/product/related-products-section";
 import { Container } from "@/components/ui/container";
 import { Page } from "@/components/ui/page";
@@ -98,35 +99,28 @@ async function ProductPageContent({
   const relatedProductsPromise = shopConfig.pdp.relatedProducts.isEnabled
     ? getProductRecommendations({ handle, intent: "RELATED" })
     : null;
-  const product = await getProduct({
-    handle,
-  });
+  const [product, resolvedSearchParams] = await Promise.all([
+    getProduct({
+      handle,
+    }),
+    searchParams,
+  ]);
   if (!product) notFound();
 
-  // Keep selection separate from the variant query so the static shell stays coherent and the picker never waits on Shopify.
-  const selectedOptionsPromise: Promise<SelectedOptions> = searchParams.then(
-    (resolvedSearchParams) => ({
-      ...defaultSelectedOptions(product),
-      ...parseSelectedOptions(product.options, resolvedSearchParams ?? {}),
-    }),
-  );
-  const variantPromise: Promise<ProductVariant | undefined> = searchParams.then(
-    async (resolvedSearchParams) => {
-      if (
-        Object.keys(parseSelectedOptions(product.options, resolvedSearchParams ?? {})).length === 0
-      ) {
-        return product.defaultVariant;
-      }
-      // Uncached: the selected variant's price and stock are read live per request, and caching per option combination multiplies entries by variant count.
-      return fetchProductVariant({
-        handle,
-        selectedOptions: toSelectedOptionList({
-          ...defaultSelectedOptions(product),
-          ...parseSelectedOptions(product.options, resolvedSearchParams ?? {}),
-        }),
-      });
-    },
-  );
+  // The media reads the URL selection synchronously so the first image can render before the live variant query resolves.
+  const explicitOptions = parseSelectedOptions(product.options, resolvedSearchParams ?? {});
+  const selectedOptions: SelectedOptions = {
+    ...defaultSelectedOptions(product),
+    ...explicitOptions,
+  };
+  const variantPromise: Promise<ProductVariant | undefined> =
+    Object.keys(explicitOptions).length === 0
+      ? Promise.resolve(product.defaultVariant)
+      : // Uncached: the selected variant's price and stock are read live per request, and caching per option combination multiplies entries by variant count.
+        fetchProductVariant({
+          handle,
+          selectedOptions: toSelectedOptionList(selectedOptions),
+        });
   return (
     <>
       <Suspense fallback={null}>
@@ -151,13 +145,15 @@ async function ProductPageContent({
       />
       <ProductDetailSection
         product={product}
-        selectedOptionsPromise={selectedOptionsPromise}
+        selectedOptions={selectedOptions}
         variantPromise={variantPromise}
       />
       {relatedProductsPromise ? (
         <Container>
           <div className="py-16 desktop:py-20">
-            <RelatedProductsSection limit={4} productsPromise={relatedProductsPromise} />
+            <DeferredRelatedProducts>
+              <RelatedProductsSection limit={4} productsPromise={relatedProductsPromise} />
+            </DeferredRelatedProducts>
           </div>
         </Container>
       ) : null}

@@ -1,6 +1,7 @@
 import { flattenConnection } from "@shopify/hydrogen";
 
 import type { Image, MediaItem } from "@/lib/media/types";
+import { isSizeOption, sortSizeValues } from "@/lib/product/sizes";
 import type {
   Category,
   OptionValue,
@@ -165,10 +166,13 @@ function transformSwatch(swatch: ShopifyOptionValueSwatch): OptionValueSwatch | 
 }
 
 function transformOption(option: ShopifyOption): ProductOption {
+  const optionValues = isSizeOption(option.name)
+    ? sortSizeValues(option.optionValues)
+    : option.optionValues;
   return {
     id: option.id,
     name: option.name,
-    values: option.optionValues.map((value): OptionValue => {
+    values: optionValues.map((value): OptionValue => {
       const firstSelectableVariant = value.firstSelectableVariant
         ? transformVariant(value.firstSelectableVariant)
         : undefined;
@@ -209,13 +213,16 @@ function transformProductCard(
     hoverImage: transformImage(
       product.images?.nodes?.find((image) => image.url.split("?")[0] !== featuredUrl),
     ),
-    options: product.options?.map((option) => ({
-      name: option.name,
-      values: option.optionValues.map((value) => ({
+    options: product.options?.map((option) => {
+      const values = option.optionValues.map((value) => ({
         name: value.name,
         swatch: transformSwatch(value.swatch),
-      })),
-    })),
+      }));
+      return {
+        name: option.name,
+        values: isSizeOption(option.name) ? sortSizeValues(values) : values,
+      };
+    }),
     price: product.priceRange.minVariantPrice,
     maxPrice: product.priceRange.maxVariantPrice,
     compareAtPrice: product.compareAtPriceRange.minVariantPrice,

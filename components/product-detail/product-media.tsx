@@ -54,9 +54,43 @@ function prefetchMediaImage(image: ImageType) {
     sizes: "100vw",
   });
   const imageElement = new window.Image();
+  imageElement.decoding = "async";
+  imageElement.setAttribute("fetchpriority", "low");
   if (props.srcSet) imageElement.srcset = props.srcSet;
   if (props.sizes) imageElement.sizes = props.sizes;
   imageElement.src = props.src;
+}
+
+function canPrefetchMedia() {
+  const connection = (
+    navigator as Navigator & {
+      connection?: { effectiveType?: string; saveData?: boolean };
+    }
+  ).connection;
+  return !connection?.saveData && !/(^|-)2g$/.test(connection?.effectiveType ?? "");
+}
+
+function useNearViewport(enabled: boolean, rootMargin = "300px 0px") {
+  const ref = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(enabled);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (enabled || near || !node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [enabled, near, rootMargin]);
+
+  return [ref, enabled || near] as const;
 }
 
 function MediaImage({
@@ -171,27 +205,19 @@ function Carousel({
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {children}
-        {mediaItems.map((item, idx) => {
-          const priority = !hasColorSlot && idx === 0;
-          return (
-            <div
-              key={mediaKey(item)}
-              className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-[2/3]"
-            >
-              {item.type === "video" ? (
-                <MediaVideo item={item} priority={priority} />
-              ) : item.type === "placeholder" ? (
-                <ImagePlaceholder className="size-full" />
-              ) : (
-                <MediaImage item={item} title={title} idx={idx} priority={priority} />
-              )}
-            </div>
-          );
-        })}
+        {mediaItems.map((item, idx) => (
+          <CarouselSlide
+            key={mediaKey(item)}
+            item={item}
+            title={title}
+            idx={idx}
+            priority={!hasColorSlot && idx === 0}
+          />
+        ))}
       </div>
 
       {/* Dot indicators – reserve space but hide when there's only one image */}
-      <div className={cn("flex justify-center gap-1.5", itemCount <= 1 && "invisible")}>
+      <div className={cn("flex flex-wrap justify-center gap-1.5", itemCount <= 1 && "invisible")}>
         {Array.from({ length: itemCount }, (_, idx) => (
           <button
             type="button"
@@ -224,9 +250,12 @@ function GridItem({
   idx: number;
   priority: boolean;
 }) {
+  const [ref, near] = useNearViewport(priority);
   return (
-    <div className="relative w-full overflow-hidden aspect-[2/3]">
-      {item.type === "video" ? (
+    <div ref={ref} className="relative w-full overflow-hidden aspect-[2/3]">
+      {!near ? (
+        <div className="size-full bg-surface" />
+      ) : item.type === "video" ? (
         <MediaVideo item={item} priority={priority} />
       ) : item.type === "placeholder" ? (
         <ImagePlaceholder className="size-full" />
@@ -234,6 +263,36 @@ function GridItem({
         <LightboxTrigger image={item.image}>
           <MediaImage item={item} title={title} idx={idx} priority={priority} />
         </LightboxTrigger>
+      )}
+    </div>
+  );
+}
+
+function CarouselSlide({
+  item,
+  title,
+  idx,
+  priority,
+}: {
+  item: MediaSlot;
+  title: string;
+  idx: number;
+  priority: boolean;
+}) {
+  const [ref, near] = useNearViewport(priority);
+  return (
+    <div
+      ref={ref}
+      className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-[2/3]"
+    >
+      {!near ? (
+        <div className="size-full bg-surface" />
+      ) : item.type === "video" ? (
+        <MediaVideo item={item} priority={priority} />
+      ) : item.type === "placeholder" ? (
+        <ImagePlaceholder className="size-full" />
+      ) : (
+        <MediaImage item={item} title={title} idx={idx} priority={priority} />
       )}
     </div>
   );
@@ -330,33 +389,58 @@ export function ProductMedia({
     () => (isEmpty ? [{ type: "placeholder" }] : media),
     [isEmpty, media],
   );
-  const mediaKeys = mediaItems.map(mediaKey).join(",");
-  const prefetchItems = useRef(mediaItems);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    prefetchItems.current = mediaItems;
-  }, [mediaItems]);
+    const root = rootRef.current;
+    const images = mediaItems.filter(
+      (item): item is Extract<MediaItem, { type: "image" }> => item.type === "image",
+    );
+    // With a colour slot the first media item is the image after the LCP; without one, the LCP is mediaItems[0].
+    const next = hasColorSlot ? images[0] : mediaItems[0]?.type === "image" ? images[1] : images[0];
+    if (!root || !next || !canPrefetchMedia()) return;
 
-  useEffect(() => {
-    if (!mediaKeys) return;
-    const images = prefetchItems.current
-      .filter((item): item is Extract<MediaItem, { type: "image" }> => item.type === "image")
-      .slice(0, 2);
-    if (images.length === 0) return;
-    const run = () => {
-      for (const item of images) prefetchMediaImage(item.image);
+    let cancelled = false;
+    let timeoutHandle: number | undefined;
+    const prefetch = () => {
+      if (!cancelled && document.visibilityState === "visible") {
+        prefetchMediaImage(next.image);
+      }
     };
-    const scheduled = window.requestIdleCallback
-      ? window.requestIdleCallback(run, { timeout: 1500 })
-      : window.setTimeout(run, 900);
+    const schedule = () => {
+      if (cancelled) return;
+      timeoutHandle = window.setTimeout(prefetch, 250);
+    };
+    const first = root.querySelector<HTMLImageElement>('img[fetchpriority="high"]');
+    const afterFirst = () => {
+      if (cancelled) return;
+      if (first?.decode) {
+        first
+          .decode()
+          .catch(() => undefined)
+          .finally(schedule);
+      } else {
+        schedule();
+      }
+    };
+
+    if (!first) {
+      schedule();
+    } else if (first.complete) {
+      afterFirst();
+    } else {
+      first.addEventListener("load", afterFirst, { once: true });
+    }
+
     return () => {
-      if (window.cancelIdleCallback) window.cancelIdleCallback(scheduled);
-      else window.clearTimeout(scheduled);
+      cancelled = true;
+      first?.removeEventListener("load", afterFirst);
+      if (timeoutHandle !== undefined) window.clearTimeout(timeoutHandle);
     };
-  }, [mediaKeys]);
+  }, [hasColorSlot, mediaItems]);
 
   return (
-    <div className={className}>
+    <div className={className} ref={rootRef}>
       <div className="desktop:hidden">
         <Carousel
           key={mediaItems.map(mediaKey).join(",")}

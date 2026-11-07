@@ -10,6 +10,7 @@ import type {
 } from "@/lib/product/types";
 
 import { getColorSwatch } from "./color-swatches";
+import { isSizeOption, sortSizeValues } from "./sizes";
 import type {
   OptionGroupState,
   ProductFormInput,
@@ -39,22 +40,25 @@ export function parseSelectedOptions(
 }
 
 export function toStaticOptionGroups(product: ProductDetails): OptionGroupState[] {
-  return product.options.map((option) => ({
-    name: option.name,
-    values: option.values.map((value) => {
-      const color = value.swatch?.color ?? getColorSwatch(value.name);
-      return {
-        available: true,
-        crossProduct: false,
-        exists: true,
-        href: buildProductUrl(product.handle, [{ name: option.name, value: value.name }]),
-        image: value.image,
-        name: value.name,
-        selected: false,
-        swatch: color ? { ...value.swatch, color } : value.swatch,
-      };
-    }),
-  }));
+  return product.options.map((option) => {
+    const values = isSizeOption(option.name) ? sortSizeValues(option.values) : option.values;
+    return {
+      name: option.name,
+      values: values.map((value) => {
+        const color = value.swatch?.color ?? getColorSwatch(value.name);
+        return {
+          available: true,
+          crossProduct: false,
+          exists: true,
+          href: buildProductUrl(product.handle, [{ name: option.name, value: value.name }]),
+          image: value.image,
+          name: value.name,
+          selected: false,
+          swatch: color ? { ...value.swatch, color } : value.swatch,
+        };
+      }),
+    };
+  });
 }
 
 export function getProductPurchaseOptions(
@@ -106,22 +110,25 @@ export function toProductFormInput(
     encodedVariantExistence: product.encodedVariantExistence ?? null,
     handle: product.handle,
     id: product.id,
-    options: product.options.map((option) => ({
-      name: option.name,
-      optionValues: option.values.map((value) => {
-        const color = value.swatch?.color ?? getColorSwatch(value.name);
-        return {
-          firstSelectableVariant: value.firstSelectableVariant
-            ? toProductFormVariant(value.firstSelectableVariant)
-            : null,
-          name: value.name,
-          swatch:
-            color || value.swatch?.image || value.image
-              ? { ...value.swatch, color, variantImage: value.image }
-              : undefined,
-        };
-      }),
-    })),
+    options: product.options.map((option) => {
+      const values = isSizeOption(option.name) ? sortSizeValues(option.values) : option.values;
+      return {
+        name: option.name,
+        optionValues: values.map((value) => {
+          const color = value.swatch?.color ?? getColorSwatch(value.name);
+          return {
+            firstSelectableVariant: value.firstSelectableVariant
+              ? toProductFormVariant(value.firstSelectableVariant)
+              : null,
+            name: value.name,
+            swatch:
+              color || value.swatch?.image || value.image
+                ? { ...value.swatch, color, variantImage: value.image }
+                : undefined,
+          };
+        }),
+      };
+    }),
     priceRange: product.priceRange,
     selectedOrFirstAvailableVariant: selectedVariant ? toProductFormVariant(selectedVariant) : null,
     title: product.title,
