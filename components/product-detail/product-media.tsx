@@ -7,16 +7,13 @@ import { preload } from "react-dom";
 
 import { AutoPlayVideo } from "@/components/ui/auto-play-video";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
-import type { Image as ImageType, Video } from "@/lib/media/types";
+import type { Image as ImageType, MediaItem, Video } from "@/lib/media/types";
 
 import { Lightbox, LightboxTrigger } from "./lightbox";
 
-type MediaItem =
-  | { type: "image"; image: ImageType }
-  | { type: "placeholder" }
-  | { type: "video"; video: Video };
+type MediaSlot = MediaItem | { type: "placeholder" };
 
-function mediaKey(item: MediaItem) {
+function mediaKey(item: MediaSlot) {
   if (item.type === "image") return item.image.url;
   if (item.type === "video") return item.video.url;
   return "placeholder";
@@ -55,7 +52,7 @@ function MediaImage({
   priority,
   className,
 }: {
-  item: Extract<MediaItem, { type: "image" }>;
+  item: Extract<MediaItem, { image: ImageType; type: "image" }>;
   title: string;
   idx: number;
   priority: boolean;
@@ -108,7 +105,7 @@ function Carousel({
   hasColorSlot,
   children,
 }: {
-  mediaItems: MediaItem[];
+  mediaItems: MediaSlot[];
   title: string;
   hasColorSlot: boolean;
   children?: ReactNode;
@@ -208,7 +205,7 @@ function GridItem({
   idx,
   priority,
 }: {
-  item: MediaItem;
+  item: MediaSlot;
   title: string;
   idx: number;
   priority: boolean;
@@ -235,7 +232,7 @@ function Grid({
   interactive = true,
   children,
 }: {
-  mediaItems: MediaItem[];
+  mediaItems: MediaSlot[];
   title: string;
   hasColorSlot: boolean;
   interactive?: boolean;
@@ -301,28 +298,21 @@ export function ColorImageCarouselItems({ images, title }: { images: ImageType[]
 }
 
 export function ProductMedia({
-  otherImages,
-  videos,
+  media,
   title,
   className,
   desktopSlot,
   mobileSlot,
 }: {
-  otherImages: ImageType[];
-  videos: Video[];
+  media: MediaItem[];
   title: string;
   className?: string;
   desktopSlot?: ReactNode;
   mobileSlot?: ReactNode;
 }) {
-  const sharedMediaItems: MediaItem[] = [
-    ...videos.map((video): MediaItem => ({ type: "video", video })),
-    ...otherImages.map((image): MediaItem => ({ type: "image", image })),
-  ];
-
   const hasColorSlot = !!mobileSlot || !!desktopSlot;
-  const isEmpty = sharedMediaItems.length === 0 && !hasColorSlot;
-  const mediaItems: MediaItem[] = isEmpty ? [{ type: "placeholder" }] : sharedMediaItems;
+  const isEmpty = media.length === 0 && !hasColorSlot;
+  const mediaItems: MediaSlot[] = isEmpty ? [{ type: "placeholder" }] : media;
 
   return (
     <div className={className}>
