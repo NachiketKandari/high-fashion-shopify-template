@@ -14,6 +14,7 @@ export const PRODUCT_FRAGMENT = gql(
     handle
     description
     descriptionHtml
+    productType
     vendor
     updatedAt
     availableForSale
@@ -145,6 +146,7 @@ export const PRODUCT_CARD_FRAGMENT = gql(
     id
     title
     handle
+    productType
     vendor
     availableForSale
     isGiftCard

@@ -130,11 +130,18 @@ function closestSize(values: string[], input: string) {
   return { distance, size: SIZES[best] };
 }
 
-export function SizeGuide() {
-  const [active, setActive] = useState(GUIDES[0].id);
+export function SizeGuide({ defaultCategory }: { defaultCategory?: string } = {}) {
+  const [active, setActive] = useState(defaultCategory ?? GUIDES[0].id);
   const [values, setValues] = useState<Record<string, string>>({});
   const [result, setResult] = useState<string | null>(null);
+  const [unit, setUnit] = useState<"cm" | "in">("in");
   const guide = GUIDES.find((entry) => entry.id === active) ?? GUIDES[0];
+
+  const formatValue = (value: string) => {
+    if (unit === "in") return value;
+    const converted = Number.parseFloat(value) * 2.54;
+    return Number.isFinite(converted) ? String(Math.round(converted * 10) / 10) : value;
+  };
 
   return (
     <div className="grid gap-10">
@@ -143,7 +150,7 @@ export function SizeGuide() {
           <button
             aria-pressed={active === entry.id}
             className={cn(
-              "type-control focus-ring flex min-h-9 min-w-9 cursor-pointer items-center justify-center transition-opacity hover:opacity-60",
+              "type-body-sm focus-ring flex min-h-9 min-w-9 cursor-pointer items-center justify-center transition-opacity hover:opacity-60",
               active === entry.id && "underline underline-offset-4",
             )}
             key={entry.id}
@@ -163,17 +170,23 @@ export function SizeGuide() {
         onSubmit={(event) => {
           event.preventDefault();
           const first = guide.rows[0];
-          const match = first ? closestSize(first.values, values[first.label] ?? "") : null;
+          const entered = Number.parseFloat(values[first?.label ?? ""] ?? "");
+          const inches = unit === "cm" ? entered / 2.54 : entered;
+          const match =
+            first && Number.isFinite(inches) ? closestSize(first.values, String(inches)) : null;
           setResult(match ? `${match.size} — ${guide.label}` : "Enter at least one measurement");
         }}
       >
-        <p className="type-label">Find my size (inches)</p>
+        <h2 className="type-h2">Find my size</h2>
+        <p className="type-body-sm text-ink-muted">
+          Measurements in {unit === "cm" ? "centimetres" : "inches"}
+        </p>
         <div className="grid gap-4 tablet:grid-cols-3">
           {guide.fields.map((field) => {
             const row = guide.rows.find((entry) => entry.label.toLowerCase().includes(field.key));
             return (
               <div className="grid gap-2" key={field.key}>
-                <Label className="type-label" htmlFor={`size-${field.key}`}>
+                <Label className="type-body-sm text-ink-muted" htmlFor={`size-${field.key}`}>
                   {field.label}
                 </Label>
                 <Input
@@ -185,7 +198,7 @@ export function SizeGuide() {
                       [row?.label ?? field.key]: event.target.value,
                     }))
                   }
-                  placeholder={row?.values[2]}
+                  placeholder={row?.values[2] ? formatValue(row.values[2]) : undefined}
                   value={values[row?.label ?? field.key] ?? ""}
                 />
               </div>
@@ -200,7 +213,7 @@ export function SizeGuide() {
             Find my size
           </Button>
           {result ? (
-            <p aria-live="polite" className="type-label">
+            <p aria-live="polite" className="type-body-sm">
               {result}
             </p>
           ) : null}
@@ -208,14 +221,40 @@ export function SizeGuide() {
       </form>
 
       <div className="grid gap-4">
-        <h2 className="type-label">{guide.label} — Size Guide</h2>
-        <div className="overflow-x-auto">
-          <table className="type-body-sm w-full min-w-[560px] border-collapse text-left">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="grid gap-1">
+            <p className="type-label text-ink-muted">PS Sizing</p>
+            <h2 className="type-display">{guide.label} — Size Guide</h2>
+          </div>
+          <div aria-label="Measurement unit" className="flex items-center gap-1" role="group">
+            {(["cm", "in"] as const).map((option, index) => (
+              <span className="flex items-center gap-1" key={option}>
+                {index > 0 ? <span className="type-control text-ink-muted">/</span> : null}
+                <button
+                  aria-pressed={unit === option}
+                  className={cn(
+                    "type-control focus-ring flex min-h-9 min-w-9 items-center justify-center px-1",
+                    unit === option ? "underline underline-offset-4" : "text-ink-muted",
+                  )}
+                  onClick={() => setUnit(option)}
+                  type="button"
+                >
+                  {option.toUpperCase()}
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="overflow-x-auto border border-rule">
+          <table className="type-body w-full min-w-[560px] border-collapse text-center font-normal">
             <thead>
               <tr>
-                <th className="type-label border-b border-rule py-2 pr-4" />
+                <th className="type-label border-r border-b border-rule px-3 py-2 text-left" />
                 {SIZES.map((size) => (
-                  <th className="type-label border-b border-rule py-2 pr-4" key={size}>
+                  <th
+                    className="type-label border-r border-b border-rule px-3 py-2 last:border-r-0"
+                    key={size}
+                  >
                     {size}
                   </th>
                 ))}
@@ -224,12 +263,15 @@ export function SizeGuide() {
             <tbody>
               {guide.rows.map((row) => (
                 <tr key={row.label}>
-                  <td className="border-b border-rule py-2 pr-4 text-muted-foreground">
+                  <td className="border-r border-b border-rule px-3 py-2 text-left text-ink-muted">
                     {row.label}
                   </td>
                   {row.values.map((value, index) => (
-                    <td className="border-b border-rule py-2 pr-4" key={`${row.label}-${index}`}>
-                      {value}
+                    <td
+                      className="border-r border-b border-rule px-3 py-2 last:border-r-0"
+                      key={`${row.label}-${index}`}
+                    >
+                      {formatValue(value)}
                     </td>
                   ))}
                 </tr>
@@ -237,16 +279,20 @@ export function SizeGuide() {
             </tbody>
           </table>
         </div>
+        <p className="type-label text-ink-muted tablet:hidden">Swipe to see all sizes</p>
       </div>
 
       <div className="grid gap-4">
-        <h2 className="type-label">Sizing Conversion</h2>
-        <div className="overflow-x-auto">
-          <table className="type-body-sm w-full min-w-[560px] border-collapse text-left">
+        <h2 className="type-h2">Sizing Conversion</h2>
+        <div className="overflow-x-auto border border-rule">
+          <table className="type-body w-full min-w-[560px] border-collapse text-center font-normal">
             <thead>
               <tr>
                 {["PS Size", "USA", "UK", "EU", "Germany", "Italy"].map((heading) => (
-                  <th className="type-label border-b border-rule py-2 pr-4" key={heading}>
+                  <th
+                    className="type-label border-r border-b border-rule px-3 py-2 last:border-r-0"
+                    key={heading}
+                  >
                     {heading}
                   </th>
                 ))}
@@ -256,7 +302,10 @@ export function SizeGuide() {
               {CONVERSION.map((row) => (
                 <tr key={row[0]}>
                   {row.map((cell, index) => (
-                    <td className="border-b border-rule py-2 pr-4" key={`${row[0]}-${index}`}>
+                    <td
+                      className="border-r border-b border-rule px-3 py-2 last:border-r-0"
+                      key={`${row[0]}-${index}`}
+                    >
                       {cell}
                     </td>
                   ))}
@@ -265,15 +314,16 @@ export function SizeGuide() {
             </tbody>
           </table>
         </div>
+        <p className="type-label text-ink-muted tablet:hidden">Swipe to see all sizes</p>
       </div>
 
       <div className="grid gap-6 tablet:grid-cols-2">
         <div className="grid content-start gap-4">
-          <h2 className="type-label">How to measure?</h2>
+          <h2 className="type-h2">How to measure?</h2>
           <ol className="grid gap-4" role="list">
             {MEASUREMENTS.map((item) => (
               <li className="grid gap-1" key={item.label}>
-                <span className="type-label">{item.label}</span>
+                <span className="type-body font-normal text-ink">{item.label}</span>
                 <span className="type-body text-ink-muted">{item.text}</span>
               </li>
             ))}

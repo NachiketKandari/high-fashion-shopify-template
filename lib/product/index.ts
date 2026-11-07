@@ -162,6 +162,16 @@ function isOptionParam(key: string, selectedOptions: readonly SelectedOption[]):
   return selectedOptions.some((option) => option.name.toLowerCase() === lower);
 }
 
+export function getSizeGuideCategory(productType?: string): string | undefined {
+  const type = productType?.trim().toUpperCase() ?? "";
+  if (!type) return undefined;
+  if (/(DRESS|JUMPSUIT)/.test(type)) return "dresses";
+  if (/(BOTTOM|TROUSER|SKIRT|SHORT|DENIM)/.test(type)) return "bottoms";
+  if (/(OUTERWEAR|JACKET|COAT)/.test(type)) return "outerwear";
+  if (/(TOP|SHIRT|TEE|CORSET|BRALETTE|BODYSUIT|RACER|VEST|KNIT)/.test(type)) return "tops";
+  return undefined;
+}
+
 export function isColorOption(option: {
   name: string;
   values: ReadonlyArray<{ swatch?: OptionValueSwatch }>;

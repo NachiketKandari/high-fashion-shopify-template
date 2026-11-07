@@ -31,6 +31,7 @@ import {
   getProductPurchaseOptions,
   getSelectedColorImage,
   getSharedMedia,
+  getSizeGuideCategory,
   hasColorImagePartitioning,
   toProductFormInput,
   toStaticOptionGroups,
@@ -176,7 +177,7 @@ function ProductInfoArea({
       <div className="mx-auto grid w-full max-w-[408px] gap-7">
         <div className="grid gap-2" data-slot="product-info-header">
           <div className="flex items-start justify-between gap-4">
-            <h1 className="type-display text-ink">{product.title}</h1>
+            <h1 className="type-display text-ink tracking-normal">{product.title}</h1>
             <WishlistButton product={wishlistProduct} variant="inline" />
           </div>
           {product.hasUniformPricing ? (
@@ -283,7 +284,12 @@ function ProductInfoContent({
             {priceSlot ?? <ProductFormPrice fallbackVariant={fallbackVariant} />}
           </div>
         ) : null}
-        {hasOptions ? <ProductFormOptions handle={product.handle} /> : null}
+        {hasOptions ? (
+          <ProductFormOptions
+            handle={product.handle}
+            sizeGuideCategory={getSizeGuideCategory(product.productType)}
+          />
+        ) : null}
         {product.isGiftCard ? (
           <GiftCardPurchaseForm />
         ) : (
@@ -314,7 +320,11 @@ function ProductInfoFallback({
     <div className="grid gap-10">
       {!product.hasUniformPricing ? <div className="h-7" aria-hidden /> : null}
       {hasOptions ? (
-        <ProductInfoOptions options={toStaticOptionGroups(product)} hideImages />
+        <ProductInfoOptions
+          options={toStaticOptionGroups(product)}
+          hideImages
+          sizeGuideCategory={getSizeGuideCategory(product.productType)}
+        />
       ) : null}
       {product.isGiftCard ? (
         <GiftCardPurchaseFormFallback />

@@ -28,8 +28,8 @@ export function Swatch({
         data-slot="swatch-visual"
         title={label}
         className={cn(
-          "relative block size-2.5 overflow-hidden rounded-none transition-colors duration-(--motion-fast)",
-          "after:pointer-events-none after:absolute after:inset-0 after:ring-1 after:ring-ink/10",
+          "relative block size-3.5 overflow-hidden rounded-none transition-colors duration-(--motion-fast)",
+          "after:pointer-events-none after:absolute after:inset-0 after:ring-1 after:ring-ink/15",
           "data-[selected=true]:ring-1 data-[selected=true]:ring-ink data-[selected=true]:ring-offset-1 data-[selected=true]:ring-offset-paper",
         )}
         data-selected={selected}

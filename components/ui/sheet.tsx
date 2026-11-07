@@ -86,7 +86,7 @@ function SheetTitle({ className, ...props }: SheetPrimitive.Title.Props) {
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
-      className={cn("type-h3 text-ink", className)}
+      className={cn("text-ink", className ?? "type-h3")}
       {...props}
     />
   );

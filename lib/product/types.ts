@@ -70,6 +70,7 @@ export interface ProductCard {
     values: Array<{ name: string; swatch?: OptionValueSwatch }>;
   }>;
   price: Money;
+  productType?: string;
   title: string;
   vendor?: string;
 }

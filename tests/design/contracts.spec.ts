@@ -81,6 +81,11 @@ test.describe("storefront contracts", () => {
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/collections/all");
+    await page.waitForFunction(() => {
+      const card = document.querySelector('[data-slot="product-card"]');
+      const grid = card?.parentElement;
+      return grid ? getComputedStyle(grid).gridTemplateColumns.split(" ").length === 2 : false;
+    });
     const mobile = await page.evaluate(() => {
       const card = document.querySelector('[data-slot="product-card"]');
       const grid = card?.parentElement;

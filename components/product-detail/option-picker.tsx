@@ -10,22 +10,29 @@ interface OptionPickerProps extends ComponentProps<"div"> {
   compact?: boolean;
   onSelectValue?: (optionName: string, value: string) => void;
   option: OptionGroupState;
+  sizeGuideCategory?: string;
 }
 
 export function OptionPicker({
   onSelectValue,
   option,
   className,
-  compact: _compact,
+  compact = false,
+  sizeGuideCategory,
   ...props
 }: OptionPickerProps) {
   return (
     <div className={cn("flex items-center gap-2", className)} {...props}>
-      <span className="type-h4 w-16 shrink-0">{option.name}</span>
-      <div className="flex flex-1 flex-wrap items-center gap-x-2 gap-y-1">
+      <span className={cn("type-h4 shrink-0", compact ? "w-11" : "w-16")}>{option.name}</span>
+      <div
+        className={cn(
+          "flex flex-1 flex-wrap items-center gap-y-1",
+          compact ? "gap-x-1" : "gap-x-2",
+        )}
+      >
         {option.values.map((value) => {
           const classes = cn(
-            "type-body-sm inline-flex min-h-9 min-w-9 items-center justify-center transition-colors",
+            "type-body-sm inline-flex min-h-9 min-w-9 items-center justify-center font-normal transition-colors",
             !value.exists
               ? "cursor-not-allowed text-ink-muted/50 line-through"
               : value.selected
@@ -69,7 +76,9 @@ export function OptionPicker({
           );
         })}
       </div>
-      {option.name.toLowerCase().includes("size") ? <SizeGuide /> : null}
+      {option.name.toLowerCase().includes("size") ? (
+        <SizeGuide category={sizeGuideCategory} />
+      ) : null}
     </div>
   );
 }

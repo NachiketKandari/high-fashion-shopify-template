@@ -12,6 +12,7 @@ interface ProductInfoOptionsProps extends ComponentProps<"div"> {
   hideImages?: boolean;
   onSelectValue?: (optionName: string, value: string) => void;
   options: OptionGroupState[];
+  sizeGuideCategory?: string;
 }
 
 function ProductInfoOptions({
@@ -19,6 +20,7 @@ function ProductInfoOptions({
   hideImages,
   onSelectValue,
   options,
+  sizeGuideCategory,
   className,
   ...props
 }: ProductInfoOptionsProps) {
@@ -56,6 +58,7 @@ function ProductInfoOptions({
             key={option.name}
             onSelectValue={onSelectValue}
             option={option}
+            sizeGuideCategory={sizeGuideCategory}
           />
         ))}
       </div>
@@ -76,7 +79,7 @@ function ProductInfoDescription({
   return (
     <div data-slot="product-info-description" className={className} {...props}>
       <div
-        className="prose prose-sm text-foreground/80"
+        className="type-body-sm text-ink-muted [&_li]:m-0 [&_p]:m-0 [&_ul]:m-0 [&_ul]:grid [&_ul]:gap-0.5"
         // oxlint-disable-next-line react/no-danger -- Product descriptions pass through sanitizeShopifyHtml when fetched.
         dangerouslySetInnerHTML={{ __html: descriptionHtml }}
       />

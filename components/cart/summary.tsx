@@ -36,9 +36,18 @@ interface CartTotalProps {
 
 export function CartTotal({ cart }: CartTotalProps) {
   const isCostPending = useCart((state) =>
-    Boolean(state.loading || state.pending.cost || state.revalidating),
+    Boolean(state.pending.cost || state.pending.lines.size > 0 || state.revalidating),
   );
-  const { amount, currencyCode } = cart.cost.totalAmount;
+  const currencyCode =
+    cart.cost.subtotalAmount.currencyCode ||
+    cart.cost.totalAmount.currencyCode ||
+    cart.lines.nodes[0]?.cost.totalAmount.currencyCode;
+  const optimisticAmount = cart.lines.nodes.reduce(
+    (total, line) => total + Number(line.cost.amountPerQuantity.amount) * line.quantity,
+    0,
+  );
+  const amount =
+    isCostPending && optimisticAmount > 0 ? String(optimisticAmount) : cart.cost.totalAmount.amount;
   return (
     <div
       aria-busy={isCostPending || undefined}
@@ -48,10 +57,10 @@ export function CartTotal({ cart }: CartTotalProps) {
     >
       <div className="type-h4 flex items-baseline justify-between text-ink">
         <span>Subtotal</span>
-        {isCostPending || !currencyCode ? (
-          <span className="text-ink-muted">Updating…</span>
-        ) : (
+        {currencyCode ? (
           <Price amount={amount} className="type-h4 font-normal" currencyCode={currencyCode} />
+        ) : (
+          <span className="text-ink-muted">Updating…</span>
         )}
       </div>
       <p className="type-label text-ink-muted">Tax included and shipping calculated at checkout.</p>
@@ -68,14 +77,14 @@ export function CartCheckout({ label = "Checkout" }: CartCheckoutProps) {
     checkoutError,
     checkoutErrorId,
     handleCheckout,
+    isCartMutating,
     isCheckingOut,
     isCheckoutDisabled,
-    isUpdatingCart,
   } = useCheckout();
   return (
     <div className="grid gap-2.5">
       <Button
-        aria-busy={isCheckingOut || isUpdatingCart || undefined}
+        aria-busy={isCheckingOut || isCartMutating || undefined}
         aria-describedby={checkoutError ? checkoutErrorId : undefined}
         className="h-9 w-full justify-center"
         disabled={isCheckoutDisabled}
@@ -83,10 +92,10 @@ export function CartCheckout({ label = "Checkout" }: CartCheckoutProps) {
         type="button"
         variant="outline"
       >
-        {isCheckingOut || isUpdatingCart ? (
+        {isCheckingOut || isCartMutating ? (
           <Loader2 className="size-4 animate-spin" aria-hidden="true" />
         ) : null}
-        {isCheckingOut ? "Redirecting..." : isUpdatingCart ? "Updating cart..." : label}
+        {isCheckingOut ? "Redirecting..." : isCartMutating ? "Updating cart..." : label}
       </Button>
       {checkoutError ? (
         <p className="type-body-sm text-error-rule" id={checkoutErrorId} role="alert">

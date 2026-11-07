@@ -266,7 +266,7 @@ function QuickShopDetails({
       }
       title={product.title}
     >
-      {product.hasOptions ? <ProductFormOptions handle={handle} /> : null}
+      {product.hasOptions ? <ProductFormOptions compact handle={handle} /> : null}
       {selectionStatus !== "idle" ? (
         <div className="grid gap-2.5">
           <p className="type-body-sm text-ink-muted" role="status">

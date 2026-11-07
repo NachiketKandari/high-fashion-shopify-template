@@ -39,10 +39,16 @@ export function ProductForm({
 }
 
 interface ProductFormOptionsProps {
+  compact?: boolean;
   handle: string;
+  sizeGuideCategory?: string;
 }
 
-export function ProductFormOptions({ handle }: ProductFormOptionsProps) {
+export function ProductFormOptions({
+  compact,
+  handle,
+  sizeGuideCategory,
+}: ProductFormOptionsProps) {
   const { options, selectOption } = useProduct();
   const optionGroups: OptionGroupState[] = options.map((option) => ({
     name: option.name,
@@ -60,7 +66,14 @@ export function ProductFormOptions({ handle }: ProductFormOptionsProps) {
       };
     }),
   }));
-  return <ProductInfoOptions options={optionGroups} onSelectValue={selectOption} />;
+  return (
+    <ProductInfoOptions
+      compact={compact}
+      options={optionGroups}
+      onSelectValue={selectOption}
+      sizeGuideCategory={sizeGuideCategory}
+    />
+  );
 }
 
 export function ProductFormPrice({

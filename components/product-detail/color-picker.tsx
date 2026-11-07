@@ -3,6 +3,7 @@ import type { ComponentProps } from "react";
 
 import { Link } from "@/components/ui/link";
 import { Swatch } from "@/components/ui/swatch";
+import { getColorSwatch } from "@/lib/product/color-swatches";
 import type { OptionGroupState } from "@/lib/product/types";
 
 interface ColorPickerProps extends ComponentProps<"div"> {
@@ -23,16 +24,12 @@ export function ColorPicker({
       <span className="type-h4 w-16 shrink-0">{option.name}</span>
       <div className="flex flex-wrap gap-2">
         {option.values.map((value) => {
+          const color = value.swatch?.color ?? getColorSwatch(value.name);
           const imageUrl = hideImages
             ? undefined
-            : value.swatch?.image || (value.swatch?.color ? undefined : value.image);
+            : value.swatch?.image || (color ? undefined : value.image);
           const swatch = (
-            <Swatch
-              color={value.swatch?.color}
-              image={imageUrl}
-              label={value.name}
-              selected={value.selected}
-            />
+            <Swatch color={color} image={imageUrl} label={value.name} selected={value.selected} />
           );
           if (!value.exists || (!value.available && !value.selected)) {
             return (

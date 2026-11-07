@@ -48,9 +48,6 @@ interface CartLineItemProps {
 
 function CartLineItem({ item }: CartLineItemProps) {
   const isPending = useCart((state) => state.pending.lines.has(item.id));
-  const isCostPending = useCart((state) =>
-    Boolean(state.pending.cost || state.revalidating || state.pending.lines.has(item.id)),
-  );
   const { cost, merchandise, quantity } = item;
   const instructions = "instructions" in item ? item.instructions : undefined;
   const canUpdateQuantity = !(
@@ -69,11 +66,11 @@ function CartLineItem({ item }: CartLineItemProps) {
   const isOptimistic = item.id.startsWith("optimistic:");
   const format = useDisplayPrice();
   const currencyCode = cost.totalAmount.currencyCode;
-  const finalUnitPrice = quantity > 0 ? Number(cost.totalAmount.amount) / quantity : 0;
   const sellingUnitPrice = Number(cost.amountPerQuantity.amount);
   const compareAtUnitPrice = Number(cost.compareAtAmountPerQuantity?.amount ?? 0);
-  const originalUnitPrice =
-    finalUnitPrice < sellingUnitPrice ? sellingUnitPrice : compareAtUnitPrice;
+  const originalUnitPrice = compareAtUnitPrice > sellingUnitPrice ? compareAtUnitPrice : 0;
+  const hasCost = Boolean(currencyCode) && sellingUnitPrice > 0;
+  const lineTotal = isPending ? sellingUnitPrice * quantity : Number(cost.totalAmount.amount);
   const title = merchandise?.product.title || "Cart item";
   const variantLabel = merchandise?.selectedOptions?.length
     ? merchandise.selectedOptions
@@ -133,13 +130,13 @@ function CartLineItem({ item }: CartLineItemProps) {
               ) : null}
             </div>
             <div className="type-h4 grid shrink-0 gap-0.5 text-right">
-              <span
-                className="text-ink data-[pending=true]:text-ink-muted"
-                data-pending={isCostPending || !currencyCode}
-              >
-                {isCostPending || !currencyCode ? "Updating…" : price(finalUnitPrice)}
+              <span className="text-ink data-[pending=true]:text-ink-muted" data-pending={!hasCost}>
+                {hasCost ? price(sellingUnitPrice) : "Updating…"}
               </span>
-              {!isCostPending && currencyCode && originalUnitPrice > finalUnitPrice ? (
+              {hasCost && quantity > 1 ? (
+                <span className="text-ink">{price(lineTotal)}</span>
+              ) : null}
+              {hasCost && originalUnitPrice > 0 ? (
                 <span className="type-label text-ink-muted line-through">
                   {price(originalUnitPrice)}
                 </span>

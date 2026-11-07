@@ -2,7 +2,7 @@
 
 import { cn } from "cn";
 import Image, { getImageProps } from "next/image";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { preload } from "react-dom";
 
 import { AutoPlayVideo } from "@/components/ui/auto-play-video";
@@ -22,7 +22,7 @@ function mediaKey(item: MediaSlot) {
 // `preload` alone does not set high fetch priority; other images stay lazy so the hidden carousel or grid never downloads.
 const LCP_IMAGE_PROPS = { fetchPriority: "high", loading: "eager", preload: true } as const;
 
-const LAZY_IMAGE_PROPS = { loading: "lazy" } as const;
+const LAZY_IMAGE_PROPS = { decoding: "async", fetchPriority: "low", loading: "lazy" } as const;
 
 // Tailwind `lg`, where the stacked gallery replaces the carousel.
 const DESKTOP_MEDIA = "(min-width: 1100px)";
@@ -43,6 +43,20 @@ function preloadDesktopGridImage(image: ImageType) {
     imageSizes: props.sizes,
     media: DESKTOP_MEDIA,
   });
+}
+
+// The next gallery image is often the first swipe; warm the optimizer after the LCP image settles.
+function prefetchMediaImage(image: ImageType) {
+  const { props } = getImageProps({
+    src: image.url,
+    alt: "",
+    fill: true,
+    sizes: "100vw",
+  });
+  const imageElement = new window.Image();
+  if (props.srcSet) imageElement.srcset = props.srcSet;
+  if (props.sizes) imageElement.sizes = props.sizes;
+  imageElement.src = props.src;
 }
 
 function MediaImage({
@@ -312,7 +326,34 @@ export function ProductMedia({
 }) {
   const hasColorSlot = !!mobileSlot || !!desktopSlot;
   const isEmpty = media.length === 0 && !hasColorSlot;
-  const mediaItems: MediaSlot[] = isEmpty ? [{ type: "placeholder" }] : media;
+  const mediaItems = useMemo<MediaSlot[]>(
+    () => (isEmpty ? [{ type: "placeholder" }] : media),
+    [isEmpty, media],
+  );
+  const mediaKeys = mediaItems.map(mediaKey).join(",");
+  const prefetchItems = useRef(mediaItems);
+
+  useEffect(() => {
+    prefetchItems.current = mediaItems;
+  }, [mediaItems]);
+
+  useEffect(() => {
+    if (!mediaKeys) return;
+    const images = prefetchItems.current
+      .filter((item): item is Extract<MediaItem, { type: "image" }> => item.type === "image")
+      .slice(0, 2);
+    if (images.length === 0) return;
+    const run = () => {
+      for (const item of images) prefetchMediaImage(item.image);
+    };
+    const scheduled = window.requestIdleCallback
+      ? window.requestIdleCallback(run, { timeout: 1500 })
+      : window.setTimeout(run, 900);
+    return () => {
+      if (window.cancelIdleCallback) window.cancelIdleCallback(scheduled);
+      else window.clearTimeout(scheduled);
+    };
+  }, [mediaKeys]);
 
   return (
     <div className={className}>

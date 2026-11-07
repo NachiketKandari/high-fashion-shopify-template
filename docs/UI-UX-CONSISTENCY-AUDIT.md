@@ -121,3 +121,26 @@ Positive checks from the same pass:
    2:3 is an Eve-owned presentation decision, not a storefront fix.
 7. **Hero tokenisation.** The mobile hero uses `100svh - 91px`; replacing 91 with the announcement
    and header tokens is safe but changes a hardcoded layout dependency.
+
+## Follow-up pass — 8 November 2026
+
+The PDP, size guide and cart were compared again against the live reference after the first pass.
+The remaining differences were implementation defects, not open decisions, and are now fixed:
+
+- **PDP content type.** Description and static tab copy were 14/21; the reference uses 12/18 at 300
+  weight. The tabs now inherit `type-body-sm`, and the PDP title uses the reference's normal
+  tracking instead of `type-display`'s 0.05em.
+- **Colour chips.** PDP swatches were 10 × 10 px and could render transparent when Shopify had no
+  swatch value. They are now 14 × 14 px boxes with the reference hairline, and
+  `getColorSwatch()` supplies the fallback for named colours and combined/reversible colourways.
+- **Size guide.** The drawer always opened Tops and used label-sized headings. It now opens the
+  product's category (Tops, Dresses, Bottoms, Outerwear), uses the reference heading hierarchy and
+  table density, and adds the CM/IN toggle and swipe hint.
+- **PDP image loading.** The first two gallery images are prefetched during idle, and non-LCP
+  images are low-priority/async, so the first swipe no longer waits for a cold image optimizer.
+- **Add to cart and subtotal.** The optimistic cart line already had a price, but the global
+  pending flag replaced both the line price and subtotal with `Updating…` until Shopify responded.
+  The line price now renders immediately, the subtotal is summed optimistically from line costs,
+  and the checkout spinner only appears while a cart mutation is actually in flight.
+- **Quantity subtotal.** When a line quantity is greater than one, the cart shows the unit price
+  and the line total, matching the reference and making the subtotal change legible.

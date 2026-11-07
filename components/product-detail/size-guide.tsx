@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { SizeGuide as SizeGuideContent } from "@/components/content/size-guide";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
-export function SizeGuide() {
+export function SizeGuide({ category }: { category?: string }) {
   return (
     <Sheet>
       <SheetTrigger
@@ -24,7 +24,7 @@ export function SizeGuide() {
         side="right"
       >
         <div className="flex h-14 shrink-0 items-center justify-between px-(--gutter)">
-          <SheetTitle>Size guide</SheetTitle>
+          <SheetTitle className="type-h2">Size guide</SheetTitle>
           <SheetClose
             aria-label="Close size guide"
             className="focus-ring flex size-9 items-center justify-center"
@@ -34,7 +34,7 @@ export function SizeGuide() {
           </SheetClose>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto px-(--gutter) pb-10">
-          <SizeGuideContent />
+          <SizeGuideContent defaultCategory={category} key={category ?? "default"} />
         </div>
       </SheetContent>
     </Sheet>

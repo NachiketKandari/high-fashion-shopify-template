@@ -15,16 +15,15 @@ export function useCheckout() {
   const agentPending = useAgentCartPending();
   const cartState = useCart((state) => state);
   const { data: cart, loading, pending, revalidating } = cartState;
-  const isUpdatingCart = Boolean(
+  const isCartMutating = Boolean(
     agentPending ||
-    loading ||
-    revalidating ||
     pending.attributes ||
     pending.cost ||
     pending.discountCodes.size ||
     pending.lines.size ||
     pending.note,
   );
+  const isUpdatingCart = Boolean(isCartMutating || loading || revalidating);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const checkoutErrorId = useId();
@@ -87,6 +86,7 @@ export function useCheckout() {
     checkoutError,
     checkoutErrorId,
     handleCheckout,
+    isCartMutating,
     isCheckingOut,
     isCheckoutDisabled,
     isUpdatingCart,
