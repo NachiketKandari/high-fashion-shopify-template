@@ -13,7 +13,11 @@ import { Container } from "@/components/ui/container";
 import { Page } from "@/components/ui/page";
 import { shopConfig } from "@/lib/config";
 import { defaultSelectedOptions, parseSelectedOptions, toSelectedOptionList } from "@/lib/product";
-import { getProduct, getSearchIndexProducts } from "@/lib/product/server";
+import {
+  getProduct,
+  getProductRecommendations,
+  getSearchIndexProducts,
+} from "@/lib/product/server";
 import { type SelectedOptions } from "@/lib/product/types";
 import type { ProductVariant } from "@/lib/product/types";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
@@ -90,6 +94,10 @@ async function ProductPageContent({
 }: Pick<PageProps<"/products/[handle]">, "params" | "searchParams">) {
   const { handle } = await params;
   if (handle === PLACEHOLDER_HANDLE) notFound();
+  // Recommendations depend only on the handle, so start them beside the product read instead of after it.
+  const relatedProductsPromise = shopConfig.pdp.relatedProducts.isEnabled
+    ? getProductRecommendations({ handle, intent: "RELATED" })
+    : null;
   const product = await getProduct({
     handle,
   });
@@ -146,10 +154,10 @@ async function ProductPageContent({
         selectedOptionsPromise={selectedOptionsPromise}
         variantPromise={variantPromise}
       />
-      {shopConfig.pdp.relatedProducts.isEnabled ? (
+      {relatedProductsPromise ? (
         <Container>
           <div className="py-16 desktop:py-20">
-            <RelatedProductsSection handle={handle} limit={4} />
+            <RelatedProductsSection limit={4} productsPromise={relatedProductsPromise} />
           </div>
         </Container>
       ) : null}

@@ -68,10 +68,11 @@ export function ProductCard({
             <ImagePlaceholder className="size-full" />
           )}
           {product.hoverImage ? (
+            // Display-gated so the browser skips the lazy fetch until hover/focus; touch devices never download it.
             <Image
               alt=""
               aria-hidden="true"
-              className="object-cover opacity-0 transition-opacity duration-(--motion-long) ease-(--ease-standard) group-focus-within/card:opacity-100 group-hover/card:opacity-100"
+              className="hidden object-cover group-focus-within/card:block group-hover/card:block"
               fill
               loading="lazy"
               sizes="100vw"

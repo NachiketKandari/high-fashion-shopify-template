@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 
 import { HomeProductRail } from "@/components/product/home-product-rail";
 import { Link } from "@/components/ui/link";
@@ -33,6 +33,40 @@ const LINK_TILES = [
   { href: "/pages/about-us", image: "/reference/tile-our-world.jpg", label: "Our World" },
 ];
 
+// Art direction: <picture> fetches only the viewport's campaign image, so mobile never downloads the desktop hero.
+function CampaignImage() {
+  const {
+    props: { srcSet: desktopSrcSet },
+  } = getImageProps({
+    alt: `${shopConfig.site.name} campaign`,
+    fill: true,
+    sizes: "100vw",
+    src: "/reference/hero-desktop.jpg",
+  });
+  const {
+    props: { srcSet: mobileSrcSet, ...mobileProps },
+  } = getImageProps({
+    alt: `${shopConfig.site.name} campaign`,
+    fill: true,
+    loading: "eager",
+    sizes: "100vw",
+    src: "/reference/hero-mobile.jpg",
+  });
+
+  return (
+    <picture>
+      <source media="(min-width: 1100px)" srcSet={desktopSrcSet} />
+      <img
+        {...mobileProps}
+        className="object-cover"
+        decoding="async"
+        fetchPriority="high"
+        srcSet={mobileSrcSet}
+      />
+    </picture>
+  );
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Everyday Luxury Clothing";
   const description = "Explore featured clothing, curated collections, and seasonal campaigns.";
@@ -57,22 +91,7 @@ export default function HomePage() {
       <section aria-label="Campaign">
         <Link className="block" href="/collections/chapter-x">
           <div className="relative h-[calc(100svh-91px)] overflow-hidden desktop:aspect-[1440/784] desktop:h-auto">
-            <Image
-              alt={`${shopConfig.site.name} campaign`}
-              className="object-cover desktop:hidden"
-              fill
-              loading="eager"
-              sizes="100vw"
-              src="/reference/hero-mobile.jpg"
-            />
-            <Image
-              alt={`${shopConfig.site.name} campaign`}
-              className="hidden object-cover desktop:block"
-              fill
-              priority
-              sizes="100vw"
-              src="/reference/hero-desktop.jpg"
-            />
+            <CampaignImage />
           </div>
         </Link>
       </section>
