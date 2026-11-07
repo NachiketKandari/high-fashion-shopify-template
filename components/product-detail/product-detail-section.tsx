@@ -369,7 +369,7 @@ function GiftCardPurchaseFormFallback() {
         </div>
       </div>
       <div className="type-control flex h-9 w-full cursor-not-allowed items-center justify-center bg-ink text-inverse opacity-50">
-        Add to Cart
+        Add to cart
       </div>
     </div>
   );
@@ -416,7 +416,7 @@ function BuyButtonsFallback({
       <div className="flex flex-wrap gap-2.5">
         {shopConfig.pdp.quantityPicker.isEnabled ? <QuantityPickerFallback /> : null}
         <div className="type-control flex h-9 min-w-0 flex-1 items-center justify-center border border-ink text-ink">
-          {showLabel ? (allInStock ? "Add to Cart" : "Out of Stock") : null}
+          {showLabel ? (allInStock ? "Add to cart" : "Out of stock") : null}
         </div>
       </div>
       {shopConfig.pdp.buyWithShop.isEnabled && !selectedPlan && !variant?.requiresSellingPlan ? (

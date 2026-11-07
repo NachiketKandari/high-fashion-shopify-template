@@ -139,7 +139,7 @@ export function GiftCardPurchaseForm() {
           "group-invalid:cursor-not-allowed group-invalid:opacity-50",
         )}
       >
-        <span>{pending ? "Adding…" : "Add to Cart"}</span>
+        <span>{pending ? "Adding…" : "Add to cart"}</span>
       </Button>
     </form>
   );

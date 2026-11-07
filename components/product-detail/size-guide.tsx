@@ -27,7 +27,7 @@ export function SizeGuide() {
           <SheetTitle>Size guide</SheetTitle>
           <SheetClose
             aria-label="Close size guide"
-            className="flex size-9 items-center justify-center"
+            className="focus-ring flex size-9 items-center justify-center"
             type="button"
           >
             <X className="size-4" strokeWidth={1.25} />

@@ -91,7 +91,7 @@ function BrowseResultsGrid({ results }: BrowseResultsGridProps) {
           key={product.id}
           loading={index < 4 ? "eager" : "lazy"}
           product={product}
-          outOfStockText="Out of Stock"
+          outOfStockText="Out of stock"
         />
       ))}
     </InfiniteProductGrid>
