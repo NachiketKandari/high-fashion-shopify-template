@@ -11,7 +11,7 @@ const SORT_LABELS: Record<SortValue, string> = {
   "best-selling": "Best Selling",
   "created-ascending": "Date: Old to New",
   "created-descending": "Date: New to Old",
-  manual: "Best Matches",
+  manual: "Featured",
   "price-ascending": "Price: Low to High",
   "price-descending": "Price: High to Low",
   "title-ascending": "Name: A-Z",

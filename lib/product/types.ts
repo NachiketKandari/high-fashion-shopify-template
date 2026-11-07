@@ -1,6 +1,6 @@
 import type { ProductInput } from "@shopify/hydrogen";
 
-import type { Image, Video } from "@/lib/media/types";
+import type { Image, MediaItem } from "@/lib/media/types";
 import type { Money } from "@/lib/money/types";
 import type { PageInfo } from "@/lib/pagination/types";
 import type { SEO } from "@/lib/seo/types";
@@ -113,6 +113,7 @@ export interface ProductDetails extends ProductCard {
   encodedVariantExistence?: string;
   hasUniformPricing: boolean;
   images: Image[];
+  media: MediaItem[];
   options: ProductOption[];
   priceRange: {
     maxVariantPrice: Money;
@@ -124,7 +125,6 @@ export interface ProductDetails extends ProductCard {
   variants?: ProductVariant[];
   variantsComplete: boolean;
   variantsCount: number;
-  videos: Video[];
 }
 
 export interface ProductVariant {

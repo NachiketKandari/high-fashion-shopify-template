@@ -11,3 +11,5 @@ export interface Video {
   url: string;
   width: number;
 }
+
+export type MediaItem = { image: Image; type: "image" } | { type: "video"; video: Video };

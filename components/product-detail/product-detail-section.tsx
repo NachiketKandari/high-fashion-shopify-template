@@ -30,7 +30,7 @@ import { shopConfig } from "@/lib/config";
 import {
   getProductPurchaseOptions,
   getSelectedColorImage,
-  getSharedImages,
+  getSharedMedia,
   hasColorImagePartitioning,
   toProductFormInput,
   toStaticOptionGroups,
@@ -89,15 +89,12 @@ function ProductMediaArea({
   selectedOptionsPromise: Promise<SelectedOptions>;
 }) {
   if (!hasColorImagePartitioning(product.options)) {
-    return (
-      <ProductMedia otherImages={product.images} videos={product.videos} title={product.title} />
-    );
+    return <ProductMedia media={product.media} title={product.title} />;
   }
 
   return (
     <ProductMedia
-      otherImages={getSharedImages(product.images, product.options)}
-      videos={product.videos}
+      media={getSharedMedia(product.media, product.options)}
       title={product.title}
       desktopSlot={
         // Color image is the LCP slot; a pulsing skeleton flashes harder than an empty image canvas.

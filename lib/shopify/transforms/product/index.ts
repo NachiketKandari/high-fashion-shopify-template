@@ -1,6 +1,6 @@
 import { flattenConnection } from "@shopify/hydrogen";
 
-import type { Image, Video } from "@/lib/media/types";
+import type { Image, MediaItem } from "@/lib/media/types";
 import type {
   Category,
   OptionValue,
@@ -57,30 +57,36 @@ export function transformImage(image: ShopifyImage | null | undefined): Image | 
 
 function extractMediaFromProduct(product: ShopifyProduct): {
   images: Image[];
-  videos: Video[];
+  media: MediaItem[];
 } {
   const images: Image[] = [];
-  const videos: Video[] = [];
+  const media: MediaItem[] = [];
 
   for (const node of flattenConnection<ShopifyMediaNode>(product.media)) {
     if (node.__typename === "MediaImage") {
       const img = transformImage(node.image);
-      if (img) images.push(img);
+      if (img) {
+        images.push(img);
+        media.push({ image: img, type: "image" });
+      }
     } else if (node.__typename === "Video") {
       const mp4Sources = node.sources.filter((s) => s.mimeType.startsWith("video/mp4"));
       const bestSource = mp4Sources.sort((a, b) => b.width - a.width)[0] ?? node.sources[0];
       if (bestSource) {
-        videos.push({
-          url: bestSource.url,
-          previewImage: transformImage(node.previewImage),
-          width: bestSource.width,
-          height: bestSource.height,
+        media.push({
+          type: "video",
+          video: {
+            url: bestSource.url,
+            previewImage: transformImage(node.previewImage),
+            width: bestSource.width,
+            height: bestSource.height,
+          },
         });
       }
     }
   }
 
-  return { images, videos };
+  return { images, media };
 }
 
 function transformCategory(category: ShopifyCategory | null | undefined): Category | null {
@@ -191,13 +197,18 @@ function transformProductCard(
     (value) => value.name.toLowerCase() === selectedOptionValue?.toLowerCase(),
   )?.firstSelectableVariant;
   const cardVariant = matchedVariant ?? defaultVariant;
+  const featuredImage = matchedVariant?.image ?? product.featuredImage;
+  // Shopify appends CDN rendition parameters; strip them so the hover image never repeats the featured one.
+  const featuredUrl = featuredImage?.url.split("?")[0];
 
   return {
     id: product.id,
     handle: product.handle,
     title: product.title,
-    featuredImage: transformImage(matchedVariant?.image ?? product.featuredImage),
-    hoverImage: transformImage(product.images?.nodes?.[1]),
+    featuredImage: transformImage(featuredImage),
+    hoverImage: transformImage(
+      product.images?.nodes?.find((image) => image.url.split("?")[0] !== featuredUrl),
+    ),
     options: product.options?.map((option) => ({
       name: option.name,
       values: option.optionValues.map((value) => ({

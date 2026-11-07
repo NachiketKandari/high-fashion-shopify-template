@@ -24,7 +24,8 @@ export const PRODUCT_FRAGMENT = gql(
         width
         height
     }
-    media(first: 10) {
+    # Shopify allows 250 media per product; 50 covers the catalog without making every PDP payload unbounded.
+    media(first: 50) {
       edges {
         node {
           __typename

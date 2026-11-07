@@ -1,6 +1,6 @@
 import { buildProductSelectionSearchParams, getSelectedProductOptions } from "@shopify/hydrogen";
 
-import type { Image } from "@/lib/media/types";
+import type { Image, MediaItem } from "@/lib/media/types";
 import type {
   OptionValueSwatch,
   ProductDetails,
@@ -204,15 +204,15 @@ export function hasColorImagePartitioning(options: ProductOption[]): boolean {
   return color.values.filter((value) => value.image).length > 1;
 }
 
-export function getSharedImages(images: Image[], options: ProductOption[]): Image[] {
+export function getSharedMedia(media: MediaItem[], options: ProductOption[]): MediaItem[] {
   const color = findColorOption(options);
-  if (!color) return images;
+  if (!color) return media;
   const colorUrls = new Set(
     color.values.map((value) => value.image).filter((url): url is string => Boolean(url)),
   );
-  if (colorUrls.size === 0) return images;
-  const shared = images.filter((image) => !colorUrls.has(image.url));
-  return shared.length > 0 ? shared : images;
+  if (colorUrls.size === 0) return media;
+  const shared = media.filter((item) => item.type !== "image" || !colorUrls.has(item.image.url));
+  return shared.length > 0 ? shared : media;
 }
 
 export function getSelectedColorImage(
