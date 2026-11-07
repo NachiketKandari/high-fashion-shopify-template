@@ -17,15 +17,25 @@ export function CartPageContent() {
 
   if (cart.totalQuantity === 0) {
     return (
-      <div className="flex flex-col items-start justify-center gap-5 py-10">
-        <h2 className="type-h3">Your shopping cart is empty</h2>
-        <Link
-          href="/collections/all"
-          className="type-control focus-ring inline-flex h-9 cursor-pointer items-center justify-center border border-ink px-4 text-ink transition-colors hover:bg-ink hover:text-inverse"
-        >
-          Explore collections
-        </Link>
-      </div>
+      <Page>
+        <Container>
+          <div className="grid gap-6">
+            <h1 className="type-h2">Shopping cart</h1>
+            <div className="grid gap-4 py-6">
+              <h2 className="type-h3">Your shopping cart is empty</h2>
+              <p className="type-body-sm max-w-[40ch] text-ink-muted">
+                Add pieces from a collection and find them here.
+              </p>
+              <Link
+                href="/collections/all"
+                className="type-control focus-ring mt-2 inline-flex h-9 w-fit cursor-pointer items-center justify-center border border-ink px-4 text-ink transition-colors hover:bg-ink hover:text-inverse"
+              >
+                Explore collections
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </Page>
     );
   }
 
