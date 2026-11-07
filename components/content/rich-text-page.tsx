@@ -12,13 +12,17 @@ export function RichTextPage({ body, title }: RichTextPageProps) {
   return (
     <Page>
       <Container className="max-w-2xl">
-        <Prose>
-          <h1>{title}</h1>
-          <div
-            // oxlint-disable-next-line react/no-danger -- Page and policy bodies pass through sanitizeShopifyHtml when fetched.
-            dangerouslySetInnerHTML={{ __html: body }}
-          />
-        </Prose>
+        <div className="grid gap-10">
+          <header className="grid gap-3 border-b border-rule pb-6">
+            <h1 className="type-display">{title}</h1>
+          </header>
+          <Prose>
+            <div
+              // oxlint-disable-next-line react/no-danger -- Page and policy bodies pass through sanitizeShopifyHtml when fetched.
+              dangerouslySetInnerHTML={{ __html: body }}
+            />
+          </Prose>
+        </div>
       </Container>
     </Page>
   );
