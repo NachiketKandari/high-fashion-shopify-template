@@ -8,7 +8,7 @@ import {
   serializeCollectionParams,
 } from "@shopify/hydrogen";
 import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
-import { CheckIcon, LoaderCircleIcon, XIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, LoaderCircleIcon, XIcon } from "lucide-react";
 import {
   type KeyboardEvent,
   type MouseEventHandler,
@@ -261,12 +261,10 @@ function FilterSection({ children, title }: FilterSectionProps) {
     <details className="group border-t border-rule py-4" open>
       <summary className="type-h4 flex min-h-9 cursor-pointer list-none items-center justify-between [&::-webkit-details-marker]:hidden">
         {title}
-        <span
+        <ChevronDownIcon
           aria-hidden="true"
-          className="text-base leading-none font-light transition-transform group-open:rotate-45"
-        >
-          +
-        </span>
+          className="size-4 shrink-0 transition-transform duration-200 group-open:rotate-180"
+        />
       </summary>
       <div className="mt-3">{children}</div>
     </details>

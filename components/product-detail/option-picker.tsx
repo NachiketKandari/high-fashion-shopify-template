@@ -20,9 +20,9 @@ export function OptionPicker({
   ...props
 }: OptionPickerProps) {
   return (
-    <div className={cn("flex items-center gap-4", className)} {...props}>
+    <div className={cn("flex items-center gap-2", className)} {...props}>
       <span className="type-h4 w-16 shrink-0">{option.name}</span>
-      <div className="flex flex-1 flex-wrap items-center gap-x-3 gap-y-1">
+      <div className="flex flex-1 flex-wrap items-center gap-x-2 gap-y-1">
         {option.values.map((value) => {
           const classes = cn(
             "type-body-sm inline-flex min-h-9 min-w-9 items-center justify-center transition-colors",
