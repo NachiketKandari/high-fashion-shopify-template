@@ -56,12 +56,12 @@ export function BuyButtons({
     variants: [{ id: selectedVariant.id, quantity }],
   });
   const getButtonText = () => {
-    if (pending) return "Adding to Cart...";
-    if (isSelectionUnresolved) return "Add to Cart";
+    if (pending) return "Adding to cart…";
+    if (isSelectionUnresolved) return "Add to cart";
     if (requiresBundleConfiguration) return "Choose bundle items";
     if (missingRequiredPlan) return "Subscription unavailable";
-    if (isOutOfStock) return "Out of Stock";
-    return "Add to Cart";
+    if (isOutOfStock) return "Out of stock";
+    return "Add to cart";
   };
   return (
     <form

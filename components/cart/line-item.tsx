@@ -79,7 +79,7 @@ function CartLineItem({ item }: CartLineItemProps) {
     ? merchandise.selectedOptions
         .filter((option) => option.value !== "Default Title")
         .map((option) => option.value)
-        .join(" / ")
+        .join(" · ")
     : "";
   const lineName = variantLabel ? `${title}, ${variantLabel}` : title;
   const href = merchandise?.product.handle ? `/products/${merchandise.product.handle}` : undefined;

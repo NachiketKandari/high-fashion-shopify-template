@@ -69,7 +69,7 @@ export function ProductTabs({ descriptionHtml }: { descriptionHtml: string }) {
         >
           {tab === "Description" && descriptionHtml ? (
             <div
-              className="prose prose-sm max-w-none prose-p:my-0 prose-p:text-body prose-p:font-light prose-p:tracking-[0.05em] prose-ul:my-0 prose-li:my-0"
+              className="prose prose-sm max-w-none prose-p:my-0 prose-p:text-body prose-p:font-light prose-p:tracking-[0.05em] prose-li:my-0 prose-p:text-ink-muted prose-li:text-ink-muted prose-ul:my-0"
               // oxlint-disable-next-line react/no-danger -- Product descriptions pass through sanitizeShopifyHtml when fetched.
               dangerouslySetInnerHTML={{ __html: descriptionHtml }}
             />

@@ -63,7 +63,7 @@ export function LightboxTrigger({ image, children }: { image: ImageType; childre
     <button
       type="button"
       onClick={() => open?.(image)}
-      className="relative h-full w-full cursor-zoom-in"
+      className="focus-ring relative h-full w-full cursor-zoom-in"
     >
       {children}
     </button>

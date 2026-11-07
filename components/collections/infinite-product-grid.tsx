@@ -89,7 +89,7 @@ export function InfiniteProductGrid({
       <div className="grid grid-cols-2 gap-x-(--grid-gap) gap-y-(--grid-row-gap) tablet:grid-cols-3 desktop:grid-cols-4">
         {children}
         {additionalProducts.map((product) => (
-          <ProductCard key={product.id} product={product} outOfStockText="Out of Stock" />
+          <ProductCard key={product.id} product={product} outOfStockText="Out of stock" />
         ))}
       </div>
 
