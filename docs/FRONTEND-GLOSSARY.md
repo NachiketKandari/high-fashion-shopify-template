@@ -1,0 +1,191 @@
+# Frontend and UI glossary
+
+This is a plain-English companion to [`FRONTEND-ARCHITECTURE.md`](./FRONTEND-ARCHITECTURE.md) for
+readers who are new to frontend and UI/UX work. It lists the terms that appear in this repository,
+explains each one, and points to the file where the term becomes real code. It describes the
+repository as it exists on 8 November 2026.
+
+Each entry follows the same shape: **what it means** in general web development, then **here** for
+where it is implemented.
+
+## 1. Learn the vocabulary first
+
+Work through these in order. All are free unless noted.
+
+| Resource                                                                              | What it is good for                                                                                                                      |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| [MDN Web Docs Glossary](https://developer.mozilla.org/en-US/docs/Glossary)            | A literal dictionary of frontend terms. When a word is unfamiliar, look it up here first.                                                |
+| [web.dev Learn](https://web.dev/learn) by Google                                      | Structured free courses: _Learn HTML_, _Learn CSS_, _Learn Accessibility_, _Learn Performance_, _Learn Design_. The best first course.   |
+| [The MDN Curriculum](https://developer.mozilla.org/en-US/docs/Web/Next)               | MDN's guided beginner path through HTML, CSS, JavaScript and accessibility.                                                              |
+| [patterns.dev](https://www.patterns.dev/)                                             | Free online book on UI and React design patterns: skeletons, optimistic UI, modals, lazy loading — the vocabulary this document uses.    |
+| [shadcn/ui](https://ui.shadcn.com/)                                                   | The component library this template's primitives are built on. Its docs _are_ a visual glossary: drawer, sheet, dialog, tabs, accordion. |
+| [Tailwind CSS docs](https://tailwindcss.com/docs)                                     | The styling tool this template uses. The utility reference teaches layout, spacing and responsive prefixes.                              |
+| [Nielsen Norman Group](https://www.nngroup.com/articles/)                             | UX research articles — reads, card sorts, usability heuristics — the "why" behind the UI patterns.                                       |
+| [UI Patterns](https://ui-patterns.com/patterns)                                       | A browsable catalogue of named interface patterns.                                                                                       |
+| [Refactoring UI](https://www.refactoringui.com/) (book, paid)                         | The most practical visual-design book for developers: spacing, type hierarchy, colour, elevation.                                        |
+| [Josh Comeau — CSS for JavaScript Developers](https://css-for-js.dev/) (course, paid) | The best CSS deep-dive for people who already write some code.                                                                           |
+| YouTube: **Fireship**, **Web Dev Simplified**, **freeCodeCamp.org**                   | Short conceptual videos (Fireship) and full walkthroughs (Web Dev Simplified, freeCodeCamp) of every term in this list.                  |
+
+A practical loop while reading this repository: see an unfamiliar word → check the glossary entry
+below → look at the named file → search the term on MDN or shadcn/ui.
+
+## 2. The raw materials
+
+| Term                        | What it means                                                                                                                        | Here                                                                                |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| **HTML**                    | The markup language that gives a page its structure: headings, paragraphs, buttons, links.                                           | Every `.tsx` file renders JSX — React's syntax for HTML.                            |
+| **CSS**                     | The language that styles HTML: colour, spacing, size, layout, animation.                                                             | Mostly written as Tailwind utility classes; tokens and resets in `app/globals.css`. |
+| **JavaScript / TypeScript** | JavaScript is the browser's programming language; TypeScript adds compile-time types. The app is TypeScript throughout.              | All `ts`/`tsx` files.                                                               |
+| **React**                   | A library for building UI out of components — reusable functions that return markup.                                                 | `components/**`, `app/**`.                                                          |
+| **JSX / .tsx**              | The file format that mixes components with markup. `.tsx` means the file is TypeScript.                                              | Every component file.                                                               |
+| **Tailwind CSS**            | A styling approach where you add small utility classes (`text-lg`, `px-4`) directly in markup instead of writing separate CSS files. | All components; always alongside `cn()` for conditional classes.                    |
+| **Base UI / shadcn**        | Libraries that ship the unstyled, accessible logic for hard components (dialogs, popovers, selects) so apps style them themselves.   | `components/ui/**`; Base UI under the hood.                                         |
+| **Vercel / Next.js**        | Next.js is the React framework that handles routing, rendering and caching; Vercel is the platform it deploys to.                    | `app/`, `next.config.ts`, `proxy.ts`.                                               |
+
+## 3. Navigation, layout and chrome (the fixed furniture)
+
+You will see the first ten terms named inside this document and in QA conversations.
+
+| Term                 | What it means                                                                                                                               | Here                                                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **Header / navbar**  | The fixed furniture at the top of every page: wordmark, navigation, utility icons.                                                          | `components/nav/index.tsx`, `header.tsx`                                                    |
+| **Hamburger menu**   | The three-line icon that opens the main menu on small screens; inside, it is a slide-in panel.                                              | `components/nav/mobile-menu.tsx`                                                            |
+| **Mega menu**        | A large dropdown that opens under a desktop nav item and shows columns of links plus images, not just one list.                             | `components/nav/desktop-nav.tsx`, `menu-link.tsx`                                           |
+| **Dropdown**         | Any small menu that opens on click or hover under a trigger.                                                                                | Desktop nav triggers; `components/ui/select.tsx` for form selects.                          |
+| **Drawer**           | A panel that slides in from an edge (right for cart, left for filters) over an overlay while the page dims.                                 | `components/cart/overlay.tsx`, `components/collections/filters-client.tsx`                  |
+| **Sheet**            | shadcn's name for a drawer built on the Dialog primitive ("side panel"). All drawers here use the Sheet primitive.                          | `components/ui/sheet.tsx`                                                                   |
+| **Dialog / modal**   | Content that blocks the page until dismissed. A **modal** is the interaction; a **dialog** is the HTML element (`<dialog>`) or ARIA role.   | `components/ui/dialog.tsx`; the search modal is a dialog: `components/nav/search-modal.tsx` |
+| **Accordion**        | A list of items that expand one at a time. Here it uses the native HTML `<details>`/`<summary>` elements — no JavaScript needed.            | `components/collections/filters-client.tsx`, `components/product-detail/size-guide.tsx`     |
+| **Tabs**             | Buttons that switch between panels within one viewport, like a PDP's Description / Fabric / Fit rows. Uses `role="tablist"` ARIA.           | `components/product-detail/product-tabs.tsx`                                                |
+| **Announcement bar** | The thin strip above the main header for promotions and shipping notes.                                                                     | `components/nav/announcement.tsx`                                                           |
+| **Utility icons**    | Header icons for search, account and cart; the cart icon carries a live **badge** count.                                                    | `components/nav/cart.tsx`, `account.tsx`                                                    |
+| **Sticky header**    | The header that stays on screen while scrolling; here it collapses to a compact height after a scroll threshold.                            | `components/nav/header.tsx`; the scroll listener is a client component effect               |
+| **Action bar**       | Fixed floating controls (the agent button) pinned to a screen edge.                                                                         | `components/action-bar/index.tsx`                                                           |
+| **Footer**           | The page-bottom furniture: link columns, payment marks, newsletter, legal.                                                                  | `components/footer/index.tsx`                                                               |
+| **Container**        | The component that centres content and applies the page's horizontal gutters and max width.                                                 | `components/ui/container.tsx`                                                               |
+| **Sections**         | A wrapper that stacks page sections with one consistent vertical gap, instead of each child carrying its own margins.                       | `components/ui/sections.tsx`                                                                |
+| **Page**             | The template's page-level scaffold: top padding plus a vertical flex column.                                                                | `components/ui/page.tsx`                                                                    |
+| **Breadcrumb**       | The "Home / Women / Dresses" trail showing where you are in the hierarchy.                                                                  | `components/schema/` emits breadcrumbs as JSON-LD for search engines                        |
+| **Navigation model** | Where the list of navigation links comes from. Here it is **code-owned** — hardcoded TypeScript — not read from Shopify's navigation admin. | `lib/nav/index.ts`                                                                          |
+
+## 4. Effects and interaction patterns
+
+The "named effects" the user asked about. Each is a reusable idea, not bespoke code.
+
+| Term                             | What it means                                                                                                                                               | Here                                                                                     |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Hero**                         | The full-width image or campaign block at the top of the homepage.                                                                                          | `app/page.tsx`                                                                           |
+| **Product card**                 | The repeated tile in lists and grids: media, title, price, colour swatches, hover affordances.                                                              | `components/product-card/product-card.tsx`                                               |
+| **Card grid**                    | Repetitive tiles laid out in columns; here a responsive grid that goes up to four columns at the desktop breakpoint.                                        | `components/collections/infinite-product-grid.tsx`                                       |
+| **Rail / scroll rail**           | A horizontal row of cards that scrolls sideways — arrows and keyboard here, no drag.                                                                        | `components/product/product-rail.tsx`, `home-product-rail.tsx`                           |
+| **Carousel / snap carousel**     | A swipeable row; "snap" means each scroll position settles aligned to a card edge (CSS `scroll-snap`).                                                      | The PDP's mobile gallery: `components/product-detail/product-media.tsx`                  |
+| **Lightbox**                     | Clicking an image opens it full-screen over a dimmed page with a close control.                                                                             | `components/product-detail/lightbox.tsx`                                                 |
+| **Gallery**                      | The set of product images on a PDP. Here: a stacked, scrollable column on desktop; a snap carousel on mobile.                                               | `components/product-detail/product-media.tsx`                                            |
+| **Aspect ratio**                 | The width-to-height shape an image reserves so layout does not jump when it loads (here 2:3 and 3:4 product media).                                         | `components/product-card/product-card.tsx`, `product-media.tsx`                          |
+| **Hover state**                  | How an element looks while the pointer is over it — here subtle opacity shifts, underline on nav links.                                                     | Throughout; nav triggers in `menu-link.tsx`                                              |
+| **Transition**                   | A CSS effect animating a property change (colour, size) over a duration with an easing curve.                                                               | Motion tokens in `app/globals.css`; durations in `--duration-*`, curves in `--ease-*`    |
+| **Easing**                       | The acceleration curve of an animation (ease-out, linear). Standard curves are shared tokens.                                                               | `app/globals.css` `--ease-standard`                                                      |
+| **Keyframe animation**           | A multi-step animation defined once and played on an element (fade in, slide up).                                                                           | `app/globals.css` keyframes for drawers and popups                                       |
+| **Reduced motion**               | Respecting the OS "reduce motion" accessibility setting by disabling non-essential animation (`prefers-reduced-motion`).                                    | Enforcement and tests: `docs/DESIGN-SYSTEM-ENFORCEMENT.md`                               |
+| **Skeleton**                     | Grey placeholder blocks shown while real content loads, matching its final shape.                                                                           | `components/ui/skeleton.tsx`; per-route skeletons beside each page                       |
+| **Infinite scroll / Load more**  | Fetching the next page of results as the shopper reaches the bottom, appended below. Collections also ship a "Load more" affordance.                        | `components/collections/infinite-product-grid.tsx`                                       |
+| **Pagination**                   | Numbered pages instead of infinite scroll. Not used in grids; the Shopify sitemap and blog use cursor pagination under the hood.                            | `lib/pagination/types.ts`                                                                |
+| **Quick shop**                   | Hover/click a product card to buy a size from a small popover instead of visiting the PDP.                                                                  | `components/product-card/quick-shop.tsx`                                                 |
+| **Wishlist / wishlist button**   | A heart toggle that saves a product for later. Here it persists in the browser's `localStorage`, not the account.                                           | `components/product-card/wishlist-button.tsx`, `components/wishlist/content.tsx`         |
+| **Recently viewed**              | A strip of the shopper's last-seen products, persisted per-browser.                                                                                         | `components/product-detail/recently-viewed.tsx`                                          |
+| **Optimistic UI**                | Updating the screen immediately on click (cart line appears instantly) while the server confirms in the background; if the server fails, the UI rolls back. | Cart mutations through `lib/cart/client.ts`                                              |
+| **Debounce / predictive search** | Search suggestions that update as you type, with a small delay so only settled keystrokes trigger requests.                                                 | `components/nav/search-modal.tsx`, Hydrogen's predictive search                          |
+| **Free-shipping progress bar**   | The cart drawer bar that fills as the subtotal approaches the free-shipping threshold.                                                                      | `components/cart/overlay.tsx`                                                            |
+| **Quantity stepper**             | The − / + pair that increments quantity.                                                                                                                    | `components/product-detail/product-form.tsx`; shared via `components/ui/input-group.tsx` |
+| **Swatch**                       | The small round colour sample that selects a colour variant. `rounded-full` circles in this template.                                                       | `components/ui/swatch.tsx`, `components/product-detail/color-picker.tsx`                 |
+| **Option picker**                | The controls that choose size and colour, updating the URL so the selection is shareable and bookmarkable.                                                  | `components/product-detail/option-picker.tsx`                                            |
+| **Sold-out state**               | How an unavailable size or product is presented — links with a line-through here, not a separate disabled control (a known parity gap).                     | `components/product-detail/option-picker.tsx`                                            |
+| **Payment marks**                | The "Accepted" card brand logos in the footer. Here six inline SVG brand marks.                                                                             | `components/footer/payment-marks.tsx`                                                    |
+| **Currency selector**            | The switcher that re-renders prices in another currency. Display-only here: totals and checkout stay USD.                                                   | `components/currency/selector.tsx`, `provider.tsx`; rates in `lib/money/display.ts`      |
+| **Copy / OG image**              | "Open Graph" metadata — the preview title, description and image other apps show when a URL is shared.                                                      | `components/product-detail/open-graph.tsx`, `lib/seo`                                    |
+| **Chat widget**                  | An embedded assistant panel; the Eve agent button opens one.                                                                                                | `components/agent/**`, `components/action-bar/index.tsx`                                 |
+
+## 5. Commerce page vocabulary
+
+Names for the pages themselves — these come up in tickets and designs.
+
+| Term                             | What it means                                                                                                                             | Here                                                                                          |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| **PLP** — product listing page   | A catalog listing: home, collections, search results.                                                                                     | `app/collections/**`, `app/search/page.tsx`                                                   |
+| **PDP** — product detail page    | One product's page.                                                                                                                       | `app/products/[handle]/page.tsx`, `components/product-detail/**`                              |
+| **Collection**                   | A Shopify-curated subset of products, e.g. "New Arrivals".                                                                                | `app/collections/[handle]/`                                                                   |
+| **Cart drawer vs cart page**     | The drawer for quick edits after adding; the full `/cart` page for line-by-line checkout preparation.                                     | `components/cart/overlay.tsx` vs `components/cart/cart-page.tsx`                              |
+| **Line item**                    | One row in the cart: a variant, its quantity, price and remove control.                                                                   | `components/cart/line-item.tsx`                                                               |
+| **Cart summary**                 | The subtotal, discount and estimated-total block.                                                                                         | `components/cart/summary.tsx`                                                                 |
+| **Discount code form**           | The "discount code" input that applies a Shopify discount to the cart.                                                                    | `components/cart/discount-form.tsx`                                                           |
+| **Cross-sell / recommendations** | "Related products" on the PDP and "complete the look" suggestions.                                                                        | `components/product-detail/product-tabs.tsx` grid; complementary products component is unused |
+| **Checkout handoff**             | The app never hosts payment: it sends the Shopify cart's `checkoutUrl` and the shopper finishes on Shopify's checkout.                    | `lib/cart/action.ts` (`prepareCheckoutAction`)                                                |
+| **Variant / SKU**                | One purchasable combination of options (Colour: Brown, Size: XS). A **SKU** is its stock code.                                            | Modelled in `lib/product/`, rendered in `option-picker.tsx`                                   |
+| **Inventory availability**       | Whether a variant can be bought. This store does not track inventory, so everything is available; mirroring sold-out variants is pending. | `docs/GAP-CLOSURE-PLAN.md`                                                                    |
+
+## 6. States, loading and feedback
+
+| Term                            | What it means                                                                                                                              | Here                                                                                                              |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| **Empty state**                 | What a screen shows when there is nothing yet — "Your cart is empty" with a link to shop.                                                  | `components/cart/overlay.tsx`, search modal                                                                       |
+| **Error state**                 | What shows when something fails — the route-level error boundary with a retry button.                                                      | `app/error.tsx`, `app/global-error.tsx`, `app/not-found.tsx`                                                      |
+| **Fallback**                    | The placeholder rendered inside a Suspense boundary while the real content resolves.                                                       | `app/products/**/skeleton.tsx` and friends                                                                        |
+| **Field validation / feedback** | Inline messages when form input is wrong (email format, required fields).                                                                  | `components/content/contact-form.tsx`, `components/newsletter/form.tsx`; error tones in `components/ui/input.tsx` |
+| **Success state**               | The confirmation after an action — contact and newsletter currently show local success states; no backend yet.                             | Same forms                                                                                                        |
+| **aria-live**                   | An accessibility attribute so screen readers announce updates — counts and availability messages.                                          | Analytics trackers and cart count; covered by `tests/design/a11y.spec.ts`                                         |
+| **Focus ring / keyboard focus** | The outline showing which element keyboard focus is on. Opt-in utility here.                                                               | `app/globals.css`; `components/ui/button.tsx`                                                                     |
+| **Target size**                 | The minimum clickable area (36px here, 35px for form fields) so small controls remain tappable.                                            | `tests/design/` contracts, `--target-min` token                                                                   |
+| **Toast / notification**        | A brief message that appears and auto-dismisses.                                                                                           | `components/cart/notifications.tsx`                                                                               |
+| **URL as state**                | Filters, sort, search query and selected variant live in the URL's query string, so views are shareable and the browser back button works. | `option-picker.tsx`, filters in `components/collections/**`                                                       |
+
+## 7. Styling system and design tokens
+
+| Term                          | What it means                                                                                                                                                       | Here                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| **Design token**              | A named raw value (`--gutter`, `--color-ink`, `--duration-fast`) defined once so every component references the same value.                                         | `app/globals.css` — the single token source               |
+| **Type role**                 | A named text style (`type-display`, `type-h2`, `type-label`, `type-body`) bundling size, line-height, weight and letter-spacing, instead of picking raw font sizes. | `app/globals.css`; enforced by `scripts/check-design.mjs` |
+| **Colour role**               | Semantic colour names (`paper`, `ink`, `ink-muted`, `rule`, `surface`, `error`) mapped through Tailwind theme variables.                                            | `app/globals.css` `@theme inline`                         |
+| **Elevation / shadow**        | The stacked-card illusion of modals and sheets. Exactly one shadow tier here: `shadow-modal`.                                                                       | `components/ui/dialog.tsx`, `sheet.tsx`                   |
+| **Radius**                    | Corner rounding. This template is intentionally square: zero radius everywhere except small round counts, swatches and gallery dots.                                | Enforced by the drift gate: `scripts/check-design.mjs`    |
+| **Breakpoint**                | The viewport width where the layout switches (here `tablet` 750px, `desktop` 1100px) — plain `md:`/`xl:` Tailwind widths are rejected.                              | `app/globals.css` `@theme`; `docs/DESIGN-SYSTEM.md`       |
+| **Responsive / mobile-first** | One layout that adapts across breakpoints; Tailwind's unprefixed classes are the base, `tablet:`/`desktop:` adjust upward.                                          | Everywhere; see `docs/DESIGN-SYSTEM.md`                   |
+| **Utility class**             | A single-purpose Tailwind class. The "arbitrary value" form (`text-[13px]`) is banned; off-scale values register as tokens.                                         | `docs/DESIGN-SYSTEM-ENFORCEMENT.md`                       |
+| **Drift**                     | When code stops matching the documented design contract. The static gate and Playwright tests catch drift in CI-style checks.                                       | `scripts/check-design.mjs`, `tests/design/**`             |
+| **Computed style test**       | A test that reads the browser's actually-rendered styles (not the class strings) and asserts the design contract.                                                   | `tests/design/tokens.spec.ts` via Playwright              |
+| **Playwright**                | The tool driving a real browser for UI tests. Locally: `pnpm test:design`.                                                                                          | `tests/design/**`                                         |
+
+## 8. Rendering and data terms you will meet in this repo
+
+Terms that belong to Next.js and React specifically.
+
+| Term                              | What it means                                                                                                                                                 | Here                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Server Component**              | A component that renders only on the server — no browser JavaScript shipped. The default here.                                                                | Pages, layouts, most components                                                              |
+| **Client Component**              | A component marked `"use client"` that ships JavaScript for interactivity — state, effects, event handlers. Kept as small leaves.                             | `components/cart/context.tsx`, `option-picker.tsx`, `mobile-menu.tsx`                        |
+| **Hydration**                     | The browser "waking up" server-rendered HTML by attaching React's interactivity to it.                                                                        | Automatic; hydration gaps are why components split server/client                             |
+| **Suspense**                      | The React boundary that swaps a fallback for content once its data resolves.                                                                                  | Every dynamic page wraps async content in `<Suspense>` with a skeleton                       |
+| **Streaming / static shell**      | The page's fixed UI (header, footer, headings) renders immediately; data-driven sections stream in and fill their boundaries.                                 | Root layout `ensureStatic = "prefetch"`; `docs/FRONTEND-ARCHITECTURE.md` §4                  |
+| **Caching / revalidation**        | Storing fetched Shopify responses and invalidating them when data changes, via webhook or manual endpoint.                                                    | `lib/<domain>/server.ts`; `app/api/webhooks/shopify/route.ts`, `app/api/revalidate/route.ts` |
+| **Cache tag**                     | A named key (`product-<handle>`) a cached entry carries so it can be invalidated precisely.                                                                   | `cacheTag(...)` in `lib/*/server.ts`                                                         |
+| **Metadata / SEO**                | Per-page `<title>`, `description`, canonical URL and social images generated in `generateMetadata`.                                                           | Each page; helpers in `lib/seo`                                                              |
+| **Schema.org / JSON-LD**          | Machine-readable product and organization data embedded for search engines.                                                                                   | `components/schema/**`, `components/product-detail/schema.tsx`                               |
+| **Sitemap / robots.txt**          | The XML list of every indexable URL, and the crawl rules for bots.                                                                                            | `app/sitemap*`, `app/robots.ts`                                                              |
+| **Markdown route**                | A `text/markdown` mirror of pages that answer engines (ChatGPT and friends) can read instead of HTML.                                                         | `app/md/**`, `app/llms.txt/`, negotiation in `proxy.ts`                                      |
+| **Route handler**                 | A file that answers an API request (webhooks, revalidate, agent session) rather than rendering a page.                                                        | `app/api/**/route.ts`                                                                        |
+| **Server Action**                 | A server function the client can call directly — here, handing the shopper to checkout. Its arguments are parsed with Zod because they are a public endpoint. | `lib/cart/action.ts` (`prepareCheckoutAction`), `lib/customer/action.ts`                     |
+| **`localStorage` persistence**    | Keeping small browser-only state across visits — wishlist, recently viewed, currency, newsletter dismissal. Not synced to any account.                        | `lib/wishlist/client.ts`, `components/currency/provider.tsx`                                 |
+| **Environment variable / config** | Values that differ per deployment (store domain, tokens), read through `shopConfig` and validated at build time.                                              | `lib/config/index.ts`, `lib/config/server.ts`, `.env.example`                                |
+
+## 9. One-line mental model
+
+If the glossary feels large, the model is small:
+
+1. **HTML** is structure, **CSS** is presentation, **JS** is behaviour.
+2. **React components** bundle those three into reusable pieces.
+3. **Next.js** decides _where_ components run — server (fast, no JS shipped) or client (interactive).
+4. A page is **server furniture** (header, footer, headings) plus **client leaves** (drawers, pickers, forms).
+5. **Data** streams in through Suspense with skeletons; **state** lives in the URL (shareable) or a provider (cart) or `localStorage` (per-browser).
+6. **Design tokens** keep presentation consistent; the drift gate keeps them honest.
+
+Learn one term, open its file, and connect the idea to the code — that loop covers everything the
+presentation layer does.

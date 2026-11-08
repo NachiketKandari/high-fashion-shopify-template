@@ -138,6 +138,7 @@ Full documentation is available at [vercel.shop](https://vercel.shop).
 Project-specific runbooks:
 
 - [`docs/FRONTEND-ARCHITECTURE.md`](./docs/FRONTEND-ARCHITECTURE.md) — the full frontend map: routes, components, data flow, caching, configuration, owners and pending work.
+- [`docs/FRONTEND-GLOSSARY.md`](./docs/FRONTEND-GLOSSARY.md) — plain-English definitions of every UI/frontend term this template uses, with where each one lives in the code and external learning resources.
 - [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md) — the canonical template tokens, layout, brand, component, motion and accessibility system.
 - [`docs/DESIGN-SYSTEM-ENFORCEMENT.md`](./docs/DESIGN-SYSTEM-ENFORCEMENT.md) — the token, lint, computed-contract and governance system that keeps the storefront on-system.
 - [`docs/DESIGN-SYSTEM-AUDIT.md`](./docs/DESIGN-SYSTEM-AUDIT.md) — the historical gap analysis, migration record and current exceptions.

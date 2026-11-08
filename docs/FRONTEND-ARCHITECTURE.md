@@ -6,6 +6,8 @@ which file owns which concern, and what is still open. It describes the reposito
 
 Read this first. The deeper references are:
 
+- [`FRONTEND-GLOSSARY.md`](./FRONTEND-GLOSSARY.md) — every UI/frontend term used here, defined in
+  plain English, with where it lives in the code and external learning resources.
 - [`SHOPIFY-WALKTHROUGH.md`](./SHOPIFY-WALKTHROUGH.md) — Shopify, Hydrogen and Vercel in detail.
 - [`HYDROGEN-USAGE.md`](./HYDROGEN-USAGE.md) — the exact Hydrogen SDK surface in use.
 - [`IMPLEMENTATION.md`](./IMPLEMENTATION.md) — the presentation rebuilt in this repository.
