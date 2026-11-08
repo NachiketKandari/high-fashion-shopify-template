@@ -412,7 +412,7 @@ client code.
 | `pdp.bundles.isEnabled`               | `true`  | Bundle fragments and PDP bundle UI                                                     |
 | `pdp.buyWithShop.isEnabled`           | `true`  | Shop Pay button                                                                        |
 | `pdp.quantityPicker.isEnabled`        | `true`  | PDP and quick-shop quantity control                                                    |
-| `pdp.complementaryProducts.isEnabled` | `true`  | No effect; the flag and component are unused                                           |
+| `pdp.complementaryProducts.isEnabled` | `true`  | No effect; the flag is unused                                                          |
 | `pdp.relatedProducts.isEnabled`       | `true`  | Related-products grid                                                                  |
 | `redirects.shopifyNotFound.isEnabled` | `false` | Shopify URL-redirect resolution from the 404 page                                      |
 

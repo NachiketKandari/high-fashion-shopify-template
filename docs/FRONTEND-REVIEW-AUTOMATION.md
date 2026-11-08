@@ -55,7 +55,7 @@ pnpm dlx knip@6 --files --dependencies --exports --cycles --reporter compact --n
 ```
 
 Run outside the repo's dependency set. It understands the App Router, `proxy.ts`, oxlint and
-Tailwind. The current output is in the results section.
+Tailwind. The 8 November output is in the results section.
 
 ### jscpd
 
@@ -113,15 +113,22 @@ Vercel Speed Insights.
 All 18 route/viewport combinations are clean afterwards. The size-guide table change also fixes
 keyboard scrolling on mobile.
 
-### Knip: dead weight, not removed
+### Knip: unused storefront files
 
-Unused files:
+Removed on 9 November 2026 (226 lines):
 
 - `components/footer/social-links.tsx`
 - `components/nav/menu-link.tsx`
 - `components/product-detail/buy-with-shop-logo.tsx`
 - `components/product-detail/complementary-products.tsx`
-- `lib/menu/types.ts`
+
+`lib/menu/types.ts` stays: the `enable-shopify-menus` skill imports `MenuItem` from it. The app
+does not use the type today, but deleting it would break that documented workflow. Knip will keep
+reporting it until the skill owns the type or is rewritten.
+
+Build impact of the removal: JS chunk bytes are unchanged (2,187,453), confirming the components
+were never in the client bundle. CSS dropped 116 bytes because Tailwind no longer emits utilities
+used only by those files. The route table is identical.
 
 Scripts and `.agents/skills/**` are reported too but are invoked manually; leave them.
 
