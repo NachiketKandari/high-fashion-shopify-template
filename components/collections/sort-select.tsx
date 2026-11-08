@@ -31,7 +31,10 @@ export function CollectionsSortSelect({ exclude = [] }: { exclude?: SortValue[] 
       onValueChange={(value) => setSortByValue(value ?? "manual")}
       disabled={status === "loading"}
     >
-      <SelectTrigger className="type-chip h-9 gap-2 border-0 bg-transparent px-0 shadow-none">
+      <SelectTrigger
+        aria-label={`Sort by ${label}`}
+        className="type-chip h-9 gap-2 border-0 bg-transparent px-0 shadow-none"
+      >
         <span>{label}</span>
       </SelectTrigger>
       <SelectContent>

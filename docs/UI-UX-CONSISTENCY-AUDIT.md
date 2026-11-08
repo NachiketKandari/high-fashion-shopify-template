@@ -144,3 +144,55 @@ The remaining differences were implementation defects, not open decisions, and a
   and the checkout spinner only appears while a cart mutation is actually in flight.
 - **Quantity subtotal.** When a line quantity is greater than one, the cart shows the unit price
   and the line total, matching the reference and making the subtotal change legible.
+
+## Follow-up pass — PDP size and colour controls (8 November 2026)
+
+Measured with Playwright at 1440 × 1000 and 390 × 844 against
+`https://politesocietyshop.com/products/alma-lace-corset-top` and the local production build.
+Reference values come from its `ps-pdp__option` styles; ours from
+`[data-slot="product-info-options"]`.
+
+| Signal                        | Reference                         | Before                                                         | Now                                             |
+| ----------------------------- | --------------------------------- | -------------------------------------------------------------- | ----------------------------------------------- |
+| Size gap, horizontal/vertical | 11 / 11 px                        | 8 / 4 px                                                       | 8 / 8 px                                        |
+| Colour gap                    | 8 px                              | 8 px                                                           | 8 px                                            |
+| Caption width                 | 72 px                             | 64 px                                                          | 64 px                                           |
+| Caption → first option        | 11 px                             | 8 px size, 16 px colour                                        | 8 px both                                       |
+| Size text x / colour chip x   | aligned                           | 948 / 956 (8 px offset)                                        | 958 / 959 (1 px offset)                         |
+| Colour → size group gap       | 27 px                             | 20 px                                                          | 28 px                                           |
+| Idle unselected size          | `#4D4D4D`                         | `#000`                                                         | `#4D4D4D`                                       |
+| Selected size                 | `#000`, 1 px underline under text | `#000`, underline at the bottom of the 36 px box               | `#000`, 1 px underline under text               |
+| Size hover                    | none                              | `opacity: 0.6` on every size, including the selected underline | unselected `#4D4D4D → #000`; selected unchanged |
+| Focus-visible                 | 1 px 50% outline at 2 px + shadow | browser default                                                | 2 px ink outline at 2 px (`focus-ring`)         |
+| Mobile size row               | one row of six                    | two rows, 4 + 2                                                | one row of six, label above                     |
+| Single-colour product         | caption + swatch                  | `COLOUR: BLUE` text line                                       | caption + one swatch                            |
+
+What changed:
+
+- **Alignment.** `ColorPicker` used `gap-4` (16 px) where `OptionPicker` used `gap-2` (8 px), so the
+  first swatch sat 8 px right of the first size. Both rows now use the same 64 px caption, 8 px gap
+  and 36 px hit area; the 14 px chip centres at x = 959 and the size glyph starts at x = 958.
+- **Vertical rhythm.** Option rows now use `gap-y-2`, so a wrapped row is 8 px apart instead of 4 px,
+  and the option groups are 28 px apart instead of 20 px (reference 27 px).
+- **Selection hierarchy.** Unselected sizes use `text-ink-muted` and the selected size uses `text-ink`
+  with a 1 px underline on the label itself. The underline previously sat at the bottom of the 36 px
+  hit box, roughly 18 px below the text. A transparent border reserves the space so selecting a size
+  does not shift the row.
+- **Hover.** The old `hover:opacity-60` dimmed the selected underline and read as disabled. Hover now
+  moves an unselected size from `#4D4D4D` to `#000`; the selected size does not change.
+- **Focus.** Size and colour options carry `focus-ring`, giving a 2 px ink outline at 2 px offset
+  instead of the browser default.
+- **Mobile.** The caption moves above the options below `desktop:`, freeing the 64 px column. All six
+  sizes and `SIZE GUIDE` now fit on one row at 390 px, and horizontal overflow remains 0.
+- **Single colour.** A product with one colour value now renders the caption and its swatch instead of
+  a `COLOUR: BLUE` sentence, matching multi-colour PDPs and the reference.
+
+Deliberate deviations from the reference:
+
+- Hit areas stay 36 × 36 px. The reference's text-width controls are about 21 px tall, below the
+  storefront's 36 px target contract.
+- Gaps are 8 px rather than the reference's 11 px because 8 px is on the storefront scale and the
+  wider hit areas already add visual space.
+- The selected colour keeps the inset hairline plus ring around the chip rather than the reference's
+  underline. `Swatch` is shared by quick shop, filters and product cards, and a ring stays legible at
+  14 px.

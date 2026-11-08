@@ -245,11 +245,18 @@ export function SizeGuide({ defaultCategory }: { defaultCategory?: string } = {}
             ))}
           </div>
         </div>
-        <div className="overflow-x-auto border border-rule">
+        <div
+          aria-label="Size guide"
+          className="overflow-x-auto border border-rule"
+          role="region"
+          tabIndex={0}
+        >
           <table className="type-body w-full min-w-[560px] border-collapse text-center font-normal">
             <thead>
               <tr>
-                <th className="type-label border-r border-b border-rule px-3 py-2 text-left" />
+                <th className="type-label border-r border-b border-rule px-3 py-2 text-left">
+                  <span className="sr-only">Size</span>
+                </th>
                 {SIZES.map((size) => (
                   <th
                     className="type-label border-r border-b border-rule px-3 py-2 last:border-r-0"
@@ -284,7 +291,12 @@ export function SizeGuide({ defaultCategory }: { defaultCategory?: string } = {}
 
       <div className="grid gap-4">
         <h2 className="type-h2">Sizing Conversion</h2>
-        <div className="overflow-x-auto border border-rule">
+        <div
+          aria-label="Sizing conversion"
+          className="overflow-x-auto border border-rule"
+          role="region"
+          tabIndex={0}
+        >
           <table className="type-body w-full min-w-[560px] border-collapse text-center font-normal">
             <thead>
               <tr>

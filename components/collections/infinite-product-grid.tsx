@@ -86,6 +86,7 @@ export function InfiniteProductGrid({
       className="transition-opacity duration-(--motion-fast) data-[pending=true]:pointer-events-none data-[pending=true]:opacity-50"
       data-pending={isPending}
     >
+      <h2 className="sr-only">Products</h2>
       <div className="grid grid-cols-2 gap-x-(--grid-gap) gap-y-(--grid-row-gap) tablet:grid-cols-3 desktop:grid-cols-4">
         {children}
         {additionalProducts.map((product) => (

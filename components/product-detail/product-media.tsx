@@ -201,8 +201,11 @@ function Carousel({
     <div className="grid gap-3">
       <div
         ref={setContainer}
-        className="relative flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain scrollbar-hide"
+        aria-label={`${title} images`}
+        className="focus-ring relative flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain scrollbar-hide"
+        role="region"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        tabIndex={0}
       >
         {children}
         {mediaItems.map((item, idx) => (

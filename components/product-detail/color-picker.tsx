@@ -20,8 +20,8 @@ export function ColorPicker({
   ...props
 }: ColorPickerProps) {
   return (
-    <div className={cn("flex items-center gap-4", className)} {...props}>
-      <span className="type-h4 w-16 shrink-0">{option.name}</span>
+    <div className={cn("flex flex-wrap items-center gap-2 gap-y-2", className)} {...props}>
+      <span className="type-h4 w-full shrink-0 desktop:w-16">{option.name}</span>
       <div className="flex flex-wrap gap-2">
         {option.values.map((value) => {
           const color = value.swatch?.color ?? getColorSwatch(value.name);
@@ -49,7 +49,7 @@ export function ColorPicker({
               key={value.name}
               href={value.href}
               scroll={false}
-              className="flex min-h-9 min-w-9 cursor-pointer items-center justify-center"
+              className="focus-ring flex min-h-9 min-w-9 cursor-pointer items-center justify-center"
               aria-label={`Select ${option.name}: ${value.name}${value.available ? "" : " (sold out)"}`}
               aria-current={value.selected ? "true" : undefined}
               onClick={

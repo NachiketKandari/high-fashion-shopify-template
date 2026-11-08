@@ -22,23 +22,35 @@ export function OptionPicker({
   ...props
 }: OptionPickerProps) {
   return (
-    <div className={cn("flex items-center gap-2", className)} {...props}>
-      <span className={cn("type-h4 shrink-0", compact ? "w-11" : "w-16")}>{option.name}</span>
+    <div className={cn("flex flex-wrap items-center gap-2 gap-y-2", className)} {...props}>
+      <span className={cn("type-h4 shrink-0", compact ? "w-11" : "w-full desktop:w-16")}>
+        {option.name}
+      </span>
       <div
         className={cn(
-          "flex flex-1 flex-wrap items-center gap-y-1",
+          "flex flex-1 flex-wrap items-center gap-y-2",
           compact ? "gap-x-1" : "gap-x-2",
         )}
       >
         {option.values.map((value) => {
           const classes = cn(
-            "type-body-sm inline-flex min-h-9 min-w-9 items-center justify-center font-normal transition-colors",
+            "type-body-sm focus-ring inline-flex min-h-9 min-w-9 cursor-pointer items-center justify-center font-normal transition-colors",
             !value.exists
               ? "cursor-not-allowed text-ink-muted/50 line-through"
               : value.selected
-                ? "border-b border-ink pb-0.5 text-ink"
-                : "text-ink hover:opacity-60",
+                ? "text-ink"
+                : "text-ink-muted hover:text-ink",
             value.exists && !value.available && "cursor-not-allowed line-through opacity-50",
+          );
+          const label = (
+            <span
+              className={cn(
+                "border-b pb-0.5",
+                value.selected ? "border-ink" : "border-transparent",
+              )}
+            >
+              {value.name}
+            </span>
           );
 
           if (!value.exists || (!value.available && !value.selected)) {
@@ -50,7 +62,7 @@ export function OptionPicker({
                 key={value.name}
                 type="button"
               >
-                {value.name}
+                {label}
               </button>
             );
           }
@@ -71,7 +83,7 @@ export function OptionPicker({
               }
               scroll={false}
             >
-              {value.name}
+              {label}
             </Link>
           );
         })}

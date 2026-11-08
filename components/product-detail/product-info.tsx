@@ -31,12 +31,14 @@ function ProductInfoOptions({
   const renderable = options.filter((opt) => !isShopifyDefaultOption(opt));
   if (renderable.length === 0) return null;
 
-  const singleValueOptions = renderable.filter(isSingleValueOption);
-  const colorOptions = renderable.filter((opt) => !isSingleValueOption(opt) && isColorOption(opt));
-  const otherOptions = renderable.filter((opt) => !isSingleValueOption(opt) && !isColorOption(opt));
+  const colorOptions = renderable.filter(isColorOption);
+  const singleValueOptions = renderable.filter(
+    (opt) => !isColorOption(opt) && isSingleValueOption(opt),
+  );
+  const otherOptions = renderable.filter((opt) => !isColorOption(opt) && !isSingleValueOption(opt));
   return (
     <div data-slot="product-info-options" className={className} {...props}>
-      <div className={cn("grid", compact ? "gap-2.5" : "gap-5")}>
+      <div className={cn("grid", compact ? "gap-2.5" : "gap-7")}>
         {singleValueOptions.map((option) => (
           <p key={option.name} className="type-h4 text-ink-muted">
             {option.name}: <span className="text-foreground">{option.values[0]?.name}</span>
