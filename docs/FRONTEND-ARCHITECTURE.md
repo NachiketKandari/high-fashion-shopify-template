@@ -23,23 +23,23 @@ does not replace them.
 
 ## 1. Current state at a glance
 
-| Item                                 | State                                                                              |
-| ------------------------------------ | ---------------------------------------------------------------------------------- |
-| Framework                            | Next.js 16.4 App Router, React 19.3, React Compiler, Cache Components              |
-| Shopify SDK                          | `@shopify/hydrogen` 2026.10.2, framework-agnostic SDK only                         |
-| Styling                              | Tailwind CSS 4.3, shadcn/base-ui primitives, tokens in `app/globals.css`           |
-| Runtime                              | Node 26, pnpm 12.16.1, deployed to Vercel                                          |
-| Store                                | Lorem Ipsum (`dummy-store-f0ejfuh9.myshopify.com`), store currency USD             |
-| Catalog                              | 95 products, 880 variants, 709 images, 41 collections, 0 unavailable variants      |
-| Content                              | 11 published Shopify pages, the `journal-2` blog and 3 articles; 3 app-owned pages |
-| Customer accounts                    | **Enabled** (`shopConfig.auth.isEnabled = true`)                                   |
-| Shop Agent (Eve)                     | **Disabled** (`shopConfig.agent.isEnabled = false`)                                |
-| BotID                                | Disabled                                                                           |
-| Vercel Analytics / Speed Insights    | Disabled                                                                           |
-| Shopify analytics / consent / WebMCP | Disabled                                                                           |
-| GA4                                  | Loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_GTM_ID` is set          |
-| Currency                             | Display-only USD/INR selector; cart subtotal converts; checkout stays USD          |
-| Locale                               | Single locale: country `US`, language `EN`, formatting locale `en-US`              |
+| Item                                 | State                                                                                         |
+| ------------------------------------ | --------------------------------------------------------------------------------------------- |
+| Framework                            | Next.js 16.4 App Router, React 19.3, React Compiler, Cache Components                         |
+| Shopify SDK                          | `@shopify/hydrogen` 2026.10.2, framework-agnostic SDK only                                    |
+| Styling                              | Tailwind CSS 4.3, shadcn/base-ui primitives, tokens in `app/globals.css`                      |
+| Runtime                              | Node 26, pnpm 12.16.1, deployed to Vercel                                                     |
+| Store                                | Lorem Ipsum (`dummy-store-f0ejfuh9.myshopify.com`), store currency INR (set 10 November 2026) |
+| Catalog                              | 95 products, 880 variants, 709 images, 41 collections, 0 unavailable variants                 |
+| Content                              | 11 published Shopify pages, the `journal-2` blog and 3 articles; 3 app-owned pages            |
+| Customer accounts                    | **Enabled** (`shopConfig.auth.isEnabled = true`)                                              |
+| Shop Agent (Eve)                     | **Disabled** (`shopConfig.agent.isEnabled = false`)                                           |
+| BotID                                | Disabled                                                                                      |
+| Vercel Analytics / Speed Insights    | Disabled                                                                                      |
+| Shopify analytics / consent / WebMCP | Disabled                                                                                      |
+| GA4                                  | Loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_GTM_ID` is set                     |
+| Currency                             | Store currency INR; INR-only display; prices are interim ×100 values                          |
+| Locale                               | Single locale: country `US`, language `EN`, formatting locale `en-US`                         |
 
 The catalog figures come from a read-only Storefront API check on 7 November 2026. Treat them as a
 snapshot, not a schema.
@@ -295,14 +295,22 @@ one-time code; see [`AUTHENTICATION.md`](./AUTHENTICATION.md).
   called immediately before every Customer Account API request.
 - Server Components never refresh tokens. Refresh happens only where Hydrogen can commit cookies.
 
-### Currency display — an explicit exception
+### Currency display — INR only
 
-`lib/money/display.ts` defines a **display-only** USD/INR layer at a fixed rate of 94.62.
-`components/currency/provider.tsx` persists the choice in `localStorage` under
-`ps_display_currency`; the selector appears in the header, mobile menu and footer. Product prices,
-cart line prices and the cart subtotal convert. Checkout, Schema.org, Markdown and Eve remain in the
-store currency, USD; free-shipping copy still assumes USD. The catalog import used a separate
-INR→USD rate of 94.83.
+The store currency is **INR** (set 10 November 2026). The storefront shows INR only; the former
+display-only USD option was removed, so the header, mobile menu and footer render a static `INR`
+label. `lib/money/display.ts` keeps the conversion helpers for a future multi-currency decision, and
+`components/currency/provider.tsx` still reads `ps_display_currency`, but INR is the only valid
+value. Checkout, Schema.org, Markdown and Eve remain in the store currency, INR.
+
+The reference store shows “Approx. in USD — charged in INR at checkout” when a non-INR display
+currency is selected. Reproduce that note if a second display currency is ever added; do not show
+converted prices without it.
+
+Prices are **interim**: every former USD variant amount was multiplied by 100 on 10 November rather
+than converted at the reference rate, so a $51 product now reads ₹5,100. The cached source INR
+catalog (95 products) should replace those values; the importer reads the shop currency and
+preserves source INR prices. Free-shipping copy and the cart threshold are ₹50,000.
 
 This is the one place where the app renders a price-derived value that Shopify did not return, and
 it is a documented exception rather than the rule. The pending decision is whether to keep it,
@@ -360,18 +368,18 @@ form and quick shop, and Hydrogen's `CollectionProvider` in the collection layou
 
 ### State ownership
 
-| State                                                      | Owner                                                       |
-| ---------------------------------------------------------- | ----------------------------------------------------------- |
-| Product options, collection filters and sort, search query | URL search params                                           |
-| Cart lines and optimistic mutations                        | Hydrogen cart store, persisted by the cart cookie           |
-| Cart drawer open/closed                                    | `CartDrawerProvider`                                        |
-| Customer identity                                          | Hydrogen customer session cookie                            |
-| Display currency                                           | `localStorage["ps_display_currency"]`                       |
-| Wishlist                                                   | `localStorage["wishlist"]` (product snapshots; per-browser) |
-| Recently viewed                                            | `localStorage["template-recently-viewed-v1"]`               |
-| Newsletter dismissal                                       | `localStorage["newsletter-dismissed-at"]`                   |
-| Eve conversation                                           | `localStorage["template-eve-chat-v1"]`                      |
-| Header scroll, menus, filters, forms                       | Local React state                                           |
+| State                                                      | Owner                                                                    |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Product options, collection filters and sort, search query | URL search params                                                        |
+| Cart lines and optimistic mutations                        | Hydrogen cart store, persisted by the cart cookie                        |
+| Cart drawer open/closed                                    | `CartDrawerProvider`                                                     |
+| Customer identity                                          | Hydrogen customer session cookie                                         |
+| Display currency                                           | INR only; `localStorage["ps_display_currency"]` is accepted only for INR |
+| Wishlist                                                   | `localStorage["wishlist"]` (product snapshots; per-browser)              |
+| Recently viewed                                            | `localStorage["template-recently-viewed-v1"]`                            |
+| Newsletter dismissal                                       | `localStorage["newsletter-dismissed-at"]`                                |
+| Eve conversation                                           | `localStorage["template-eve-chat-v1"]`                                   |
+| Header scroll, menus, filters, forms                       | Local React state                                                        |
 
 ## 8. Design system
 
@@ -509,40 +517,39 @@ This is the current backlog, deduplicated across the docs. Historical records su
 
 ### B. Product decisions
 
-| Decision                       | Current state                                                                                                    |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| Currency                       | Display-only USD/INR is implemented; Indian payments require an INR store currency or Markets; see `PAYMENTS.md` |
-| Checkout test order            | Not placed; verification stops at the Shopify checkout redirect                                                  |
-| Gallery parity                 | Stacked desktop gallery + lightbox + mobile snap carousel; no zoom, previous/next or image counter               |
-| Checkout provider              | Shopify checkout; no gateway configured; GoKwik is not implemented; see `PAYMENTS.md`                            |
-| Contact and newsletter backend | Both show a local success state and send nothing                                                                 |
-| Wishlist persistence           | Browser-local only                                                                                               |
-| Navigation ownership           | Code-owned in `lib/nav/index.ts`; Shopify menus are not enabled                                                  |
-| Product data depth             | Description-only; no structured fabric, fit, composition, origin or size-chart assignment                        |
-| Shipping and fulfilment        | Shopify native rates; no Shiprocket code                                                                         |
-| Localization                   | Single locale US/EN; no next-intl or Markets                                                                     |
-| Analytics and consent          | GA4 only; no consent management, Vercel Analytics or Speed Insights                                              |
-| Public Shop Agent              | Disabled; launch controls are external                                                                           |
+| Decision                       | Current state                                                                                                                |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Currency                       | INR is the store currency and the only display currency; prices are interim ×100 values; replace from the source INR catalog |
+| Checkout test order            | Not placed; verification stops at the Shopify checkout redirect                                                              |
+| Gallery parity                 | Stacked desktop gallery + lightbox + mobile snap carousel; no zoom, previous/next or image counter                           |
+| Checkout provider              | Shopify checkout; no gateway configured; GoKwik is not implemented; see `PAYMENTS.md`                                        |
+| Contact and newsletter backend | Both show a local success state and send nothing                                                                             |
+| Wishlist persistence           | Browser-local only                                                                                                           |
+| Navigation ownership           | Code-owned in `lib/nav/index.ts`; Shopify menus are not enabled                                                              |
+| Product data depth             | Description-only; no structured fabric, fit, composition, origin or size-chart assignment                                    |
+| Shipping and fulfilment        | Shopify native rates; no Shiprocket code                                                                                     |
+| Localization                   | Single locale US/EN; no next-intl or Markets                                                                                 |
+| Analytics and consent          | GA4 only; no consent management, Vercel Analytics or Speed Insights                                                          |
+| Public Shop Agent              | Disabled; launch controls are external                                                                                       |
 
 ### C. Frontend code remaining
 
-| Item                                                                               | Files                                                                                                                                                                             |
-| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Add the missing `POLITE BLUE` swatch alias                                         | `lib/product/color-swatches.ts`                                                                                                                                                   |
-| Add `--inventory-only` and preserve inventory on other imports                     | `scripts/import-live-catalog.mjs`                                                                                                                                                 |
-| Add metadata-only import and Fabric/Fit metafields end to end                      | importer, product fragment/transform, `product-tabs.tsx`, product Markdown                                                                                                        |
-| Render colour facets as swatch + label + count                                     | `components/collections/filters-client.tsx`                                                                                                                                       |
-| Reconcile display currency across filters, free-shipping copy and PDP shipping tab | `lib/money/display.ts`, `components/collections/filters-client.tsx`, `components/cart/overlay.tsx`, `components/cart/cart-page.tsx`, `components/product-detail/product-tabs.tsx` |
-| Connect contact and newsletter forms                                               | `components/content/contact-form.tsx`, `components/newsletter/form.tsx`                                                                                                           |
-| Add gallery zoom, lightbox navigation and counter if chosen                        | `components/product-detail/product-media.tsx`, `lightbox.tsx`                                                                                                                     |
-| Import product/collection SEO copy and collection images                           | importer and collection transforms                                                                                                                                                |
-| Add error reporting, request IDs, structured logs and a health route               | `instrumentation.ts`, `lib/shopify/logging`, new route                                                                                                                            |
-| Make webhooks observable and idempotent                                            | `app/api/webhooks/shopify/route.ts`                                                                                                                                               |
-| Add CI for lint, typecheck, build and design tests                                 | repository root                                                                                                                                                                   |
-| Sync wishlist to Customer Account if chosen                                        | `lib/wishlist/client.ts`, `lib/customer/action.ts`                                                                                                                                |
-| Move navigation to Shopify menus if chosen                                         | `lib/nav/index.ts`, nav components                                                                                                                                                |
-| Add ecommerce analytics events and consent handling                                | `components/analytics`, `lib/analytics/client.ts`                                                                                                                                 |
-| Remove or resolve dead config and components                                       | `pdp.complementaryProducts`, unused product-card/lightbox variants                                                                                                                |
+| Item                                                                 | Files                                                                      |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Add the missing `POLITE BLUE` swatch alias                           | `lib/product/color-swatches.ts`                                            |
+| Add `--inventory-only` and preserve inventory on other imports       | `scripts/import-live-catalog.mjs`                                          |
+| Add metadata-only import and Fabric/Fit metafields end to end        | importer, product fragment/transform, `product-tabs.tsx`, product Markdown |
+| Render colour facets as swatch + label + count                       | `components/collections/filters-client.tsx`                                |
+| Connect contact and newsletter forms                                 | `components/content/contact-form.tsx`, `components/newsletter/form.tsx`    |
+| Add gallery zoom, lightbox navigation and counter if chosen          | `components/product-detail/product-media.tsx`, `lightbox.tsx`              |
+| Import product/collection SEO copy and collection images             | importer and collection transforms                                         |
+| Add error reporting, request IDs, structured logs and a health route | `instrumentation.ts`, `lib/shopify/logging`, new route                     |
+| Make webhooks observable and idempotent                              | `app/api/webhooks/shopify/route.ts`                                        |
+| Add CI for lint, typecheck, build and design tests                   | repository root                                                            |
+| Sync wishlist to Customer Account if chosen                          | `lib/wishlist/client.ts`, `lib/customer/action.ts`                         |
+| Move navigation to Shopify menus if chosen                           | `lib/nav/index.ts`, nav components                                         |
+| Add ecommerce analytics events and consent handling                  | `components/analytics`, `lib/analytics/client.ts`                          |
+| Remove or resolve dead config and components                         | `pdp.complementaryProducts`, unused product-card/lightbox variants         |
 
 ### D. Content and data remaining
 
@@ -553,8 +560,11 @@ This is the current backlog, deduplicated across the docs. Historical records su
 - Sold-out inventory availability.
 - Descriptive image alt text; imported alt text is `TITLE image N`.
 - Licensed or original photography and brand assets to replace reference imagery.
-- Real brand, contact, social, legal and shipping copy; several Shopify pages still use INR
-  thresholds while the store is USD.
+- Replace the interim ×100 variant prices with the cached source INR catalog; re-check compare-at
+  prices and the zero-priced sold-out variants. The 39 Uniplus drafts now carry category-median
+  prices; replace them with real prices before publishing.
+- Real brand, contact, social, legal and shipping copy; verify policy thresholds match the INR
+  store and the ₹50,000 free-shipping threshold.
 - `/collections` and `/collections/all` are missing from the static sitemap shard.
 
 ### E. Production readiness

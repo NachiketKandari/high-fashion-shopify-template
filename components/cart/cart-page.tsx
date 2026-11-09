@@ -2,10 +2,12 @@
 
 import type { ComponentProps, ReactNode } from "react";
 
+import { useDisplayPrice } from "@/components/currency/provider";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/cart";
 import { useSuspenseCart } from "@/lib/cart/client";
 
 import { CartLineItems } from "./line-item";
@@ -54,12 +56,13 @@ export function CartPageContent() {
 }
 
 function FreeShippingLine({ subtotal }: { subtotal: string }) {
-  const remaining = Math.max(0, 500 - Number(subtotal));
+  const format = useDisplayPrice();
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - Number(subtotal));
   return (
     <p className="type-label border-t border-rule pt-2.5 text-ink-muted">
       {remaining === 0
         ? "Congratulations! You qualify for free shipping."
-        : `You're $${remaining.toFixed(0)} away from free shipping.`}
+        : `You're ${format({ amount: remaining.toFixed(2), currencyCode: "INR" })} away from free shipping.`}
     </p>
   );
 }

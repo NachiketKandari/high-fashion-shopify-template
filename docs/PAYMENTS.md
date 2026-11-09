@@ -15,7 +15,7 @@ exists on 10 November 2026.
 | Checkout test order       | **Not placed**; verification stops at the Shopify checkout redirect (and the store password gate)   |
 | Payment code in this repo | **None, by design**: no card form, no UPI form, no gateway SDK, no payment state                    |
 | GoKwik / Magic Checkout   | **Not implemented**; the reference storefront uses GoKwik for Indian traffic                        |
-| Store currency            | **USD**; Indian UPI requires INR, so this is a prerequisite decision, not a detail                  |
+| Store currency            | **INR** (set 10 November 2026); catalog prices are interim ×100 values                              |
 
 "Integration" here does not mean writing a payment form. The template's entire payment surface is:
 
@@ -80,25 +80,24 @@ GMV, Grow → Advanced at about **₹56.8 lakh/month**, Advanced → Plus at abo
 Annual billing lowers the first two to roughly ₹4.1 lakh and ₹42.7 lakh. Plan features can justify
 an upgrade earlier; the fee alone usually does not.
 
-## 3. Currency is the prerequisite
+## 3. Currency: resolved, pricing interim
 
-This is the constraint that invalidates most gateway comparisons until it is fixed:
+The store currency is now **INR** (set 10 November 2026), so third-party providers receive INR and
+UPI can appear. The remaining currency work is pricing:
 
-- Shopify processes payments through third-party providers **in the store's default currency**.
-  Local-currency checkout is supported only by Shopify Payments and Adyen.
-- UPI is INR-denominated. A USD-based store sends USD to the gateway, and UPI and other domestic
-  INR rails do not appear. Razorpay's own Shopify guide states that a USD base disables UPI and
-  local Indian methods.
-- Markets can give international shoppers market-specific **prices** (catalogs, adjustments,
-  rounding) on any plan, but without Shopify Payments they are still **charged in the store
-  currency**; Markets is not a presentment-currency solution here.
+- Every former USD variant amount was multiplied by 100 as an interim reprice, so a $51 product
+  now reads ₹5,100. The cached source INR catalog (95 products, e.g. ₹4,800) should replace those
+  values; the importer preserves source INR amounts when the shop currency is INR.
+- The storefront shows INR only; the former display-only USD option was removed, so there is no
+  conversion note to show.
+- Keeping international shoppers is a Markets decision: markets can adjust **prices** (catalogs,
+  adjustments, rounding) on any plan, but without Shopify Payments they are still **charged in INR**
+  with FX handled by the card network or gateway.
 - Changing store currency after the first sale requires Shopify Support and resets market
-  currencies, shipping rates, gift cards, app behaviour and reports.
+  currencies, shipping rates, gift cards, app behaviour and reports. Do not take a paid order until
+  the authoritative INR prices are in place.
 
-**Recommendation: make INR the store currency before the first order.** Keep USD/EUR price lists
-through Markets for international shoppers, accepting that they are charged in INR with FX handled
-by the card network or gateway. The current display-only USD/INR selector is presentation only and
-does not change checkout currency.
+The free-shipping threshold and copy are ₹50,000, matching the interim ×100 scale.
 
 ## 4. How Razorpay is incorporated (recommended path)
 
@@ -411,16 +410,16 @@ vendor register, incident-response plan, least-privilege admin, CSP and log hygi
 
 ## 11. Open decisions
 
-| Decision                | Current state   | Recommendation                                                                   |
-| ----------------------- | --------------- | -------------------------------------------------------------------------------- |
-| Store currency          | USD             | Move to INR before taking Indian payments                                        |
-| Primary gateway         | None configured | Razorpay Secure                                                                  |
-| Onsite cards            | None            | Stay with Razorpay redirect at launch; evaluate PayU/Cashfree direct cards later |
-| Fallback gateway        | None            | Not native; rely on Razorpay smart routing and a tested rollback                 |
-| GoKwik / Magic Checkout | Not implemented | Defer; verify headless support before any pilot                                  |
-| COD                     | Not configured  | Only with verification and RTO controls                                          |
-| Order webhooks          | Not consumed    | Add only when fulfilment or analytics needs them                                 |
-| Payment marks           | Six card brands | Mirror the real method mix, including UPI                                        |
+| Decision                | Current state                              | Recommendation                                                                   |
+| ----------------------- | ------------------------------------------ | -------------------------------------------------------------------------------- |
+| Store currency          | INR (set 10 Nov 2026); interim ×100 prices | Replace with the cached source INR catalog                                       |
+| Primary gateway         | None configured                            | Razorpay Secure                                                                  |
+| Onsite cards            | None                                       | Stay with Razorpay redirect at launch; evaluate PayU/Cashfree direct cards later |
+| Fallback gateway        | None                                       | Not native; rely on Razorpay smart routing and a tested rollback                 |
+| GoKwik / Magic Checkout | Not implemented                            | Defer; verify headless support before any pilot                                  |
+| COD                     | Not configured                             | Only with verification and RTO controls                                          |
+| Order webhooks          | Not consumed                               | Add only when fulfilment or analytics needs them                                 |
+| Payment marks           | Six card brands                            | Mirror the real method mix, including UPI                                        |
 
 ## 12. Cross-references and sources
 

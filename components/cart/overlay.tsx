@@ -4,6 +4,7 @@ import type { CartData } from "@shopify/hydrogen";
 import { Loader2, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { useDisplayPrice } from "@/components/currency/provider";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/components/ui/link";
 import {
@@ -13,14 +14,13 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/cart";
 import { useCart } from "@/lib/cart/client";
 
 import { useCartDrawer } from "./context";
 import { CartLineItems } from "./line-item";
 import { CartSummary } from "./summary";
 import { CartWarnings } from "./warnings";
-
-const FREE_SHIPPING_THRESHOLD = 500;
 
 interface CartOverlayProps {
   description: string;
@@ -119,6 +119,7 @@ function OverlayContent() {
 }
 
 function FreeShippingProgress({ cart }: { cart: CartData }) {
+  const format = useDisplayPrice();
   const subtotal = Number(cart.cost.subtotalAmount.amount);
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
   const progress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
@@ -141,7 +142,7 @@ function FreeShippingProgress({ cart }: { cart: CartData }) {
       <p aria-live="polite" className="type-label text-ink-muted">
         {remaining === 0
           ? "Congratulations! You qualify for free shipping."
-          : `You're $${remaining.toFixed(0)} away from free shipping.`}
+          : `You're ${format({ amount: remaining.toFixed(2), currencyCode: "INR" })} away from free shipping.`}
       </p>
     </div>
   );

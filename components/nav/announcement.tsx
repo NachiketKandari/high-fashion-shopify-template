@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const MESSAGES = [
   "Need it sooner? Reach out to us before placing your order",
-  "Free shipping worldwide above $500",
+  "Free shipping worldwide above ₹50,000",
 ];
 
 const ROTATE_MS = 3000;

@@ -307,7 +307,7 @@ Known differences from the reference are deliberate or environmental:
 
 | Area          | Reference                               | This template                                                         |
 | ------------- | --------------------------------------- | --------------------------------------------------------------------- |
-| Currency      | INR default with a 55-currency selector | USD store; display-only USD/INR selector; cart and checkout stay USD  |
+| Currency      | INR default with a 55-currency selector | INR store and INR-only display; interim ×100 prices                   |
 | Product rail  | Five cards in the measured design       | Up to eight `bestsellers` cards in `HomeProductRail`                  |
 | Product image | 3:4 card media in `DESIGN.md`           | 2:3 media in `components/product-card/product-card.tsx`               |
 | Desktop nav   | Desktop starts at 1100px                | `desktop` breakpoint at 1100px; the compact header/menu runs below it |
@@ -425,9 +425,9 @@ verification.
   plus registered callback URLs.
 - **Wishlist:** saves products in `localStorage` under `wishlist`; it is per-browser and is not
   synced to a customer account.
-- **Currency:** the store is priced in USD. A display-only USD/INR selector converts rendered prices
-  at a fixed rate; Shopify cart totals and checkout remain USD. The reference defaults to INR and
-  exposes a 55-currency selector.
+- **Currency:** the store and storefront are INR-only. The former display-only USD selector was
+  removed; Shopify cart totals and checkout are INR. Prices are interim ×100 values until the source
+  INR catalog is re-applied; the reference defaults to INR and exposes a 55-currency selector.
 - **Catalog imagery:** accessories and outerwear use editorial or press imagery from the reference
   rather than dedicated product photography. The seeder does not add new photography.
 - **Brand assets:** reference photography and copied brand copy must be replaced before public distribution. The placeholder wordmark is the template mark; the reference imagery is licensed for this private study only.

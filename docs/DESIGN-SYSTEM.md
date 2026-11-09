@@ -9,10 +9,10 @@ are recorded in [`DESIGN-SYSTEM-AUDIT.md`](./DESIGN-SYSTEM-AUDIT.md) and
 [`FRONTEND-ARCHITECTURE.md`](./FRONTEND-ARCHITECTURE.md); it does not claim full parity.
 
 It is normative for presentation only. Commerce facts — prices, availability, currency, cart totals,
-checkout and customer identity — come from Shopify, with one display-only exception: the USD/INR
-selector in the header, mobile menu and footer converts prices for presentation at a fixed 94.62
-rate (`lib/money/display.ts`, stored under `ps_display_currency`). Cart totals, checkout, Schema.org,
-Markdown and Eve remain Shopify USD values. The system is built from the live reference measured on
+checkout and customer identity — come from Shopify. The store and storefront are **INR-only**; a
+USD display option is not offered, so no conversion note is shown. `lib/money/display.ts` retains
+the conversion helpers for a future multi-currency decision. Cart totals, checkout, Schema.org,
+Markdown and Eve remain Shopify INR values. The system is built from the live reference measured on
 4 November 2026 and re-measured on 5 November 2026; see
 [`reference/DESIGN.md`](./reference/DESIGN.md) for the measurement log,
 [`DESIGN-SYSTEM-AUDIT.md`](./DESIGN-SYSTEM-AUDIT.md) for the historical gap analysis, and
@@ -470,9 +470,10 @@ Interaction rules:
 - Uppercase is a CSS transform; source copy stays sentence case except acronyms and proper nouns.
 - Buttons use verbs: `Add to cart`, `Buy it now`, `View all`, `Apply`, `Clear all`.
 - Empty states say what happened and what to do next in one short sentence.
-- Prices, currency and availability are formatted from Shopify responses, with one display-only
-  exception: the USD/INR selector converts prices at a fixed rate for presentation. It never changes
-  cart state, checkout, Schema.org, Markdown or Eve, which stay on Shopify's USD amounts.
+- Prices, currency and availability are formatted from Shopify responses. The storefront is INR-only;
+  no display-currency conversion changes cart state, checkout, Schema.org, Markdown or Eve. The
+  reference shows an “Approx. in USD — charged in INR at checkout” note when a non-INR display
+  currency is selected; reproduce that if a second display currency is added.
 - The wordmark, reference photography and press imagery remain placeholders; replace them before
   publishing.
 

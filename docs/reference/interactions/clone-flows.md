@@ -25,7 +25,8 @@ mismatches.
 
 ## Product detail
 
-- `ALMA LACE CORSET TOP` renders at `$158.00`, matching the reference's approximate USD display.
+- `ALMA LACE CORSET TOP` renders at ₹15,800 (interim ×100; the reference shows ₹15,000). The
+  storefront is INR-only and does not show the reference's non-INR display note.
 - Colour is shown as three flat colour boxes, not names. Selecting `BURNT ORANGE` changes the
   selected chip, the URL (`?Colour=BURNT+ORANGE&Size=XS`) and the gallery to the Burnt Orange image.
 - Size is text, not image swatches: `XS S M L XL XXL` plus a size-guide control.
@@ -48,13 +49,14 @@ mismatches.
 ## Mobile
 
 - 390 × 844: no horizontal page overflow (`scrollWidth === innerWidth`).
-- The menu drawer opens, exposes 61 navigation links, and shows the USD/INR currency selector.
+- The menu drawer opens, exposes 61 navigation links, and shows the static INR currency label.
 - Product cards show colour dots and size text; the PDP stacks the gallery as on the reference.
 
 ## Differences from the live reference
 
-- The live store has a client-side 56-currency selector; the clone has a display-only USD/INR
-  selector. Rendered prices convert at a fixed rate, but cart totals and checkout remain USD.
+- The live store has a client-side 56-currency selector and a “charged in INR at checkout” note for
+  non-INR display; the clone is INR-only. Rendered prices, cart totals and checkout are INR, with
+  interim ×100 catalog prices.
 - The live India checkout opens GoKwik; the clone hands off to Shopify checkout.
 - The live PDP gallery is a stacked desktop column with a lightbox; the clone uses a stacked desktop
   grid, a mobile snap carousel and a lightbox with no thumbnail strip, previous/next controls or

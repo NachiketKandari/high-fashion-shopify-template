@@ -66,9 +66,9 @@ published reference catalog:
 - Every published product, option value, variant combination, image count and price was checked
   against the Storefront API; the import and verification report is written under
   `.catalog-import/`.
-- Reference prices are INR. This store is USD, so prices use the live storefront's approximate USD
-  display (₹94.83 per USD, rounded to whole dollars). The reference shows the same approximate USD
-  values when its currency selector is set to USD.
+- Reference prices are INR. The store was USD at import time, so early prices used the live
+  storefront's approximate USD display (₹94.83 per USD, rounded to whole dollars). The store is now
+  INR; current prices are interim ×100 values until the source INR catalog is re-applied.
 - Product photography is imported from the reference CDN into Shopify Files, including variant
   images so colour selection changes the gallery.
 - Colour option values use the reference theme's flat swatch palette in
@@ -233,9 +233,10 @@ The ordered closure plan, with dependencies and acceptance checks, is in
 - **Checkout, order status and payment failure** are Shopify-hosted.
 - **Newsletter and contact submissions** show a local success state; the contact form does not
   send mail yet, and the newsletter does not post to Shopify or a marketing provider.
-- **Currency**: the store is priced in USD. A display-only USD/INR selector converts rendered prices
-  at a fixed rate; Shopify cart totals and checkout remain USD. Making presentment currency
-  authoritative is a Shopify Markets decision, not a styling change.
+- **Currency**: the store and storefront are INR-only. The former display-only USD selector was
+  removed; Shopify cart totals and checkout are INR. Presentment-currency support would be a Shopify
+  Markets decision, not a styling change. Prices are interim ×100 values until the source INR
+  catalog is re-applied.
 - **Shipping**: no Shiprocket code ships in this repository. See
   [`SHIPROCKET.md`](./SHIPROCKET.md) for the two integration paths.
 - **Payment marks** are inline SVG brand marks in `components/footer/payment-marks.tsx` (American

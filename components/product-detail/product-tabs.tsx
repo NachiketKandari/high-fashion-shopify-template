@@ -9,7 +9,7 @@ const STATIC_CONTENT: Record<(typeof TABS)[number], string> = {
   Fit: "True to size. The model is wearing a size XS.",
   Fabric: "Dry clean on low heat. Do not bleach. Cool iron on the reverse.",
   "Shipping, Exchange & Returns":
-    "Complimentary shipping worldwide above $500. Orders dispatch within 2–3 business days. Exchanges are accepted within 14 days of delivery.",
+    "Complimentary shipping worldwide above ₹50,000. Orders dispatch within 2–3 business days. Exchanges are accepted within 14 days of delivery.",
 };
 
 export function ProductTabs({ descriptionHtml }: { descriptionHtml: string }) {

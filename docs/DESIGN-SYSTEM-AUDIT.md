@@ -55,7 +55,7 @@ the empty/filled cart states.
 | Token foundation      | Pass   | Colour, type roles, spacing, breakpoints, motion, focus and reduced motion are registered and asserted.                                     |
 | Layout and spacing    | Pass   | Gutter 20/30 at 1100, page top 24, section gap 40/60, grid gaps 3 and 24/20.                                                                |
 | Brand mark            | Pass   | One `Wordmark`, one intrinsic ratio, one priority rule; four variants, three in use, `menu` unused.                                         |
-| Shell                 | Pass*  | Header, mega menu, mobile menu, search, contact, cart and footer follow the system; currency is display-only USD/INR.                       |
+| Shell                 | Pass*  | Header, mega menu, mobile menu, search, contact, cart and footer follow the system; currency is INR-only.                                   |
 | Product cards / rails | Pass   | 2:3 media, 10px swatches with names, 12/16 type, 8px inset, hover/focus reveal and quick shop.                                              |
 | Collection            | Pass*  | Grid, chips, 36px toolbar and sticky filter footer; filter application remains immediate rather than draft.                                 |
 | Product detail        | Pass*  | Split, gallery, sticky info, tabs key model, 36px controls and the shared find-my-size size guide.                                          |
@@ -345,9 +345,10 @@ pointer drag. Add drag with keyboard/arrow fallback and reduced-motion instant s
 **P1.15 Currency and grid density.**
 At audit time, the header currency was a static `USD` label (`components/nav/index.tsx:19-22`) and
 the mobile bottom row was a static span (`components/nav/mobile-menu.tsx:114-116`). The currency is
-now the display-only USD/INR selector described in §7.7. The grid density buttons remain
-non-interactive (`components/collections/toolbar.tsx:86-92`); grid density is still a reference-only
-control that needs a product decision, not a styling patch.
+now a static `INR` label; the earlier display-only USD/INR selector was removed after the store
+moved to INR. The grid density buttons remain non-interactive
+(`components/collections/toolbar.tsx:86-92`); grid density is still a reference-only control that
+needs a product decision, not a styling patch.
 
 **P1.16 Several surfaces use type outside the scale.**
 Blog and listing headings use 20–48px with template tracking (`components/blog/article-card.tsx:33-42`,
@@ -554,12 +555,11 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
    named `--motion-drawer-slow: 500ms` exception for the cart only; do not mix anonymous durations.
 6. **Quick shop.** Wire the existing `QuickShop` component into the card hover/focus action rather
    than writing a second implementation.
-7. **Currency and grid density.** The store currency is USD and checkout stays in USD, but the
-   storefront has a display-only USD/INR selector (`lib/money/display.ts`, `components/currency/*`)
-   using fixed display rates; this is the recorded exception to "do not fake currency" because it
-   never changes the Shopify currency. The reference exposes 55 currencies; broader support still
-   needs a product decision. Grid density is a reference control with no storefront behaviour yet.
-   Do not extend the display-only conversion to checkout or present it as Shopify Markets.
+7. **Currency and grid density.** The store is INR and the storefront shows INR only; the earlier
+   display-only USD/INR selector was removed. The reference exposes 55 currencies and notes that a
+   non-INR display is approximate and charged in INR at checkout; revisit that pattern only if a
+   second display currency becomes a requirement. Grid density is a reference control with no
+   storefront behaviour yet. Do not present display conversion as Shopify Markets.
 8. **Content migration.** The content migration commit moved the editorial pages and journal to Shopify. Remaining
    content may still move; do not couple the design system to local route files. The shell and
    commerce components are the priority.
@@ -587,9 +587,9 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
 7. **Screen reader.** Automated ARIA, focus, tab-key, target and reduced-motion checks pass; a
    screen-reader pass remains manual.
 8. **Checkout.** Shopify-hosted and out of scope.
-9. **Display-only currency.** `lib/money/display.ts` and `components/currency/*` convert storefront
-   prices to INR at fixed display rates and persist the choice in the browser. Checkout and Shopify's
-   recorded totals remain in USD; this is not Shopify Markets and does not change the store currency.
+9. **Currency.** The store and storefront are INR-only; the former display-only USD selector and
+   fixed-rate conversion were removed. Checkout and Shopify's recorded totals are INR. Catalog
+   prices are interim ×100 values until the source INR catalog is re-applied.
 
 ## 9. Verification status
 

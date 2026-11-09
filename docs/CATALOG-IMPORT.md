@@ -23,9 +23,11 @@ The live storefront's larger collection counts, such as `women` at 341, include 
 archived products. The published catalog is the 95 products returned by the public product feed
 and listed in the product sitemap.
 
-Prices are INR in the reference. This store is USD, so prices use the live site's approximate USD
-display: **₹94.83 per USD**, rounded to whole dollars. Example: Alma Lace Corset Top is **$158.00**
-in both the reference's USD display and this store.
+Prices are INR in the reference. At import time this store was USD, so prices used the live site's
+approximate USD display: **₹94.83 per USD**, rounded to whole dollars. Example: Alma Lace Corset Top
+was **$158.00** in both the reference's USD display and this store. The store currency is now INR
+(set 10 November 2026); current prices are interim ×100 values until the cached source INR catalog
+is re-applied.
 
 ## Verification
 
@@ -91,9 +93,9 @@ and acceptance checks, is in [`GAP-CLOSURE-PLAN.md`](./GAP-CLOSURE-PLAN.md):
    `https://dummy-store-f0ejfuh9.myshopify.com`, but the development store's Online Store password
    gate redirects to `/password`. Disable password protection in Shopify admin to complete the
    checkout test.
-5. **Currency UI differs in scope.** The reference has a client-side 56-currency selector; the clone
-   has a two-currency display selector (USD/INR at a fixed rate). Prices convert in the browser;
-   Shopify cart totals and checkout remain in the store currency, USD.
+5. **Currency UI differs in scope.** The reference has a client-side 56-currency selector and shows a
+   “charged in INR at checkout” note for non-INR display. The clone is INR-only: the store, cart,
+   checkout and every rendered price are INR, with interim ×100 catalog prices.
 6. **Gallery presentation differs.** The reference stacks the desktop gallery and opens a lightbox;
    the clone uses a stacked desktop grid, a mobile snap carousel and a lightbox with no thumbnail
    strip, previous/next controls or image counter. Image URLs now request a 1920 px Shopify CDN

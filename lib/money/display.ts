@@ -1,16 +1,14 @@
 import { formatPrice } from "@/lib/money";
 import type { Money } from "@/lib/money/types";
 
-// Display-only rates, relative to the store's USD prices. INR is the 5 November
-// 2026 rate, 94.620171, rounded down to two decimals.
-export const DISPLAY_CURRENCIES = [
-  { code: "USD", name: "US Dollar", rate: 1 },
-  { code: "INR", name: "Indian Rupee", rate: 94.62 },
-] as const;
+// The store is INR-only. The conversion helpers remain for a future
+// multi-currency decision; do not expose a second display currency without
+// reproducing the reference's "charged in INR at checkout" note.
+export const DISPLAY_CURRENCIES = [{ code: "INR", name: "Indian Rupee", rate: 1 }] as const;
 
 export type DisplayCurrencyCode = (typeof DISPLAY_CURRENCIES)[number]["code"];
 
-export const DEFAULT_DISPLAY_CURRENCY: DisplayCurrencyCode = "USD";
+export const DEFAULT_DISPLAY_CURRENCY: DisplayCurrencyCode = "INR";
 
 export function isDisplayCurrency(value: string): value is DisplayCurrencyCode {
   return DISPLAY_CURRENCIES.some((currency) => currency.code === value);

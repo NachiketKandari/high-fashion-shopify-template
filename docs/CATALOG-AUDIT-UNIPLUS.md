@@ -5,7 +5,8 @@ Status: 7 November 2026.
 Source: `UniPlus_Product_Catalog.xlsx` (`Catalog` and `Notes`), the labelled photoshoot folder
 `Lorum Ipsum resources`, and its `labels_mapping.csv`. Reference standard:
 [`PRODUCT-DATA-REQUIREMENTS.md`](./PRODUCT-DATA-REQUIREMENTS.md) §1–§14. Target:
-`dummy-store-f0ejfuh9.myshopify.com` (USD). Existing Polite Society and demo products are out of
+`dummy-store-f0ejfuh9.myshopify.com` (USD at audit time; now INR). Existing Polite Society and demo
+products are out of
 scope and are not modified.
 
 ## Verdict
