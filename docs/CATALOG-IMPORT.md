@@ -26,8 +26,7 @@ and listed in the product sitemap.
 Prices are INR in the reference. At import time this store was USD, so prices used the live site's
 approximate USD display: **₹94.83 per USD**, rounded to whole dollars. Example: Alma Lace Corset Top
 was **$158.00** in both the reference's USD display and this store. The store currency is now INR
-(set 10 November 2026); current prices are interim ×100 values until the cached source INR catalog
-is re-applied.
+(set 10 November 2026); current prices are final INR values.
 
 ## Verification
 
@@ -95,7 +94,7 @@ and acceptance checks, is in [`GAP-CLOSURE-PLAN.md`](./GAP-CLOSURE-PLAN.md):
    checkout test.
 5. **Currency UI differs in scope.** The reference has a client-side 56-currency selector and shows a
    “charged in INR at checkout” note for non-INR display. The clone is INR-only: the store, cart,
-   checkout and every rendered price are INR, with interim ×100 catalog prices.
+   checkout and every rendered price are INR, with final INR catalog prices.
 6. **Gallery presentation differs.** The reference stacks the desktop gallery and opens a lightbox;
    the clone uses a stacked desktop grid, a mobile snap carousel and a lightbox with no thumbnail
    strip, previous/next controls or image counter. Image URLs now request a 1920 px Shopify CDN

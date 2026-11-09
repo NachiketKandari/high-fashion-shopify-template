@@ -8,21 +8,21 @@ products and never publishes UniPlus products.
 
 ## What was imported
 
-| Metric      | Value                                                                    |
-| ----------- | ------------------------------------------------------------------------ |
-| Products    | 39, all `DRAFT`                                                          |
-| Variants    | 354                                                                      |
-| Colourways  | 59                                                                       |
-| Images      | 86 product image slots from 70 unique local photos                       |
-| Collections | 13 named in the sheet; existing `bottoms`, `tops` and `bodysuits` reused |
-| Prices      | Source was blank (`0.00`); on 10 November 2026 prices were derived from active category medians (₹4,000–₹20,900) so no draft is ₹0 |
-| SKUs        | Generated `UNI-<HANDLE>-<COLOUR>-<SIZE>`; flagged as generated           |
-| Inventory   | Untracked; `continue_selling` is `No`                                    |
-| Publication | None                                                                     |
+| Metric      | Value                                                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| Products    | 39, all `DRAFT`                                                                                                     |
+| Variants    | 354                                                                                                                 |
+| Colourways  | 59                                                                                                                  |
+| Images      | 86 product image slots from 70 unique local photos                                                                  |
+| Collections | 13 named in the sheet; existing `bottoms`, `tops` and `bodysuits` reused                                            |
+| Prices      | Final category-based INR values (₹4,000–₹20,900), derived from active category medians because the source was blank |
+| SKUs        | Generated `UNI-<HANDLE>-<COLOUR>-<SIZE>`; flagged as generated                                                      |
+| Inventory   | Untracked; `continue_selling` is `No`                                                                               |
+| Publication | None                                                                                                                |
 
 Admin verification passed at import: 39/39 products, 354/354 variants, 86/86 images, expected
 `Colour`/`Size` options, DRAFT status, generated SKUs and all expected collection memberships. The
-`0.00` prices were later replaced by category-derived values; the source fixture still has blank
+`0.00` prices were replaced with final category-based values; the source fixture still has blank
 prices, so a future importer run will reset them until the fixture or importer is updated.
 
 The audit and client-input list is [`CATALOG-AUDIT-UNIPLUS.md`](./CATALOG-AUDIT-UNIPLUS.md).

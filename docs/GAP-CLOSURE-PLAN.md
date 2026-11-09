@@ -154,17 +154,15 @@ without changing the cart, checkout or order currency. Indian payments add a har
 Shopify processes third-party-provider payments in the store currency, and UPI is INR-only, so a USD
 base disables UPI and domestic payment methods.
 
-| Option                        | What it means                                                                                       | Recommendation                                                    |
-| ----------------------------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| A. Keep USD only              | Static `USD` label, one currency everywhere. Remove this from the gap list and document the choice. | Not viable for an Indian audience: no UPI                         |
-| B. INR base + Markets pricing | Set store currency to INR; use Markets catalogs/price adjustments for international shoppers.       | **Recommended**; note international shoppers are charged in INR   |
-| C. Reference-style FX display | Convert displayed prices client-side; cart and checkout stay in the store currency.                 | Not a payments solution; replace once the store currency is final |
+| Option                        | What it means                                                                                       | Recommendation                                             |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| A. Keep USD only              | Static `USD` label, one currency everywhere. Remove this from the gap list and document the choice. | Not viable for an Indian audience: no UPI                  |
+| B. INR base + Markets pricing | Set store currency to INR; use Markets catalogs/price adjustments for international shoppers.       | **Implemented**; international shoppers are charged in INR |
+| C. Reference-style FX display | Convert displayed prices client-side; cart and checkout stay in the store currency.                 | Removed; the storefront is INR-only                        |
 
-**Current status:** the store currency is INR (set 10 November 2026). Every former USD variant
-amount was multiplied by 100 as an interim reprice; replace those values from the cached source INR
-catalog before taking orders. The storefront shows INR only; the former display-only USD toggle was
-removed. The full payment rationale is in
-[`PAYMENTS.md`](./PAYMENTS.md).
+**Current status:** the store currency is INR (set 10 November 2026) with final INR prices. The
+storefront shows INR only; the former display-only USD toggle was removed. No reprice is pending.
+The full payment rationale is in [`PAYMENTS.md`](./PAYMENTS.md).
 
 ## G7 — Gallery parity decision
 

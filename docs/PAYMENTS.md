@@ -15,7 +15,7 @@ exists on 10 November 2026.
 | Checkout test order       | **Not placed**; verification stops at the Shopify checkout redirect (and the store password gate)   |
 | Payment code in this repo | **None, by design**: no card form, no UPI form, no gateway SDK, no payment state                    |
 | GoKwik / Magic Checkout   | **Not implemented**; the reference storefront uses GoKwik for Indian traffic                        |
-| Store currency            | **INR** (set 10 November 2026); catalog prices are interim ×100 values                              |
+| Store currency            | **INR** (set 10 November 2026); catalog prices are final INR values                                 |
 
 "Integration" here does not mean writing a payment form. The template's entire payment surface is:
 
@@ -80,24 +80,23 @@ GMV, Grow → Advanced at about **₹56.8 lakh/month**, Advanced → Plus at abo
 Annual billing lowers the first two to roughly ₹4.1 lakh and ₹42.7 lakh. Plan features can justify
 an upgrade earlier; the fee alone usually does not.
 
-## 3. Currency: resolved, pricing interim
+## 3. Currency: resolved
 
-The store currency is now **INR** (set 10 November 2026), so third-party providers receive INR and
-UPI can appear. The remaining currency work is pricing:
+The store currency is **INR** (set 10 November 2026), so third-party providers receive INR and UPI
+can appear. There is no remaining currency work for launch.
 
-- Every former USD variant amount was multiplied by 100 as an interim reprice, so a $51 product
-  now reads ₹5,100. The cached source INR catalog (95 products, e.g. ₹4,800) should replace those
-  values; the importer preserves source INR amounts when the shop currency is INR.
+- Variant prices are **final INR values**. They were set at 100× the former USD amounts when the
+  store moved to INR; the cached source INR catalog is no longer the target.
 - The storefront shows INR only; the former display-only USD option was removed, so there is no
   conversion note to show.
 - Keeping international shoppers is a Markets decision: markets can adjust **prices** (catalogs,
   adjustments, rounding) on any plan, but without Shopify Payments they are still **charged in INR**
   with FX handled by the card network or gateway.
 - Changing store currency after the first sale requires Shopify Support and resets market
-  currencies, shipping rates, gift cards, app behaviour and reports. Do not take a paid order until
-  the authoritative INR prices are in place.
+  currencies, shipping rates, gift cards, app behaviour and reports; the store has no orders, so the
+  INR change is settled.
 
-The free-shipping threshold and copy are ₹50,000, matching the interim ×100 scale.
+The free-shipping threshold and copy are ₹50,000.
 
 ## 4. How Razorpay is incorporated (recommended path)
 
@@ -115,8 +114,8 @@ Shopify and Razorpay before committing.
 
 ### Setup sequence
 
-1. **Set the store currency to INR** and re-price products, discounts and shipping. Do this before
-   the first order.
+1. **Confirm the store currency is INR** and that prices, discounts and shipping are final. Do this
+   before the first order.
 2. **Complete Razorpay KYC** for the legal entity: PAN, address and bank proof, entity documents
    (CIN/MOA/AOA/board resolution for a company), GST certificate or the no-GST route, and a video
    KYC/cancelled-cheque fallback. The business name and address must match the website.
@@ -410,16 +409,16 @@ vendor register, incident-response plan, least-privilege admin, CSP and log hygi
 
 ## 11. Open decisions
 
-| Decision                | Current state                              | Recommendation                                                                   |
-| ----------------------- | ------------------------------------------ | -------------------------------------------------------------------------------- |
-| Store currency          | INR (set 10 Nov 2026); interim ×100 prices | Replace with the cached source INR catalog                                       |
-| Primary gateway         | None configured                            | Razorpay Secure                                                                  |
-| Onsite cards            | None                                       | Stay with Razorpay redirect at launch; evaluate PayU/Cashfree direct cards later |
-| Fallback gateway        | None                                       | Not native; rely on Razorpay smart routing and a tested rollback                 |
-| GoKwik / Magic Checkout | Not implemented                            | Defer; verify headless support before any pilot                                  |
-| COD                     | Not configured                             | Only with verification and RTO controls                                          |
-| Order webhooks          | Not consumed                               | Add only when fulfilment or analytics needs them                                 |
-| Payment marks           | Six card brands                            | Mirror the real method mix, including UPI                                        |
+| Decision                | Current state                       | Recommendation                                                                   |
+| ----------------------- | ----------------------------------- | -------------------------------------------------------------------------------- |
+| Store currency          | INR (set 10 Nov 2026); final prices | No action; revisit Markets only for international presentment                    |
+| Primary gateway         | None configured                     | Razorpay Secure                                                                  |
+| Onsite cards            | None                                | Stay with Razorpay redirect at launch; evaluate PayU/Cashfree direct cards later |
+| Fallback gateway        | None                                | Not native; rely on Razorpay smart routing and a tested rollback                 |
+| GoKwik / Magic Checkout | Not implemented                     | Defer; verify headless support before any pilot                                  |
+| COD                     | Not configured                      | Only with verification and RTO controls                                          |
+| Order webhooks          | Not consumed                        | Add only when fulfilment or analytics needs them                                 |
+| Payment marks           | Six card brands                     | Mirror the real method mix, including UPI                                        |
 
 ## 12. Cross-references and sources
 

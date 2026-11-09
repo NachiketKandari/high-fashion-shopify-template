@@ -589,7 +589,7 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
 8. **Checkout.** Shopify-hosted and out of scope.
 9. **Currency.** The store and storefront are INR-only; the former display-only USD selector and
    fixed-rate conversion were removed. Checkout and Shopify's recorded totals are INR. Catalog
-   prices are interim ×100 values until the source INR catalog is re-applied.
+   prices are final INR values.
 
 ## 9. Verification status
 

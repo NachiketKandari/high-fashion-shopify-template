@@ -38,7 +38,7 @@ does not replace them.
 | Vercel Analytics / Speed Insights    | Disabled                                                                                      |
 | Shopify analytics / consent / WebMCP | Disabled                                                                                      |
 | GA4                                  | Loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_GTM_ID` is set                     |
-| Currency                             | Store currency INR; INR-only display; prices are interim ×100 values                          |
+| Currency                             | Store currency INR; INR-only display; final INR prices                                        |
 | Locale                               | Single locale: country `US`, language `EN`, formatting locale `en-US`                         |
 
 The catalog figures come from a read-only Storefront API check on 7 November 2026. Treat them as a
@@ -307,10 +307,9 @@ The reference store shows “Approx. in USD — charged in INR at checkout” wh
 currency is selected. Reproduce that note if a second display currency is ever added; do not show
 converted prices without it.
 
-Prices are **interim**: every former USD variant amount was multiplied by 100 on 10 November rather
-than converted at the reference rate, so a $51 product now reads ₹5,100. The cached source INR
-catalog (95 products) should replace those values; the importer reads the shop currency and
-preserves source INR prices. Free-shipping copy and the cart threshold are ₹50,000.
+Prices are **final INR values**. They were set at 100× the former USD amounts when the store moved
+to INR; the cached source INR catalog is no longer the target. Free-shipping copy and the cart
+threshold are ₹50,000.
 
 This is the one place where the app renders a price-derived value that Shopify did not return, and
 it is a documented exception rather than the rule. The pending decision is whether to keep it,
@@ -517,20 +516,20 @@ This is the current backlog, deduplicated across the docs. Historical records su
 
 ### B. Product decisions
 
-| Decision                       | Current state                                                                                                                |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Currency                       | INR is the store currency and the only display currency; prices are interim ×100 values; replace from the source INR catalog |
-| Checkout test order            | Not placed; verification stops at the Shopify checkout redirect                                                              |
-| Gallery parity                 | Stacked desktop gallery + lightbox + mobile snap carousel; no zoom, previous/next or image counter                           |
-| Checkout provider              | Shopify checkout; no gateway configured; GoKwik is not implemented; see `PAYMENTS.md`                                        |
-| Contact and newsletter backend | Both show a local success state and send nothing                                                                             |
-| Wishlist persistence           | Browser-local only                                                                                                           |
-| Navigation ownership           | Code-owned in `lib/nav/index.ts`; Shopify menus are not enabled                                                              |
-| Product data depth             | Description-only; no structured fabric, fit, composition, origin or size-chart assignment                                    |
-| Shipping and fulfilment        | Shopify native rates; no Shiprocket code                                                                                     |
-| Localization                   | Single locale US/EN; no next-intl or Markets                                                                                 |
-| Analytics and consent          | GA4 only; no consent management, Vercel Analytics or Speed Insights                                                          |
-| Public Shop Agent              | Disabled; launch controls are external                                                                                       |
+| Decision                       | Current state                                                                                      |
+| ------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Currency                       | INR is the store currency and the only display currency; prices are final INR values               |
+| Checkout test order            | Not placed; verification stops at the Shopify checkout redirect                                    |
+| Gallery parity                 | Stacked desktop gallery + lightbox + mobile snap carousel; no zoom, previous/next or image counter |
+| Checkout provider              | Shopify checkout; no gateway configured; GoKwik is not implemented; see `PAYMENTS.md`              |
+| Contact and newsletter backend | Both show a local success state and send nothing                                                   |
+| Wishlist persistence           | Browser-local only                                                                                 |
+| Navigation ownership           | Code-owned in `lib/nav/index.ts`; Shopify menus are not enabled                                    |
+| Product data depth             | Description-only; no structured fabric, fit, composition, origin or size-chart assignment          |
+| Shipping and fulfilment        | Shopify native rates; no Shiprocket code                                                           |
+| Localization                   | Single locale US/EN; no next-intl or Markets                                                       |
+| Analytics and consent          | GA4 only; no consent management, Vercel Analytics or Speed Insights                                |
+| Public Shop Agent              | Disabled; launch controls are external                                                             |
 
 ### C. Frontend code remaining
 
@@ -560,9 +559,7 @@ This is the current backlog, deduplicated across the docs. Historical records su
 - Sold-out inventory availability.
 - Descriptive image alt text; imported alt text is `TITLE image N`.
 - Licensed or original photography and brand assets to replace reference imagery.
-- Replace the interim ×100 variant prices with the cached source INR catalog; re-check compare-at
-  prices and the zero-priced sold-out variants. The 39 Uniplus drafts now carry category-median
-  prices; replace them with real prices before publishing.
+- The 39 Uniplus drafts carry category-derived final INR prices; review them before publishing.
 - Real brand, contact, social, legal and shipping copy; verify policy thresholds match the INR
   store and the ₹50,000 free-shipping threshold.
 - `/collections` and `/collections/all` are missing from the static sitemap shard.

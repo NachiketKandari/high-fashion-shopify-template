@@ -701,7 +701,7 @@ pointing at `/api/webhooks/shopify` and `SHOPIFY_WEBHOOK_SECRET` matching.
 ## 16. Current state of this template
 
 - Store: **Lorem Ipsum** (`dummy-store-f0ejfuh9.myshopify.com`), store currency INR (set
-  10 November 2026); catalog prices are interim ×100 values.
+  10 November 2026); catalog prices are final INR values.
 - Catalog: **95 products, 880 variants, 709 images across 41 collections**, imported from the
   published reference catalog by `scripts/import-live-catalog.mjs`. All 880 variants are currently
   available because inventory is untracked. The original 12-product design-study seeder remains

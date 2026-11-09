@@ -68,7 +68,7 @@ published reference catalog:
   `.catalog-import/`.
 - Reference prices are INR. The store was USD at import time, so early prices used the live
   storefront's approximate USD display (₹94.83 per USD, rounded to whole dollars). The store is now
-  INR; current prices are interim ×100 values until the source INR catalog is re-applied.
+  INR; current prices are final INR values.
 - Product photography is imported from the reference CDN into Shopify Files, including variant
   images so colour selection changes the gallery.
 - Colour option values use the reference theme's flat swatch palette in
@@ -235,8 +235,7 @@ The ordered closure plan, with dependencies and acceptance checks, is in
   send mail yet, and the newsletter does not post to Shopify or a marketing provider.
 - **Currency**: the store and storefront are INR-only. The former display-only USD selector was
   removed; Shopify cart totals and checkout are INR. Presentment-currency support would be a Shopify
-  Markets decision, not a styling change. Prices are interim ×100 values until the source INR
-  catalog is re-applied.
+  Markets decision, not a styling change. Prices are final INR values.
 - **Shipping**: no Shiprocket code ships in this repository. See
   [`SHIPROCKET.md`](./SHIPROCKET.md) for the two integration paths.
 - **Payment marks** are inline SVG brand marks in `components/footer/payment-marks.tsx` (American

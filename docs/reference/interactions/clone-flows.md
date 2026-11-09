@@ -25,8 +25,8 @@ mismatches.
 
 ## Product detail
 
-- `ALMA LACE CORSET TOP` renders at ₹15,800 (interim ×100; the reference shows ₹15,000). The
-  storefront is INR-only and does not show the reference's non-INR display note.
+- `ALMA LACE CORSET TOP` renders at ₹15,800 (the reference shows ₹15,000). The storefront is
+  INR-only and does not show the reference's non-INR display note.
 - Colour is shown as three flat colour boxes, not names. Selecting `BURNT ORANGE` changes the
   selected chip, the URL (`?Colour=BURNT+ORANGE&Size=XS`) and the gallery to the Burnt Orange image.
 - Size is text, not image swatches: `XS S M L XL XXL` plus a size-guide control.
@@ -56,7 +56,7 @@ mismatches.
 
 - The live store has a client-side 56-currency selector and a “charged in INR at checkout” note for
   non-INR display; the clone is INR-only. Rendered prices, cart totals and checkout are INR, with
-  interim ×100 catalog prices.
+  final INR catalog prices.
 - The live India checkout opens GoKwik; the clone hands off to Shopify checkout.
 - The live PDP gallery is a stacked desktop column with a lightbox; the clone uses a stacked desktop
   grid, a mobile snap carousel and a lightbox with no thumbnail strip, previous/next controls or
