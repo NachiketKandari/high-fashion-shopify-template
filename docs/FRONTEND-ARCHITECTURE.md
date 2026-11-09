@@ -8,6 +8,8 @@ Read this first. The deeper references are:
 
 - [`FRONTEND-GLOSSARY.md`](./FRONTEND-GLOSSARY.md) — every UI/frontend term used here, defined in
   plain English, with where it lives in the code and external learning resources.
+- [`PAYMENTS.md`](./PAYMENTS.md) — checkout, India payment gateways, pending-payment behavior and
+  payment security.
 - [`SHOPIFY-WALKTHROUGH.md`](./SHOPIFY-WALKTHROUGH.md) — Shopify, Hydrogen and Vercel in detail.
 - [`HYDROGEN-USAGE.md`](./HYDROGEN-USAGE.md) — the exact Hydrogen SDK surface in use.
 - [`IMPLEMENTATION.md`](./IMPLEMENTATION.md) — the presentation rebuilt in this repository.
@@ -507,20 +509,20 @@ This is the current backlog, deduplicated across the docs. Historical records su
 
 ### B. Product decisions
 
-| Decision                       | Current state                                                                                      |
-| ------------------------------ | -------------------------------------------------------------------------------------------------- |
-| Currency                       | Display-only USD/INR is implemented; alternatives are USD-only or Shopify Markets                  |
-| Checkout test order            | Not placed; verification stops at the Shopify checkout redirect                                    |
-| Gallery parity                 | Stacked desktop gallery + lightbox + mobile snap carousel; no zoom, previous/next or image counter |
-| Checkout provider              | Shopify checkout; GoKwik is not implemented                                                        |
-| Contact and newsletter backend | Both show a local success state and send nothing                                                   |
-| Wishlist persistence           | Browser-local only                                                                                 |
-| Navigation ownership           | Code-owned in `lib/nav/index.ts`; Shopify menus are not enabled                                    |
-| Product data depth             | Description-only; no structured fabric, fit, composition, origin or size-chart assignment          |
-| Shipping and fulfilment        | Shopify native rates; no Shiprocket code                                                           |
-| Localization                   | Single locale US/EN; no next-intl or Markets                                                       |
-| Analytics and consent          | GA4 only; no consent management, Vercel Analytics or Speed Insights                                |
-| Public Shop Agent              | Disabled; launch controls are external                                                             |
+| Decision                       | Current state                                                                                                    |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Currency                       | Display-only USD/INR is implemented; Indian payments require an INR store currency or Markets; see `PAYMENTS.md` |
+| Checkout test order            | Not placed; verification stops at the Shopify checkout redirect                                                  |
+| Gallery parity                 | Stacked desktop gallery + lightbox + mobile snap carousel; no zoom, previous/next or image counter               |
+| Checkout provider              | Shopify checkout; no gateway configured; GoKwik is not implemented; see `PAYMENTS.md`                            |
+| Contact and newsletter backend | Both show a local success state and send nothing                                                                 |
+| Wishlist persistence           | Browser-local only                                                                                               |
+| Navigation ownership           | Code-owned in `lib/nav/index.ts`; Shopify menus are not enabled                                                  |
+| Product data depth             | Description-only; no structured fabric, fit, composition, origin or size-chart assignment                        |
+| Shipping and fulfilment        | Shopify native rates; no Shiprocket code                                                                         |
+| Localization                   | Single locale US/EN; no next-intl or Markets                                                                     |
+| Analytics and consent          | GA4 only; no consent management, Vercel Analytics or Speed Insights                                              |
+| Public Shop Agent              | Disabled; launch controls are external                                                                           |
 
 ### C. Frontend code remaining
 

@@ -181,9 +181,10 @@ previous/next, counter and a focus trap. This is presentation parity, not a cata
 ## G8 — GoKwik decision
 
 The reference opens a GoKwik iframe for India; the clone hands off to Shopify checkout. GoKwik is a
-merchant-specific integration with its own account, scripts and checkout contract. Recommended:
-keep Shopify checkout and document the difference. Only start a GoKwik project if the merchant
-explicitly needs that provider.
+checkout-experience layer, not a payment aggregator: licensed payment aggregators integrated with
+GoKwik process the payments. Recommended: keep Shopify checkout with Razorpay and revisit GoKwik
+only if conversion or COD/RTO data justifies a second checkout system. The full evaluation and
+launch checklist is in [`PAYMENTS.md`](./PAYMENTS.md).
 
 ## G9 — Final verification and handoff
 

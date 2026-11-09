@@ -166,7 +166,9 @@ domains while testing. The Customer Account API credentials and
 ### Checkout
 
 Checkout remains Shopify-hosted. Set the store's payment providers, shipping zones, taxes and
-policies in Shopify Admin. The Vercel deployment never handles card data.
+policies in Shopify Admin. The Vercel deployment never handles card data. For the India gateway
+recommendation, currency prerequisite and payment security checklist, see
+[`PAYMENTS.md`](./PAYMENTS.md).
 
 ## 7. Caching on Vercel
 
