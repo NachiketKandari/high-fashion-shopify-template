@@ -89,7 +89,7 @@ export default function HomePage() {
       <h1 className="sr-only">{shopConfig.site.name} | High Fashion Clothing</h1>
 
       <section aria-label="Campaign">
-        <Link className="block" href="/collections/chapter-x">
+        <Link className="block" href="/collections/new-in">
           <div className="relative h-[calc(100svh-91px)] overflow-hidden desktop:aspect-[1440/784] desktop:h-auto">
             <CampaignImage />
           </div>

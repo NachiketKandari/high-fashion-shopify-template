@@ -91,7 +91,7 @@ and never publicly cached.
 
 `app/page.tsx` composes the static homepage:
 
-- A full-bleed hero linking to `/collections/chapter-x`: `/reference/hero-desktop.jpg` at
+- A full-bleed hero linking to `/collections/new-in`: `/reference/hero-desktop.jpg` at
   `1440/784` on desktop, `/reference/hero-mobile.jpg` filling the mobile viewport under the header.
   Both use `priority` and `sizes="100vw"`.
 - Two-up editorial tiles linking to `/collections/corsets` and
@@ -290,7 +290,7 @@ UPDATE=1 corepack pnpm seed:content    # replace existing page and article bodie
 
 `lib/nav/index.ts` is the single source for the menu and footer. It mirrors the live structure:
 
-- `New In` → `/collections/chapter-x`.
+- `New In` → `/collections/new-in`, populated by the published UniPlus catalog.
 - `Woman` → `/collections/women`, with Shop Woman, Shop by Occasion and Shop by Category columns
   plus two editorial tiles.
 - `Unisex` → `/collections/unisex-1`, with Shirts & T-shirts, Bottoms and Outerwear.
@@ -298,10 +298,11 @@ UPDATE=1 corepack pnpm seed:content    # replace existing page and article bodie
 - `Our World` → `/pages/about-us`, with About Us and Press.
 - Footer columns: Help, Policies, The Brand and Socials.
 
-Home links and collection chips were rewired to seeded handles: `chapter-x`, `corsets`,
-`dresses-and-jumpsuits`, `core`, `essentials`, `signature` and `bestsellers` are all created by the
-seeder. The collection chips add `bottoms-women`, `co-ord-sets`, `knits`, `new-in` and `tops`; the
-seed includes each one.
+Home links and collection chips were rewired to seeded handles: `new-in`, `corsets`,
+`dresses-and-jumpsuits`, `core`, `essentials`, `signature` and `bestsellers`. The home hero and
+header `New In` link point to `/collections/new-in`, which is populated from Shopify rather than the
+design-study seeder. The collection chips add `bottoms-women`, `co-ord-sets`, `knits`, `new-in` and
+`tops`; the seed includes each one.
 
 Known differences from the reference are deliberate or environmental:
 

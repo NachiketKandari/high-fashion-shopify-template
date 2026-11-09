@@ -335,10 +335,13 @@ mutation Publish($id: ID!, $input: [PublicationInput!]!) {
 ```
 
 Find the publication with the `publications` query. In this store it is called
-**Dummy Store Headless**.
+**Lorem Ipsum**; it is the Headless channel the Next.js storefront reads. Set
+`SHOPIFY_PUBLICATION_ID` if the channel is named differently.
 
-Collections follow the same pattern: `collectionCreate` (with `ruleSet` for automated collections),
-`collectionAddProducts`, then `publishablePublish`.
+Collections follow the same pattern: `collectionCreate`, then `collectionUpdate` with `sources` and
+manual `selections` (or `ruleSet` conditions for automated collections), then
+`publishablePublish`. The older `collectionAddProducts` mutation is not available in API
+`2026-10`.
 
 ### 2.5 The Storefront API
 
@@ -472,7 +475,7 @@ previous.
 3. Add one option `Colour` with `Ivory`, and one option `Size` with `One Size`.
 4. Set the variant price to `$45`, SKU `TEST-SCARF-IVORY`.
 5. Add an image, set status **Active**, and save.
-6. In the product's **Sales channels** section, publish to **Dummy Store Headless**.
+6. In the product's **Sales channels** section, publish to **Lorem Ipsum** (the Headless channel).
 7. Visit `http://localhost:3000/products/test-silk-scarf`.
 
 If it 404s, recheck the publication and wait for the product cache tag to expire or send a

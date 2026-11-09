@@ -17,7 +17,7 @@ current frontend map and pending-work summary is
 | Admin checks        | 41/41 collection memberships match the reference, including unpublished items |
 | Reference reports   | Four live interaction audits plus `clone-flows.md`                            |
 | Code checks         | `pnpm lint` and `pnpm typecheck` pass; working tree clean                     |
-| Published catalogue | “Dummy Store Headless” publication                                            |
+| Published catalogue | “Lorem Ipsum” Headless publication                                            |
 
 The 221 sold-out variants are the largest remaining catalog difference: 50 products are partially
 sold out and `core-cotton-shirt-all` is completely sold out in the reference, while every variant

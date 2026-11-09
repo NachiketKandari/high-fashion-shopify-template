@@ -380,8 +380,8 @@ vendor register, incident-response plan, least-privilege admin, CSP and log hygi
 - [ ] Set INR pricing, taxes, shipping zones and return/refund policy.
 - [ ] Add COD as a manual payment method only with verification rules.
 - [ ] Set checkout customer contact to phone or email; Razorpay needs a phone number.
-- [ ] Disable the Shop Pay button: `shopConfig.pdp.buyWithShop` is currently `true`, but Shop Pay
-      requires Shopify Payments, which is unavailable in India.
+- [x] Disable the Shop Pay button: `shopConfig.pdp.buyWithShop` is `false` because Shop Pay requires
+      Shopify Payments, which is unavailable in India.
 - [ ] Remove the Online Store password and place a real test order (then refund it).
 - [ ] Configure order notification emails and the sender address.
 

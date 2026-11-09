@@ -28,7 +28,7 @@ export interface FooterColumn {
 
 // Mirrors the reference storefront menu. The collection handles are seeded by scripts/seed-catalog.mjs.
 export const MAIN_NAV: NavItem[] = [
-  { href: "/collections/chapter-x", label: "New In" },
+  { href: "/collections/new-in", label: "New In" },
   {
     href: "/collections/women",
     label: "Woman",

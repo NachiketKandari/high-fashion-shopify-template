@@ -1,33 +1,68 @@
-# UniPlus draft import
+# UniPlus catalog import and publication
 
 The UniPlus catalog is a separate client catalog imported from
 `UniPlus_Product_Catalog.xlsx` and the labelled `Lorum Ipsum resources` photoshoot folder. The
 normalized source is `scripts/data/uniplus-catalog.json`; the importer is
-`scripts/import-uniplus-catalog.mjs`. It never modifies the existing Polite Society or demo
-products and never publishes UniPlus products.
+`scripts/import-uniplus-catalog.mjs`; the storefront publisher is
+`scripts/publish-uniplus-catalog.mjs`.
 
-## What was imported
+## Current state
 
-| Metric      | Value                                                                                                               |
-| ----------- | ------------------------------------------------------------------------------------------------------------------- |
-| Products    | 39, all `DRAFT`                                                                                                     |
-| Variants    | 354                                                                                                                 |
-| Colourways  | 59                                                                                                                  |
-| Images      | 86 product image slots from 70 unique local photos                                                                  |
-| Collections | 13 named in the sheet; existing `bottoms`, `tops` and `bodysuits` reused                                            |
-| Prices      | Final category-based INR values (₹4,000–₹20,900), derived from active category medians because the source was blank |
-| SKUs        | Generated `UNI-<HANDLE>-<COLOUR>-<SIZE>`; flagged as generated                                                      |
-| Inventory   | Untracked; `continue_selling` is `No`                                                                               |
-| Publication | None                                                                                                                |
+| Metric        | Value                                                                                                       |
+| ------------- | ----------------------------------------------------------------------------------------------------------- |
+| Products      | 39 total: 29 `ACTIVE` and published, 10 `DRAFT`                                                             |
+| Variants      | 354                                                                                                         |
+| Colourways    | 59                                                                                                          |
+| Images        | 86 product image slots from 70 unique local photos                                                          |
+| Collections   | 13; all published to the storefront channel                                                                 |
+| Prices        | Final category-based INR values (₹4,000–₹20,900); no reprice is pending                                     |
+| Sales channel | `Lorem Ipsum` (`gid://shopify/Publication/228076519522`), the channel the Next.js storefront reads          |
+| New In        | `/collections/new-in` contains the 29 published products; the header `New In` link and home hero point here |
 
-Admin verification passed at import: 39/39 products, 354/354 variants, 86/86 images, expected
-`Colour`/`Size` options, DRAFT status, generated SKUs and all expected collection memberships. The
-`0.00` prices were replaced with final category-based values; the source fixture still has blank
-prices, so a future importer run will reset them until the fixture or importer is updated.
+The publisher replaced the 12 reference products that were previously in New In; those products
+remain in their other collections. The 29 published UniPlus products have at least one image for
+every colourway. The 10 drafts are held back for imagery, not price:
 
-The audit and client-input list is [`CATALOG-AUDIT-UNIPLUS.md`](./CATALOG-AUDIT-UNIPLUS.md).
+| Product (`handle`)                 | Missing imagery   |
+| ---------------------------------- | ----------------- |
+| `cover-belted-slit-pants`          | No product images |
+| `pinstriped-bralette`              | No product images |
+| `crush-linen-bralette`             | No product images |
+| `corset-back-hide-t-shirt`         | No product images |
+| `slit-racer-back-shirt`            | No product images |
+| `mini-chipped-skirt`               | Brown, Black      |
+| `double-mesh-skirt`                | Black             |
+| `animal-poplin-bralette`           | Brown, Black      |
+| `rolled-twisted-racer-back`        | Brown             |
+| `big-collar-slit-racer-back-shirt` | Brown             |
 
-## Commands
+A product with a missing colour image is not published: the product page partitions the gallery by
+colour, so the shopper would see another colour's photo under the selected colour. Add the missing
+photos, then run the publisher again. `--allow-partial-colours` overrides this guard, but the
+product page will be misleading.
+
+## What makes a UniPlus product visible
+
+Product visibility needs the first three conditions; collection pages also need the fourth; every
+surface needs the fifth:
+
+1. **Status is `ACTIVE`.** A draft is invisible to the Storefront API even if it has media.
+2. **Published to the `Lorem Ipsum` sales channel.** `ACTIVE` alone is not enough; the product must
+   be on the publication the storefront's Storefront API token belongs to. Existing Polite Society
+   products use the same channel.
+3. **At least one `READY` image, and one image for every colourway.** The storefront selects the
+   variant image when a colour is chosen.
+4. **The collection is published** if shoppers should reach it at `/collections/<handle>`.
+   `/collections/all` returns every product published to the channel, regardless of manual
+   collection membership.
+5. **The Next.js cache is refreshed.** Default collection and product reads use `cacheLife("max")`
+   with Shopify tags. Product and collection webhooks invalidate those tags; without webhooks, a
+   deploy or a manual `/api/revalidate` call is required.
+
+A draft or unpublished product returns `null` from the Storefront API, and `/products/<handle>`
+renders the 404 page.
+
+## Automated import and publishing
 
 The default image folder is `~/UniPlus/Lorum Ipsum resources`. Override it with `--image-dir`.
 
@@ -37,38 +72,113 @@ node scripts/build-uniplus-fixture.mjs \
   --workbook="$HOME/workspace/UniPlus_Product_Catalog.xlsx" \
   --image-dir="$HOME/UniPlus/Lorum Ipsum resources"
 
-# Inspect the plan without calling Shopify
+# Inspect the import plan without calling Shopify
 node --env-file=.env.local scripts/import-uniplus-catalog.mjs --dry-run --limit=1
 
-# Upsert all 39 products, upload local images, keep every product DRAFT
+# Upsert products and upload local images
 node --env-file=.env.local scripts/import-uniplus-catalog.mjs --upload
 
-# Import in small batches if the full run is slow
-node --env-file=.env.local scripts/import-uniplus-catalog.mjs \
-  --only=tucked-jacket,dawg-t-shirt,armani-t-shirt --upload
-
-# Add missing collection memberships without touching products or media
-node --env-file=.env.local scripts/import-uniplus-catalog.mjs --collections-only
-
-# Verify existing products and collections, write the report, change nothing
+# Verify products, options, media, SKUs and collection membership
 node --env-file=.env.local scripts/import-uniplus-catalog.mjs --verify-only
+
+# Plan the storefront publication
+node --env-file=.env.local scripts/publish-uniplus-catalog.mjs \
+  --dry-run --replace-new-in --demote-blocked
+
+# Publish products and collections, then make New In contain only publishable UniPlus products
+node --env-file=.env.local scripts/publish-uniplus-catalog.mjs \
+  --replace-new-in --demote-blocked
+
+# Re-check the publication state without writing
+node --env-file=.env.local scripts/publish-uniplus-catalog.mjs --verify-only
 ```
 
-The report is `.catalog-import/uniplus-report.json`. Use `--report=<path>` for another location.
-`--limit` and `--only` apply to both import and verification. `--publish` is implemented but is a
-no-op while any launch blocker remains; every product in this workbook is blocked by missing price,
-composition, care, fit, colour hex, inventory policy or confirmed SKU.
+`import-uniplus-catalog.mjs` preserves the existing Shopify price by SKU when the fixture price is
+blank, and it leaves an existing product's status unchanged unless `--publish` is passed. A
+re-import therefore does not reset final prices or unpublish live products. `--publish` publishes
+products that have media and non-zero prices; it does not update the New In collection, so use the
+publisher for the launch flow.
 
-## Import behaviour
+`publish-uniplus-catalog.mjs` defaults to strict imagery: a product is blocked when any colourway
+has no image. Use `--allow-partial-colours` to publish those products anyway. `--demote-blocked`
+sets previously published products back to `DRAFT` and unpublishes them from the storefront
+channel.
 
-- Upserts by handle with `productSet`; options are always `Colour` and `Size`.
-- Replaces media on an updated product, then uploads local files through
-  `stagedUploadsCreate` and `productSet` file inputs.
-- Writes `productType`, vendor, tags, SEO, description HTML and `custom.origin`,
-  `custom.composition`, `custom.care` and `custom.fit` metafields where present.
-- Assigns each colourway's first image to its variants.
-- Creates or ensures only the collections named in the sheet; it never removes other products from
-  an existing collection.
-- Requires the same Admin app credentials and scopes as `scripts/import-live-catalog.mjs`
-  (`read_products`, `write_products`, `read_files`, `write_files`, `read_publications`,
-  `write_publications`). No new dependency is used.
+Reports are written to `.catalog-import/uniplus-report.json` and
+`.catalog-import/uniplus-publish-report.json`.
+
+## Manual Shopify admin steps
+
+### Publish one product
+
+1. In Shopify admin, open **Products** and search for the product handle or title.
+2. Open **Media** and upload the missing photos. Add alt text that names the product, colour and
+   view. Drag to set the front image first.
+3. Under **Variants**, select each colour variant and assign its front image.
+4. Set **Status** to **Active**.
+5. In **Sales channels**, choose **Manage** and tick **Lorem Ipsum**. Save.
+6. Open the live product page and check the price, the default colour image and every colour's
+   image.
+
+### Publish products in bulk
+
+1. In **Products**, filter by **Draft** or by vendor `UniPlus`.
+2. Select the products that have complete imagery.
+3. Use **More actions → Set as active**.
+4. Use **More actions → Add to sales channel** (or open each product's **Sales channels → Manage**)
+   and select **Lorem Ipsum**.
+5. Confirm the products appear at `/collections/new-in` and `/collections/all`.
+
+Bulk actions vary slightly by admin version; the per-product **Sales channels → Manage** path is
+always available.
+
+### Add products to New In
+
+1. Open **Products → Collections → New In**.
+2. Use **Add products** and select the published UniPlus products.
+3. Remove products that should no longer be in New In.
+4. Under **Sales channels**, ensure **Lorem Ipsum** is ticked.
+5. Save, then check `/collections/new-in`.
+
+The automated equivalent is `publish-uniplus-catalog.mjs --replace-new-in`; it replaces the
+collection membership with the publishable UniPlus set instead of appending.
+
+### Publish a collection
+
+1. Open **Products → Collections** and select the collection.
+2. Under **Sales channels**, choose **Manage** and tick **Lorem Ipsum**.
+3. Save. The collection handle is now readable at `/collections/<handle>`.
+
+### Add or correct images
+
+- Use a 2:3 portrait crop; 1600 px on the long edge is enough for the storefront's image sizes.
+- Keep one clean front image per colour and three images per colour where possible.
+- Set the variant image for every colour; the PDP uses it when the shopper changes colour.
+- Alt text should follow `Product title in Colour, view`, for example
+  `Tucked Jacket in Brown, front view`.
+- If a colour has no photo, leave the product in draft rather than reusing another colour's image.
+
+### Refresh the storefront cache
+
+Shopify product and collection webhooks post to `/api/webhooks/shopify` and invalidate the product,
+collection and index tags. If webhooks are not configured, either redeploy or, when
+`REVALIDATE_SECRET` is set, call:
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $REVALIDATE_SECRET" \
+  "https://your-store.example/api/revalidate?tag=products-index&tag=collections&tag=collections-index&tag=collection-new-in"
+```
+
+Add `tag=product-<handle>` when only one product page is stale. `cacheLife("max")` means waiting for
+the cache to expire is not a reliable verification step.
+
+## Verification checklist
+
+- Admin: product is `ACTIVE`, `Lorem Ipsum` is listed under sales channels, media status is
+  `READY`, and every colour has a variant image.
+- Storefront API: `collection(handle: "new-in")` returns the expected product handles and images.
+- Browser: `/collections/new-in` renders the expected cards with loaded images; `/products/<handle>`
+  renders the price in INR, the default colour image and each colour's image.
+- Draft: `/products/<held-back-handle>` returns the 404 page.
+- Cache: after a publish, re-check the live URL rather than relying on the admin state alone.

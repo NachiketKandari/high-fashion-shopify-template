@@ -74,12 +74,17 @@ published reference catalog:
 - Colour option values use the reference theme's flat swatch palette in
   `lib/product/color-swatches.ts`; Shopify exposes no swatch value for these products.
 - Demo products, the gift card, stale curated products and non-catalog collections are unpublished
-  from **Dummy Store Headless**. They remain in the Shopify admin.
+  from the **Lorem Ipsum** storefront channel. They remain in the Shopify admin.
 - Inventory quantities are not mirrored: the seeding app lacks `read_locations` and
   `write_inventory`, so variants are untracked and available. Add those scopes and pass
   `--location-id` to mirror sold-out variants.
 - Product descriptions come from the reference `body_html`. Per-product Fabric and Fit tab copy is
   not imported yet; the PDP renders its current static copy for those tabs.
+
+A separate client catalog adds 39 UniPlus products and 354 variants. 29 are `ACTIVE` and published
+to the **Lorem Ipsum** channel with final INR prices and complete colour imagery; they populate
+`/collections/new-in`. The other 10 remain `DRAFT` for missing photos. The import, publication and
+manual Shopify steps are in [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
 
 ### Credentials: source and storage
 
@@ -105,7 +110,7 @@ never use the `NEXT_PUBLIC_` prefix, and must never be committed. `.env.example`
 ever exposed — a screenshot, a chat, a log — rotate it under **Settings → Credentials**, update
 `.env.local`, and re-run the seed. The product, publication and file scopes are `write_products`,
 `write_publications` and `write_files` (write includes read), and the target publication is
-**Dummy Store Headless**. The full granted scope list is in
+**Lorem Ipsum** (the Headless channel). The full granted scope list is in
 [`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md).
 
 ### Commands

@@ -9,7 +9,7 @@ cache and verification JSON live in the git-ignored `.catalog-import/` directory
 | Metric             | Value                                                              |
 | ------------------ | ------------------------------------------------------------------ |
 | Source             | `https://politesocietyshop.com` published catalog                  |
-| Target publication | Dummy Store Headless                                               |
+| Target publication | Lorem Ipsum (the Headless storefront channel)                      |
 | Products           | 95 of 95 published reference products                              |
 | Variants           | 880                                                                |
 | Images             | 709                                                                |
@@ -116,9 +116,11 @@ The live-site and clone interaction audits are in
 The ready-to-read design-specific findings and open questions are in those reports; the catalog
 gaps above are the only catalog-level follow-ups.
 
-## UniPlus draft catalog
+## UniPlus catalog
 
-The client UniPlus workbook has a separate normalized source and importer. It creates 39 products
-and 354 variants as DRAFT, uploads 86 local image slots, and never publishes or modifies the
-Polite Society catalog. See [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md) for commands and
-[`CATALOG-AUDIT-UNIPLUS.md`](./CATALOG-AUDIT-UNIPLUS.md) for the client-input list.
+The client UniPlus workbook has a separate normalized source, importer and publisher. It creates 39
+products and 354 variants, uploads 86 local image slots, and does not modify the Polite Society
+catalog. 29 products with complete colour imagery are `ACTIVE` and published to the `Lorem Ipsum`
+storefront channel; they form `/collections/new-in`. The other 10 stay `DRAFT` until their missing
+photos are added. See [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md) for commands and manual Shopify
+steps, and [`CATALOG-AUDIT-UNIPLUS.md`](./CATALOG-AUDIT-UNIPLUS.md) for the client-input list.

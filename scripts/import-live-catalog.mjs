@@ -512,9 +512,9 @@ async function getPublicationId() {
     return publicationId;
   }
   const data = await admin(PUBLICATIONS);
-  const match = data.publications.nodes.find(({ name }) =>
-    /headless|hydrogen|storefront/i.test(name),
-  );
+  const match =
+    data.publications.nodes.find(({ name }) => name.toLowerCase() === "lorem ipsum") ??
+    data.publications.nodes.find(({ name }) => /headless|hydrogen|storefront/i.test(name));
   if (!match) {
     const available = data.publications.nodes.map(({ name }) => name).join(", ") || "none";
     console.warn(

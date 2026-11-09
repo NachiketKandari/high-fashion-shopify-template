@@ -23,26 +23,27 @@ does not replace them.
 
 ## 1. Current state at a glance
 
-| Item                                 | State                                                                                         |
-| ------------------------------------ | --------------------------------------------------------------------------------------------- |
-| Framework                            | Next.js 16.4 App Router, React 19.3, React Compiler, Cache Components                         |
-| Shopify SDK                          | `@shopify/hydrogen` 2026.10.2, framework-agnostic SDK only                                    |
-| Styling                              | Tailwind CSS 4.3, shadcn/base-ui primitives, tokens in `app/globals.css`                      |
-| Runtime                              | Node 26, pnpm 12.16.1, deployed to Vercel                                                     |
-| Store                                | Lorem Ipsum (`dummy-store-f0ejfuh9.myshopify.com`), store currency INR (set 10 November 2026) |
-| Catalog                              | 95 products, 880 variants, 709 images, 41 collections, 0 unavailable variants                 |
-| Content                              | 11 published Shopify pages, the `journal-2` blog and 3 articles; 3 app-owned pages            |
-| Customer accounts                    | **Enabled** (`shopConfig.auth.isEnabled = true`)                                              |
-| Shop Agent (Eve)                     | **Disabled** (`shopConfig.agent.isEnabled = false`)                                           |
-| BotID                                | Disabled                                                                                      |
-| Vercel Analytics / Speed Insights    | Disabled                                                                                      |
-| Shopify analytics / consent / WebMCP | Disabled                                                                                      |
-| GA4                                  | Loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_GTM_ID` is set                     |
-| Currency                             | Store currency INR; INR-only display; final INR prices                                        |
-| Locale                               | Single locale: country `US`, language `EN`, formatting locale `en-US`                         |
+| Item                                 | State                                                                                                                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework                            | Next.js 16.4 App Router, React 19.3, React Compiler, Cache Components                                                                 |
+| Shopify SDK                          | `@shopify/hydrogen` 2026.10.2, framework-agnostic SDK only                                                                            |
+| Styling                              | Tailwind CSS 4.3, shadcn/base-ui primitives, tokens in `app/globals.css`                                                              |
+| Runtime                              | Node 26, pnpm 12.16.1, deployed to Vercel                                                                                             |
+| Store                                | Lorem Ipsum (`dummy-store-f0ejfuh9.myshopify.com`), store currency INR (set 10 November 2026)                                         |
+| Catalog                              | 157 products: 145 active, 11 draft, 1 archived; 56 collections; 1,332 variants; 95-product reference catalog plus 39 UniPlus products |
+| Content                              | 11 published Shopify pages, the `journal-2` blog and 3 articles; 3 app-owned pages                                                    |
+| Customer accounts                    | **Enabled** (`shopConfig.auth.isEnabled = true`)                                                                                      |
+| Shop Agent (Eve)                     | **Disabled** (`shopConfig.agent.isEnabled = false`)                                                                                   |
+| BotID                                | Disabled                                                                                                                              |
+| Vercel Analytics / Speed Insights    | Disabled                                                                                                                              |
+| Shopify analytics / consent / WebMCP | Disabled                                                                                                                              |
+| GA4                                  | Loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_GTM_ID` is set                                                             |
+| Currency                             | Store currency INR; INR-only display; final INR prices                                                                                |
+| Locale                               | Single locale: country `US`, language `EN`, formatting locale `en-US`                                                                 |
 
-The catalog figures come from a read-only Storefront API check on 7 November 2026. Treat them as a
-snapshot, not a schema.
+The catalog figures come from a read-only Admin API check on 10 November 2026. Treat them as a
+snapshot, not a schema. The 29 published UniPlus products supply `/collections/new-in`; the 10
+remaining UniPlus drafts are listed in [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
 
 ## 2. The three owners
 
@@ -422,7 +423,7 @@ client code.
 | `shopify.webmcp.isEnabled`            | `false` | WebMCP registration                                                                    |
 | `search.isEnabled`                    | `true`  | Header predictive-search modal only                                                    |
 | `pdp.bundles.isEnabled`               | `true`  | Bundle fragments and PDP bundle UI                                                     |
-| `pdp.buyWithShop.isEnabled`           | `true`  | Shop Pay button                                                                        |
+| `pdp.buyWithShop.isEnabled`           | `false` | Shop Pay button; disabled because Shop Pay is unavailable in India                     |
 | `pdp.quantityPicker.isEnabled`        | `true`  | PDP and quick-shop quantity control                                                    |
 | `pdp.complementaryProducts.isEnabled` | `true`  | No effect; the flag is unused                                                          |
 | `pdp.relatedProducts.isEnabled`       | `true`  | Related-products grid                                                                  |
@@ -559,7 +560,9 @@ This is the current backlog, deduplicated across the docs. Historical records su
 - Sold-out inventory availability.
 - Descriptive image alt text; imported alt text is `TITLE image N`.
 - Licensed or original photography and brand assets to replace reference imagery.
-- The 39 Uniplus drafts carry category-derived final INR prices; review them before publishing.
+- 29 UniPlus products are published with final INR prices and complete colour imagery; 10 remain
+  drafts for missing photos. Add the missing images and rerun the publisher; see
+  [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
 - Real brand, contact, social, legal and shipping copy; verify policy thresholds match the INR
   store and the ₹50,000 free-shipping threshold.
 - `/collections` and `/collections/all` are missing from the static sitemap shard.

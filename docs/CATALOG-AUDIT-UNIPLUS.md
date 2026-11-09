@@ -1,6 +1,6 @@
 # UniPlus catalog audit
 
-Status: 7 November 2026.
+Audit status: 7 November 2026. Publication update: 10 November 2026.
 
 Source: `UniPlus_Product_Catalog.xlsx` (`Catalog` and `Notes`), the labelled photoshoot folder
 `Lorum Ipsum resources`, and its `labels_mapping.csv`. Reference standard:
@@ -9,22 +9,43 @@ Source: `UniPlus_Product_Catalog.xlsx` (`Catalog` and `Notes`), the labelled pho
 products are out of
 scope and are not modified.
 
-## Verdict
+## Publication update
+
+**29 of 39 products are `ACTIVE` and published to the `Lorem Ipsum` storefront channel; 10 remain
+`DRAFT`.** The 29 published products have a photo for every colourway and are the membership of
+`/collections/new-in`. Prices are final INR values. Composition, care and fit remain blank, but the
+PDP renders those tabs from static storefront copy, so they are not launch blockers for this
+catalogue.
+
+The 10 drafts are held back for imagery only:
+
+- No product photos: `cover-belted-slit-pants`, `pinstriped-bralette`, `crush-linen-bralette`,
+  `corset-back-hide-t-shirt`, `slit-racer-back-shirt`.
+- Missing one or more colour photos: `mini-chipped-skirt`, `double-mesh-skirt`,
+  `animal-poplin-bralette`, `rolled-twisted-racer-back`, `big-collar-slit-racer-back-shirt`.
+
+The full publication and manual Shopify steps are in
+[`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md#manual-shopify-admin-steps).
+
+## Verdict at audit time
 
 - **39 products, 59 colourways, 354 variant rows, 6 assumed sizes.**
-- **0 ready for launch, 34 partial, 5 blocked.** “Partial” means product identity and variants are
-  complete enough to upload as DRAFT; it does not mean launch-ready. “Blocked” means no usable local
-  image exists for the product.
-- **All 39 products are launch-blocked** by missing price, composition, care and fit, plus missing
-  colour hex, inventory policy and confirmed SKUs. No product passes the minimum launch set.
-- **All 39 can be uploaded as DRAFT now** with generated SKUs, `0.00` price and untracked inventory.
-  They must not be published until the client inputs below arrive.
+- **0 ready for launch, 34 partial, 5 blocked.** “Partial” means product identity and variants were
+  complete enough to upload as DRAFT; it did not mean launch-ready. “Blocked” meant no usable local
+  image existed for the product.
+- **All 39 products were launch-blocked at audit time** by missing price, composition, care and fit,
+  plus missing colour hex, inventory policy and confirmed SKUs. Prices were supplied later; the
+  publication decision above accepts the remaining content gaps because the PDP does not render
+  them.
+- **All 39 were uploaded as DRAFT** with generated SKUs and untracked inventory. Publication now
+  requires complete imagery, not a full product-data record.
 
 ## Counts
 
 | Metric                                 | Value                                               |
 | -------------------------------------- | --------------------------------------------------- |
 | Products                               | 39                                                  |
+| Published / draft                      | 29 / 10                                             |
 | Variant rows                           | 354                                                 |
 | Colourways                             | 59                                                  |
 | Sizes                                  | XS, S, M, L, XL, XXL (assumed, no source size data) |
@@ -244,8 +265,8 @@ lists only product-specific launch blockers.
 
 The normalized source is `scripts/data/uniplus-catalog.json`; it carries one row per variant,
 product-level fields, ordered images per product and per colour, source UIDs, generated SKUs and
-readiness flags. The DRAFT import path and verification commands are in
-[`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md). All 39 products are now in Shopify as DRAFT with 354
-variants and 86 image slots; Admin verification passed for products, variants, options, images,
-SKUs, prices and collection memberships. No product is published and no existing product,
-collection or publication is changed.
+readiness flags. The import, publication and verification commands are in
+[`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md). All 39 products are in Shopify with 354 variants and 86
+image slots; Admin verification passed for products, variants, options, images, SKUs, prices and
+collection memberships. 29 are `ACTIVE` and published to the `Lorem Ipsum` channel; 10 remain
+`DRAFT` for missing imagery.
