@@ -120,7 +120,8 @@ gaps above are the only catalog-level follow-ups.
 
 The client UniPlus workbook has a separate normalized source, importer and publisher. It creates 39
 products and 354 variants, uploads 86 local image slots, and does not modify the Polite Society
-catalog. 29 products with complete colour imagery are `ACTIVE` and published to the `Lorem Ipsum`
-storefront channel; they form `/collections/new-in`. The other 10 stay `DRAFT` until their missing
-photos are added. See [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md) for commands and manual Shopify
-steps, and [`CATALOG-AUDIT-UNIPLUS.md`](./CATALOG-AUDIT-UNIPLUS.md) for the client-input list.
+catalog. 27 products with complete colour imagery are `ACTIVE` and published to the `Lorem Ipsum`
+storefront channel; they form `/collections/new-in`. The other 12 stay `DRAFT`: ten need missing
+photos and two have a wrong garment photo. See [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md) for
+commands and manual Shopify steps, and
+[`CATALOG-AUDIT-UNIPLUS.md`](./CATALOG-AUDIT-UNIPLUS.md) for the client-input list.

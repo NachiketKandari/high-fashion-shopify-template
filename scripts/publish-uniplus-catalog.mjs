@@ -26,7 +26,7 @@
  *   --report[=<path>]   Report path, default .catalog-import/uniplus-publish-report.json.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -46,6 +46,10 @@ const clientSecret = process.env.SHOPIFY_CLIENT_SECRET;
 const reportPath =
   typeof args.report === "string" ? args.report : ".catalog-import/uniplus-publish-report.json";
 const fixturePath = join(dirname(fileURLToPath(import.meta.url)), "data", "uniplus-catalog.json");
+const holdsPath = join(dirname(fileURLToPath(import.meta.url)), "data", "uniplus-holds.json");
+const holds = existsSync(holdsPath)
+  ? (JSON.parse(readFileSync(holdsPath, "utf8")).products ?? {})
+  : {};
 const onlyHandles = args.only
   ? new Set(
       String(args.only)
@@ -255,6 +259,7 @@ function publishBlockers(product, fixtureProduct) {
   if (product.variants.nodes.some((variant) => Number(variant.price) <= 0)) {
     blockers.push("zero price");
   }
+  if (holds[product.handle]) blockers.push(`held back: ${holds[product.handle]}`);
   if (!allowPartialColours) {
     const missing = fixtureProduct.colourways
       .filter((colourway) => colourway.images.length === 0)

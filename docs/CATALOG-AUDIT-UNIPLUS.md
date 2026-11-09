@@ -11,18 +11,23 @@ scope and are not modified.
 
 ## Publication update
 
-**29 of 39 products are `ACTIVE` and published to the `Lorem Ipsum` storefront channel; 10 remain
-`DRAFT`.** The 29 published products have a photo for every colourway and are the membership of
+**27 of 39 products are `ACTIVE` and published to the `Lorem Ipsum` storefront channel; 12 remain
+`DRAFT`.** The 27 published products have a photo for every colourway and are the membership of
 `/collections/new-in`. Prices are final INR values. Composition, care and fit remain blank, but the
 PDP renders those tabs from static storefront copy, so they are not launch blockers for this
 catalogue.
 
-The 10 drafts are held back for imagery only:
+Ten drafts are held back for missing imagery:
 
 - No product photos: `cover-belted-slit-pants`, `pinstriped-bralette`, `crush-linen-bralette`,
   `corset-back-hide-t-shirt`, `slit-racer-back-shirt`.
 - Missing one or more colour photos: `mini-chipped-skirt`, `double-mesh-skirt`,
   `animal-poplin-bralette`, `rolled-twisted-racer-back`, `big-collar-slit-racer-back-shirt`.
+
+Two more are held back because the available photo shows the wrong garment:
+
+- `armani-t-shirt`: the only wine photo is a camp-collar shirt, not a t-shirt.
+- `rouched-baby-tee`: the White colourway uses a white bralette photo, not the rouched tee.
 
 The full publication and manual Shopify steps are in
 [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md#manual-shopify-admin-steps).
@@ -45,7 +50,7 @@ The full publication and manual Shopify steps are in
 | Metric                                 | Value                                               |
 | -------------------------------------- | --------------------------------------------------- |
 | Products                               | 39                                                  |
-| Published / draft                      | 29 / 10                                             |
+| Published / draft                      | 27 / 12                                             |
 | Variant rows                           | 354                                                 |
 | Colourways                             | 59                                                  |
 | Sizes                                  | XS, S, M, L, XL, XXL (assumed, no source size data) |
@@ -268,5 +273,5 @@ product-level fields, ordered images per product and per colour, source UIDs, ge
 readiness flags. The import, publication and verification commands are in
 [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md). All 39 products are in Shopify with 354 variants and 86
 image slots; Admin verification passed for products, variants, options, images, SKUs, prices and
-collection memberships. 29 are `ACTIVE` and published to the `Lorem Ipsum` channel; 10 remain
-`DRAFT` for missing imagery.
+collection memberships. 27 are `ACTIVE` and published to the `Lorem Ipsum` channel; 12 remain
+`DRAFT`: ten for missing imagery and two for a wrong garment photo.

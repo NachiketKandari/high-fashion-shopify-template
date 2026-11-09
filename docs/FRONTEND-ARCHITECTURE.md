@@ -30,7 +30,7 @@ does not replace them.
 | Styling                              | Tailwind CSS 4.3, shadcn/base-ui primitives, tokens in `app/globals.css`                                                              |
 | Runtime                              | Node 26, pnpm 12.16.1, deployed to Vercel                                                                                             |
 | Store                                | Lorem Ipsum (`dummy-store-f0ejfuh9.myshopify.com`), store currency INR (set 10 November 2026)                                         |
-| Catalog                              | 157 products: 145 active, 11 draft, 1 archived; 56 collections; 1,332 variants; 95-product reference catalog plus 39 UniPlus products |
+| Catalog                              | 157 products: 143 active, 13 draft, 1 archived; 56 collections; 1,332 variants; 95-product reference catalog plus 39 UniPlus products |
 | Content                              | 11 published Shopify pages, the `journal-2` blog and 3 articles; 3 app-owned pages                                                    |
 | Customer accounts                    | **Enabled** (`shopConfig.auth.isEnabled = true`)                                                                                      |
 | Shop Agent (Eve)                     | **Disabled** (`shopConfig.agent.isEnabled = false`)                                                                                   |
@@ -42,7 +42,7 @@ does not replace them.
 | Locale                               | Single locale: country `US`, language `EN`, formatting locale `en-US`                                                                 |
 
 The catalog figures come from a read-only Admin API check on 10 November 2026. Treat them as a
-snapshot, not a schema. The 29 published UniPlus products supply `/collections/new-in`; the 10
+snapshot, not a schema. The 27 published UniPlus products supply `/collections/new-in`; the 12
 remaining UniPlus drafts are listed in [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
 
 ## 2. The three owners
@@ -560,9 +560,9 @@ This is the current backlog, deduplicated across the docs. Historical records su
 - Sold-out inventory availability.
 - Descriptive image alt text; imported alt text is `TITLE image N`.
 - Licensed or original photography and brand assets to replace reference imagery.
-- 29 UniPlus products are published with final INR prices and complete colour imagery; 10 remain
-  drafts for missing photos. Add the missing images and rerun the publisher; see
-  [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
+- 27 UniPlus products are published with final INR prices and complete colour imagery; 12 remain
+  drafts, ten for missing photos and two for wrong garment photos. Add the correct images and rerun
+  the publisher; see [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
 - Real brand, contact, social, legal and shipping copy; verify policy thresholds match the INR
   store and the ₹50,000 free-shipping threshold.
 - `/collections` and `/collections/all` are missing from the static sitemap shard.

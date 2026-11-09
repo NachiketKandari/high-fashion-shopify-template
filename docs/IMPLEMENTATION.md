@@ -81,10 +81,11 @@ published reference catalog:
 - Product descriptions come from the reference `body_html`. Per-product Fabric and Fit tab copy is
   not imported yet; the PDP renders its current static copy for those tabs.
 
-A separate client catalog adds 39 UniPlus products and 354 variants. 29 are `ACTIVE` and published
+A separate client catalog adds 39 UniPlus products and 354 variants. 27 are `ACTIVE` and published
 to the **Lorem Ipsum** channel with final INR prices and complete colour imagery; they populate
-`/collections/new-in`. The other 10 remain `DRAFT` for missing photos. The import, publication and
-manual Shopify steps are in [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
+`/collections/new-in`. The other 12 remain `DRAFT`: ten for missing photos and two for a wrong
+garment photo. The import, publication and manual Shopify steps are in
+[`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
 
 ### Credentials: source and storage
 

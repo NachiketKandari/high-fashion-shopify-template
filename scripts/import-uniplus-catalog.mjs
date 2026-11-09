@@ -59,6 +59,10 @@ const onlyHandles = args.only
   : null;
 const limit = args.limit ? Number(args.limit) : null;
 const fixturePath = join(dirname(fileURLToPath(import.meta.url)), "data", "uniplus-catalog.json");
+const holdsPath = join(dirname(fileURLToPath(import.meta.url)), "data", "uniplus-holds.json");
+const holds = existsSync(holdsPath)
+  ? (JSON.parse(readFileSync(holdsPath, "utf8")).products ?? {})
+  : {};
 
 if (!dryRun && (!domain || (!staticToken && !(clientId && clientSecret)))) {
   console.error(
@@ -662,6 +666,7 @@ async function importProduct(product, options) {
   }
 
   const publishBlockers = [];
+  if (holds[product.handle]) publishBlockers.push(`held back: ${holds[product.handle]}`);
   if (product.imageCount === 0) publishBlockers.push("no images");
   if (input.variants.some((variant) => variant.price === "0.00")) {
     publishBlockers.push("zero price");
@@ -728,6 +733,7 @@ async function verifyProducts(products) {
     const remoteVariants = remote.variants.nodes;
     const expectedStatus =
       publish &&
+      !holds[handle] &&
       product.imageCount > 0 &&
       remoteVariants.every((variant) => Number(variant.price) > 0)
         ? "ACTIVE"

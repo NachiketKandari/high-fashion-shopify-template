@@ -10,18 +10,18 @@ normalized source is `scripts/data/uniplus-catalog.json`; the importer is
 
 | Metric        | Value                                                                                                       |
 | ------------- | ----------------------------------------------------------------------------------------------------------- |
-| Products      | 39 total: 29 `ACTIVE` and published, 10 `DRAFT`                                                             |
+| Products      | 39 total: 27 `ACTIVE` and published, 12 `DRAFT`                                                             |
 | Variants      | 354                                                                                                         |
 | Colourways    | 59                                                                                                          |
 | Images        | 86 product image slots from 70 unique local photos                                                          |
 | Collections   | 13; all published to the storefront channel                                                                 |
 | Prices        | Final category-based INR values (₹4,000–₹20,900); no reprice is pending                                     |
 | Sales channel | `Lorem Ipsum` (`gid://shopify/Publication/228076519522`), the channel the Next.js storefront reads          |
-| New In        | `/collections/new-in` contains the 29 published products; the header `New In` link and home hero point here |
+| New In        | `/collections/new-in` contains the 27 published products; the header `New In` link and home hero point here |
 
 The publisher replaced the 12 reference products that were previously in New In; those products
-remain in their other collections. The 29 published UniPlus products have at least one image for
-every colourway. The 10 drafts are held back for imagery, not price:
+remain in their other collections. The 27 published UniPlus products have at least one image for
+every colourway. Ten drafts are held back for missing imagery:
 
 | Product (`handle`)                 | Missing imagery   |
 | ---------------------------------- | ----------------- |
@@ -36,10 +36,18 @@ every colourway. The 10 drafts are held back for imagery, not price:
 | `rolled-twisted-racer-back`        | Brown             |
 | `big-collar-slit-racer-back-shirt` | Brown             |
 
+Two more are held back because the available photo shows the wrong garment. Their reasons live in
+`scripts/data/uniplus-holds.json`, and both the importer and publisher read that file:
+
+| Product (`handle`) | Problem                                                               |
+| ------------------ | --------------------------------------------------------------------- |
+| `armani-t-shirt`   | The only wine photo is a camp-collar shirt, not a t-shirt.            |
+| `rouched-baby-tee` | The White colourway uses a white bralette photo, not the rouched tee. |
+
 A product with a missing colour image is not published: the product page partitions the gallery by
 colour, so the shopper would see another colour's photo under the selected colour. Add the missing
 photos, then run the publisher again. `--allow-partial-colours` overrides this guard, but the
-product page will be misleading.
+product page will be misleading. Remove a handle from `uniplus-holds.json` when its photo is fixed.
 
 ## What makes a UniPlus product visible
 
@@ -61,6 +69,15 @@ surface needs the fifth:
 
 A draft or unpublished product returns `null` from the Storefront API, and `/products/<handle>`
 renders the 404 page.
+
+## Image reuse
+
+The photoshoot is outfit-based, so one frame often shows a top and a bottom. Nine image UIDs are
+shared by two published products: `U79` on Tucked Jacket and Cover Belted Pants, `U58` on Dawg T-Shirt
+and Pinstriped Pants, `U60` on Tucked Shirt and Rouched Black Pants, and six more pairs. The product
+page uses the selected colour's variant image, so the duplicated frame is not shown twice within one
+product; the repetition is across product cards. No product contains the same media URL or file hash
+twice. Dedicated garment shots are required to remove the remaining cross-product repetition.
 
 ## Automated import and publishing
 

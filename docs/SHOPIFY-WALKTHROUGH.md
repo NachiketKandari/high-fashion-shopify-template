@@ -702,13 +702,13 @@ pointing at `/api/webhooks/shopify` and `SHOPIFY_WEBHOOK_SECRET` matching.
 
 - Store: **Lorem Ipsum** (`dummy-store-f0ejfuh9.myshopify.com`), store currency INR (set
   10 November 2026); catalog prices are final INR values.
-- Catalog: **157 products, 1,332 variants, 56 collections** — 145 active, 11 draft and 1 archived.
+- Catalog: **157 products, 1,332 variants, 56 collections** — 143 active, 13 draft and 1 archived.
   The 95-product reference catalog (880 variants, 709 images, 41 collections) was imported by
-  `scripts/import-live-catalog.mjs`; 29 of the 39 UniPlus products are also published. All variants
+  `scripts/import-live-catalog.mjs`; 27 of the 39 UniPlus products are also published. All variants
   are available because inventory is untracked. The original 12-product design-study seeder remains
   available as `pnpm seed:catalog`.
-- New In: `/collections/new-in` contains the 29 published UniPlus products; the header link and home
-  hero point there. The 10 UniPlus drafts are held for missing imagery; see
+- New In: `/collections/new-in` contains the 27 published UniPlus products; the header link and home
+  hero point there. The 12 UniPlus drafts are held for missing or wrong imagery; see
   [`UNIPLUS-IMPORT.md`](./UNIPLUS-IMPORT.md).
 - Content: 11 published Shopify pages, the `journal-2` blog and three articles; contact, size guide
   and wishlist remain app-owned routes.
