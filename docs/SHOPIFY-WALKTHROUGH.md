@@ -366,6 +366,9 @@ on Shopify's hosted checkout, outside this repo.
 ```
 
 Refreshable sessions are redirected through `/account/refresh` so Hydrogen can commit new cookies.
+The sign-in screen itself is Shopify-hosted: by default Shopify sends the passwordless email
+one-time verification code, and mobile-number sign-in exists only through Sign in with Shop. See
+[`AUTHENTICATION.md`](./AUTHENTICATION.md) for the full sign-in picture.
 
 ### 8.5 Seeding the catalog
 

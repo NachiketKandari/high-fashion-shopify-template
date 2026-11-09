@@ -280,6 +280,9 @@ Prices are `Money`, media are `Image`, pagination is `PageInfo`. Cross-domain pr
 
 ### Customer accounts
 
+Sign-in happens on Shopify's hosted account page, where Shopify sends the default passwordless email
+one-time code; see [`AUTHENTICATION.md`](./AUTHENTICATION.md).
+
 - Session cookie family: `shop_customer_session.0` through `.3`, up to four chunks, AES-256-GCM encrypted
   with a SHA-256 key derived from `CUSTOMER_ACCOUNT_SESSION_SECRET`, 7-day lifetime, `HttpOnly`,
   `SameSite=Lax`, `Secure` over HTTPS.
