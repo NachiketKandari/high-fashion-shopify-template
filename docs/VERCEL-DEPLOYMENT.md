@@ -138,6 +138,11 @@ Create a Shopify webhook for each topic the storefront caches:
 | `products/create`, `products/update`, `products/delete`          | `https://<domain>/api/webhooks/shopify` |
 | `collections/create`, `collections/update`, `collections/delete` | `https://<domain>/api/webhooks/shopify` |
 
+Shopify's admin webhook console rejects a URL on a custom domain that is attached to the store, so a
+headless storefront usually needs an app-managed subscription (Admin API `webhookSubscriptionCreate`
+or `shopify.app.toml`) or a separate endpoint domain. Verify delivery before relying on tag
+invalidation.
+
 Use the same `SHOPIFY_WEBHOOK_SECRET` that is set in Vercel. The handler verifies the
 `X-Shopify-Hmac-Sha256` header and invalidates tags; it returns `404` when the secret is unset.
 The handler also accepts metaobject topics and clears `metaobjects`/`metaobject-<handle>`, but no

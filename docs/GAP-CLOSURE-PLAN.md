@@ -147,23 +147,25 @@ because of a missing metafield.
 
 **Acceptance:** checkout is reachable and the order summary matches the cart; no password redirect.
 
-## G6 — Currency selector decision
+## G6 — Currency and store-currency decision
 
-The store is USD-priced. The reference’s selector is a client-side FX display: it changes prices
-without changing the cart, checkout or order currency. Three options:
+The store is USD-priced. The reference's selector is a client-side FX display: it changes prices
+without changing the cart, checkout or order currency. Indian payments add a harder constraint:
+Shopify processes third-party-provider payments in the store currency, and UPI is INR-only, so a USD
+base disables UPI and domestic payment methods.
 
-| Option                        | What it means                                                                                            | Recommendation                                                          |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| A. Keep USD only              | Static `USD` label, one currency everywhere. Remove this from the gap list and document the choice.      | Recommended for a single-currency template.                             |
-| B. Shopify Markets            | Configure markets and presentment currencies, add a country/currency selector, and localize prices/cart. | Choose only if multi-currency commerce is a real requirement. 1–2 days. |
-| C. Reference-style FX display | Convert displayed prices client-side; cart and checkout stay USD.                                        | Not recommended for commerce correctness, but currently implemented.    |
+| Option                        | What it means                                                                                       | Recommendation                                                    |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| A. Keep USD only              | Static `USD` label, one currency everywhere. Remove this from the gap list and document the choice. | Not viable for an Indian audience: no UPI                         |
+| B. INR base + Markets pricing | Set store currency to INR; use Markets catalogs/price adjustments for international shoppers.       | **Recommended**; note international shoppers are charged in INR   |
+| C. Reference-style FX display | Convert displayed prices client-side; cart and checkout stay USD.                                   | Not a payments solution; replace once the store currency is final |
 
 **Current status:** option C has shipped. `lib/money/display.ts` defines USD/INR at a fixed 94.62
 rate, and the selector appears in the header, mobile menu and footer. Cart totals and checkout
-remain USD. The practical choice is now to keep and harden C, remove it for A, or replace it with B.
-
-If B is chosen, use the `enable-shopify-markets` skill and verify that product, collection, cart,
-checkout and order currencies agree.
+remain USD. Before enabling an Indian gateway, change the store currency to INR while the store has
+no orders (after the first sale it requires Shopify Support and resets shipping rates and market
+currencies). Then remove the display-only selector and rely on Shopify's authoritative currency.
+The full payment rationale is in [`PAYMENTS.md`](./PAYMENTS.md).
 
 ## G7 — Gallery parity decision
 
