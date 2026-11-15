@@ -60,7 +60,7 @@ next action only.
 | Figma REST `?depth=2` on `TzeMmJHUVWuiuknAcm1hq4` | 200; 221 top-level frames on one page (`Wireframe`)                                 |
 | File metadata                                     | Version `2421747092237574279`, last modified `2026-11-14T17:37:18Z`, `role: viewer` |
 | Components, component sets, published styles      | 0, 0, 0                                                                             |
-| Frame classification                              | 105 Build, 62 Shopify-hosted, 23 Gated, 31 Skip                                     |
+| Frame classification                              | 93 Build, 62 Shopify-hosted, 35 Gated, 31 Skip                                      |
 | Payment frames text nodes                         | 0 across all five `Payment Screen` frames                                           |
 | `pnpm lint`, `pnpm typecheck`, build              | Not run this session                                                                |
 

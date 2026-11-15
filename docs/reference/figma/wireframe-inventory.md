@@ -21,9 +21,9 @@ The execution order these verdicts feed is `docs/WIREFRAME-EXECUTION-PLAN.md`.
 
 | Verdict        | Frames |
 | -------------- | ------ |
-| Build          | 105    |
+| Build          | 93     |
 | Shopify-hosted | 62     |
-| Gated          | 23     |
+| Gated          | 35     |
 | Skip           | 31     |
 
 | Surface                                         | Frames | Desktop | Mobile |
@@ -247,51 +247,51 @@ Populated, empty and the quick size selector. Route target: `/wishlist`.
 
 Each frame needs a data source Shopify does not expose to a storefront by default. See P0. Route target: —.
 
-| Frame      | State                                                         | Viewport | Size      | Verdict        | Note                                 |
-| ---------- | ------------------------------------------------------------- | -------- | --------- | -------------- | ------------------------------------ |
-| `3:560`    | Order confirmation - Happy Path (≤ 24h Window)                | desktop  | 1440×755  | Shopify-hosted | thank-you page; custom states gated. |
-| `52:15230` | Order confirmation - Happy Path (≤ 24h Window)                | desktop  | 1440×755  | Shopify-hosted | thank-you page; custom states gated. |
-| `45:13446` | Address and Shipping - Non-Serviceable Pincode Alert          | desktop  | 1440×755  | Gated          | serviceability source undecided.     |
-| `52:15069` | Mobile Order confirmation - Happy Path (≤ 24h Window)         | mobile   | 390×1256  | Shopify-hosted | thank-you page; custom states gated. |
-| `52:15307` | Mobile Order confirmation - Happy Path (≤ 24h Window)         | mobile   | 390×1256  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:161`   | Order confirmation — Policy expired (> 24h)                   | desktop  | 1440×854  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:238`   | Mobile order confirmation — Policy expired (> 24h)            | mobile   | 390×1393  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:310`   | Order confirmation — Guest profile activation                 | desktop  | 1440×1081 | Shopify-hosted | thank-you page; custom states gated. |
-| `54:387`   | Mobile order confirmation — Guest profile activation          | mobile   | 390×1712  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:459`   | Order confirmation — Payment pending delay                    | desktop  | 1440×854  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:536`   | Mobile order confirmation — Payment pending delay             | mobile   | 390×1514  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:608`   | Order confirmation — Modify address (≤ 24h)                   | desktop  | 1440×854  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:685`   | Mobile order confirmation — Modify address (≤ 24h)            | mobile   | 390×1295  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:757`   | Order confirmation — Confirm cancellation — dual rules        | desktop  | 1440×854  | Shopify-hosted | thank-you page; custom states gated. |
-| `54:834`   | Mobile order confirmation — Confirm cancellation — dual rules | mobile   | 390×1295  | Shopify-hosted | thank-you page; custom states gated. |
-| `55:161`   | Public Track Order — Initial Form (No Login)                  | desktop  | 1440×854  | Gated          | Admin API or Shiprocket.             |
-| `55:239`   | Mobile Public Track Order — Initial Form (No Login)           | mobile   | 390×844   | Gated          | Admin API or Shiprocket.             |
-| `55:312`   | Public Track Order — Invalid Order Match Alert                | desktop  | 1440×854  | Gated          | Admin API or Shiprocket.             |
-| `55:390`   | Mobile Public Track Order — Invalid Order Match Alert         | mobile   | 390×844   | Gated          | Admin API or Shiprocket.             |
-| `55:463`   | Order Tracking — Pre-Delivery 4-Step Stepper                  | desktop  | 1440×1044 | Gated          | Admin API or Shiprocket.             |
-| `55:579`   | Mobile Order Tracking — Pre-Delivery 4-Step Stepper           | mobile   | 390×1617  | Gated          | Admin API or Shiprocket.             |
-| `55:686`   | Order Tracking — Order Locked for Dispatch                    | desktop  | 1440×910  | Gated          | Admin API or Shiprocket.             |
-| `55:802`   | Mobile Order Tracking — Order Locked for Dispatch             | mobile   | 390×1449  | Gated          | Admin API or Shiprocket.             |
-| `55:909`   | Order Tracking — Delivered (In Return Window)                 | desktop  | 1440×880  | Gated          | Admin API or Shiprocket.             |
-| `55:1025`  | Mobile Order Tracking — Delivered (In Return Window)          | mobile   | 390×1419  | Gated          | Admin API or Shiprocket.             |
-| `55:1132`  | Order Tracking — Delivered (Window Closed)                    | desktop  | 1440×939  | Gated          | Admin API or Shiprocket.             |
-| `55:1248`  | Mobile Order Tracking — Delivered (Window Closed)             | mobile   | 390×1478  | Gated          | Admin API or Shiprocket.             |
-| `55:1355`  | Cancellation Flow — Cancellation ≤ 24h Modal                  | desktop  | 1440×1044 | Gated          | Admin API or Shiprocket.             |
-| `55:1471`  | Mobile Cancellation Flow — Cancellation ≤ 24h Modal           | mobile   | 390×844   | Gated          | Admin API or Shiprocket.             |
-| `55:1578`  | Cancellation Flow — Cancellation > 24h (Member)               | desktop  | 1440×985  | Gated          | Admin API or Shiprocket.             |
-| `55:1694`  | Mobile Cancellation Flow — Cancellation > 24h (Member)        | mobile   | 390×844   | Gated          | Admin API or Shiprocket.             |
-| `67:15387` | 05. Item-Level Partial Return                                 | desktop  | 1440×959  | Build          |                                      |
-| `67:15448` | 05. Mobile — Item-Level Partial Return                        | mobile   | 390×1534  | Build          |                                      |
-| `67:15509` | 06. Exchange vs. Return Choice                                | desktop  | 1440×909  | Build          |                                      |
-| `67:15567` | 06. Mobile — Exchange vs. Return Choice                       | mobile   | 390×1501  | Build          |                                      |
-| `67:15625` | 07. Size/Color Swap Selection                                 | desktop  | 1440×939  | Build          |                                      |
-| `67:15693` | 07. Mobile — Size/Color Swap Selection                        | mobile   | 390×1514  | Build          |                                      |
-| `67:15761` | 08. Reason & Refund Method                                    | desktop  | 1440×1202 | Build          |                                      |
-| `67:15827` | 08. Mobile — Reason & Refund Method                           | mobile   | 390×1811  | Build          |                                      |
-| `67:15893` | 09. Reverse Courier Scheduled                                 | desktop  | 1440×994  | Build          |                                      |
-| `67:15950` | 09. Mobile — Reverse Courier Scheduled                        | mobile   | 390×1668  | Build          |                                      |
-| `67:16007` | 10. Atelier Inspection Gate                                   | desktop  | 1440×1017 | Build          |                                      |
-| `67:16050` | 10. Mobile — Atelier Inspection Gate                          | mobile   | 390×1708  | Build          |                                      |
+| Frame      | State                                                         | Viewport | Size      | Verdict        | Note                                                   |
+| ---------- | ------------------------------------------------------------- | -------- | --------- | -------------- | ------------------------------------------------------ |
+| `3:560`    | Order confirmation - Happy Path (≤ 24h Window)                | desktop  | 1440×755  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `52:15230` | Order confirmation - Happy Path (≤ 24h Window)                | desktop  | 1440×755  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `45:13446` | Address and Shipping - Non-Serviceable Pincode Alert          | desktop  | 1440×755  | Gated          | serviceability source undecided.                       |
+| `52:15069` | Mobile Order confirmation - Happy Path (≤ 24h Window)         | mobile   | 390×1256  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `52:15307` | Mobile Order confirmation - Happy Path (≤ 24h Window)         | mobile   | 390×1256  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:161`   | Order confirmation — Policy expired (> 24h)                   | desktop  | 1440×854  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:238`   | Mobile order confirmation — Policy expired (> 24h)            | mobile   | 390×1393  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:310`   | Order confirmation — Guest profile activation                 | desktop  | 1440×1081 | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:387`   | Mobile order confirmation — Guest profile activation          | mobile   | 390×1712  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:459`   | Order confirmation — Payment pending delay                    | desktop  | 1440×854  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:536`   | Mobile order confirmation — Payment pending delay             | mobile   | 390×1514  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:608`   | Order confirmation — Modify address (≤ 24h)                   | desktop  | 1440×854  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:685`   | Mobile order confirmation — Modify address (≤ 24h)            | mobile   | 390×1295  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:757`   | Order confirmation — Confirm cancellation — dual rules        | desktop  | 1440×854  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `54:834`   | Mobile order confirmation — Confirm cancellation — dual rules | mobile   | 390×1295  | Shopify-hosted | thank-you page; custom states gated.                   |
+| `55:161`   | Public Track Order — Initial Form (No Login)                  | desktop  | 1440×854  | Gated          | Admin API or Shiprocket.                               |
+| `55:239`   | Mobile Public Track Order — Initial Form (No Login)           | mobile   | 390×844   | Gated          | Admin API or Shiprocket.                               |
+| `55:312`   | Public Track Order — Invalid Order Match Alert                | desktop  | 1440×854  | Gated          | Admin API or Shiprocket.                               |
+| `55:390`   | Mobile Public Track Order — Invalid Order Match Alert         | mobile   | 390×844   | Gated          | Admin API or Shiprocket.                               |
+| `55:463`   | Order Tracking — Pre-Delivery 4-Step Stepper                  | desktop  | 1440×1044 | Gated          | Admin API or Shiprocket.                               |
+| `55:579`   | Mobile Order Tracking — Pre-Delivery 4-Step Stepper           | mobile   | 390×1617  | Gated          | Admin API or Shiprocket.                               |
+| `55:686`   | Order Tracking — Order Locked for Dispatch                    | desktop  | 1440×910  | Gated          | Admin API or Shiprocket.                               |
+| `55:802`   | Mobile Order Tracking — Order Locked for Dispatch             | mobile   | 390×1449  | Gated          | Admin API or Shiprocket.                               |
+| `55:909`   | Order Tracking — Delivered (In Return Window)                 | desktop  | 1440×880  | Gated          | Admin API or Shiprocket.                               |
+| `55:1025`  | Mobile Order Tracking — Delivered (In Return Window)          | mobile   | 390×1419  | Gated          | Admin API or Shiprocket.                               |
+| `55:1132`  | Order Tracking — Delivered (Window Closed)                    | desktop  | 1440×939  | Gated          | Admin API or Shiprocket.                               |
+| `55:1248`  | Mobile Order Tracking — Delivered (Window Closed)             | mobile   | 390×1478  | Gated          | Admin API or Shiprocket.                               |
+| `55:1355`  | Cancellation Flow — Cancellation ≤ 24h Modal                  | desktop  | 1440×1044 | Gated          | Admin API or Shiprocket.                               |
+| `55:1471`  | Mobile Cancellation Flow — Cancellation ≤ 24h Modal           | mobile   | 390×844   | Gated          | Admin API or Shiprocket.                               |
+| `55:1578`  | Cancellation Flow — Cancellation > 24h (Member)               | desktop  | 1440×985  | Gated          | Admin API or Shiprocket.                               |
+| `55:1694`  | Mobile Cancellation Flow — Cancellation > 24h (Member)        | mobile   | 390×844   | Gated          | Admin API or Shiprocket.                               |
+| `67:15387` | 05. Item-Level Partial Return                                 | desktop  | 1440×959  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15448` | 05. Mobile — Item-Level Partial Return                        | mobile   | 390×1534  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15509` | 06. Exchange vs. Return Choice                                | desktop  | 1440×909  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15567` | 06. Mobile — Exchange vs. Return Choice                       | mobile   | 390×1501  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15625` | 07. Size/Color Swap Selection                                 | desktop  | 1440×939  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15693` | 07. Mobile — Size/Color Swap Selection                        | mobile   | 390×1514  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15761` | 08. Reason & Refund Method                                    | desktop  | 1440×1202 | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15827` | 08. Mobile — Reason & Refund Method                           | mobile   | 390×1811  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15893` | 09. Reverse Courier Scheduled                                 | desktop  | 1440×994  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:15950` | 09. Mobile — Reverse Courier Scheduled                        | mobile   | 390×1668  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:16007` | 10. Atelier Inspection Gate                                   | desktop  | 1440×1017 | Gated          | needs a returns write path (Shiprocket reverse pickup) |
+| `67:16050` | 10. Mobile — Atelier Inspection Gate                          | mobile   | 390×1708  | Gated          | needs a returns write path (Shiprocket reverse pickup) |
 
 ### Support and editorial pages
 
