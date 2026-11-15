@@ -27,6 +27,13 @@ next action only.
 | P12 Content and agent surface        | Not started                                       |
 | P13 Hardening and launch             | Not started                                       |
 
+## Notes on closed phases
+
+P4 leaves two things deliberately unbuilt. The cookie consent banner is not rendered because
+`shopConfig.analytics` disables every analytics integration, so there is nothing to consent to; it
+returns with the analytics work in P13. The mobile menu has no frame in the source file, so it keeps
+the template's behaviour rather than an invented one.
+
 ## Decisions
 
 | ID  | Question                                                                  | Answer                                          | Date |
@@ -66,8 +73,8 @@ next action only.
 
 ## Next action
 
-Continue P4 with the mega menu, footer and consent against their frames, then P6 stock states.
-D1 and D3 are still needed for P0's capability table.
+P5: add the model/image/item content mode to browse state and the toolbar, then verify the default
+page still renders its cached products and the filter rewrite still works. D1 and D3 remain open.
 
 ## Credentials
 
