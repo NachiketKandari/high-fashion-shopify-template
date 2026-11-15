@@ -106,11 +106,11 @@ test.describe("storefront contracts", () => {
     expect(mobile.scrollWidth).toBeLessThanOrEqual(mobile.innerWidth);
   });
 
-  test("product detail tabs, typography and gallery targets", async ({ page }) => {
+  test("product detail disclosures, typography and gallery targets", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto("/products/alma-lace-corset-top");
     await page.locator("main h1").waitFor();
-    await page.locator('[role="tab"]').first().waitFor();
+    await page.locator("[data-slot=accordion] summary").first().waitFor();
     const pdp = await page.evaluate(() => {
       const read = (selector: string) => {
         const element = document.querySelector(selector);
@@ -126,37 +126,21 @@ test.describe("storefront contracts", () => {
         addToCartHeight: document
           .querySelector('main form button[type="submit"]')
           ?.getBoundingClientRect().height,
+        disclosure: read("[data-slot=accordion] summary"),
+        disclosureCount: document.querySelectorAll("[data-slot=accordion] details").length,
         h1: read("main h1"),
-        panels: document.querySelectorAll('[role="tabpanel"]').length,
-        tabs: read('[role="tab"]'),
-        tabCount: document.querySelectorAll('[role="tab"]').length,
+        summaryHeight: document
+          .querySelector("[data-slot=accordion] summary")
+          ?.getBoundingClientRect().height,
+        tabRoles: document.querySelectorAll('[role="tab"], [role="tabpanel"]').length,
       };
     });
     expect(pdp.h1).toEqual({ lineHeight: "29px", size: "22px", weight: "400" });
-    expect(pdp.tabs).toEqual({ lineHeight: "16px", size: "11px", weight: "400" });
-    expect(pdp.tabCount).toBe(4);
-    expect(pdp.panels).toBe(4);
+    expect(pdp.disclosure).toEqual({ lineHeight: "16px", size: "12px", weight: "400" });
+    expect(pdp.disclosureCount).toBe(3);
+    expect(pdp.tabRoles).toBe(0);
+    expect(pdp.summaryHeight).toBeGreaterThanOrEqual(36);
     expect(pdp.addToCartHeight).toBeGreaterThanOrEqual(36);
-
-    const firstTab = page.locator('[role="tab"]').first();
-    await firstTab.focus();
-    await page.keyboard.press("ArrowRight");
-    const keyboard = await page.evaluate(() => ({
-      activeId: document.activeElement?.id,
-      selectedId: document.querySelector('[role="tab"][aria-selected="true"]')?.id,
-      selectedPanel: document
-        .querySelector('[role="tab"][aria-selected="true"]')
-        ?.getAttribute("aria-controls"),
-      panelExists: Boolean(
-        document.querySelector(
-          `#${document.querySelector('[role="tab"][aria-selected="true"]')?.getAttribute("aria-controls")}`,
-        ),
-      ),
-    }));
-    expect(keyboard.activeId).toBe("product-tab-1");
-    expect(keyboard.selectedId).toBe("product-tab-1");
-    expect(keyboard.selectedPanel).toBe("product-panel-1");
-    expect(keyboard.panelExists).toBe(true);
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/products/alma-lace-corset-top");

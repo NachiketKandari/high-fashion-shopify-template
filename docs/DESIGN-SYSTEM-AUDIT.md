@@ -590,6 +590,12 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
 9. **Currency.** The store and storefront are INR-only; the former display-only USD selector and
    fixed-rate conversion were removed. Checkout and Shopify's recorded totals are INR. Catalog
    prices are final INR values.
+10. **Product disclosures replace tabs.** The wireframe stacks description, details and shipping as
+    `<details>` rows; the product page previously used a `role="tablist"` with roving focus. The
+    disclosure is the contract now: three summary rows at 12/16 400, at least 36px tall, and no tab
+    roles. Owner: Next.js presentation. Reason: the wireframe is the build target, and native
+    disclosure removes the client component without losing keyboard access. Expiry: none; the tab
+    contract is retired rather than deferred.
 
 ## 9. Verification status
 

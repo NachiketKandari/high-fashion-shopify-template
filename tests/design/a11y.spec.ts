@@ -42,28 +42,24 @@ test.describe("accessibility and motion", () => {
     expect(after).toBe(before);
   });
 
-  test("tabs render one panel at a time with complete aria wiring", async ({ page }) => {
+  test("product disclosures are native and open independently", async ({ page }) => {
     await page.goto("/products/alma-lace-corset-top");
-    const wiring = await page.evaluate(() => {
-      const tabs = [...document.querySelectorAll('[role="tab"]')];
-      return tabs.map((tab) => {
-        const controls = tab.getAttribute("aria-controls");
-        const panel = controls ? document.getElementById(controls) : null;
-        return {
-          controls,
-          controlsPanel: Boolean(panel),
-          panelLabel: panel?.getAttribute("aria-labelledby"),
-          selected: tab.getAttribute("aria-selected") === "true",
-          tabId: tab.id,
-        };
-      });
-    });
-    expect(wiring).toHaveLength(4);
-    for (const tab of wiring) {
-      expect(tab.controlsPanel).toBe(true);
-      expect(tab.panelLabel).toBe(tab.tabId);
-    }
-    expect(wiring.filter((tab) => tab.selected)).toHaveLength(1);
+    const items = page.locator("[data-slot=accordion] details");
+    await expect(items).toHaveCount(3);
+    expect(await page.locator('[role="tab"], [role="tabpanel"]').count()).toBe(0);
+
+    const first = items.first();
+    const summary = first.locator("summary");
+    await expect(summary).toHaveAccessibleName(/description/i);
+
+    const closed = await first.boundingBox();
+    await summary.click();
+    await expect(first).toHaveAttribute("open", "");
+    const opened = await first.boundingBox();
+    expect(opened?.height ?? 0).toBeGreaterThan(closed?.height ?? 0);
+
+    await summary.click();
+    expect(await first.getAttribute("open")).toBeNull();
   });
 
   test("reduced motion shortens authored transitions", async ({ page }) => {
