@@ -7,6 +7,7 @@ import { BundleComponents, BundleParents } from "@/components/product-detail/bun
 import { BuyButtons, PurchaseOptions } from "@/components/product-detail/buy-buttons";
 import { GiftCardPurchaseForm } from "@/components/product-detail/gift-card-purchase-form";
 import { ProductOpenGraph } from "@/components/product-detail/open-graph";
+import { ProductAccordion } from "@/components/product-detail/product-accordion";
 import {
   ProductForm,
   ProductFormOptions,
@@ -19,7 +20,6 @@ import {
   ProductMedia,
 } from "@/components/product-detail/product-media";
 import { ProductPrice } from "@/components/product-detail/product-price";
-import { ProductTabs } from "@/components/product-detail/product-tabs";
 import { ProductSchema } from "@/components/product-detail/schema";
 import { BreadcrumbSchema } from "@/components/schema/breadcrumb-schema";
 import { Input } from "@/components/ui/input";
@@ -179,7 +179,7 @@ function ProductInfoArea({
             <BundleRelationships variant={product.defaultVariant} />
           ) : null}
 
-          <ProductTabs descriptionHtml={descriptionHtml} />
+          <ProductAccordion descriptionHtml={descriptionHtml} />
 
           <div className="sticky bottom-0 flex justify-end bg-paper py-2">
             <a
