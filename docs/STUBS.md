@@ -19,17 +19,17 @@ reads an unverified source ships with a stub and a row here, or does not ship.
 
 ## Register
 
-| Surface                | Needed                                       | Status      | Stub                          | Unblocked by                               |
-| ---------------------- | -------------------------------------------- | ----------- | ----------------------------- | ------------------------------------------ |
-| Pincode serviceability | Shiprocket serviceability API                | Unverified  | `lib/serviceability/index.ts` | D5 decision plus API credentials           |
-| Waitlist / notify me   | No source chosen                             | Not started | —                             | D3 decision                                |
-| Size recommendation    | Fit data on the product                      | Not started | —                             | Metafield schema or a fit app              |
-| Order tracking events  | Shiprocket API or Admin API                  | Not started | —                             | P11 scope, Shiprocket credentials          |
-| Public order lookup    | Order lookup by number plus email            | Not started | —                             | Security decision on enumeration           |
-| Cancellation write     | Admin API `orderCancel`                      | Not started | —                             | Decision on a server-side admin credential |
-| Returns write          | Shopify Returns or Shiprocket reverse pickup | Not started | —                             | P11 scope                                  |
-| Store credit balance   | Customer Account API, unconfirmed            | Unverified  | —                             | One API check before any wallet UI         |
-| Tax invoices           | GST invoice app or Admin API plus generation | Not started | —                             | App procurement decision                   |
+| Surface                | Needed                                       | Status      | Stub                                                      | Unblocked by                               |
+| ---------------------- | -------------------------------------------- | ----------- | --------------------------------------------------------- | ------------------------------------------ |
+| Pincode serviceability | Shiprocket serviceability API                | Unverified  | `lib/serviceability/index.ts`, created and not yet called | D5 decision plus API credentials           |
+| Waitlist / notify me   | No source chosen                             | Not started | —                                                         | D3 decision                                |
+| Size recommendation    | Fit data on the product                      | Not started | —                                                         | Metafield schema or a fit app              |
+| Order tracking events  | Shiprocket API or Admin API                  | Not started | —                                                         | P11 scope, Shiprocket credentials          |
+| Public order lookup    | Order lookup by number plus email            | Not started | —                                                         | Security decision on enumeration           |
+| Cancellation write     | Admin API `orderCancel`                      | Not started | —                                                         | Decision on a server-side admin credential |
+| Returns write          | Shopify Returns or Shiprocket reverse pickup | Not started | —                                                         | P11 scope                                  |
+| Store credit balance   | Customer Account API, unconfirmed            | Unverified  | —                                                         | One API check before any wallet UI         |
+| Tax invoices           | GST invoice app or Admin API plus generation | Not started | —                                                         | App procurement decision                   |
 
 ## Writing a stub
 

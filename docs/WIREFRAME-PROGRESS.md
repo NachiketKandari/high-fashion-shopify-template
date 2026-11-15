@@ -66,8 +66,8 @@ next action only.
 
 ## Next action
 
-Get D1 and D3 answered, then run P0's capability checks against the dev store and append the
-capability table here. Then pause at checkpoint C0.
+Continue P4 with the mega menu, footer and consent against their frames, then P6 stock states.
+D1 and D3 are still needed for P0's capability table.
 
 ## Credentials
 
