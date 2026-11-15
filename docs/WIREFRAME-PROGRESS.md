@@ -34,6 +34,13 @@ P4 leaves two things deliberately unbuilt. The cookie consent banner is not rend
 returns with the analytics work in P13. The mobile menu has no frame in the source file, so it keeps
 the template's behaviour rather than an invented one.
 
+## Open interpretation
+
+The three browse modes differ in caption density, not in imagery: `model` hides the caption, `image`
+keeps title and price, `item` adds the available sizes. The frames draw all three identically because
+a wireframe has no photography, and distinguishing a model shot from a flat shot needs per-media
+tagging that the catalogue does not carry. Until it does, both modes feature the same image.
+
 ## Decisions
 
 | ID  | Question                                                                  | Answer                                          | Date |
@@ -73,8 +80,8 @@ the template's behaviour rather than an invented one.
 
 ## Next action
 
-P5: add the model/image/item content mode to browse state and the toolbar, then verify the default
-page still renders its cached products and the filter rewrite still works. D1 and D3 remain open.
+P5: verify the filter rewrite still works after the toolbar changed, then the zero-result and active
+filtered states. D1 and D3 remain open.
 
 ## Credentials
 

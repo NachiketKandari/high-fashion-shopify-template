@@ -4,6 +4,7 @@ import { ProductsGridSkeleton } from "@/components/product/products-grid";
 import { PRODUCTS_PER_PAGE } from "@/lib/collections";
 import type { SortValue } from "@/lib/collections/types";
 
+import { CardViewToggle } from "./card-view-toggle";
 import { CollectionActiveFilterCountBadge } from "./collection-browse-provider";
 import { FilterSheet } from "./filters-client";
 import { CollectionsSortSelect } from "./sort-select";
@@ -33,6 +34,7 @@ export function BrowseToolbar({ filters, resultCount, sortExclude }: BrowseToolb
           {filters}
         </FilterSheet>
       }
+      cardView={<CardViewToggle />}
       resultCount={resultCount}
       sortSelect={<CollectionsSortSelect exclude={sortExclude} />}
     />
@@ -52,6 +54,7 @@ export function BrowseFallback({ resultCount }: BrowseFallbackProps) {
             <span>Filter</span>
           </button>
         }
+        cardView={<CardViewToggle />}
         resultCount={resultCount}
         sortSelect={<span className="type-chip flex h-9 items-center">Featured</span>}
       />
@@ -61,14 +64,16 @@ export function BrowseFallback({ resultCount }: BrowseFallbackProps) {
 }
 
 interface ToolbarLayoutProps {
+  cardView: ReactNode;
   filterSheet: ReactNode;
   resultCount?: ReactNode;
   sortSelect: ReactNode;
 }
 
-function ToolbarLayout({ filterSheet, resultCount, sortSelect }: ToolbarLayoutProps) {
+function ToolbarLayout({ cardView, filterSheet, resultCount, sortSelect }: ToolbarLayoutProps) {
   return (
     <div className="flex min-w-0 items-center gap-4">
+      <div className="shrink-0">{cardView}</div>
       <div className="shrink-0">{filterSheet}</div>
       {resultCount !== undefined && (
         <div className="type-body-sm hidden min-w-0 items-center truncate text-ink-muted tablet:flex">

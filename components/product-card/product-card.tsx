@@ -111,7 +111,7 @@ export function ProductCard({
         />
       </div>
 
-      <div className="grid gap-1 px-2 pb-2 pt-2">
+      <div className="grid gap-1 px-2 pb-2 pt-2 [[data-card-view=model]_&]:hidden">
         <h3 className="type-h4 min-w-0 truncate text-ink">
           <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
             {product.title}
@@ -136,7 +136,9 @@ export function ProductCard({
           ) : null}
         </div>
         {showSizes && sizes.length > 0 ? (
-          <p className="type-body-sm truncate text-ink-muted">{sizes.join(" ")}</p>
+          <p className="type-body-sm truncate text-ink-muted [[data-card-view=image]_&]:hidden">
+            {sizes.join(" ")}
+          </p>
         ) : null}
       </div>
     </article>
