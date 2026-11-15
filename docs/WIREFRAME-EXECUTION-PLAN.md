@@ -73,7 +73,7 @@ D1 and D3 carry revenue and scope respectively and should be answered first. D5 
 
 **Work:**
 
-1. Write `docs/reference/figma/wireframe-inventory.md`: one row per frame with journey, screen, state, platform, frame id, dimensions, and a verdict of `Build`, `Shopify-hosted`, `Gated`, or `Skip`, following the conventions in `docs/reference/figma/README.md`. Done: 221 frames classified as 93 build, 62 Shopify-hosted, 35 gated, 31 skip.
+1. Write `docs/reference/figma/wireframe-inventory.md`: one row per frame with journey, screen, state, platform, frame id, dimensions, and a verdict of `Build`, `Shopify-hosted`, `Gated`, or `Skip`, following the conventions in `docs/reference/figma/README.md`. Done: 221 frames classified as 93 build, 60 Shopify-hosted, 37 gated, 31 skip.
 2. Record the defects found in the source file so they are not built: the pre-payment audit renders `INR 11,000` while deducting `INR 1,000` of account credit (the subtotal plus tax reconciles, the credit line does not); all five payment frames contain zero text nodes and cannot serve as a build reference; thirteen frame-name pairs are duplicates (`Mobile PDP - Default State (In Stock)`, `Order confirmation - Happy Path`, and others); and the copy typos `CONTROL YOUR NURRATIVE`, `Shop for Man`, `Subscribe to Our Newsletters`, `Typo correcton`, `Notify Me Modall`.
 3. Map the wireframe's type scale and spacing onto the existing roles in `app/globals.css`. The wireframe uses DM Sans at 10–18px with negative tracking; the template uses 9–22px roles with `0.05em` tracking. Reconcile under D6.
 4. Inventory the primitives the frames require that have no counterpart: accordion, stepper, segmented content toggle, quantity stepper, drawer with two-level navigation.

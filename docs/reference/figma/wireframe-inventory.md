@@ -22,8 +22,8 @@ The execution order these verdicts feed is `docs/WIREFRAME-EXECUTION-PLAN.md`.
 | Verdict        | Frames |
 | -------------- | ------ |
 | Build          | 93     |
-| Shopify-hosted | 62     |
-| Gated          | 35     |
+| Shopify-hosted | 60     |
+| Gated          | 37     |
 | Skip           | 31     |
 
 | Surface                                         | Frames | Desktop | Mobile |
@@ -180,30 +180,30 @@ Frames exist, but the surfaces are Shopify checkout. Built in Shopify admin, not
 
 Frames exist, but identity is Shopify Customer Account OAuth. Only entry, failure and refresh are ours. Route target: Shopify Customer Account.
 
-| Frame      | State                                                     | Viewport | Size     | Verdict        | Note |
-| ---------- | --------------------------------------------------------- | -------- | -------- | -------------- | ---- |
-| `30:12637` | Mobile New Client Onboarding - OTP Verified Hand-off      | desktop  | 1440×755 | Shopify-hosted |      |
-| `1:3745`   | Identity Gate - Default Split View                        | desktop  | 1440×755 | Shopify-hosted |      |
-| `30:11706` | Identity Gate -Email Format Validation                    | desktop  | 1440×755 | Shopify-hosted |      |
-| `1:3777`   | New Client Onboarding - New User OTP Verification         | desktop  | 1440×755 | Shopify-hosted |      |
-| `1:3844`   | Login Screen - OTP Entry with Password Option             | desktop  | 1440×755 | Shopify-hosted |      |
-| `30:12263` | Login Screen - Password Entry Alternative                 | desktop  | 1440×755 | Shopify-hosted |      |
-| `30:12449` | Login Screen - Wrong Password Error State                 | desktop  | 1440×755 | Shopify-hosted |      |
-| `30:12525` | Login Screen - Wrong Password Error State                 | desktop  | 1440×755 | Shopify-hosted |      |
-| `30:11917` | Login Screen - OTP Error                                  | desktop  | 1440×755 | Shopify-hosted |      |
-| `30:12098` | Login Screen - OTP Retry loop                             | desktop  | 1440×755 | Shopify-hosted |      |
-| `30:11557` | Mobile Identity Gate - Default Split View                 | mobile   | 390×844  | Shopify-hosted |      |
-| `30:11731` | Mobile Identity Gate -Email Format Validation             | mobile   | 390×844  | Shopify-hosted |      |
-| `30:11826` | Mobile Login Screen - OTP Entry with Password Option      | mobile   | 390×844  | Shopify-hosted |      |
-| `30:12305` | Mobile Login Screen - Password Entry Alternative          | mobile   | 390×844  | Shopify-hosted |      |
-| `30:12489` | Mobile Login Screen - Wrong Password Error State          | mobile   | 390×844  | Shopify-hosted |      |
-| `30:12565` | Mobile Login Screen - Wrong Password Error State          | mobile   | 390×844  | Shopify-hosted |      |
-| `30:12601` | Mobile New Client Onboarding - New User OTP Verification  | mobile   | 390×844  | Shopify-hosted |      |
-| `30:12695` | Mobile New Client Onboarding - New User OTP Verification  | mobile   | 390×844  | Shopify-hosted |      |
-| `30:11959` | Mobile Login Screen - OTP Error                           | mobile   | 390×844  | Shopify-hosted |      |
-| `30:12220` | Mobile Login Screen - OTP Retry Loop                      | mobile   | 390×844  | Shopify-hosted |      |
-| `55:1801`  | Cancellation Flow — Cancellation > 24h (Guest OTP)        | desktop  | 1440×985 | Shopify-hosted |      |
-| `55:1917`  | Mobile Cancellation Flow — Cancellation > 24h (Guest OTP) | mobile   | 390×844  | Shopify-hosted |      |
+| Frame      | State                                                     | Viewport | Size     | Verdict        | Note                                                  |
+| ---------- | --------------------------------------------------------- | -------- | -------- | -------------- | ----------------------------------------------------- |
+| `30:12637` | Mobile New Client Onboarding - OTP Verified Hand-off      | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `1:3745`   | Identity Gate - Default Split View                        | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `30:11706` | Identity Gate -Email Format Validation                    | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `1:3777`   | New Client Onboarding - New User OTP Verification         | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `1:3844`   | Login Screen - OTP Entry with Password Option             | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `30:12263` | Login Screen - Password Entry Alternative                 | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `30:12449` | Login Screen - Wrong Password Error State                 | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `30:12525` | Login Screen - Wrong Password Error State                 | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `30:11917` | Login Screen - OTP Error                                  | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `30:12098` | Login Screen - OTP Retry loop                             | desktop  | 1440×755 | Shopify-hosted |                                                       |
+| `30:11557` | Mobile Identity Gate - Default Split View                 | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:11731` | Mobile Identity Gate -Email Format Validation             | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:11826` | Mobile Login Screen - OTP Entry with Password Option      | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:12305` | Mobile Login Screen - Password Entry Alternative          | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:12489` | Mobile Login Screen - Wrong Password Error State          | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:12565` | Mobile Login Screen - Wrong Password Error State          | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:12601` | Mobile New Client Onboarding - New User OTP Verification  | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:12695` | Mobile New Client Onboarding - New User OTP Verification  | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:11959` | Mobile Login Screen - OTP Error                           | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `30:12220` | Mobile Login Screen - OTP Retry Loop                      | mobile   | 390×844  | Shopify-hosted |                                                       |
+| `55:1801`  | Cancellation Flow — Cancellation > 24h (Guest OTP)        | desktop  | 1440×985 | Gated          | needs OTP verification plus a cancellation write path |
+| `55:1917`  | Mobile Cancellation Flow — Cancellation > 24h (Guest OTP) | mobile   | 390×844  | Gated          | needs OTP verification plus a cancellation write path |
 
 ### Account and wallet
 
@@ -320,6 +320,41 @@ Policy, story and support pages. Route target: `/pages/[handle]`.
 | `67:17518` | 27. Mobile — Editorial 404 Page     | mobile   | 390×844  | Build   |      |
 | `67:17540` | 28. 500 Maintenance Screen          | desktop  | 1440×904 | Build   |      |
 | `67:17568` | 28. Mobile — 500 Maintenance Screen | mobile   | 390×977  | Build   |      |
+
+### Skipped — dividers and device shells
+
+Not specifications. The `Frame N` strips are 262 px journey labels that group the canvas; the
+`iPhone 13 & 14` frames are device shells wrapping mobile artboards.
+
+| Frame      | Name                              | Size      | Reason                |
+| ---------- | --------------------------------- | --------- | --------------------- |
+| `1:3772`   | Frame 183                         | 2920×262  | journey divider strip |
+| `3:294`    | Frame 196                         | 8737×262  | journey divider strip |
+| `9:4888`   | Frame 198                         | 42999×262 | journey divider strip |
+| `16:6092`  | Frame 205                         | 13330×262 | journey divider strip |
+| `22:8536`  | Frame 206                         | 7599×262  | journey divider strip |
+| `51:14964` | Frame 208                         | 9510×262  | journey divider strip |
+| `52:15066` | Frame 209                         | 17150×262 | journey divider strip |
+| `56:15383` | Frame 210                         | 13320×262 | journey divider strip |
+| `37:12918` | Frame 207                         | 17150×262 | journey divider strip |
+| `13:1877`  | Frame 199                         | 15900×262 | journey divider strip |
+| `13:1879`  | Frame 200                         | 5260×262  | journey divider strip |
+| `13:2192`  | Frame 201                         | 7600×262  | journey divider strip |
+| `15:4738`  | Frame 202                         | 2640×262  | journey divider strip |
+| `15:5141`  | Frame 203                         | 2699×262  | journey divider strip |
+| `15:6075`  | Frame 204                         | 1870×262  | journey divider strip |
+| `1:3773`   | Frame 184                         | 7360×262  | journey divider strip |
+| `1:3775`   | Frame 185                         | 19094×262 | journey divider strip |
+| `5:874`    | iPhone 13 & 14 - 1                | 390×4825  | device shell, no spec |
+| `13:1881`  | iPhone 13 & 14 - 12               | 390×3853  | device shell, no spec |
+| `13:2061`  | iPhone 13 & 14 - 13               | 390×4080  | device shell, no spec |
+| `6:1166`   | iPhone 13 & 14 - 2                | 390×4825  | device shell, no spec |
+| `6:1289`   | iPhone 13 & 14 - 3                | 390×844   | device shell, no spec |
+| `67:15385` | Exchange & Return — Journey label | 11420×262 | journey divider strip |
+| `67:16093` | Account & Wallet — Journey label  | 15240×262 | journey divider strip |
+| `67:16733` | Private Wishlist — Journey label  | 5690×262  | journey divider strip |
+| `67:17016` | Support Pages — Journey label     | 9510×262  | journey divider strip |
+| `67:17494` | Error Screens — Journey label     | 3780×262  | journey divider strip |
 
 ## Duplicate frames
 
