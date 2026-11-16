@@ -590,7 +590,12 @@ and no new `sizes` warnings beyond the accepted `100vw` policy.
 9. **Currency.** The store and storefront are INR-only; the former display-only USD selector and
    fixed-rate conversion were removed. Checkout and Shopify's recorded totals are INR. Catalog
    prices are final INR values.
-10. **Product disclosures replace tabs.** The wireframe stacks description, details and shipping as
+10. **Wordmark aspect.** The brand mark is a 950x82 raster, so the masthead renders 1016x87.7 rather
+    than the 1016x82 the contract asserted for the previous traced serif. The token contract now
+    derives the height from the asset's own ratio. Owner: Next.js presentation. Reason: the design
+    file's `IMG_0923` wordmark replaced the serif. Expiry: none, but a vector master would remove the
+    ~7% upscale at masthead size.
+11. **Product disclosures replace tabs.** The wireframe stacks description, details and shipping as
     `<details>` rows; the product page previously used a `role="tablist"` with roving focus. The
     disclosure is the contract now: three summary rows at 12/16 400, at least 36px tall, and no tab
     roles. Owner: Next.js presentation. Reason: the wireframe is the build target, and native
