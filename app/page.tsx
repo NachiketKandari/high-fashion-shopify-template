@@ -1,22 +1,27 @@
 import type { Metadata } from "next";
 import Image, { getImageProps } from "next/image";
 
-import { HomeProductRail } from "@/components/product/home-product-rail";
+import { MediaTile } from "@/components/home/media-tile";
+import { ProductRow } from "@/components/home/product-row";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
 import { shopConfig } from "@/lib/config";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 
 const EDITORIAL_TILES = [
-  { href: "/collections/corsets", image: "/reference/editorial-corsets.jpg", label: "Corsets" },
   {
-    href: "/collections/dresses-and-jumpsuits",
-    image: "/reference/editorial-dresses.jpg",
-    label: "Dresses & Jumpsuits",
+    href: "/collections/women",
+    image: "/reference/clone/lookbook-01.jpg",
+    watermark: "Women",
+  },
+  {
+    href: "/collections/unisex-1",
+    image: "/reference/clone/lookbook-02.jpg",
+    watermark: "Men",
   },
 ];
 
-const COLLECTION_TILES = [
+const LOOK_TILES = [
   { href: "/collections/core", image: "/reference/editorial-core.jpg", label: "Core" },
   {
     href: "/collections/essentials",
@@ -26,11 +31,13 @@ const COLLECTION_TILES = [
   { href: "/collections/signature", image: "/reference/editorial-elevated.jpg", label: "Elevated" },
 ];
 
-const LINK_TILES = [
-  { href: "/pages/about-us#store", image: "/reference/tile-flagship.jpg", label: "Flagship Store" },
-  { href: "/blogs/journal-2", image: "/reference/tile-journal.jpg", label: "Journal" },
-  { href: "/pages/care-guide", image: "/reference/tile-careguide.jpg", label: "Care Guide" },
-  { href: "/pages/about-us", image: "/reference/tile-our-world.jpg", label: "Our World" },
+const STORY_TILES = [
+  {
+    href: "/pages/about-us#store",
+    image: "/reference/clone/lookbook-05.jpg",
+    label: "Flagship Store",
+  },
+  { href: "/blogs/journal-2", image: "/reference/clone/lookbook-06.jpg", label: "Journal" },
 ];
 
 // Art direction: <picture> fetches only the viewport's campaign image, so mobile never downloads the desktop hero.
@@ -90,73 +97,86 @@ export default function HomePage() {
 
       <section aria-label="Campaign">
         <Link className="block" href="/collections/new-in">
-          <div className="relative h-[calc(100svh-91px)] overflow-hidden desktop:aspect-[1440/784] desktop:h-auto">
+          <div className="relative h-[calc(100svh-var(--header-total-h))] overflow-hidden desktop:aspect-[1440/784] desktop:h-auto">
             <CampaignImage />
           </div>
         </Link>
       </section>
 
+      <section aria-label="New arrivals" className="px-(--gutter) py-10">
+        <ProductRow handle="new-in" />
+      </section>
+
       <section aria-label="Shop by category" className="grid grid-cols-1 desktop:grid-cols-2">
         {EDITORIAL_TILES.map((tile) => (
-          <Link
-            className="group relative block aspect-[2/3] overflow-hidden bg-surface desktop:aspect-[720/893]"
+          <MediaTile
+            className="aspect-[3/5] desktop:aspect-[720/893]"
             href={tile.href}
-            key={tile.label}
-          >
-            <Image
-              alt=""
-              className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within:scale-[1.03] group-hover:scale-[1.03] motion-reduce:transform-none"
-              fill
-              sizes="100vw"
-              src={tile.image}
-            />
-            <span className="type-h2 absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/45 to-transparent px-(--gutter) pt-12 pb-5 text-inverse">
-              {tile.label}
-            </span>
-          </Link>
+            image={tile.image}
+            key={tile.watermark}
+            watermark={tile.watermark}
+          />
         ))}
       </section>
 
-      <HomeProductRail />
-
-      <section aria-label="Collection edits" className="grid grid-cols-1 desktop:grid-cols-3">
-        {COLLECTION_TILES.map((tile) => (
-          <Link
-            className="group relative block aspect-[480/557] overflow-hidden bg-surface"
-            href={tile.href}
-            key={tile.label}
-          >
-            <Image
-              alt=""
-              className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within:scale-[1.03] group-hover:scale-[1.03] motion-reduce:transform-none"
-              fill
-              sizes="100vw"
-              src={tile.image}
+      <section aria-label="Get the look" className="grid gap-10 px-(--gutter) py-20">
+        <h2 className="type-h2 text-center">Get the Look</h2>
+        <div className="grid grid-cols-1 gap-(--grid-gap) desktop:grid-cols-3">
+          {LOOK_TILES.map((tile) => (
+            <MediaTile
+              className="aspect-[480/557]"
+              href={tile.href}
+              image={tile.image}
+              key={tile.label}
+              label={tile.label}
+              labelTone="inverse"
             />
-            <span className="type-h3 absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/45 to-transparent px-(--gutter) pt-10 pb-4 text-inverse">
-              {tile.label}
-            </span>
-          </Link>
-        ))}
-      </section>
-
-      <section aria-label={`Discover ${shopConfig.site.name}`} className="pb-10 pt-10">
-        <div className="grid grid-cols-2 desktop:grid-cols-4">
-          {LINK_TILES.map((tile) => (
-            <Link className="group grid content-start" href={tile.href} key={tile.label}>
-              <span className="relative block aspect-square overflow-hidden bg-surface">
-                <Image
-                  alt=""
-                  className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within:scale-[1.03] group-hover:scale-[1.03] motion-reduce:transform-none"
-                  fill
-                  sizes="100vw"
-                  src={tile.image}
-                />
-              </span>
-              <span className="type-h4 px-(--gutter) pt-2.5">{tile.label}</span>
-            </Link>
           ))}
         </div>
+      </section>
+
+      <section aria-label="Exclusives">
+        <Link
+          className="group relative block aspect-[4/5] overflow-hidden bg-surface desktop:aspect-[1440/700]"
+          href="/collections/new-in"
+        >
+          <Image
+            alt=""
+            className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within:scale-[1.03] group-hover:scale-[1.03] motion-reduce:transform-none"
+            fill
+            sizes="100vw"
+            src="/reference/hero-desktop.jpg"
+          />
+          <span className="absolute inset-0 flex items-center justify-center gap-10">
+            <span
+              aria-hidden="true"
+              className="type-display desktop:type-watermark-lg text-inverse/50"
+            >
+              Exclusives
+            </span>
+            <span
+              aria-hidden="true"
+              className="size-17 rounded-full border-[19.5px] border-inverse/50"
+            />
+          </span>
+        </Link>
+      </section>
+
+      <section aria-label="Bestsellers" className="px-(--gutter) py-10">
+        <ProductRow handle="bestsellers" />
+      </section>
+
+      <section aria-label="Stories" className="grid grid-cols-1 desktop:grid-cols-2">
+        {STORY_TILES.map((tile) => (
+          <MediaTile
+            className="aspect-[4/5] desktop:aspect-[720/700]"
+            href={tile.href}
+            image={tile.image}
+            key={tile.label}
+            label={tile.label}
+            labelTone="inverse"
+          />
+        ))}
       </section>
     </Page>
   );
