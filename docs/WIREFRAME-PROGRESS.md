@@ -238,6 +238,17 @@ mobile panel and the home page. Mobile uses the frame's closed bar (`Menu`, word
 no 390 frame shows the menu open, so the open state follows the desktop panel with two columns and
 one image.
 
+## Cart
+
+Built from `1:1599` and `22:8538`: the page is titled `Cart`, carries the sign-in prompt above an
+order summary of `Subtotal`, `Delivery`, `TOTAL`, checkout, the promotional-code line and
+`need help? contact us`, and closes with the `May interest you` four-up row.
+
+`Delivery` reads `Free` once the subtotal clears the free-shipping threshold and
+`Calculated at checkout` below it, rather than the frame's fixed `Free`, because Shopify does not
+return a shipping cost until checkout. The sign-in state is read inside the page's Suspense boundary
+so the route still prerenders.
+
 ## Mobile
 
 Built from `docs/reference/figma/mobile-frames.md`, which records the 390 frames, their defects and

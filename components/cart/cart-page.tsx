@@ -15,7 +15,7 @@ import { CartLineItems } from "./line-item";
 import { CartSummary } from "./summary";
 import { CartWarnings } from "./warnings";
 
-export function CartPageContent() {
+export function CartPageContent({ signIn }: { signIn?: ReactNode }) {
   const cart = useSuspenseCart((state) => state.data);
 
   if (cart.totalQuantity === 0) {
@@ -23,7 +23,7 @@ export function CartPageContent() {
       <Page>
         <Container>
           <div className="grid gap-6">
-            <h1 className="type-h2">Shopping cart</h1>
+            <h1 className="type-h2">Cart</h1>
             <div className="grid gap-4 py-6">
               <h2 className="type-h3">Your shopping cart is empty</h2>
               <p className="type-body-sm max-w-[40ch] text-ink-muted">
@@ -45,7 +45,7 @@ export function CartPageContent() {
   return (
     <CartPageLayout
       count={<span className="type-h4 text-ink-muted">({cart.totalQuantity})</span>}
-      summary={<CartSummary cart={cart} />}
+      summary={<CartSummary cart={cart} signIn={signIn} />}
       warnings={<CartWarnings />}
     >
       <div className="grid gap-5">
@@ -115,7 +115,7 @@ function CartPageLayout({ children, count, summary, warnings, ...props }: CartPa
       <Container>
         <div className="grid gap-8">
           <div className="flex items-center gap-2">
-            <h1 className="type-h2">Shopping cart</h1>
+            <h1 className="type-h2">Cart</h1>
             {count}
           </div>
           {warnings}

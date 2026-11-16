@@ -2,69 +2,81 @@
 
 import type { CartData } from "@shopify/hydrogen";
 import { Loader2 } from "lucide-react";
+import type { ReactNode } from "react";
 
+import { useDisplayPrice } from "@/components/currency/provider";
 import { Price } from "@/components/product/price";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
+import { getFreeShippingStatus } from "@/lib/cart";
 import { useCart, useCheckout } from "@/lib/cart/client";
 
 import { DiscountForm } from "./discount-form";
 
 interface CartSummaryProps {
   cart: CartData;
+  signIn?: ReactNode;
 }
 
-export function CartSummary({ cart }: CartSummaryProps) {
+export function CartSummary({ cart, signIn }: CartSummaryProps) {
   return (
     <div className="grid gap-4">
+      {signIn}
       <CartTotal cart={cart} />
-      <CartCheckout label="Checkout" />
+      <CartCheckout />
       <details className="group">
-        <summary className="type-control focus-ring flex h-9 cursor-pointer list-none items-center underline underline-offset-4 [&::-webkit-details-marker]:hidden">
-          Discount code
+        <summary className="type-body focus-ring flex h-9 cursor-pointer list-none items-center underline underline-offset-4 [&::-webkit-details-marker]:hidden">
+          Do you have a promotional code?
         </summary>
         <div className="mt-3">
           <DiscountForm cart={cart} />
         </div>
       </details>
+      <Link
+        className="type-body-sm focus-ring w-fit underline underline-offset-4"
+        href="/pages/contact-us"
+      >
+        need help? contact us
+      </Link>
     </div>
   );
 }
 
-interface CartTotalProps {
-  cart: CartData;
-}
-
-export function CartTotal({ cart }: CartTotalProps) {
-  const isCostPending = useCart((state) =>
-    Boolean(state.pending.cost || state.pending.lines.size > 0 || state.revalidating),
+export function CartTotal({ cart }: { cart: CartData }) {
+  const format = useDisplayPrice();
+  const currencyCode = cart.cost.subtotalAmount.currencyCode;
+  const { remaining } = getFreeShippingStatus(
+    cart.cost.subtotalAmount.amount,
+    currencyCode,
+    format,
   );
-  const currencyCode =
-    cart.cost.subtotalAmount.currencyCode ||
-    cart.cost.totalAmount.currencyCode ||
-    cart.lines.nodes[0]?.cost.totalAmount.currencyCode;
-  const optimisticAmount = cart.lines.nodes.reduce(
-    (total, line) => total + Number(line.cost.amountPerQuantity.amount) * line.quantity,
-    0,
-  );
-  const amount =
-    isCostPending && optimisticAmount > 0 ? String(optimisticAmount) : cart.cost.totalAmount.amount;
   return (
-    <div
-      aria-busy={isCostPending || undefined}
-      aria-label="Subtotal"
-      className="grid gap-1"
-      role="group"
-    >
-      <div className="type-h4 flex items-baseline justify-between text-ink">
-        <span>Subtotal</span>
-        {currencyCode ? (
-          <Price amount={amount} className="type-h4 font-normal" currencyCode={currencyCode} />
-        ) : (
-          <span className="text-ink-muted">Updating…</span>
-        )}
+    <dl className="grid gap-3">
+      <div className="flex items-baseline justify-between">
+        <dt className="type-body">Subtotal</dt>
+        <dd className="type-body">
+          <Price
+            amount={cart.cost.subtotalAmount.amount}
+            className="type-body"
+            currencyCode={currencyCode}
+          />
+        </dd>
       </div>
-      <p className="type-label text-ink-muted">Tax included and shipping calculated at checkout.</p>
-    </div>
+      <div className="flex items-baseline justify-between">
+        <dt className="type-body">Delivery</dt>
+        <dd className="type-body">{remaining === 0 ? "Free" : "Calculated at checkout"}</dd>
+      </div>
+      <div className="flex items-baseline justify-between border-t border-rule pt-3">
+        <dt className="type-h4">TOTAL</dt>
+        <dd className="type-h4">
+          <Price
+            amount={cart.cost.totalAmount.amount}
+            className="type-h4"
+            currencyCode={cart.cost.totalAmount.currencyCode || currencyCode}
+          />
+        </dd>
+      </div>
+    </dl>
   );
 }
 
@@ -89,14 +101,12 @@ export function CartCheckout({ label = "Checkout" }: CartCheckoutProps) {
         className="h-9 w-full justify-center"
         disabled={isCheckoutDisabled}
         onClick={handleCheckout}
-        type="button"
-        variant="outline"
       >
-        {isCheckingOut ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
-        {isCheckingOut ? "Redirecting..." : label}
+        {isCheckingOut ? <Loader2 aria-hidden="true" className="size-4 animate-spin" /> : null}
+        {label}
       </Button>
       {checkoutError ? (
-        <p className="type-body-sm text-error-rule" id={checkoutErrorId} role="alert">
+        <p className="type-body-sm text-error" id={checkoutErrorId} role="alert">
           {checkoutError}
         </p>
       ) : null}
