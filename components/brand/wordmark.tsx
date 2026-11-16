@@ -4,9 +4,9 @@ import Image from "next/image";
 import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 
-const SRC = "/brand/wordmark.svg";
-const WIDTH = 149.354;
-const HEIGHT = 12.054;
+const SRC = "/brand/wordmark.png";
+const WIDTH = 950;
+const HEIGHT = 82;
 
 const VARIANTS = {
   compact: "w-[170px] desktop:w-[342px]",

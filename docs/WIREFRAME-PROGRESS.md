@@ -113,6 +113,15 @@ already ships DM Sans as `--font-sans` and has no Helvetica token.
 The branding page (`172:24`) holds 321 frames of neck labels, care tags and hangtags, plus two
 script-font wordmark studies. Rendering stopped on an HTTP 429 from the image endpoint.
 
+**Logo.** `IMG_0923` is the wordmark: 17 frames, all the same raster, `imageRef`
+`0730f03ab1f718d4c34f446141e74383add383ce`, a 1200x1800 PNG whose ink is 946x82. Cropped to
+`public/brand/wordmark.png` (950x82) and wired through `components/brand/wordmark.tsx`.
+
+The typeface cannot be read from the file because the mark is a bitmap, and no font in either file
+matches it: at matched width it is wider than Archivo 700/width 100, Gothic A1 Black and Poppins
+ExtraBold, so it reads as an extended geometric sans, probably custom or a commercial extended cut.
+A vector master is still needed — at the 1016px masthead the 950px raster is upscaled about 7%.
+
 ## Artifacts on disk
 
 | Artifact                                        | State                                                 |
