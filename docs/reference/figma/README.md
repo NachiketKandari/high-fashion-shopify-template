@@ -69,12 +69,32 @@ this directory are the durable artifact.
 When the quota is exhausted, in order of preference:
 
 1. `trim` an export that was already fetched — one document covers every frame in it.
-2. Fetch with a token on a paid seat: the limit follows the plan, so a Professional or Organization
+2. Run [`export-plugin/`](./export-plugin) from the Figma desktop app. It reads the document through
+   the plugin API, which is not metered, and never touches the REST quota.
+3. Fetch with a token on a paid seat: the limit follows the plan, so a Professional or Organization
    account raises it for the same file.
-3. Export through a development plugin in the Figma desktop app, which runs on the plugin API and
-   never touches the REST quota. It returns the node tree and can render PNGs at any scale.
 4. Select a frame in the editor and read its properties from the right sidebar, for one or two
    frames that are needed before the quota returns.
+
+### The export plugin
+
+Dev Mode and its "Copy as PNG" are paywalled, and the browser's download never reaches disk, so the
+plugin API is the free route to the same node tree.
+
+1. Open the file in the Figma desktop app.
+2. Plugins → Development → **Import plugin from manifest…** and pick
+   `export-plugin/manifest.json`.
+3. Run **Lorem Ipsum spec export**, then **Save JSON** in its panel.
+4. Trim or list it like any other export:
+
+```
+node figma-cache.mjs trim ~/Downloads/lorem-ipsum-wireframe-export.json --out figma-cache/wireframe.json
+node figma-cache.mjs list
+```
+
+The plugin writes the same shape the REST endpoint returns: pages, then frames, with `id`, `name`,
+`type`, `absoluteBoundingBox`, layout, paddings, fills, strokes, `characters` and the text style —
+`fontWeight` mapped from the font style name and line heights and tracking resolved to pixels.
 
 Images share the quota. Render each surface once at 1x and keep the PNG beside its spec rather than
 re-rendering while writing.
