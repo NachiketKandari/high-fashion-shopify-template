@@ -44,12 +44,7 @@ export function Browse({ path, resultCount, results, sortExclude, state, storeKe
 }
 
 export function BrowseResultsFallback() {
-  return (
-    <ProductsGridSkeleton
-      count={PRODUCTS_PER_PAGE}
-      className="grid-cols-2 tablet:grid-cols-3 desktop:grid-cols-4"
-    />
-  );
+  return <ProductsGridSkeleton count={PRODUCTS_PER_PAGE} />;
 }
 
 // Renders a collection page's grid under the layout's CollectionBrowseFrame and hands its facets and data search to the layout's toolbar.

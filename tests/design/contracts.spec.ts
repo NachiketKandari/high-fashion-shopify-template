@@ -101,7 +101,7 @@ test.describe("storefront contracts", () => {
       };
     });
     expect(mobile.columns).toBe(2);
-    expect(mobile.rowGap).toBe("24px");
+    expect(mobile.rowGap).toBe("1px");
     expect(mobile.sortHeight).toBeGreaterThanOrEqual(36);
     expect(mobile.scrollWidth).toBeLessThanOrEqual(mobile.innerWidth);
   });

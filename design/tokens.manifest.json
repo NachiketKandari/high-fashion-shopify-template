@@ -89,7 +89,7 @@
       "--card-inset": "8px",
       "--grid-gap": "3px",
       "--grid-row-gap": "24px",
-      "--gutter": "20px",
+      "--gutter": "24px",
       "--page-top": "24px",
       "--section-gap": "40px"
     },

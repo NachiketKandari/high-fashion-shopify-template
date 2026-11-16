@@ -94,7 +94,7 @@ test.describe("design tokens", () => {
       };
     });
 
-    expect(probe.gutter).toBe("20px");
+    expect(probe.gutter).toBe("24px");
     expect(probe.sectionGap).toBe("40px");
     expect(probe.headerHeight).toBeCloseTo(56, 0);
     expect(probe.navDisplay).toBe("none");

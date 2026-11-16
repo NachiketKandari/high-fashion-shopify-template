@@ -11,6 +11,10 @@ states are specified from the exported file: low stock renders from `quantityAva
 storefront token returns null for, so it is dormant and registered as a stub; the waitlist frame
 cannot ship until something stores an email.
 
+Mobile is now built for the three surfaces that already exist on desktop — home, product and browse —
+from `mobile-frames.md`. The 24 px gutter, the 36 px hero, the 4-up overflow rows, the full-bleed
+2-up browse grid and the 24/40 product column all come from the 390 frames.
+
 ## Phase status
 
 | Phase                                | Status                                            |
@@ -204,29 +208,43 @@ A vector master is still needed — at the 1016px masthead the 950px raster is u
 
 ## Verification evidence
 
-| Check                                             | Result                                                                                                                                        |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Figma REST `?depth=2` on `TzeMmJHUVWuiuknAcm1hq4` | 200; 221 top-level frames on one page (`Wireframe`)                                                                                           |
-| File metadata                                     | Version `2421747092237574279`, last modified `2026-11-14T17:37:18Z`, `role: viewer`                                                           |
-| Components, component sets, published styles      | 0, 0, 0                                                                                                                                       |
-| Frame classification                              | 93 Build, 60 Shopify-hosted, 37 Gated, 31 Skip                                                                                                |
-| Payment frames text nodes                         | 0 across all five `Payment Screen` frames                                                                                                     |
-| `pnpm lint`, `pnpm typecheck`                     | Pass; design gate 167 files                                                                                                                   |
-| Design suite (`tests/design`)                     | 16/16 headless after the wordmark contract change                                                                                             |
-| INR across home, collection, PDP                  | 6/6 headless: rupee prices on all three, no dollar amounts                                                                                    |
-| New wordmark in the shell                         | 5/5 headless: loads at 342x30, 950/82 aspect, masthead renders                                                                                |
-| Home against frame 40:313                         | 16/16 headless: section heights 700/588/700/527/700/588/700, 4 x 360 columns, 48 px captions, 36/54 hero title, no horizontal overflow at 390 |
-| Browse states                                     | 7/7 headless: chips render and remove, zero results name the filter, end-of-list count                                                        |
-| Load more under a filter                          | 5/5 headless: 40 to 122 products, every price inside the filter, boundary reached                                                             |
-| Design suite after the home rebuild               | 16/16 headless                                                                                                                                |
+| Check                                              | Result                                                                                                                                        |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Figma REST `?depth=2` on `TzeMmJHUVWuiuknAcm1hq4`  | 200; 221 top-level frames on one page (`Wireframe`)                                                                                           |
+| File metadata                                      | Version `2421747092237574279`, last modified `2026-11-14T17:37:18Z`, `role: viewer`                                                           |
+| Components, component sets, published styles       | 0, 0, 0                                                                                                                                       |
+| Frame classification                               | 93 Build, 60 Shopify-hosted, 37 Gated, 31 Skip                                                                                                |
+| Payment frames text nodes                          | 0 across all five `Payment Screen` frames                                                                                                     |
+| `pnpm lint`, `pnpm typecheck`                      | Pass; design gate 167 files                                                                                                                   |
+| Design suite (`tests/design`)                      | 16/16 headless after the wordmark contract change                                                                                             |
+| INR across home, collection, PDP                   | 6/6 headless: rupee prices on all three, no dollar amounts                                                                                    |
+| New wordmark in the shell                          | 5/5 headless: loads at 342x30, 950/82 aspect, masthead renders                                                                                |
+| Home against frame 40:313                          | 16/16 headless: section heights 700/588/700/527/700/588/700, 4 x 360 columns, 48 px captions, 36/54 hero title, no horizontal overflow at 390 |
+| Browse states                                      | 7/7 headless: chips render and remove, zero results name the filter, end-of-list count                                                        |
+| Load more under a filter                           | 5/5 headless: 40 to 122 products, every price inside the filter, boundary reached                                                             |
+| Design suite after the home rebuild                | 16/16 headless                                                                                                                                |
+| Mobile home, product and browse against 390 frames | 10/10 headless: 24 px gutter, 36/108 hero, 180.8 px row cards, 195.5 px browse columns, 390×585 gallery, no document overflow at 390          |
+| Dead-code and stub audit                           | Two unrendered components and one unused export removed; newsletter and contact forms registered after claiming success with no sink          |
+
+## Mobile
+
+Built from `docs/reference/figma/mobile-frames.md`, which records the 390 frames, their defects and
+the deferrals. Home, product and browse render frame geometry at 390 with no horizontal document
+overflow. Deferred: the frame's bordered `Menu` / `Bag` / `Help` header is a chrome decision against
+the shipped icon header, the gallery keeps its dot rail because the frame draws none and products
+carry up to 15 images, and the footer stays until the footer phase.
+
+`6:1166` duplicates the home frame, `16:6827` is the out-of-stock state under a default-state name,
+and every 390 frame reuses the 1440 footer with the newsletter label off-canvas at x 1179.
 
 ## Next action
 
-Align the browse states to their frames: both `15:4740` and `15:5317` draw one line under the
-toolbar — `showing 14 results for applied filter` and `0 results for applied filter`, Inter 16/400 at
-the gutter — and no heading, button or chip row. The shipped build has chips and a fuller empty
-state, which is a superset and needs a decision, not a silent rewrite. Then the product page's title
-scale and gallery pattern, then P9 against the Customer Account API.
+Decide the mobile header: the frame draws bordered `Menu` / `Bag` / `Help` text buttons at 76 px
+against the shipped 56 px icon header. Then align the browse states to their frames — both `15:4740`
+and `15:5317` draw one line under the toolbar, `showing 14 results for applied filter` and
+`0 results for applied filter` at Inter 16/400 on the gutter, with no heading, button or chip row,
+where the shipped build is a superset. Then the product page's title scale and gallery pattern, then
+P9 against the Customer Account API.
 
 Two formatting questions are open for the owner: cards render `₹50,000.00` because Hydrogen formats
 INR at its ISO exponent, while the frame writes `9,000`, and the footer's price line has the same

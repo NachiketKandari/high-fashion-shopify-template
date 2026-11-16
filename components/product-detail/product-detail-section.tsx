@@ -131,8 +131,8 @@ function ProductInfoArea({
     vendor: product.vendor,
   };
   return (
-    <div className="px-(--gutter) py-7 desktop:sticky desktop:top-[76px] desktop:max-h-[calc(100svh-76px)] desktop:self-start desktop:overflow-y-auto desktop:px-0 desktop:pb-6 desktop:pt-[64px]">
-      <div className="mx-auto grid w-full max-w-[432px] gap-7">
+    <div className="px-(--gutter) py-6 desktop:sticky desktop:top-[76px] desktop:max-h-[calc(100svh-76px)] desktop:self-start desktop:overflow-y-auto desktop:px-0 desktop:pb-6 desktop:pt-[64px]">
+      <div className="mx-auto grid w-full max-w-[432px] gap-10">
         <div className="grid gap-2" data-slot="product-info-header">
           <div className="flex items-start justify-between gap-4">
             <h1 className="type-display text-ink tracking-normal">{product.title}</h1>
@@ -408,8 +408,8 @@ export function ProductDetailSkeleton() {
         <div className="aspect-[2/3] w-full bg-surface desktop:hidden" />
         <div className="hidden aspect-[20/27] w-full bg-surface desktop:block" />
       </div>
-      <div className="px-(--gutter) py-7 desktop:sticky desktop:top-[76px] desktop:px-0 desktop:pt-[64px]">
-        <div className="mx-auto grid w-full max-w-[432px] gap-7">
+      <div className="px-(--gutter) py-6 desktop:sticky desktop:top-[76px] desktop:px-0 desktop:pt-[64px]">
+        <div className="mx-auto grid w-full max-w-[432px] gap-10">
           <div className="grid gap-2">
             <Skeleton className="h-7 w-3/4" />
             <Skeleton className="h-7 w-24" />

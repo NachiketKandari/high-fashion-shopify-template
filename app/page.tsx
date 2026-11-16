@@ -99,7 +99,7 @@ export default function HomePage() {
         <div className="relative h-[calc(100svh-var(--header-total-h))] overflow-hidden bg-surface desktop:aspect-[1440/700] desktop:h-auto">
           <CampaignImage />
           <div aria-hidden="true" className="absolute inset-0 bg-paper/30" />
-          <h1 className="type-display desktop:type-display-lg absolute inset-x-0 top-[41%] px-(--gutter) text-center text-ink">
+          <h1 className="type-display-lg absolute inset-x-0 top-[41%] px-3 text-center text-ink desktop:px-(--gutter)">
             Control Your Narrative
           </h1>
           <Button
@@ -120,7 +120,7 @@ export default function HomePage() {
       <section aria-label="Shop by category" className="grid grid-cols-1 desktop:grid-cols-2">
         {CATEGORY_TILES.map((tile) => (
           <MediaTile
-            className="aspect-[3/5] desktop:aspect-[720/700]"
+            className="aspect-[10/9] desktop:aspect-[720/700]"
             href={tile.href}
             image={tile.image}
             key={tile.href}
@@ -129,12 +129,12 @@ export default function HomePage() {
         ))}
       </section>
 
-      <section aria-label="Get the look" className="grid gap-6 bg-surface px-6 py-10">
+      <section aria-label="Get the look" className="grid gap-6 bg-surface px-(--gutter) py-10">
         <h2 className="type-h2">Get the Look</h2>
-        <div className="grid grid-cols-2 gap-6 desktop:grid-cols-4">
+        <div className="flex snap-x gap-6 overflow-x-auto desktop:grid desktop:grid-cols-4 desktop:overflow-visible">
           {LOOK_TILES.map((tile) => (
             <MediaTile
-              className="aspect-[33/40]"
+              className="w-[min(68vw,268px)] shrink-0 snap-start aspect-[2/3] desktop:w-auto"
               href={tile.href}
               image={tile.image}
               key={tile.href}
@@ -146,7 +146,7 @@ export default function HomePage() {
 
       <section
         aria-label="Exclusives"
-        className="relative aspect-[4/5] overflow-hidden bg-surface desktop:aspect-[1440/700]"
+        className="relative aspect-[39/70] overflow-hidden bg-surface desktop:aspect-[1440/700]"
       >
         <Image
           alt=""
@@ -171,7 +171,7 @@ export default function HomePage() {
       <section aria-label="Stories" className="grid grid-cols-1 desktop:grid-cols-2">
         {STORY_TILES.map((tile) => (
           <MediaTile
-            className="aspect-[4/5] desktop:aspect-[720/700]"
+            className="aspect-[10/9] desktop:aspect-[720/700]"
             href={tile.href}
             image={tile.image}
             key={tile.href}
