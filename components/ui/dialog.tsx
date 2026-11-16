@@ -22,7 +22,7 @@ function DialogOverlay({ className, ...props }: DialogPrimitive.Backdrop.Props) 
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 z-60 bg-black/50 transition-opacity duration-(--motion-base) ease-(--ease-standard) data-starting-style:opacity-0 data-ending-style:opacity-0",
+        "fixed inset-0 z-(--z-overlay) bg-black/50 transition-opacity duration-(--motion-base) ease-(--ease-standard) data-starting-style:opacity-0 data-ending-style:opacity-0",
         className,
       )}
       {...props}
@@ -45,7 +45,7 @@ function DialogContent({
         aria-modal="true"
         data-slot="dialog-content"
         className={cn(
-          "bg-paper fixed top-1/2 left-1/2 z-60 grid w-[calc(100%-2rem)] max-w-(--modal-narrow) -translate-x-1/2 -translate-y-1/2 gap-5 rounded-none border p-5 shadow-modal transition duration-(--motion-base) ease-(--ease-standard) outline-none data-starting-style:scale-[1.02] data-starting-style:opacity-0 data-ending-style:scale-[0.98] data-ending-style:opacity-0",
+          "bg-paper fixed top-1/2 left-1/2 z-(--z-overlay) grid w-[calc(100%-2rem)] max-w-(--modal-narrow) -translate-x-1/2 -translate-y-1/2 gap-5 rounded-none border p-5 shadow-modal transition duration-(--motion-base) ease-(--ease-standard) outline-none data-starting-style:scale-[1.02] data-starting-style:opacity-0 data-ending-style:scale-[0.98] data-ending-style:opacity-0",
           className,
         )}
         {...props}

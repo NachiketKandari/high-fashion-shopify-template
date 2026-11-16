@@ -57,9 +57,6 @@ export interface ShopConfig {
     buyWithShop: {
       isEnabled: boolean;
     };
-    complementaryProducts: {
-      isEnabled: boolean;
-    };
     quantityPicker: {
       isEnabled: boolean;
     };

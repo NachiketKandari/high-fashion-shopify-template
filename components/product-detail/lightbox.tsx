@@ -19,9 +19,9 @@ export function Lightbox({ label, children }: { label: string; children: ReactNo
 
       <DialogPrimitive.Root open={activeImage !== null} onOpenChange={(open) => !open && close()}>
         <DialogPrimitive.Portal>
-          <DialogPrimitive.Backdrop className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0" />
+          <DialogPrimitive.Backdrop className="fixed inset-0 z-(--z-overlay) bg-black/50 backdrop-blur-sm data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0" />
           <DialogPrimitive.Popup
-            className="fixed inset-0 z-60 flex items-center justify-center p-10 outline-none data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0"
+            className="fixed inset-0 z-(--z-overlay) flex items-center justify-center p-10 outline-none data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0"
             aria-describedby={undefined}
             onClick={(e) => {
               if (e.target === e.currentTarget) close();

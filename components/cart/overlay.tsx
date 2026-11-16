@@ -14,7 +14,7 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { FREE_SHIPPING_THRESHOLD } from "@/lib/cart";
+import { getFreeShippingStatus } from "@/lib/cart";
 import { useCart } from "@/lib/cart/client";
 
 import { useCartDrawer } from "./context";
@@ -120,9 +120,11 @@ function OverlayContent() {
 
 function FreeShippingProgress({ cart }: { cart: CartData }) {
   const format = useDisplayPrice();
-  const subtotal = Number(cart.cost.subtotalAmount.amount);
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-  const progress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+  const { message, progress } = getFreeShippingStatus(
+    cart.cost.subtotalAmount.amount,
+    cart.cost.subtotalAmount.currencyCode,
+    format,
+  );
 
   return (
     <div className="grid gap-2 border-b border-rule px-(--gutter) py-3">
@@ -140,9 +142,7 @@ function FreeShippingProgress({ cart }: { cart: CartData }) {
         />
       </div>
       <p aria-live="polite" className="type-label text-ink-muted">
-        {remaining === 0
-          ? "Congratulations! You qualify for free shipping."
-          : `You're ${format({ amount: remaining.toFixed(2), currencyCode: "INR" })} away from free shipping.`}
+        {message}
       </p>
     </div>
   );

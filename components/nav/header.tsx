@@ -34,11 +34,10 @@ export function Header({ actions, search }: { actions: ReactNode; search?: React
       <Announcement />
       <header
         className={cn(
-          "pointer-events-none sticky top-0 z-50",
-          isHome ? "h-14 desktop:h-[186px]" : "h-14 desktop:h-[76px]",
+          "pointer-events-none sticky top-0 z-(--z-header)",
+          isHome ? "h-(--header-bar-h) desktop:h-(--header-total-h)" : "h-(--header-bar-h)",
         )}
         data-app-header
-        data-scrolled={scrolled}
       >
         <div className="pointer-events-auto bg-paper">
           <div
@@ -46,7 +45,6 @@ export function Header({ actions, search }: { actions: ReactNode; search?: React
               "overflow-hidden transition-[height] duration-(--motion-base) ease-(--ease-standard)",
               showMasthead ? "h-0 desktop:h-(--header-masthead-h)" : "h-0",
             )}
-            data-masthead
           >
             {showMasthead ? (
               <div className="hidden h-(--header-masthead-h) items-start px-(--gutter) desktop:flex">

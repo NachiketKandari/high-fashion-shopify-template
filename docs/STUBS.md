@@ -29,11 +29,13 @@ reads an unverified source ships with a stub and a row here, or does not ship.
 | Cancellation write     | Admin API `orderCancel`                      | Not started | —                                                         | Decision on a server-side admin credential            |
 | Returns write          | Shopify Returns or Shiprocket reverse pickup | Not started | —                                                         | P11 scope                                             |
 | Tax invoices           | GST invoice app or Admin API plus generation | Not started | —                                                         | App procurement decision                              |
+| Newsletter signup      | A list provider or marketing-consent sink    | Blocked     | `NewsletterForm` renders an unavailable status            | A provider plus a consent policy                      |
+| Contact form           | A mailbox or ticketing transport             | Blocked     | `ContactForm` renders an unavailable status               | A transport endpoint or a ticketing app               |
 
 ## Verified 2026-11-16
 
 `ProductVariant.quantityAvailable` is in the installed Storefront schema and is now selected by
-`PRODUCT_VARIANT_FIELDS`, but the token for this store returns `null` for every variant of every
+`PRODUCT_VARIANT_FRAGMENT`, but the token for this store returns `null` for every variant of every
 product tested, so the low-stock line renders as absence. The code path is dormant until the token
 carries `unauthenticated_read_product_inventory`.
 

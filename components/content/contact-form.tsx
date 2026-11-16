@@ -16,10 +16,10 @@ export function ContactForm() {
   if (sent) {
     return (
       <div className="grid gap-3 border border-rule p-6" role="status">
-        <p className="type-control">Message received</p>
+        <p className="type-control">Contact form not connected</p>
         <p className="type-body text-ink-muted">
-          Thank you for writing to us. The team replies within one working day. For urgent order
-          questions, call or WhatsApp {shopConfig.site.contact.phone}.
+          Message delivery is not wired up yet. For order questions, call or WhatsApp{" "}
+          {shopConfig.site.contact.phone}.
         </p>
       </div>
     );

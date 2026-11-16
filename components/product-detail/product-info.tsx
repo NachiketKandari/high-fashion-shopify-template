@@ -72,25 +72,4 @@ function ProductInfoOptions({
   );
 }
 
-interface ProductInfoDescriptionProps extends ComponentProps<"div"> {
-  descriptionHtml: string;
-}
-
-function ProductInfoDescription({
-  descriptionHtml,
-  className,
-  ...props
-}: ProductInfoDescriptionProps) {
-  if (!descriptionHtml) return null;
-  return (
-    <div data-slot="product-info-description" className={className} {...props}>
-      <div
-        className="type-body-sm text-ink-muted [&_li]:m-0 [&_p]:m-0 [&_ul]:m-0 [&_ul]:grid [&_ul]:gap-0.5"
-        // oxlint-disable-next-line react/no-danger -- Product descriptions pass through sanitizeShopifyHtml when fetched.
-        dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-      />
-    </div>
-  );
-}
-
-export { ProductInfoDescription, ProductInfoOptions };
+export { ProductInfoOptions };

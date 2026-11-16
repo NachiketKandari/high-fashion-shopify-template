@@ -8,7 +8,7 @@ import {
   serializeCollectionParams,
 } from "@shopify/hydrogen";
 import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
-import { CheckIcon, ChevronDownIcon, LoaderCircleIcon, XIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 import {
   type KeyboardEvent,
   type MouseEventHandler,

@@ -56,7 +56,7 @@ export function DesktopNav() {
                 {item.label}
               </button>
               <div
-                className="invisible absolute top-full left-0 z-40 w-[231px] translate-y-1 border-r border-b border-rule bg-paper opacity-0 transition-[opacity,transform,visibility] duration-(--motion-base) ease-(--ease-standard) data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:opacity-100"
+                className="invisible absolute top-full left-0 z-(--z-mega) w-[231px] translate-y-1 border-r border-b border-rule bg-paper opacity-0 transition-[opacity,transform,visibility] duration-(--motion-base) ease-(--ease-standard) data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:opacity-100"
                 data-open={openIndex === index}
                 id={`mega-${index}`}
               >

@@ -16,7 +16,6 @@ export interface ProductCardProps {
   loading?: "eager" | "lazy";
   outOfStockText?: string;
   product: ProductCardType;
-  showSizes?: boolean;
 }
 
 function swatchStyle(swatch: { color?: string; image?: string } | undefined) {
@@ -40,7 +39,6 @@ export function ProductCard({
   loading = "lazy",
   outOfStockText = "Out of stock",
   product,
-  showSizes = true,
 }: ProductCardProps) {
   const href = buildProductUrl(product.handle, product.defaultVariantSelectedOptions ?? []);
   const colorOption = product.options?.find((option) =>
@@ -151,7 +149,7 @@ export function ProductCard({
               />
             ) : null}
           </div>
-          {showSizes && sizes.length > 0 ? (
+          {sizes.length > 0 ? (
             <p className="type-body-sm truncate text-ink-muted [[data-card-view=image]_&]:hidden">
               {sizes.join(" ")}
             </p>

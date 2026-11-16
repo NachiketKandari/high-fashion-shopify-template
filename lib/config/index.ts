@@ -44,9 +44,6 @@ export const shopConfig = {
     buyWithShop: {
       isEnabled: false,
     },
-    complementaryProducts: {
-      isEnabled: true,
-    },
     quantityPicker: {
       isEnabled: true,
     },
