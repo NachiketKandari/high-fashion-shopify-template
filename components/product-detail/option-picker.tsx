@@ -1,5 +1,5 @@
 import { cn } from "cn";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { Link } from "@/components/ui/link";
 import type { OptionGroupState } from "@/lib/product/types";
@@ -8,6 +8,7 @@ import { SizeGuide } from "./size-guide";
 
 interface OptionPickerProps extends ComponentProps<"div"> {
   compact?: boolean;
+  footnote?: ReactNode;
   onSelectValue?: (optionName: string, value: string) => void;
   option: OptionGroupState;
   sizeGuideCategory?: string;
@@ -18,6 +19,7 @@ export function OptionPicker({
   option,
   className,
   compact = false,
+  footnote,
   sizeGuideCategory,
   ...props
 }: OptionPickerProps) {
@@ -91,6 +93,7 @@ export function OptionPicker({
       {option.name.toLowerCase().includes("size") ? (
         <SizeGuide category={sizeGuideCategory} />
       ) : null}
+      {footnote ? <p className="type-body-sm mt-1 w-full text-ink">{footnote}</p> : null}
     </div>
   );
 }

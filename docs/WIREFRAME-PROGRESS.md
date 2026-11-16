@@ -6,9 +6,10 @@ next action only.
 
 ## Current phase
 
-**P6 remainder.** Browse is complete and product detail matches the default frame: 800/592 split,
-20:27 gallery, 432 px buy column, full-bleed recommendation row. Three decisions are open on the page
-itself, and the stock states are blocked on frames the API would not serve.
+**P6 remainder.** Product detail matches its default frame and selects variant inventory. The stock
+states are specified from the exported file: low stock renders from `quantityAvailable`, which the
+storefront token returns null for, so it is dormant and registered as a stub; the waitlist frame
+cannot ship until something stores an email.
 
 ## Phase status
 
@@ -66,9 +67,15 @@ The frame draws four images; catalogue products carry up to fifteen, so the stac
 about 16,000 px and the recommendation row sits far below the fold. A gallery pattern for long
 galleries is an open decision, not a styling fix.
 
-The stock states — low-stock alert `1:1090`, out-of-stock `1:1910`, notify-me `16:7696`, mobile
-`16:6714` and `16:8009` — stay unbuilt: the REST token is out of quota, and no Shopify surface here
-provides a waitlist to submit to.
+The stock states are specified in `product-desktop-stock-states.md`, read from the plugin export now
+in the cache. Low stock adds one line under the size chips, 12 px below them, and pushes the button
+down 28; out of stock greys the chips and swaps the button for a waitlist trigger; notify-me is a
+592 px right-side sheet, not a centred dialog.
+
+Only the first line is wired. `quantityAvailable` is selected by the variant fragment, but this
+store's token returns null for it, so `getLowStockLabel` renders nothing and the row is dormant until
+the token carries inventory scope. The waitlist control is absent by the stub rule: nothing here can
+store an email yet.
 
 ## Browse states
 
@@ -144,11 +151,10 @@ Three of six are settled and the wallet and stepper move from Gated to Build: 10
 ## Figma access
 
 The token is on a `starter` plan and every REST endpoint shares one bucket, so a 429 means the whole
-token is spent until its `retry-after` (2026-11-20T14:11Z at the last check), not that one request was
-too fast. Frames are therefore exported once and read from disk: `figma-cache.mjs` beside the token
-fetches a whole document in one request or trims an export already held, and the procedure is in
-`docs/reference/figma/README.md`. A token on a paid seat or a development plugin in the desktop app
-both bypass the limit; per-frame retries do not.
+token is spent until its `retry-after`, not that one request was too fast. Frames are exported once
+and read from disk through `docs/reference/figma/export-plugin`, which runs on the plugin API and
+needs no quota; both files are now in the local cache with all 221 frames and 5 pages, node ids
+intact. REST remains available for later re-checks once the bucket refills.
 
 ## Source files
 
@@ -216,9 +222,11 @@ A vector master is still needed — at the 1016px masthead the 950px raster is u
 
 ## Next action
 
-Decide the product page's title scale and its gallery pattern for long media sets, then P6's stock
-states once the frames can be read. After that, P9 (account hub, wallet, orders) against the Customer
-Account API. Cancellation and returns stay gated until an Admin-side write path is agreed.
+Align the browse states to their frames: both `15:4740` and `15:5317` draw one line under the
+toolbar — `showing 14 results for applied filter` and `0 results for applied filter`, Inter 16/400 at
+the gutter — and no heading, button or chip row. The shipped build has chips and a fuller empty
+state, which is a superset and needs a decision, not a silent rewrite. Then the product page's title
+scale and gallery pattern, then P9 against the Customer Account API.
 
 Two formatting questions are open for the owner: cards render `₹50,000.00` because Hydrogen formats
 INR at its ISO exponent, while the frame writes `9,000`, and the footer's price line has the same

@@ -19,15 +19,23 @@ reads an unverified source ships with a stub and a row here, or does not ship.
 
 ## Register
 
-| Surface                | Needed                                       | Status      | Stub                                                      | Unblocked by                               |
-| ---------------------- | -------------------------------------------- | ----------- | --------------------------------------------------------- | ------------------------------------------ |
-| Pincode serviceability | Shiprocket serviceability API                | Unverified  | `lib/serviceability/index.ts`, created and not yet called | D5 decision plus API credentials           |
-| Waitlist / notify me   | No source chosen                             | Not started | —                                                         | No storage decision for a waitlist yet     |
-| Size recommendation    | Fit data on the product                      | Not started | —                                                         | Metafield schema or a fit app              |
-| Public order lookup    | Order lookup by number plus email            | Not started | —                                                         | Security decision on enumeration           |
-| Cancellation write     | Admin API `orderCancel`                      | Not started | —                                                         | Decision on a server-side admin credential |
-| Returns write          | Shopify Returns or Shiprocket reverse pickup | Not started | —                                                         | P11 scope                                  |
-| Tax invoices           | GST invoice app or Admin API plus generation | Not started | —                                                         | App procurement decision                   |
+| Surface                | Needed                                       | Status      | Stub                                                      | Unblocked by                                          |
+| ---------------------- | -------------------------------------------- | ----------- | --------------------------------------------------------- | ----------------------------------------------------- |
+| Pincode serviceability | Shiprocket serviceability API                | Unverified  | `lib/serviceability/index.ts`, created and not yet called | D5 decision plus API credentials                      |
+| Waitlist / notify me   | A place to store an email per variant        | Blocked     | — — the control is absent until a sink exists             | A storage decision: metafield, app or list provider   |
+| Low stock line         | `quantityAvailable` on the storefront token  | Unverified  | `getLowStockLabel` in `lib/product/index.ts` returns null | `unauthenticated_read_product_inventory` on the token |
+| Size recommendation    | Fit data on the product                      | Not started | —                                                         | Metafield schema or a fit app                         |
+| Public order lookup    | Order lookup by number plus email            | Not started | —                                                         | Security decision on enumeration                      |
+| Cancellation write     | Admin API `orderCancel`                      | Not started | —                                                         | Decision on a server-side admin credential            |
+| Returns write          | Shopify Returns or Shiprocket reverse pickup | Not started | —                                                         | P11 scope                                             |
+| Tax invoices           | GST invoice app or Admin API plus generation | Not started | —                                                         | App procurement decision                              |
+
+## Verified 2026-11-16
+
+`ProductVariant.quantityAvailable` is in the installed Storefront schema and is now selected by
+`PRODUCT_VARIANT_FIELDS`, but the token for this store returns `null` for every variant of every
+product tested, so the low-stock line renders as absence. The code path is dormant until the token
+carries `unauthenticated_read_product_inventory`.
 
 ## Verified during P0
 

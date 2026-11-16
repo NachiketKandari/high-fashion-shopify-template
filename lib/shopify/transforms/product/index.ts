@@ -135,6 +135,7 @@ export function transformVariant(variant: ShopifyVariant): ProductVariant {
     id: variant.id,
     title: variant.title,
     availableForSale: variant.availableForSale,
+    quantityAvailable: variant.quantityAvailable,
     price: variant.price,
     compareAtPrice: variant.compareAtPrice ?? undefined,
     productHandle: variant.product.handle,

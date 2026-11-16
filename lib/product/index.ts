@@ -82,6 +82,15 @@ export function requiresBundleConfiguration(
   return variant.requiresComponents && variant.components.length === 0;
 }
 
+export const LOW_STOCK_THRESHOLD = 5;
+
+// Inventory is null when the store does not expose it to the storefront token, so absence is the default.
+export function getLowStockLabel(quantityAvailable: number | null | undefined): string | null {
+  if (quantityAvailable === null || quantityAvailable === undefined) return null;
+  if (quantityAvailable <= 0 || quantityAvailable > LOW_STOCK_THRESHOLD) return null;
+  return `Only ${quantityAvailable} left in stock`;
+}
+
 // Only the bundle gating boolean crosses the client boundary.
 function toProductFormVariant(variant: ProductVariant): ProductFormVariant {
   return {
@@ -91,6 +100,7 @@ function toProductFormVariant(variant: ProductVariant): ProductFormVariant {
     image: variant.image,
     price: variant.price,
     product: { handle: variant.productHandle, title: variant.productTitle },
+    quantityAvailable: variant.quantityAvailable,
     requiresBundleConfiguration: requiresBundleConfiguration(variant),
     requiresSellingPlan: variant.requiresSellingPlan,
     selectedOptions: variant.selectedOptions,
