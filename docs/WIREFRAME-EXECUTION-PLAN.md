@@ -37,16 +37,18 @@ A phase does not start until its predecessor's exit criteria pass. Each phase sh
 
 These cannot be answered by code. Defaults are the recommendation, not the decision.
 
-| ID  | Decision                                                                                                                                     | Blocks     | Default                                                          |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------------- |
-| D1  | Is the identity gate (OTP before checkout) required, or is guest checkout with phone verification acceptable?                                | P2, P7, P9 | Guest checkout; verify, do not create                            |
-| D2  | Is the shipped home page (`home-desktop-frame-64.md`, exported from a different Figma frame) still the target, given it is not in this file? | P4         | Keep it; align only its header and product rows with P4–P5       |
-| D3  | Which of the six post-purchase features are in scope for launch?                                                                             | P11        | Track order only; wallet, invoices, cancellation, returns follow |
-| D4  | Do collection pages keep the 2-column/4-column and model/image/item selectors, or fix one layout per breakpoint?                             | P5         | Keep model/image/item; fix 4-up desktop, 2-up mobile             |
-| D5  | Where does pincode serviceability data come from — Shiprocket, a Shopify app, or a metafield ruleset?                                        | P6, P11    | Shiprocket, per `SHIPROCKET.md`                                  |
-| D6  | Does the wireframe's type treatment (left, negative tracking) replace the template's (positive tracking) or is it confined to display sizes? | P3         | Confine to display and heading roles                             |
+| ID  | Decision                                                                                                                                     | Blocks     | Default                                                                                  |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------- |
+| D1  | Is the identity gate (OTP before checkout) required, or is guest checkout with phone verification acceptable?                                | P2, P7, P9 | **Answered:** guest checkout; accounts only for wallet, invoices, wishlist, cancellation |
+| D2  | Is the shipped home page (`home-desktop-frame-64.md`, exported from a different Figma frame) still the target, given it is not in this file? | P4         | **Answered:** rebuild to the wireframe, blocked on a home frame that does not exist      |
+| D3  | Which of the six post-purchase features are in scope for launch?                                                                             | P11        | **Answered:** full suite — tracking, pincode, cancellation, wallet, invoices, returns    |
+| D4  | Do collection pages keep the 2-column/4-column and model/image/item selectors, or fix one layout per breakpoint?                             | P5         | Keep model/image/item; fix 4-up desktop, 2-up mobile                                     |
+| D5  | Where does pincode serviceability data come from — Shiprocket, a Shopify app, or a metafield ruleset?                                        | P6, P11    | Shiprocket, per `SHIPROCKET.md`                                                          |
+| D6  | Does the wireframe's type treatment (left, negative tracking) replace the template's (positive tracking) or is it confined to display sizes? | P3         | Confine to display and heading roles                                                     |
 
-D1 and D3 carry revenue and scope respectively and should be answered first. D5 is already constrained by `SHIPROCKET.md`; only the storefront surface is open.
+D1, D2 and D3 were answered on 2026-11-16 and the decision log lives in `docs/WIREFRAME-PROGRESS.md`.
+D4–D6 stay open with their defaults. D2 is answered in intent but not actionable until a home frame
+exists, so home work does not begin.
 
 ## P0 — Decisions and capability gates
 
@@ -218,7 +220,11 @@ Order of delivery, cheapest and highest value first:
 5. Tax invoices and credit notes.
 6. Non-serviceable pincode alert.
 
-Each item is its own phase-sized unit with its own data source and its own exit criteria. None ships behind a mock. The `Returns` frame's own caveat — final settlement after inspection — is a business rule that must exist in the data, not only in the copy.
+All six are in scope under D3. Each is its own phase-sized unit with its own data source and its own
+exit criteria, and none ships behind a mock. Two are conditional on verification rather than on scope:
+the wallet needs store credit visible to a storefront, and cancellation and returns need write paths
+that are Admin-side or Shiprocket-side. If a capability check fails, the feature stalls at P0 and does
+not become a screen that renders invented data. The `Returns` frame's own caveat — final settlement after inspection — is a business rule that must exist in the data, not only in the copy.
 
 ## P12 — Content, errors, agent surface
 
