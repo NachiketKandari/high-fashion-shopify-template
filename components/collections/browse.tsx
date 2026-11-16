@@ -5,6 +5,7 @@ import { ProductsGridSkeleton } from "@/components/product/products-grid";
 import { PRODUCTS_PER_PAGE } from "@/lib/collections";
 import type { BrowseResults, BrowseState, SortValue } from "@/lib/collections/types";
 
+import { BrowseEmpty } from "./browse-empty";
 import { BrowsePublisher, CollectionBrowseProvider } from "./collection-browse-provider";
 import { CollectionFilters } from "./filters";
 import { InfiniteProductGrid } from "./infinite-product-grid";
@@ -69,14 +70,13 @@ async function StreamedResultsGrid({ results }: { results: Promise<BrowseResults
 function BrowseResultsGrid({ results }: BrowseResultsGridProps) {
   const { dataSearch, pageInfo, products, source } = results;
   if (products.length === 0) {
-    const query = source.type === "search" ? source.query : undefined;
     return (
-      <div className="py-10 text-center">
-        <h2 className="type-h2 mb-2">No products found</h2>
-        <p className="type-body-sm text-ink-muted">
-          {query ? `We couldn't find any products matching "${query}"` : "No products available"}
-        </p>
-      </div>
+      <BrowseEmpty
+        browseAllHref={
+          source.type === "search" || source.collection !== "all" ? "/collections/all" : undefined
+        }
+        query={source.type === "search" ? source.query : undefined}
+      />
     );
   }
   return (

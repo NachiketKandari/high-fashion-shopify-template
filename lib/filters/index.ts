@@ -1,6 +1,8 @@
 import { isFilterInputActive, type ProductFilter } from "@shopify/hydrogen";
 
+import { shopConfig } from "@/lib/config";
 import type { ActiveFilterBadge, Filter } from "@/lib/filters/types";
+import { formatPrice } from "@/lib/money";
 
 export function getActiveFilterBadges(
   filters: Filter[],
@@ -21,4 +23,18 @@ export function getActiveFilterBadges(
   }
 
   return badges;
+}
+
+export function formatPriceRangeLabel(
+  min: number | null,
+  max: number | null,
+  currencyCode: string | undefined,
+): string {
+  const format = (value: number) =>
+    currencyCode
+      ? formatPrice({ amount: String(value), currencyCode })
+      : new Intl.NumberFormat(shopConfig.localization.locale).format(value);
+  if (min !== null && max !== null) return `${format(min)} - ${format(max)}`;
+  if (min !== null) return `From ${format(min)}`;
+  return `Up to ${format(max ?? 0)}`;
 }

@@ -6,8 +6,8 @@ next action only.
 
 ## Current phase
 
-**P5/P6 follow-ups.** The home page is built to `Homepage - default` (40:313). Browse still owes the
-zero-results, active-filtered and load-more boundary states; product detail owes the stock states.
+**P6 remainder.** Browse is complete: the active-filtered, zero-results and load-more boundary states
+are built. Product detail owes the stock states — low-stock alert, out-of-stock, notify-me.
 
 ## Phase status
 
@@ -48,6 +48,17 @@ Deviations, each a decision rather than an oversight:
   `streetwear` are placeholders, not destinations.
 - **Header and footer are untouched.** The frame's 76 px bar without the masthead, and its 361 px
   footer, are separate surfaces. Both remain as shipped.
+
+## Browse states
+
+Applied filters render as removable chips under the toolbar (`CollectionActiveFilters`), so a
+zero-result view names the filter that emptied it. The empty state offers `Clear filters` when one is
+applied and `Browse all products` otherwise, and a settled grid ends with the rendered product count.
+
+The frames for these states — `15:4740`, `15:5317`, `15:4896`, `15:5490` in the first file — could not
+be read: the nodes endpoint answered HTTP 429 for the whole file. The states follow the existing
+toolbar, chip and button patterns instead of measured geometry, and need a comparison pass when the
+API allows.
 
 ## Notes on closed phases
 
@@ -168,15 +179,16 @@ A vector master is still needed — at the 1016px masthead the 950px raster is u
 | Design suite (`tests/design`)                     | 16/16 headless after the wordmark contract change                                                                                             |
 | INR across home, collection, PDP                  | 6/6 headless: rupee prices on all three, no dollar amounts                                                                                    |
 | New wordmark in the shell                         | 5/5 headless: loads at 342x30, 950/82 aspect, masthead renders                                                                                |
-| Home against frame 40:313                         | 15/16 headless: section heights 700/588/700/527/700/588/700, 4 x 360 columns, 48 px captions, 36/54 hero title, no horizontal overflow at 390 |
+| Home against frame 40:313                         | 16/16 headless: section heights 700/588/700/527/700/588/700, 4 x 360 columns, 48 px captions, 36/54 hero title, no horizontal overflow at 390 |
+| Browse states                                     | 7/7 headless: chips render and remove, zero results name the filter, end-of-list count                                                        |
+| Load more under a filter                          | 5/5 headless: 40 to 122 products, every price inside the filter, boundary reached                                                             |
 | Design suite after the home rebuild               | 16/16 headless                                                                                                                                |
 
 ## Next action
 
-P5's remaining browse states — zero results, active-filtered, load-more boundary — then P6's stock
-states: low-stock alert, out-of-stock, notify-me. After that, P9 (account hub, wallet, orders)
-against the Customer Account API. Cancellation and returns stay gated until an Admin-side write path
-is agreed.
+P6's stock states: low-stock alert, out-of-stock and notify-me on the product page. After that, P9
+(account hub, wallet, orders) against the Customer Account API. Cancellation and returns stay gated
+until an Admin-side write path is agreed.
 
 Two formatting questions are open for the owner: cards render `₹50,000.00` because Hydrogen formats
 INR at its ISO exponent, while the frame writes `9,000`, and the footer's price line has the same

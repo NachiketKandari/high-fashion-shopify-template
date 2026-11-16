@@ -1,6 +1,7 @@
 import { type ReactNode, Suspense } from "react";
 
 import { CollectionViewedTracker } from "@/components/analytics/trackers";
+import { CollectionActiveFilters } from "@/components/collections/active-filters";
 import { BrowseResultsFallback } from "@/components/collections/browse";
 import { CollectionBrowseFrame } from "@/components/collections/collection-browse-provider";
 import { CollectionFiltersSkeleton } from "@/components/collections/filters";
@@ -52,6 +53,7 @@ export async function CollectionLayout({
                     />
                   </div>
                 </div>
+                <CollectionActiveFilters />
                 {children}
               </div>
             </CollectionBrowseFrame>
