@@ -6,9 +6,10 @@ next action only.
 
 ## Current phase
 
-**P0 — Decisions and capability gates.** Status: in progress. D1 and D3 answered 2026-11-16; the
-capability table for the full post-purchase suite is next. D2 is answered in intent but blocked on a
-home frame that does not exist in the source file.
+**P0 — Decisions and capability gates.** Status: in progress. D1, D2 and D3 answered 2026-11-16 and
+the post-purchase capability table is done. The home frame is specified at
+`docs/reference/figma/home-desktop-frame-40-313.md`; building it is blocked on four presentation
+decisions listed under Open questions.
 
 ## Phase status
 
@@ -56,23 +57,30 @@ tagging that the catalogue does not carry. Until it does, both modes feature the
 
 ## Decisions
 
-| ID  | Question                                                                  | Answer                                                                                  | Date       |
-| --- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------- |
-| D1  | Identity gate before checkout, or guest checkout with phone verification? | Guest checkout; accounts required only for wallet, invoices, wishlist and cancellation  | 2026-11-16 |
-| D2  | Is the shipped home page (`home-desktop-frame-64.md`) still the target?   | Rebuild to `Homepage - default` (40:313) in `e-Commerce Research`; unblocked 2026-11-16 | 2026-11-16 |
-| D3  | Which post-purchase features ship at launch?                              | Full suite: tracking, pincode, cancellation, wallet, invoices, returns 05-10            | 2026-11-16 |
-| D4  | Keep the 2/4-column and model/image/item selectors, or fix one layout?    | Open; default is keep content mode, fix density                                         | —          |
-| D5  | Where does pincode serviceability data come from?                         | Open; default is Shiprocket                                                             | —          |
-| D6  | Does the wireframe's negative tracking replace the template's roles?      | Open; default is display and headings only                                              | —          |
+| ID  | Question                                                                  | Answer                                                                                 | Date       |
+| --- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------- |
+| D1  | Identity gate before checkout, or guest checkout with phone verification? | Guest checkout; accounts required only for wallet, invoices, wishlist and cancellation | 2026-11-16 |
+| D2  | Is the shipped home page (`home-desktop-frame-64.md`) still the target?   | Rebuild to `Homepage - default` (40:313); specified in `home-desktop-frame-40-313.md`  | 2026-11-16 |
+| D3  | Which post-purchase features ship at launch?                              | Full suite: tracking, pincode, cancellation, wallet, invoices, returns 05-10           | 2026-11-16 |
+| D4  | Keep the 2/4-column and model/image/item selectors, or fix one layout?    | Open; default is keep content mode, fix density                                        | —          |
+| D5  | Where does pincode serviceability data come from?                         | Open; default is Shiprocket                                                            | —          |
+| D6  | Does the wireframe's negative tracking replace the template's roles?      | Open; default is display and headings only                                             | —          |
 
 ## Open questions blocking the next phase
 
-1. Which logo is the brand's. `public/brand/wordmark.svg` already ships a traced serif wordmark.
-   The branding page also holds two script-font studies (`Mrs Saint Delafield`, `Monsieur La
-   Doulaise`) and 321 label/tag frames. None of them is identified as the final mark.
-2. Store password (`GAP-CLOSURE-PLAN.md` G5) — blocks P7 verification, and therefore P0's checkout row.
-3. Whether the Customer Account API exposes a store credit balance to a storefront, or whether it is
-   checkout-only. Determines whether the wallet is `Build` or `Gated` in P11.
+1. **Home type scale.** The frame sets every non-product string in Helvetica at 36, 16, 14 and 12.
+   The storefront ships DM Sans as `--font-sans` and its largest role is `--text-display` at 22.
+   Default: add `type-display-lg` 36/54 and `type-h2` stays for 16, keep DM Sans.
+2. **Home grid.** The frame is full-bleed: 4 × 360.8 columns and 4 × 330 tiles edge to edge, with
+   −1 px gaps. `Container`/`--gutter` inset by 30 px at 1440. Default: full-bleed rows, no column
+   gap, keep `--grid-row-gap` when columns stack.
+3. **Footer scope.** The frame's 361 px footer drops the flagship address, payment marks and currency
+   selector from every route. Default: keep the shipped footer until the footer frame itself is
+   specified, and treat footer parity as its own phase.
+4. **Price format.** The frame writes `9,000` bare and the cart copy writes `INR`; the storefront
+   renders `₹9,000` from Shopify's INR amount. Default: keep shopify-formatted ₹ on cards and `INR`
+   in the cart summary's total line.
+5. Store password (`GAP-CLOSURE-PLAN.md` G5) — blocks P7 verification, and therefore P0's checkout row.
 
 ## Capability results
 
@@ -98,10 +106,12 @@ Two Figma files, both readable with the same token.
 
 The home page lives in the second file, page `wireframe` (`40:312`):
 
-- `Homepage - default` — `40:313`, and duplicates `141:4665` and `141:4534` (`Homepage when on top`)
-- The existing `home-desktop-frame-64.md` was exported from a child of this frame, so the shipped
-  home and the wireframe home are the same design. Rebuilding means re-deriving from the frame, not
-  inventing one.
+- `Homepage - default` — `40:313`, 1440x5011, and duplicates `141:4665` and `141:4534`
+  (`Homepage when on top`). The body node `44:364` is still named `Frame 64`.
+- `home-desktop-frame-64.md` was exported from that body node at an earlier revision (5158 tall,
+  starting at 106). `home-desktop-frame-40-313.md` is the current drawing of the same page and
+  supersedes it where they disagree.
+- All imagery is missing from the frame: zero image fills, every picture a solid ground.
 - Same page carries `menu-woman` / `menu-man`, `Product Detail page`, `Cart` and `Payment page`
   duplicates of the first file.
 
@@ -124,11 +134,12 @@ A vector master is still needed — at the 1016px masthead the 950px raster is u
 
 ## Artifacts on disk
 
-| Artifact                                        | State                                                 |
-| ----------------------------------------------- | ----------------------------------------------------- |
-| `docs/WIREFRAME-EXECUTION-PLAN.md`              | Written; 14 phases, checkpoint table, risk register   |
-| `docs/reference/figma/wireframe-inventory.md`   | Written; 221 frames classified                        |
-| `docs/reference/figma/home-desktop-frame-64.md` | Existing, uncommitted; home spec, already implemented |
+| Artifact                                            | State                                                      |
+| --------------------------------------------------- | ---------------------------------------------------------- |
+| `docs/WIREFRAME-EXECUTION-PLAN.md`                  | Written; 14 phases, checkpoint table, risk register        |
+| `docs/reference/figma/wireframe-inventory.md`       | Written; 221 frames classified                             |
+| `docs/reference/figma/home-desktop-frame-40-313.md` | Written; current home spec, sections 1-8, decisions needed |
+| `docs/reference/figma/home-desktop-frame-64.md`     | Uncommitted; earlier revision of the same page, superseded |
 
 ## Verification evidence
 
@@ -139,12 +150,16 @@ A vector master is still needed — at the 1016px masthead the 950px raster is u
 | Components, component sets, published styles      | 0, 0, 0                                                                             |
 | Frame classification                              | 93 Build, 60 Shopify-hosted, 37 Gated, 31 Skip                                      |
 | Payment frames text nodes                         | 0 across all five `Payment Screen` frames                                           |
-| `pnpm lint`, `pnpm typecheck`, build              | Not run this session                                                                |
+| `pnpm lint`, `pnpm typecheck`                     | Pass; design gate 167 files                                                         |
+| Design suite (`tests/design`)                     | 16/16 headless after the wordmark contract change                                   |
+| INR across home, collection, PDP                  | 6/6 headless: rupee prices on all three, no dollar amounts                          |
+| New wordmark in the shell                         | 5/5 headless: loads at 342x30, 950/82 aspect, masthead renders                      |
 
 ## Next action
 
-Resolve D2's home frame, then build P9 (account hub, wallet, orders) against the Customer Account
-API, since the wallet and the stepper are now confirmed buildable. Cancellation and returns stay
+Build the home from `home-desktop-frame-40-313.md` once the four presentation defaults above are
+confirmed, starting with the two product rows and the two editorial pairs, which need no new tokens.
+Then P9 (account hub, wallet, orders) against the Customer Account API. Cancellation and returns stay
 gated until an Admin-side write path is agreed.
 
 ## Credentials
