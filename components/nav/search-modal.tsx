@@ -12,6 +12,8 @@ import { useRecentlyViewedProducts } from "@/lib/product/client";
 import { SEARCH_TERM_MAX_LENGTH } from "@/lib/search";
 import { usePredictiveSearch } from "@/lib/search/client";
 
+import { NAV_CHIP_CLASS } from "./nav-chip";
+
 export function SearchModal() {
   const [open, setOpen] = useState(false);
 
@@ -30,13 +32,8 @@ export function SearchModal() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
         render={
-          <button
-            aria-label="Search"
-            className="focus-ring flex h-9 min-w-9 shrink-0 cursor-pointer items-center justify-center transition-opacity hover:opacity-60"
-            type="button"
-          >
-            <Search className="size-4 desktop:hidden" strokeWidth={1.25} />
-            <span className="type-nav hidden desktop:inline">Search</span>
+          <button className={`${NAV_CHIP_CLASS} hidden desktop:flex`} type="button">
+            Search
           </button>
         }
       />

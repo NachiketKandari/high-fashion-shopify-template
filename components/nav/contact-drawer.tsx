@@ -5,6 +5,8 @@ import { ChevronRight, Mail, MapPin, MessageCircle, Phone, X } from "lucide-reac
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { shopConfig } from "@/lib/config";
 
+import { NAV_CHIP_CLASS } from "./nav-chip";
+
 const { contact } = shopConfig.site;
 
 const ROWS = [
@@ -35,21 +37,7 @@ export function ContactDrawer() {
     <Sheet>
       <SheetTrigger
         render={
-          <button
-            aria-label="Contact us"
-            className="focus-ring flex size-9 shrink-0 cursor-pointer items-center justify-center transition-opacity hover:opacity-60 desktop:hidden"
-            type="button"
-          >
-            <MessageCircle className="size-4" strokeWidth={1.25} />
-          </button>
-        }
-      />
-      <SheetTrigger
-        render={
-          <button
-            className="type-nav focus-ring hidden h-9 cursor-pointer items-center px-1 transition-opacity hover:opacity-60 desktop:inline-flex"
-            type="button"
-          >
+          <button className={NAV_CHIP_CLASS} type="button">
             Help
           </button>
         }

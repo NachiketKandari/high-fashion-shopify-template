@@ -1,7 +1,6 @@
 import { PredictiveSearchProvider } from "@shopify/hydrogen/react";
 import { Suspense } from "react";
 
-import { CurrencySelector } from "@/components/currency/selector";
 import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 
@@ -9,6 +8,7 @@ import { NavAccount, NavAccountFallback } from "./account";
 import { CartIcon, CartIconFallback } from "./cart";
 import { ContactDrawer } from "./contact-drawer";
 import { Header } from "./header";
+import { NAV_CHIP_CLASS } from "./nav-chip";
 import { SearchModal } from "./search-modal";
 
 export function Nav() {
@@ -16,10 +16,7 @@ export function Nav() {
     <Header
       actions={
         <>
-          <Link
-            className="type-nav focus-ring hidden h-9 shrink-0 items-center px-1 transition-opacity hover:opacity-60 desktop:inline-flex"
-            href="/pages/wishlist"
-          >
+          <Link className={`${NAV_CHIP_CLASS} hidden desktop:flex`} href="/pages/wishlist">
             Wishlist
           </Link>
           <Suspense fallback={<CartIconFallback />}>
@@ -31,7 +28,6 @@ export function Nav() {
               <NavAccount />
             </Suspense>
           )}
-          <CurrencySelector className="type-nav hidden h-9 desktop:inline-flex" />
         </>
       }
       search={

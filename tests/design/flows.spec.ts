@@ -4,10 +4,12 @@ test.describe("shell and commerce flows", () => {
   test("mega menu opens on hover and Escape returns focus", async ({ page }) => {
     await page.goto("/");
     await page.waitForTimeout(500);
-    const trigger = page.getByRole("button", { name: "Woman" });
-    await trigger.hover();
+    const trigger = page
+      .getByRole("navigation", { name: "Menu" })
+      .getByRole("button", { name: "Woman" });
+    await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    const panel = page.locator("#mega-1");
+    const panel = page.locator("#nav-panel");
     await expect(panel).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -31,9 +33,7 @@ test.describe("shell and commerce flows", () => {
         rowHeight: row?.height,
       };
     });
-    expect(Math.abs((geometry.menuTop ?? 0) - (geometry.headerBottom ?? 0))).toBeLessThanOrEqual(
-      1.5,
-    );
+    expect(geometry.menuTop).toBe(0);
     expect(geometry.rowHeight).toBeGreaterThanOrEqual(38);
     await page.keyboard.press("Escape");
     await expect(panel).toBeHidden();

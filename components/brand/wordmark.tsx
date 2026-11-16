@@ -9,10 +9,8 @@ const WIDTH = 950;
 const HEIGHT = 82;
 
 const VARIANTS = {
-  compact: "w-[170px] desktop:w-[342px]",
   footer: "w-[315px]",
-  masthead: "w-[min(1016px,calc(100vw-2*var(--gutter)))]",
-  menu: "w-[210px]",
+  nav: "w-[125px]",
 } as const;
 
 export type WordmarkVariant = keyof typeof VARIANTS;

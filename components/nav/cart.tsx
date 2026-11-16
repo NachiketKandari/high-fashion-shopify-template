@@ -7,14 +7,14 @@ import { CartIconClient } from "./cart-client";
 
 export async function CartIcon() {
   const cart = await withFallback(getCart(), undefined);
-  return <CartIconClient cartLabel="Cart" initialCart={cart ?? null} />;
+  return <CartIconClient cartLabel="Bag" initialCart={cart ?? null} />;
 }
 
 export function CartIconFallback() {
   return (
     <span className="flex h-9 w-9 items-center justify-center text-ink">
       <HandbagIcon className="size-5" strokeWidth={1.25} />
-      <span className="sr-only">Cart</span>
+      <span className="sr-only">Bag</span>
     </span>
   );
 }

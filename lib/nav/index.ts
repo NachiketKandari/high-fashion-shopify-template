@@ -26,9 +26,8 @@ export interface FooterColumn {
   title: string;
 }
 
-// Mirrors the reference storefront menu. The collection handles are seeded by scripts/seed-catalog.mjs.
+// Mirrors the header in menu-woman (1:152) and menu-man (1:309).
 export const MAIN_NAV: NavItem[] = [
-  { href: "/collections/new-in", label: "New In" },
   {
     href: "/collections/women",
     label: "Woman",
@@ -37,118 +36,50 @@ export const MAIN_NAV: NavItem[] = [
         title: "Shop Woman",
         links: [
           { href: "/collections/women", label: "All" },
+          { href: "/collections/bralettes", label: "Bralettes" },
+          { href: "/collections/bodysuits", label: "Bodysuits" },
+          { href: "/collections/dresses", label: "Dress" },
+          { href: "/collections/bottoms-women", label: "Pants" },
+          { href: "/collections/racer-backs", label: "Racer Backs" },
+          { href: "/collections/shirts", label: "Shirts" },
+          { href: "/collections/skirts", label: "Skirt" },
+          { href: "/collections/shorts", label: "Shorts" },
+          { href: "/collections/tshirts", label: "T-shirt" },
           { href: "/collections/tops", label: "Tops" },
-          { href: "/collections/corsets", label: "Corsets" },
-          { href: "/collections/dresses-and-jumpsuits", label: "Dresses & Jumpsuits" },
-          { href: "/collections/co-ord-sets", label: "Co-ord Sets" },
-          { href: "/collections/knits", label: "Knitwear" },
-          { href: "/collections/bottoms-women", label: "Bottoms" },
-          { href: "/collections/accessories", label: "Accessories" },
-        ],
-      },
-      {
-        title: "Shop by Occasion",
-        links: [
-          { href: "/collections/work-wear", label: "Work Wear" },
-          { href: "/collections/evening", label: "Evening" },
-          { href: "/collections/weekend", label: "Weekend" },
-          { href: "/collections/festive", label: "Festive" },
-        ],
-      },
-      {
-        title: "Shop by Category",
-        links: [
-          { href: "/collections/core", label: "Core" },
-          { href: "/collections/essentials", label: "Essentials" },
-          { href: "/collections/signature", label: "Elevated" },
         ],
       },
     ],
     tiles: [
-      { href: "/collections/corsets", image: "/reference/editorial-corsets.jpg", label: "Corsets" },
-      {
-        href: "/collections/dresses-and-jumpsuits",
-        image: "/reference/editorial-dresses.jpg",
-        label: "Dresses & Jumpsuits",
-      },
+      { href: "/collections/women", image: "/reference/editorial-corsets.jpg", label: "Woman" },
     ],
   },
   {
-    href: "/collections/unisex-1",
+    href: "/collections/menswear",
     label: "Men",
     columns: [
       {
         title: "Shop Men",
         links: [
-          { href: "/collections/shirts-and-tshirts", label: "Shirts & T-shirts" },
-          { href: "/collections/bottoms-unisex", label: "Bottoms" },
-          { href: "/collections/outerwear", label: "Outerwear" },
-        ],
-      },
-      {
-        title: "Shop by Category",
-        links: [
-          { href: "/collections/core", label: "Core" },
-          { href: "/collections/essentials", label: "Essentials" },
-          { href: "/collections/signature", label: "Elevated" },
+          { href: "/collections/menswear", label: "All" },
+          { href: "/collections/jackets", label: "Jackets" },
+          { href: "/collections/bottoms-unisex", label: "Pants" },
+          { href: "/collections/shirts-and-tshirts", label: "Shirts" },
+          { href: "/collections/shorts", label: "Shorts" },
+          { href: "/collections/tshirts", label: "T-shirt" },
         ],
       },
     ],
     tiles: [
-      {
-        href: "/collections/tops",
-        image: "/reference/editorial-core.jpg",
-        label: "Shirts & T-shirts",
-      },
-      {
-        href: "/collections/bottoms-unisex",
-        image: "/reference/editorial-elevated.jpg",
-        label: "Bottoms",
-      },
+      { href: "/collections/menswear", image: "/reference/clone/lookbook-men.jpg", label: "Men" },
     ],
   },
-  {
-    href: "/pages/lookbooks",
-    label: "Edit",
-    columns: [
-      {
-        title: "The Edit",
-        links: [
-          { href: "/pages/lookbooks", label: "Lookbooks" },
-          { href: "/blogs/journal-2", label: "Journal" },
-        ],
-      },
-    ],
-    tiles: [
-      { href: "/pages/lookbooks", image: "/reference/tile-journal.jpg", label: "Lookbooks" },
-      { href: "/blogs/journal-2", image: "/reference/tile-our-world.jpg", label: "Journal" },
-    ],
-  },
-  {
-    href: "/pages/about-us",
-    label: "Our World",
-    columns: [
-      {
-        title: "Our World",
-        links: [
-          { href: "/pages/about-us", label: "About Us" },
-          { href: "/pages/press-v2", label: "Press" },
-        ],
-      },
-    ],
-    tiles: [
-      {
-        href: "/pages/about-us#studio",
-        image: "/reference/clone/about-craftsmanship.png",
-        label: "The Studio",
-      },
-      {
-        href: "/pages/about-us#store",
-        image: "/reference/clone/about-store.png",
-        label: "Flagship Store",
-      },
-    ],
-  },
+];
+
+// Destinations the frame moves out of the bar but the mobile panel still needs.
+export const SECONDARY_NAV: NavItem[] = [
+  { href: "/collections/new-in", label: "New In" },
+  { href: "/pages/lookbooks", label: "Edit" },
+  { href: "/pages/about-us", label: "Our World" },
 ];
 
 export const FOOTER_COLUMNS: FooterColumn[] = [

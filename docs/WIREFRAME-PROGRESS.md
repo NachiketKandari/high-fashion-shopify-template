@@ -17,22 +17,22 @@ from `mobile-frames.md`. The 24 px gutter, the 36 px hero, the 4-up overflow row
 
 ## Phase status
 
-| Phase                                | Status                                            |
-| ------------------------------------ | ------------------------------------------------- |
-| P0 Decisions and capability gates    | In progress                                       |
-| P1 Specification inventory           | Done — inventory written; design delta still open |
-| P2 Shopify connectivity verification | Not started                                       |
-| P3 Design contract in code           | Not started                                       |
-| P4 Shell and navigation              | Not started                                       |
-| P5 Browse                            | Not started                                       |
-| P6 Product page                      | Not started                                       |
-| P7 Cart and checkout handoff         | Not started                                       |
-| P8 Search                            | Not started                                       |
-| P9 Account                           | Not started                                       |
-| P10 Private wishlist                 | Not started                                       |
-| P11 Post-purchase                    | Not started                                       |
-| P12 Content and agent surface        | Not started                                       |
-| P13 Hardening and launch             | Not started                                       |
+| Phase                                | Status                                               |
+| ------------------------------------ | ---------------------------------------------------- |
+| P0 Decisions and capability gates    | In progress                                          |
+| P1 Specification inventory           | Done — inventory written; design delta still open    |
+| P2 Shopify connectivity verification | Not started                                          |
+| P3 Design contract in code           | Not started                                          |
+| P4 Shell and navigation              | Done — bar, panel and mobile header match the frames |
+| P5 Browse                            | Not started                                          |
+| P6 Product page                      | Not started                                          |
+| P7 Cart and checkout handoff         | Not started                                          |
+| P8 Search                            | Not started                                          |
+| P9 Account                           | Not started                                          |
+| P10 Private wishlist                 | Not started                                          |
+| P11 Post-purchase                    | Not started                                          |
+| P12 Content and agent surface        | Not started                                          |
+| P13 Hardening and launch             | Not started                                          |
 
 ## Home build
 
@@ -226,6 +226,18 @@ A vector master is still needed — at the 1016px masthead the 950px raster is u
 | Mobile home, product and browse against 390 frames | 10/10 headless: 24 px gutter, 36/108 hero, 180.8 px row cards, 195.5 px browse columns, 390×585 gallery, no document overflow at 390          |
 | Dead-code and stub audit                           | Two unrendered components and one unused export removed; newsletter and contact forms registered after claiming success with no sink          |
 
+## Shell and navigation
+
+Built from `nav-desktop-frame-1-152.md` (`menu-woman` 1:152, `menu-man` 1:309). The bar is one 76 px
+three-zone row: bordered 43 px chips, a 125 px centred wordmark, and the scrimmed 592 px left panel
+with the category's links. The announcement bar is gone because the frame's header is the first
+element on the page.
+
+`New In` and `Edit` left the header to match the frame's `Woman / Man / Search`; both remain in the
+mobile panel and the home page. Mobile uses the frame's closed bar (`Menu`, wordmark, `Bag`, `Help`);
+no 390 frame shows the menu open, so the open state follows the desktop panel with two columns and
+one image.
+
 ## Mobile
 
 Built from `docs/reference/figma/mobile-frames.md`, which records the 390 frames, their defects and
@@ -239,8 +251,7 @@ and every 390 frame reuses the 1440 footer with the newsletter label off-canvas 
 
 ## Next action
 
-Decide the mobile header: the frame draws bordered `Menu` / `Bag` / `Help` text buttons at 76 px
-against the shipped 56 px icon header. Then align the browse states to their frames — both `15:4740`
+Decide the browse states to their frames — both `15:4740`
 and `15:5317` draw one line under the toolbar, `showing 14 results for applied filter` and
 `0 results for applied filter` at Inter 16/400 on the gutter, with no heading, button or chip row,
 where the shipped build is a superset. Then the product page's title scale and gallery pattern, then

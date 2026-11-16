@@ -16,7 +16,7 @@ test.describe("design tokens", () => {
       );
       const navStyle = navLink ? getComputedStyle(navLink) : null;
       const header = document.querySelector("[data-app-header]");
-      const wordmark = document.querySelector('[data-wordmark="masthead"] img');
+      const wordmark = document.querySelector('[data-wordmark="nav"] img');
       const headerRect = header?.getBoundingClientRect();
       const wordmarkRect = wordmark?.getBoundingClientRect();
       return {
@@ -58,13 +58,13 @@ test.describe("design tokens", () => {
     expect(probe.headingSize).toBe("18px");
     expect(probe.headingWeight).toBe("400");
     expect(probe.headingLineHeight).toBe("23px");
-    expect(probe.navFontSize).toBe("13px");
+    expect(probe.navFontSize).toBe("14px");
     expect(probe.navFontWeight).toBe("400");
-    expect(probe.navLineHeight).toBe("18px");
-    expect(probe.headerHeight).toBeCloseTo(186, 0);
-    // The wordmark asset is 950x82, so the masthead keeps its aspect at 1016 wide.
-    expect(probe.wordmarkWidth).toBeCloseTo(1016, 0);
-    expect(probe.wordmarkHeight).toBeCloseTo((1016 * 82) / 950, 0);
+    expect(probe.navLineHeight).toBe("21px");
+    expect(probe.headerHeight).toBeCloseTo(76, 0);
+    // The frame's bar sets the wordmark at 125 wide; the asset is 950x82.
+    expect(probe.wordmarkWidth).toBeCloseTo(125, 0);
+    expect(probe.wordmarkHeight).toBeCloseTo((125 * 82) / 950, 1);
   });
 
   test("mobile tokens and shell geometry", async ({ page }) => {
@@ -76,7 +76,7 @@ test.describe("design tokens", () => {
     const probe = await page.evaluate(() => {
       const root = getComputedStyle(document.documentElement);
       const header = document.querySelector("[data-app-header]");
-      const wordmark = document.querySelector('[data-wordmark="compact"] img');
+      const wordmark = document.querySelector('[data-wordmark="nav"] img');
       const nav = document.querySelector('nav[aria-label="Menu"]');
       const menu = document.querySelector('[aria-controls="mobile-menu"]');
       const headerRect = header?.getBoundingClientRect();
@@ -96,10 +96,10 @@ test.describe("design tokens", () => {
 
     expect(probe.gutter).toBe("24px");
     expect(probe.sectionGap).toBe("40px");
-    expect(probe.headerHeight).toBeCloseTo(56, 0);
+    expect(probe.headerHeight).toBeCloseTo(76, 0);
     expect(probe.navDisplay).toBe("none");
-    expect(probe.wordmarkWidth).toBeCloseTo(170, 0);
-    expect(probe.wordmarkHeight).toBeCloseTo((170 * 82) / 950, 1);
+    expect(probe.wordmarkWidth).toBeCloseTo(125, 0);
+    expect(probe.wordmarkHeight).toBeCloseTo((125 * 82) / 950, 1);
     expect(probe.menuWidth).toBeGreaterThanOrEqual(36);
     expect(probe.menuHeight).toBeGreaterThanOrEqual(36);
   });
@@ -117,7 +117,7 @@ test.describe("design tokens", () => {
         nav: nav ? getComputedStyle(nav).display : null,
       };
     });
-    expect(desktop.header).toBeCloseTo(186, 0);
+    expect(desktop.header).toBeCloseTo(76, 0);
     expect(desktop.nav).toBe("block");
 
     await page.setViewportSize({ width: 1099, height: 1000 });
@@ -132,7 +132,7 @@ test.describe("design tokens", () => {
         nav: nav ? getComputedStyle(nav).display : null,
       };
     });
-    expect(compact.header).toBeCloseTo(56, 0);
+    expect(compact.header).toBeCloseTo(76, 0);
     expect(compact.nav).toBe("none");
   });
 });

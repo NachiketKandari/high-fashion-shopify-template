@@ -141,10 +141,8 @@
   --grid-gap: 3px;
   --grid-row-gap: 24px;
   --card-inset: 8px;
-  --announcement-h: 35px;
-  --header-bar-h: 56px;
-  --header-masthead-h: 0px;
-  --header-total-h: 91px;
+  --header-bar-h: 76px;
+  --header-total-h: 76px;
   --drawer-search: 100%;
   --drawer-filter: 100%;
   --drawer-size: 100%;
@@ -173,10 +171,8 @@
     --gutter: 30px;
     --section-gap: 60px;
     --grid-row-gap: 20px;
-    --announcement-h: 30px;
     --header-bar-h: 76px;
-    --header-masthead-h: 110px;
-    --header-total-h: 186px;
+      --header-total-h: 76px;
     --drawer-search: 440px;
     --drawer-filter: 420px;
     --drawer-size: 720px;
