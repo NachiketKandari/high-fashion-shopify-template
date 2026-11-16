@@ -151,6 +151,7 @@ Project-specific runbooks:
 - [`docs/OBSERVABILITY.md`](./docs/OBSERVABILITY.md) — logging, analytics, error reporting, health checks and the current gaps.
 - [`docs/IMPLEMENTATION.md`](./docs/IMPLEMENTATION.md) — what the template implements and what remains.
 - [`docs/CATALOG-IMPORT.md`](./docs/CATALOG-IMPORT.md) — catalog import result, verification and remaining gaps.
+- [`docs/UNIPLUS-ASSET-PLAN.md`](./docs/UNIPLUS-ASSET-PLAN.md) — what the UniPlus brand collateral, photography and flow diagram change in the storefront, and what blocks launch.
 - [`docs/CONTENT.md`](./docs/CONTENT.md) — content ownership, Shopify seeding and invalidation rules.
 - [`docs/SHOPIFY-APP-SCOPES.md`](./docs/SHOPIFY-APP-SCOPES.md) — the seeding app's Admin API scopes and how to change them.
 - [`docs/SHIPROCKET.md`](./docs/SHIPROCKET.md) — shipping and fulfilment integration options.

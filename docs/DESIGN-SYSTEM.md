@@ -88,19 +88,21 @@ DM Sans loads weights 300/400/500. Body copy is 300; headings, labels and contro
 role uses 500; the weight is loaded but unused. All letter spacing is `0.05em` unless stated.
 There is no monospace role on storefront surfaces; the wordmark is an SVG, not type.
 
-| Token          | Role utility   | Size / line | Weight | Case      | Use                                        |
-| -------------- | -------------- | ----------- | ------ | --------- | ------------------------------------------ |
-| `text-display` | `type-display` | 22 / 29     | 400    | uppercase | PDP title, price, large editorial heading  |
-| `text-h2`      | `type-h2`      | 18 / 23     | 400    | uppercase | Collection title, rail title, modal title  |
-| `text-h3`      | `type-h3`      | 14 / 18     | 400    | uppercase | Section labels, cart drawer title          |
-| `text-h4`      | `type-h4`      | 12 / 16     | 400    | uppercase | Mega-menu links, option labels, card title |
-| `text-label`   | `type-label`   | 9 / 14      | 400    | uppercase | Micro labels                               |
-| `text-body`    | `type-body`    | 14 / 21     | 300    | sentence  | Default copy, descriptions                 |
-| `text-body-sm` | `type-body-sm` | 12 / 18     | 300    | sentence  | Secondary copy, footer links               |
-| `text-control` | `type-control` | 11 / 14     | 400    | uppercase | Buttons, small links, helper labels        |
-| `text-chip`    | `type-chip`    | 12 / 18     | 400    | uppercase | Chips, sort, toolbar                       |
-| `text-tab`     | `type-tab`     | 11 / 16     | 400    | uppercase | PDP tabs                                   |
-| `text-nav`     | `type-nav`     | 13 / 18     | 400    | uppercase | Desktop nav, utility links                 |
+| Token               | Role utility        | Size / line | Weight | Case      | Use                                        |
+| ------------------- | ------------------- | ----------- | ------ | --------- | ------------------------------------------ |
+| `text-display`      | `type-display`      | 22 / 29     | 400    | uppercase | PDP title, price, large editorial heading  |
+| `text-h2`           | `type-h2`           | 18 / 23     | 400    | uppercase | Collection title, rail title, modal title  |
+| `text-h3`           | `type-h3`           | 14 / 18     | 400    | uppercase | Section labels, cart drawer title          |
+| `text-h4`           | `type-h4`           | 12 / 16     | 400    | uppercase | Mega-menu links, option labels, card title |
+| `text-label`        | `type-label`        | 9 / 14      | 400    | uppercase | Micro labels                               |
+| `text-body`         | `type-body`         | 14 / 21     | 300    | sentence  | Default copy, descriptions                 |
+| `text-body-sm`      | `type-body-sm`      | 12 / 18     | 300    | sentence  | Secondary copy, footer links               |
+| `text-control`      | `type-control`      | 11 / 14     | 400    | uppercase | Buttons, small links, helper labels        |
+| `text-chip`         | `type-chip`         | 12 / 18     | 400    | uppercase | Chips, sort, toolbar                       |
+| `text-tab`          | `type-tab`          | 11 / 16     | 400    | uppercase | PDP tabs                                   |
+| `text-nav`          | `type-nav`          | 13 / 18     | 400    | uppercase | Desktop nav, utility links                 |
+| `text-watermark`    | `type-watermark`    | 96 / 124    | 400    | uppercase | Ghost word over full-bleed editorial media |
+| `text-watermark-lg` | `type-watermark-lg` | 128 / 167   | 400    | uppercase | Ghost word over a campaign banner          |
 
 Rules:
 

@@ -75,6 +75,12 @@
   --text-nav: 0.8125rem;
   --text-nav--line-height: 1.125rem;
   --text-nav--letter-spacing: 0.05em;
+  --text-watermark: 6rem;
+  --text-watermark--line-height: 7.75rem;
+  --text-watermark--letter-spacing: 0.05em;
+  --text-watermark-lg: 8rem;
+  --text-watermark-lg--line-height: 10.4375rem;
+  --text-watermark-lg--letter-spacing: 0.05em;
 
   --radius-xs: 0px;
   --radius-sm: 0px;
@@ -259,6 +265,22 @@
   line-height: var(--text-nav--line-height);
   font-weight: 400;
   letter-spacing: var(--text-nav--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-watermark {
+  font-size: var(--text-watermark);
+  line-height: var(--text-watermark--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-watermark--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-watermark-lg {
+  font-size: var(--text-watermark-lg);
+  line-height: var(--text-watermark-lg--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-watermark-lg--letter-spacing);
   text-transform: uppercase;
 }
 

@@ -67,6 +67,16 @@
       "lineHeight": "1.125rem",
       "size": "0.8125rem",
       "weight": 400
+    },
+    "watermark": {
+      "lineHeight": "7.75rem",
+      "size": "6rem",
+      "weight": 400
+    },
+    "watermark-lg": {
+      "lineHeight": "10.4375rem",
+      "size": "8rem",
+      "weight": 400
     }
   },
   "spacing": {

@@ -1,6 +1,7 @@
 {
   "ignorePatterns": [
     "app/globals.css",
+    "docs/reference/figma/**/*.css",
     ".next/**",
     "dist/**",
     "build/**",
