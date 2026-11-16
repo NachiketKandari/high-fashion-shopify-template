@@ -17,7 +17,7 @@ const CATEGORY_TILES = [
   },
   {
     href: "/collections/unisex-1",
-    image: "/reference/clone/lookbook-02.jpg",
+    image: "/reference/clone/lookbook-men.jpg",
     label: "Shop for Men",
   },
 ];
