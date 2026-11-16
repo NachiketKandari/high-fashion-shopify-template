@@ -67,8 +67,8 @@ about 16,000 px and the recommendation row sits far below the fold. A gallery pa
 galleries is an open decision, not a styling fix.
 
 The stock states — low-stock alert `1:1090`, out-of-stock `1:1910`, notify-me `16:7696`, mobile
-`16:6714` and `16:8009` — stay unbuilt: the nodes endpoint answers HTTP 429 for the file, and no
-Shopify surface here provides a waitlist to submit to.
+`16:6714` and `16:8009` — stay unbuilt: the REST token is out of quota, and no Shopify surface here
+provides a waitlist to submit to.
 
 ## Browse states
 
@@ -140,6 +140,15 @@ tagging that the catalogue does not carry. Until it does, both modes feature the
 | Pincode serviceability | External             | Shiprocket, per D5 default                                                                                |
 
 Three of six are settled and the wallet and stepper move from Gated to Build: 105 Build, 25 Gated.
+
+## Figma access
+
+The token is on a `starter` plan and every REST endpoint shares one bucket, so a 429 means the whole
+token is spent until its `retry-after` (2026-11-20T14:11Z at the last check), not that one request was
+too fast. Frames are therefore exported once and read from disk: `figma-cache.mjs` beside the token
+fetches a whole document in one request or trims an export already held, and the procedure is in
+`docs/reference/figma/README.md`. A token on a paid seat or a development plugin in the desktop app
+both bypass the limit; per-frame retries do not.
 
 ## Source files
 

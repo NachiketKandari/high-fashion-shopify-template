@@ -37,6 +37,48 @@ here does not parse as CSS. It is exempted from `oxfmt` in `.oxfmtrc.json` and m
 | ---------------- | ------- | -------- | --------- | -------------------------------------------------------- |
 | Home, `Frame 64` | home    | desktop  | 1440×5158 | [`home-desktop-frame-64.md`](./home-desktop-frame-64.md) |
 
+## Offline exports and the REST quota
+
+The REST API is metered per token and plan tier, not per minute. A 429 carries the real number:
+
+```
+x-figma-plan-tier: starter
+x-figma-rate-limit-type: low
+retry-after: 380911          # seconds, ~4 days
+```
+
+On 2026-11-16 the wireframe file answered every endpoint — `/files`, `/files/{key}/nodes`,
+`/files/{key}/images`, `/images` — with the same `retry-after`, so the quota is shared and the whole
+token is out until about 2026-11-20T14:11Z. Retrying a frame does not help and spends nothing useful.
+
+Fetch once, read locally:
+
+```
+node figma-cache.mjs fetch <fileKey>                 # whole document, one request
+node figma-cache.mjs fetch <fileKey> --ids 1:1090    # one subtree, still one request
+node figma-cache.mjs trim <cached.json> --ids 1:1090 # re-read a frame, no request at all
+node figma-cache.mjs list
+```
+
+`fetch` honours `Retry-After` and refuses to write a partial file. `trim` keeps `id`, `name`, `type`,
+`absoluteBoundingBox`, `layoutMode`, `itemSpacing`, paddings, fills, strokes, `characters` and the
+text style, which is every field a spec uses. The cache lives outside the repository, next to the
+token, because the raw document is tens of megabytes and a checkout does not need it; the specs in
+this directory are the durable artifact.
+
+When the quota is exhausted, in order of preference:
+
+1. `trim` an export that was already fetched — one document covers every frame in it.
+2. Fetch with a token on a paid seat: the limit follows the plan, so a Professional or Organization
+   account raises it for the same file.
+3. Export through a development plugin in the Figma desktop app, which runs on the plugin API and
+   never touches the REST quota. It returns the node tree and can render PNGs at any scale.
+4. Select a frame in the editor and read its properties from the right sidebar, for one or two
+   frames that are needed before the quota returns.
+
+Images share the quota. Render each surface once at 1x and keep the PNG beside its spec rather than
+re-rendering while writing.
+
 ## Constraints that apply to every frame
 
 These come from `AGENTS.md` and `docs/DESIGN-SYSTEM-ENFORCEMENT.md`, and they override anything a
