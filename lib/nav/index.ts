@@ -50,7 +50,13 @@ export const MAIN_NAV: NavItem[] = [
       },
     ],
     tiles: [
-      { href: "/collections/women", image: "/reference/editorial-corsets.jpg", label: "Woman" },
+      { href: "/collections/core", image: "/reference/editorial-core.jpg", label: "Core" },
+      {
+        href: "/collections/signature",
+        image: "/reference/editorial-elevated.jpg",
+        label: "Elevated",
+      },
+      { href: "/collections/corsets", image: "/reference/editorial-corsets.jpg", label: "Core" },
     ],
   },
   {

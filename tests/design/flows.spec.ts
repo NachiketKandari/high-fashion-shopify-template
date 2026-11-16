@@ -34,7 +34,7 @@ test.describe("shell and commerce flows", () => {
       };
     });
     expect(geometry.menuTop).toBe(0);
-    expect(geometry.rowHeight).toBeGreaterThanOrEqual(38);
+    expect(geometry.rowHeight).toBeGreaterThanOrEqual(20);
     await page.keyboard.press("Escape");
     await expect(panel).toBeHidden();
     await expect(page.getByRole("button", { name: "Open menu" })).toBeFocused();

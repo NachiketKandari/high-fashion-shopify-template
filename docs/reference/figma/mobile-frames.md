@@ -102,14 +102,31 @@ Do not copy these:
 | Buy column 24 / 40       | `py-6`, `gap-10`                                            |
 | Full-bleed 2-up grid     | `-mx-(--gutter)`, `gap-px`, 3-up at tablet, 4-up at desktop |
 
+## Mobile menu — `Lorem Ipsum Design I` `2022:4641`, `2022:4768`
+
+The design file adds the open state at 440 × 956. A full-height white panel replaces the page:
+
+| Part    | Geometry                                                                                                |
+| ------- | ------------------------------------------------------------------------------------------------------- |
+| Header  | 74 tall, padding 24; `WOMAN MAN SEARCH` 14 px at the left, then search, bag, account and close icons    |
+| Links   | one column at the 24 px gutter, 21 px rows with 24 px rhythm                                            |
+| Utility | `My Account`, `Delivery`, `Return`, `Contact Us`, muted, 12 px apart                                    |
+| Tiles   | full-bleed square images with an uppercase white label at the bottom left; three for Woman, two for Men |
+
+Typography throughout is DM Sans, which the storefront already loads (`--font-dm-sans`, weights 300/400/500)
+and applies to the body, so every text surface inherits it. The wordmark stays a bitmap asset rather than
+type.
+
 ## Open decisions
 
-1. **Header chrome.** The frame draws bordered `Menu` / `Bag` / `Help` text buttons at 76 px; the
-   template ships an icon header at 56 px with an announcement bar above it. Replacing it is a
-   brand decision, not a layout fix.
-2. **Gallery affordance.** The frame shows no indicator, but products here carry up to 15 images; the
+1. **Header chrome.** The 390 wireframe draws bordered `Menu` / `Bag` / `Help` text buttons at 76 px;
+   the design file draws a wordmark-left bar with search, bag, account and menu icons. The storefront
+   ships the wireframe's closed bar and the design file's open panel.
+2. **Menu tiles.** The design file uses generated placeholder images; the storefront uses one
+   editorial image per tile (Core, Elevated, Core; Jacket, Shirt).
+3. **Gallery affordance.** The frame shows no indicator, but products here carry up to 15 images; the
    shipped carousel draws one dot per image. A counter or a capped dot rail needs a choice.
-3. **Product title scale.** The frame uses 12/600 for the name and 10/600 for the price; the
+4. **Product title scale.** The frame uses 12/600 for the name and 10/600 for the price; the
    storefront uses `type-display`. The same question is open on desktop.
-4. **Footer.** The frames' footer is a broken desktop copy, so the shipped global footer stays until
+5. **Footer.** The frames' footer is a broken desktop copy, so the shipped global footer stays until
    the footer phase.

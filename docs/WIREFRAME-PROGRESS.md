@@ -233,6 +233,11 @@ three-zone row: bordered 43 px chips, a 125 px centred wordmark, and the scrimme
 with the category's links. The announcement bar is gone because the frame's header is the first
 element on the page.
 
+The mobile menu follows the newer design file (`Lorem Ipsum Design I`, `2022:4641` / `2022:4768`):
+WOMAN / MAN / SEARCH and icons in a 74 px header, one link column, four utility links, then full-bleed
+square image tiles (three for Woman, two for Men). All text stays DM Sans, the family the body already
+uses.
+
 `New In` and `Edit` left the header to match the frame's `Woman / Man / Search`; both remain in the
 mobile panel and the home page. Mobile uses the frame's closed bar (`Menu`, wordmark, `Bag`, `Help`);
 no 390 frame shows the menu open, so the open state follows the desktop panel with two columns and
