@@ -3,7 +3,6 @@
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
 import { cn } from "cn";
 import { XIcon } from "lucide-react";
-import type { ComponentProps } from "react";
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
@@ -26,7 +25,7 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
     <SheetPrimitive.Backdrop
       data-slot="sheet-overlay"
       className={cn(
-        "fixed inset-0 z-60 bg-black/30 transition-opacity duration-(--motion-base) ease-(--ease-standard) data-starting-style:opacity-0 data-ending-style:opacity-0 data-[dim=false]:bg-transparent",
+        "fixed inset-0 z-(--z-overlay) bg-black/30 transition-opacity duration-(--motion-base) ease-(--ease-standard) data-starting-style:opacity-0 data-ending-style:opacity-0 data-[dim=false]:bg-transparent",
         className,
       )}
       {...props}
@@ -57,7 +56,7 @@ function SheetContent({
         data-slot="sheet-content"
         data-side={side}
         className={cn(
-          "bg-paper fixed z-60 flex flex-col gap-5 shadow-modal transition duration-(--motion-base) ease-(--ease-standard)",
+          "bg-paper fixed z-(--z-overlay) flex flex-col gap-5 shadow-modal transition duration-(--motion-base) ease-(--ease-standard)",
           side === "right" &&
             "inset-y-0 right-0 h-full w-(--drawer-search) max-w-full border-l data-starting-style:translate-x-full data-ending-style:translate-x-full",
           side === "left" &&

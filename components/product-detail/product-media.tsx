@@ -7,7 +7,7 @@ import { preload } from "react-dom";
 
 import { AutoPlayVideo } from "@/components/ui/auto-play-video";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
-import type { Image as ImageType, MediaItem, Video } from "@/lib/media/types";
+import type { Image as ImageType, MediaItem } from "@/lib/media/types";
 
 import { Lightbox, LightboxTrigger } from "./lightbox";
 
@@ -255,7 +255,7 @@ function GridItem({
 }) {
   const [ref, near] = useNearViewport(priority);
   return (
-    <div ref={ref} className="relative w-full overflow-hidden aspect-[2/3]">
+    <div ref={ref} className="relative w-full overflow-hidden aspect-[20/27]">
       {!near ? (
         <div className="size-full bg-surface" />
       ) : item.type === "video" ? (
@@ -324,7 +324,7 @@ function Grid({
   }
 
   const grid = (
-    <div className="grid grid-cols-1">
+    <div className="grid grid-cols-1 gap-2.5">
       {children}
       {mediaItems.map((item, idx) => (
         <GridItem

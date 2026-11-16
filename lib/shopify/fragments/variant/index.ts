@@ -10,6 +10,7 @@ export const PRODUCT_VARIANT_FRAGMENT = gql(
     id
     title
     availableForSale
+    quantityAvailable
     price {
       amount
         currencyCode

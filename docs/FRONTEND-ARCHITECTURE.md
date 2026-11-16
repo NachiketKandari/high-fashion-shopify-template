@@ -29,7 +29,7 @@ does not replace them.
 | Shopify SDK                          | `@shopify/hydrogen` 2026.10.2, framework-agnostic SDK only                                                                            |
 | Styling                              | Tailwind CSS 4.3, shadcn/base-ui primitives, tokens in `app/globals.css`                                                              |
 | Runtime                              | Node 26, pnpm 12.16.1, deployed to Vercel                                                                                             |
-| Store                                | Lorem Ipsum (`dummy-store-f0ejfuh9.myshopify.com`), store currency INR (set 10 November 2026)                                         |
+| Store                                | Lorem Ipsum (`dummy-store-f0ejfuh9.myshopify.com`), store country India, currency INR, ships to India                                 |
 | Catalog                              | 157 products: 143 active, 13 draft, 1 archived; 56 collections; 1,332 variants; 95-product reference catalog plus 39 UniPlus products |
 | Content                              | 11 published Shopify pages, the `journal-2` blog and 3 articles; 3 app-owned pages                                                    |
 | Customer accounts                    | **Enabled** (`shopConfig.auth.isEnabled = true`)                                                                                      |
@@ -39,7 +39,7 @@ does not replace them.
 | Shopify analytics / consent / WebMCP | Disabled                                                                                                                              |
 | GA4                                  | Loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_GTM_ID` is set                                                             |
 | Currency                             | Store currency INR; INR-only display; final INR prices                                                                                |
-| Locale                               | Single locale: country `US`, language `EN`, formatting locale `en-US`                                                                 |
+| Locale                               | Single locale: country `IN`, language `EN`, formatting locale `en-IN`                                                                 |
 
 The catalog figures come from a read-only Admin API check on 10 November 2026. Treat them as a
 snapshot, not a schema. The 27 published UniPlus products supply `/collections/new-in`; the 12

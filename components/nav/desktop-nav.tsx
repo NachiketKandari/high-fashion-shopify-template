@@ -1,7 +1,6 @@
 "use client";
 
-import { cn } from "cn";
-import Image from "next/image";
+import { XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Link } from "@/components/ui/link";
@@ -57,54 +56,42 @@ export function DesktopNav() {
                 {item.label}
               </button>
               <div
-                className="invisible absolute inset-x-0 top-full z-40 translate-y-1 border-b border-rule bg-paper opacity-0 transition-[opacity,transform,visibility] duration-(--motion-base) ease-(--ease-standard) data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:opacity-100"
+                className="invisible absolute top-full left-0 z-(--z-mega) w-[231px] translate-y-1 border-r border-b border-rule bg-paper opacity-0 transition-[opacity,transform,visibility] duration-(--motion-base) ease-(--ease-standard) data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:opacity-100"
                 data-open={openIndex === index}
                 id={`mega-${index}`}
               >
-                <div className="grid grid-cols-[minmax(0,1fr)_minmax(420px,520px)] gap-[60px] px-(--gutter) pt-9 pb-10">
-                  <div className="grid grid-cols-3 gap-10">
-                    {item.columns.map((column) => (
-                      <div key={column.title}>
-                        <p className="type-h4">{column.title}</p>
-                        <ul className="mt-5 grid" role="list">
-                          {column.links.map((link) => (
-                            <li key={link.label}>
-                              <Link
-                                className="type-h4 block transition-opacity hover:opacity-60"
-                                href={link.href}
-                                onClick={() => setOpenIndex(null)}
-                              >
-                                {link.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                  {item.tiles && item.tiles.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-[10px]">
-                      {item.tiles.map((tile) => (
-                        <Link
-                          className="group/tile grid content-start"
-                          href={tile.href}
-                          key={tile.label}
-                          onClick={() => setOpenIndex(null)}
-                        >
-                          <span className="relative block aspect-[260/418] overflow-hidden bg-surface">
-                            <Image
-                              alt={tile.label}
-                              className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-hover/tile:scale-[1.03] motion-reduce:transform-none"
-                              fill
-                              sizes="100vw"
-                              src={tile.image}
-                            />
-                          </span>
-                          <span className="type-h4 mt-2.5 block">{tile.label}</span>
-                        </Link>
-                      ))}
+                <div className="flex items-center justify-between gap-4 border-b border-rule pr-2 pl-5">
+                  <p className="type-h4">{item.columns[0]?.title.toUpperCase()}</p>
+                  <button
+                    aria-label="Close menu"
+                    className="focus-ring flex size-9 cursor-pointer items-center justify-center"
+                    onClick={() => setOpenIndex(null)}
+                    type="button"
+                  >
+                    <XIcon className="size-4" strokeWidth={1.25} />
+                  </button>
+                </div>
+                <div className="grid gap-6 px-5 py-5">
+                  {item.columns.map((column, columnIndex) => (
+                    <div className="grid gap-1" key={column.title}>
+                      {columnIndex > 0 ? (
+                        <p className="type-label mb-1 text-ink-muted">{column.title}</p>
+                      ) : null}
+                      <ul className="grid" role="list">
+                        {column.links.map((link) => (
+                          <li key={link.label}>
+                            <Link
+                              className="type-h4 flex min-h-9 items-center transition-opacity hover:opacity-60"
+                              href={link.href}
+                              onClick={() => setOpenIndex(null)}
+                            >
+                              {link.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  ) : null}
+                  ))}
                 </div>
               </div>
             </li>

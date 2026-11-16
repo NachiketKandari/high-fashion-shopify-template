@@ -7,8 +7,9 @@ import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FREE_SHIPPING_THRESHOLD } from "@/lib/cart";
+import { getFreeShippingStatus } from "@/lib/cart";
 import { useSuspenseCart } from "@/lib/cart/client";
+import type { Cart } from "@/lib/cart/types";
 
 import { CartLineItems } from "./line-item";
 import { CartSummary } from "./summary";
@@ -48,23 +49,21 @@ export function CartPageContent() {
       warnings={<CartWarnings />}
     >
       <div className="grid gap-5">
-        <FreeShippingLine subtotal={cart.cost.subtotalAmount.amount} />
+        <FreeShippingLine cart={cart} />
         <CartLineItems lines={cart.lines.nodes} />
       </div>
     </CartPageLayout>
   );
 }
 
-function FreeShippingLine({ subtotal }: { subtotal: string }) {
+function FreeShippingLine({ cart }: { cart: Cart }) {
   const format = useDisplayPrice();
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - Number(subtotal));
-  return (
-    <p className="type-label border-t border-rule pt-2.5 text-ink-muted">
-      {remaining === 0
-        ? "Congratulations! You qualify for free shipping."
-        : `You're ${format({ amount: remaining.toFixed(2), currencyCode: "INR" })} away from free shipping.`}
-    </p>
+  const { message } = getFreeShippingStatus(
+    cart.cost.subtotalAmount.amount,
+    cart.cost.subtotalAmount.currencyCode,
+    format,
   );
+  return <p className="type-label border-t border-rule pt-2.5 text-ink-muted">{message}</p>;
 }
 
 export function CartPageSkeleton() {

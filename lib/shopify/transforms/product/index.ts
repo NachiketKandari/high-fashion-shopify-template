@@ -27,7 +27,7 @@ import type {
 
 const MAX_IMAGE_WIDTH = 1920;
 
-function resizedImageUrl(url: string, width: number, height: number) {
+function resizedImageUrl(url: string, width: number) {
   if (
     width <= MAX_IMAGE_WIDTH ||
     !/cdn\.shopify\.com|politesocietyshop\.com\/cdn\/shop/.test(url)
@@ -49,7 +49,7 @@ export function transformImage(image: ShopifyImage | null | undefined): Image | 
       ? Math.round((originalHeight * MAX_IMAGE_WIDTH) / originalWidth)
       : originalHeight;
   return {
-    url: resizedImageUrl(image.url, originalWidth, originalHeight),
+    url: resizedImageUrl(image.url, originalWidth),
     altText: image.altText ?? "",
     width,
     height,
@@ -135,6 +135,7 @@ export function transformVariant(variant: ShopifyVariant): ProductVariant {
     id: variant.id,
     title: variant.title,
     availableForSale: variant.availableForSale,
+    quantityAvailable: variant.quantityAvailable,
     price: variant.price,
     compareAtPrice: variant.compareAtPrice ?? undefined,
     productHandle: variant.product.handle,

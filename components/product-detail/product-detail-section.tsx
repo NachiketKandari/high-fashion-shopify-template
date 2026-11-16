@@ -7,6 +7,7 @@ import { BundleComponents, BundleParents } from "@/components/product-detail/bun
 import { BuyButtons, PurchaseOptions } from "@/components/product-detail/buy-buttons";
 import { GiftCardPurchaseForm } from "@/components/product-detail/gift-card-purchase-form";
 import { ProductOpenGraph } from "@/components/product-detail/open-graph";
+import { ProductAccordion } from "@/components/product-detail/product-accordion";
 import {
   ProductForm,
   ProductFormOptions,
@@ -19,7 +20,6 @@ import {
   ProductMedia,
 } from "@/components/product-detail/product-media";
 import { ProductPrice } from "@/components/product-detail/product-price";
-import { ProductTabs } from "@/components/product-detail/product-tabs";
 import { ProductSchema } from "@/components/product-detail/schema";
 import { BreadcrumbSchema } from "@/components/schema/breadcrumb-schema";
 import { Input } from "@/components/ui/input";
@@ -74,7 +74,7 @@ export function ProductDetailSection({
           { name: product.title, path: `/products/${product.handle}` },
         ]}
       />
-      <div className="grid grid-cols-1 items-start desktop:grid-cols-2">
+      <div className="grid grid-cols-1 items-start desktop:grid-cols-[minmax(0,800fr)_minmax(0,592fr)] desktop:px-(--gutter)">
         <ProductMediaArea product={product} selectedOptions={selectedOptions} />
         <ProductInfoArea product={product} variantPromise={variantPromise} />
       </div>
@@ -131,8 +131,8 @@ function ProductInfoArea({
     vendor: product.vendor,
   };
   return (
-    <div className="px-(--gutter) py-7 desktop:sticky desktop:top-[76px] desktop:max-h-[calc(100svh-76px)] desktop:self-start desktop:overflow-y-auto desktop:px-0 desktop:pb-6 desktop:pt-[64px]">
-      <div className="mx-auto grid w-full max-w-[408px] gap-7">
+    <div className="px-(--gutter) py-6 desktop:sticky desktop:top-[76px] desktop:max-h-[calc(100svh-76px)] desktop:self-start desktop:overflow-y-auto desktop:px-0 desktop:pb-6 desktop:pt-[64px]">
+      <div className="mx-auto grid w-full max-w-[432px] gap-10">
         <div className="grid gap-2" data-slot="product-info-header">
           <div className="flex items-start justify-between gap-4">
             <h1 className="type-display text-ink tracking-normal">{product.title}</h1>
@@ -179,7 +179,7 @@ function ProductInfoArea({
             <BundleRelationships variant={product.defaultVariant} />
           ) : null}
 
-          <ProductTabs descriptionHtml={descriptionHtml} />
+          <ProductAccordion descriptionHtml={descriptionHtml} />
 
           <div className="sticky bottom-0 flex justify-end bg-paper py-2">
             <a
@@ -400,13 +400,16 @@ function BuyButtonsFallback({
 
 export function ProductDetailSkeleton() {
   return (
-    <div aria-busy="true" className="grid grid-cols-1 items-start desktop:grid-cols-2">
+    <div
+      aria-busy="true"
+      className="grid grid-cols-1 items-start desktop:grid-cols-[minmax(0,800fr)_minmax(0,592fr)] desktop:px-(--gutter)"
+    >
       <div>
         <div className="aspect-[2/3] w-full bg-surface desktop:hidden" />
-        <div className="hidden aspect-[2/3] w-full bg-surface desktop:block" />
+        <div className="hidden aspect-[20/27] w-full bg-surface desktop:block" />
       </div>
-      <div className="px-(--gutter) py-7 desktop:sticky desktop:top-[76px] desktop:px-0 desktop:pt-[64px]">
-        <div className="mx-auto grid w-full max-w-[408px] gap-7">
+      <div className="px-(--gutter) py-6 desktop:sticky desktop:top-[76px] desktop:px-0 desktop:pt-[64px]">
+        <div className="mx-auto grid w-full max-w-[432px] gap-10">
           <div className="grid gap-2">
             <Skeleton className="h-7 w-3/4" />
             <Skeleton className="h-7 w-24" />

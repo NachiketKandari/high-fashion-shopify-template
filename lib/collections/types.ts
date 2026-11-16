@@ -24,6 +24,8 @@ export interface BrowseResults extends ProductPage {
   total?: number;
 }
 
+export type CardView = "image" | "item" | "model";
+
 export interface Collection {
   description: string;
   handle: string;

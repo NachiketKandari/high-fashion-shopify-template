@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 import { ProductInfoOptions } from "@/components/product-detail/product-info";
 import { ProductPrice } from "@/components/product-detail/product-price";
-import { buildProductUrl } from "@/lib/product";
+import { buildProductUrl, getLowStockLabel } from "@/lib/product";
 import { ProductProvider, useProduct } from "@/lib/product/client";
 import type {
   OptionGroupState,
@@ -49,7 +49,7 @@ export function ProductFormOptions({
   handle,
   sizeGuideCategory,
 }: ProductFormOptionsProps) {
-  const { options, selectOption } = useProduct();
+  const { options, selectOption, selectedVariant } = useProduct();
   const optionGroups: OptionGroupState[] = options.map((option) => ({
     name: option.name,
     values: option.values.map((value) => {
@@ -69,6 +69,7 @@ export function ProductFormOptions({
   return (
     <ProductInfoOptions
       compact={compact}
+      lowStockLabel={getLowStockLabel(selectedVariant?.quantityAvailable)}
       options={optionGroups}
       onSelectValue={selectOption}
       sizeGuideCategory={sizeGuideCategory}

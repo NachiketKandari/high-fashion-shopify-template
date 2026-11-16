@@ -2,6 +2,7 @@ import { cn } from "cn";
 import type { ComponentProps } from "react";
 
 import { isColorOption } from "@/lib/product";
+import { isSizeOption } from "@/lib/product/sizes";
 import type { OptionGroupState } from "@/lib/product/types";
 
 import { ColorPicker } from "./color-picker";
@@ -10,6 +11,7 @@ import { OptionPicker } from "./option-picker";
 interface ProductInfoOptionsProps extends ComponentProps<"div"> {
   compact?: boolean;
   hideImages?: boolean;
+  lowStockLabel?: string | null;
   onSelectValue?: (optionName: string, value: string) => void;
   options: OptionGroupState[];
   sizeGuideCategory?: string;
@@ -18,6 +20,7 @@ interface ProductInfoOptionsProps extends ComponentProps<"div"> {
 function ProductInfoOptions({
   compact = false,
   hideImages,
+  lowStockLabel,
   onSelectValue,
   options,
   sizeGuideCategory,
@@ -57,6 +60,7 @@ function ProductInfoOptions({
         {otherOptions.map((option) => (
           <OptionPicker
             compact={compact}
+            footnote={isSizeOption(option.name) ? lowStockLabel : null}
             key={option.name}
             onSelectValue={onSelectValue}
             option={option}
@@ -68,25 +72,4 @@ function ProductInfoOptions({
   );
 }
 
-interface ProductInfoDescriptionProps extends ComponentProps<"div"> {
-  descriptionHtml: string;
-}
-
-function ProductInfoDescription({
-  descriptionHtml,
-  className,
-  ...props
-}: ProductInfoDescriptionProps) {
-  if (!descriptionHtml) return null;
-  return (
-    <div data-slot="product-info-description" className={className} {...props}>
-      <div
-        className="type-body-sm text-ink-muted [&_li]:m-0 [&_p]:m-0 [&_ul]:m-0 [&_ul]:grid [&_ul]:gap-0.5"
-        // oxlint-disable-next-line react/no-danger -- Product descriptions pass through sanitizeShopifyHtml when fetched.
-        dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-      />
-    </div>
-  );
-}
-
-export { ProductInfoDescription, ProductInfoOptions };
+export { ProductInfoOptions };

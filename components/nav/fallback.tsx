@@ -6,7 +6,7 @@ export function NavFallback() {
   return (
     <>
       <Announcement />
-      <header className="sticky top-0 z-50 h-(--header-bar-h)">
+      <header className="sticky top-0 z-(--z-header) h-(--header-bar-h)">
         <div className="bg-paper">
           <div className="border-y border-rule">
             <div className="flex h-(--header-bar-h) items-center px-(--gutter)">

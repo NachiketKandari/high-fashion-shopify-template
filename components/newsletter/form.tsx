@@ -18,7 +18,7 @@ export function NewsletterForm({ className, inputId }: NewsletterFormProps) {
   if (submitted) {
     return (
       <p className={className} role="status">
-        Thank you. You are on the list.
+        Newsletter signup is not connected yet.
       </p>
     );
   }

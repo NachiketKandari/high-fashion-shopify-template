@@ -25,7 +25,9 @@ export function WishlistButton({ product, variant = "card" }: WishlistButtonProp
           ? "absolute bottom-2 left-2 bg-paper/90 opacity-0 backdrop-blur-sm transition-opacity duration-(--motion-base) group-focus-within/card:opacity-100 group-hover/card:opacity-100 hover:bg-paper focus-visible:opacity-100 pointer-coarse:opacity-100"
           : "relative shrink-0",
       )}
-      onClick={() => toggleWishlist(product)}
+      onClick={() => {
+        toggleWishlist(product);
+      }}
       type="button"
     >
       <Bookmark

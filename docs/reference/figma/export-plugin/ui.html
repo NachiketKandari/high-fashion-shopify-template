@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      body {
+        display: grid;
+        font:
+          12px/1.5 -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        gap: 12px;
+        margin: 0;
+        padding: 16px;
+      }
+      pre {
+        background: rgba(127, 127, 127, 0.12);
+        border-radius: 4px;
+        margin: 0;
+        max-height: 120px;
+        overflow: auto;
+        padding: 8px;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      button {
+        background: #0d99ff;
+        border: 0;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 600;
+        padding: 8px 12px;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      Exports every page as trimmed node JSON. Save the file, then move it into the cache directory.
+    </p>
+    <pre id="summary">waiting for the document…</pre>
+    <div class="row">
+      <button id="save" disabled>Save JSON</button>
+      <button id="copy" disabled>Copy to clipboard</button>
+    </div>
+    <script>
+      let payload = null;
+
+      window.onmessage = (event) => {
+        const message = event.data.pluginMessage;
+        if (!message || message.type !== "export") return;
+        payload = message.payload;
+        const parsed = JSON.parse(payload);
+        const frames = parsed.pages.flatMap((page) =>
+          page.children.map((child) => `${page.name} / ${child.name} (${child.id})`),
+        );
+        document.getElementById("summary").textContent =
+          `${parsed.file.name || "document"} · ${frames.length} top-level frames · ` +
+          `${Math.round(payload.length / 1024)} KB\n\n` +
+          frames.slice(0, 8).join("\n") +
+          (frames.length > 8 ? `\n… ${frames.length - 8} more` : "");
+        document.getElementById("save").disabled = false;
+        document.getElementById("copy").disabled = false;
+      };
+
+      document.getElementById("save").onclick = () => {
+        if (!payload) return;
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const name = `${(JSON.parse(payload).file.name || "figma").replace(/\s+/g, "-").toLowerCase()}-export.json`;
+        const link = document.createElement("a");
+        link.download = name;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+      };
+
+      document.getElementById("copy").onclick = async () => {
+        if (!payload) return;
+        await navigator.clipboard.writeText(payload);
+        document.getElementById("copy").textContent = "Copied";
+      };
+    </script>
+  </body>
+</html>

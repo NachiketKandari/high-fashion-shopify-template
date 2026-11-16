@@ -66,6 +66,7 @@ export function InfiniteProductGrid({
 
   // Re-arm the observer per cursor so a sentinel still in view after a page lands triggers the next load.
   const { endCursor, hasNextPage } = pageInfo;
+  const count = initialProductIds.length + additionalProducts.length;
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel || !hasNextPage || !endCursor) return;
@@ -87,7 +88,7 @@ export function InfiniteProductGrid({
       data-pending={isPending}
     >
       <h2 className="sr-only">Products</h2>
-      <div className="grid grid-cols-2 gap-x-(--grid-gap) gap-y-(--grid-row-gap) tablet:grid-cols-3 desktop:grid-cols-4">
+      <div className="-mx-(--gutter) grid grid-cols-2 gap-px tablet:mx-0 tablet:grid-cols-3 tablet:gap-x-(--grid-gap) tablet:gap-y-(--grid-row-gap) desktop:grid-cols-4">
         {children}
         {additionalProducts.map((product) => (
           <ProductCard key={product.id} product={product} outOfStockText="Out of stock" />
@@ -97,6 +98,12 @@ export function InfiniteProductGrid({
       <p aria-live="polite" className="sr-only" role="status">
         {announcement}
       </p>
+
+      {!pageInfo.hasNextPage && (
+        <p className="type-body-sm py-10 text-center text-ink-muted">
+          {`You've seen all ${count} ${count === 1 ? "product" : "products"}.`}
+        </p>
+      )}
 
       {pageInfo.hasNextPage && (
         <div className="flex flex-col items-center gap-3 py-10">

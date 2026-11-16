@@ -18,6 +18,11 @@
       "size": "1.375rem",
       "weight": 400
     },
+    "display-lg": {
+      "lineHeight": "3.375rem",
+      "size": "2.25rem",
+      "weight": 400
+    },
     "h2": {
       "lineHeight": "1.4375rem",
       "size": "1.125rem",
@@ -67,6 +72,16 @@
       "lineHeight": "1.125rem",
       "size": "0.8125rem",
       "weight": 400
+    },
+    "watermark": {
+      "lineHeight": "7.75rem",
+      "size": "6rem",
+      "weight": 400
+    },
+    "watermark-lg": {
+      "lineHeight": "10.4375rem",
+      "size": "8rem",
+      "weight": 400
     }
   },
   "spacing": {
@@ -74,7 +89,7 @@
       "--card-inset": "8px",
       "--grid-gap": "3px",
       "--grid-row-gap": "24px",
-      "--gutter": "20px",
+      "--gutter": "24px",
       "--page-top": "24px",
       "--section-gap": "40px"
     },

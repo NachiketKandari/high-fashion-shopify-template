@@ -104,7 +104,6 @@ function ProductCardTitle({ className, children, ...props }: ComponentProps<"h3"
 interface ProductCardPriceProps {
   amount: string;
   currencyCode: string;
-  maxAmount?: string;
   compareAtAmount?: string;
   compareAtCurrencyCode?: string;
   className?: string;
@@ -113,14 +112,11 @@ interface ProductCardPriceProps {
 function ProductCardPrice({
   amount,
   currencyCode,
-  maxAmount,
   compareAtAmount,
   compareAtCurrencyCode,
   className,
 }: ProductCardPriceProps) {
-  const isRange = maxAmount != null && maxAmount !== amount;
-  // A range's per-variant discounts differ, so a single compare-at would be misleading.
-  const discountPercent = isRange ? null : getDiscountPercent(amount, compareAtAmount);
+  const discountPercent = getDiscountPercent(amount, compareAtAmount);
   return (
     <div data-slot="product-card-price" className={cn(className)}>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -130,16 +126,6 @@ function ProductCardPrice({
             currencyCode={currencyCode}
             className="type-h4 font-light text-ink-muted"
           />
-          {isRange && (
-            <>
-              <span>–</span>
-              <Price
-                amount={maxAmount}
-                currencyCode={currencyCode}
-                className="type-h4 font-light text-ink-muted"
-              />
-            </>
-          )}
         </span>
         {discountPercent !== null && compareAtAmount && compareAtCurrencyCode ? (
           <>

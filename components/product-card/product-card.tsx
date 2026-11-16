@@ -11,11 +11,11 @@ import { getColorSwatch } from "@/lib/product/color-swatches";
 import type { ProductCard as ProductCardType } from "@/lib/product/types";
 
 export interface ProductCardProps {
+  captionLayout?: "row" | "stack";
   className?: string;
   loading?: "eager" | "lazy";
   outOfStockText?: string;
   product: ProductCardType;
-  showSizes?: boolean;
 }
 
 function swatchStyle(swatch: { color?: string; image?: string } | undefined) {
@@ -34,11 +34,11 @@ function cardSwatch(value: { name: string; swatch?: { color?: string; image?: st
 }
 
 export function ProductCard({
+  captionLayout = "stack",
   className,
   loading = "lazy",
   outOfStockText = "Out of stock",
   product,
-  showSizes = true,
 }: ProductCardProps) {
   const href = buildProductUrl(product.handle, product.defaultVariantSelectedOptions ?? []);
   const colorOption = product.options?.find((option) =>
@@ -111,34 +111,51 @@ export function ProductCard({
         />
       </div>
 
-      <div className="grid gap-1 px-2 pb-2 pt-2">
-        <h3 className="type-h4 min-w-0 truncate text-ink">
-          <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
-            {product.title}
-          </Link>
-        </h3>
-        <div className="flex flex-wrap items-baseline gap-x-1.5">
-          {product.maxPrice.amount !== product.price.amount ? (
-            <span className="type-body-sm text-ink-muted">From</span>
-          ) : null}
+      {captionLayout === "row" ? (
+        <div className="flex items-center justify-between gap-3 px-6 py-1.5">
+          <h3 className="type-h4 min-w-0 truncate text-ink">
+            <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
+              {product.title}
+            </Link>
+          </h3>
           <Price
             amount={product.price.amount}
-            className="type-h4 font-light text-ink-muted normal-case"
+            className="type-h4 shrink-0 font-light text-ink-muted normal-case"
             currencyCode={product.price.currencyCode}
           />
-          {product.compareAtPrice &&
-          Number(product.compareAtPrice.amount) > Number(product.price.amount) ? (
+        </div>
+      ) : (
+        <div className="grid gap-1 px-2 pt-2 pb-2 [[data-card-view=model]_&]:hidden">
+          <h3 className="type-h4 min-w-0 truncate text-ink">
+            <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
+              {product.title}
+            </Link>
+          </h3>
+          <div className="flex flex-wrap items-baseline gap-x-1.5">
+            {product.maxPrice.amount !== product.price.amount ? (
+              <span className="type-body-sm text-ink-muted">From</span>
+            ) : null}
             <Price
-              amount={product.compareAtPrice.amount}
-              className="type-label font-light text-ink-muted line-through"
-              currencyCode={product.compareAtPrice.currencyCode}
+              amount={product.price.amount}
+              className="type-h4 font-light text-ink-muted normal-case"
+              currencyCode={product.price.currencyCode}
             />
+            {product.compareAtPrice &&
+            Number(product.compareAtPrice.amount) > Number(product.price.amount) ? (
+              <Price
+                amount={product.compareAtPrice.amount}
+                className="type-label font-light text-ink-muted line-through"
+                currencyCode={product.compareAtPrice.currencyCode}
+              />
+            ) : null}
+          </div>
+          {sizes.length > 0 ? (
+            <p className="type-body-sm truncate text-ink-muted [[data-card-view=image]_&]:hidden">
+              {sizes.join(" ")}
+            </p>
           ) : null}
         </div>
-        {showSizes && sizes.length > 0 ? (
-          <p className="type-body-sm truncate text-ink-muted">{sizes.join(" ")}</p>
-        ) : null}
-      </div>
+      )}
     </article>
   );
 }

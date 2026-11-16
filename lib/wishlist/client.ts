@@ -9,7 +9,6 @@ const CHANGE_EVENT = "wishlist-change";
 const EMPTY: WishlistItem[] = [];
 
 export interface WishlistItem {
-  addedAt: number;
   product: ProductCard;
 }
 
@@ -52,9 +51,8 @@ export function toggleWishlist(product: ProductCard) {
   write(
     exists
       ? items.filter((item) => item.product.handle !== product.handle)
-      : [{ addedAt: Date.now(), product }, ...items],
+      : [{ product }, ...items],
   );
-  return !exists;
 }
 
 export function useWishlist() {

@@ -14,6 +14,7 @@ export type ProductFormVariant = Pick<
   | "id"
   | "image"
   | "price"
+  | "quantityAvailable"
   | "requiresSellingPlan"
   | "selectedOptions"
   | "sellingPlanAllocations"
@@ -136,6 +137,8 @@ export interface ProductVariant {
   id: string;
   image: Image | null;
   price: Money;
+  /** Null when the store does not expose inventory to the storefront token. */
+  quantityAvailable?: number | null;
   /** Differs from the page's handle for combined-listing option values. */
   productHandle: string;
   productTitle: string;

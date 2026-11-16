@@ -33,9 +33,9 @@ export const shopConfig = {
     isEnabled: false,
   },
   localization: {
-    country: "US",
+    country: "IN",
     language: "EN",
-    locale: "en-US" as const,
+    locale: "en-IN" as const,
   },
   pdp: {
     bundles: {
@@ -43,9 +43,6 @@ export const shopConfig = {
     },
     buyWithShop: {
       isEnabled: false,
-    },
-    complementaryProducts: {
-      isEnabled: true,
     },
     quantityPicker: {
       isEnabled: true,

@@ -11,11 +11,11 @@ exists on 10 November 2026.
 | Item                      | State                                                                                               |
 | ------------------------- | --------------------------------------------------------------------------------------------------- |
 | Checkout handoff          | **Implemented**: `prepareCheckoutAction` reads `cart.checkoutUrl` and redirects to Shopify checkout |
-| Payment provider          | **Not configured**; the development store has no live gateway                                       |
-| Checkout test order       | **Not placed**; verification stops at the Shopify checkout redirect (and the store password gate)   |
+| Payment provider          | **Test payment gateway active** for dummy transactions; no live gateway                             |
+| Checkout test order       | **Blocked by the store password**; cart and checkout handoff verified, no order placed              |
 | Payment code in this repo | **None, by design**: no card form, no UPI form, no gateway SDK, no payment state                    |
 | GoKwik / Magic Checkout   | **Not implemented**; the reference storefront uses GoKwik for Indian traffic                        |
-| Store currency            | **INR** (set 10 November 2026); catalog prices are final INR values                                 |
+| Store currency            | **INR**; store country **India**; ships to **India**; catalog prices are final INR values           |
 
 "Integration" here does not mean writing a payment form. The template's entire payment surface is:
 
@@ -409,16 +409,16 @@ vendor register, incident-response plan, least-privilege admin, CSP and log hygi
 
 ## 11. Open decisions
 
-| Decision                | Current state                       | Recommendation                                                                   |
-| ----------------------- | ----------------------------------- | -------------------------------------------------------------------------------- |
-| Store currency          | INR (set 10 Nov 2026); final prices | No action; revisit Markets only for international presentment                    |
-| Primary gateway         | None configured                     | Razorpay Secure                                                                  |
-| Onsite cards            | None                                | Stay with Razorpay redirect at launch; evaluate PayU/Cashfree direct cards later |
-| Fallback gateway        | None                                | Not native; rely on Razorpay smart routing and a tested rollback                 |
-| GoKwik / Magic Checkout | Not implemented                     | Defer; verify headless support before any pilot                                  |
-| COD                     | Not configured                      | Only with verification and RTO controls                                          |
-| Order webhooks          | Not consumed                        | Add only when fulfilment or analytics needs them                                 |
-| Payment marks           | Six card brands                     | Mirror the real method mix, including UPI                                        |
+| Decision                | Current state                 | Recommendation                                                                   |
+| ----------------------- | ----------------------------- | -------------------------------------------------------------------------------- |
+| Store country/currency  | India, INR; ships to India    | No action; revisit Markets only for international presentment                    |
+| Primary gateway         | Test gateway; no live gateway | Razorpay Secure                                                                  |
+| Onsite cards            | None                          | Stay with Razorpay redirect at launch; evaluate PayU/Cashfree direct cards later |
+| Fallback gateway        | None                          | Not native; rely on Razorpay smart routing and a tested rollback                 |
+| GoKwik / Magic Checkout | Not implemented               | Defer; verify headless support before any pilot                                  |
+| COD                     | Not configured                | Only with verification and RTO controls                                          |
+| Order webhooks          | Not consumed                  | Add only when fulfilment or analytics needs them                                 |
+| Payment marks           | Six card brands               | Mirror the real method mix, including UPI                                        |
 
 ## 12. Cross-references and sources
 

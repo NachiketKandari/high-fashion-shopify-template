@@ -48,7 +48,7 @@ export function MobileMenu() {
 
       {open ? (
         <div
-          className="absolute inset-x-0 top-full z-40 flex h-[calc(100dvh-var(--header-bar-h)-var(--announcement-h))] flex-col border-b border-rule bg-paper desktop:hidden"
+          className="absolute inset-x-0 top-full z-(--z-mega) flex h-[calc(100dvh-var(--header-bar-h)-var(--announcement-h))] flex-col border-b border-rule bg-paper desktop:hidden"
           id="mobile-menu"
         >
           <nav aria-label="Menu" className="min-h-0 flex-1 overflow-y-auto px-(--gutter) py-2">

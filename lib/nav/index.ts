@@ -75,10 +75,10 @@ export const MAIN_NAV: NavItem[] = [
   },
   {
     href: "/collections/unisex-1",
-    label: "Unisex",
+    label: "Men",
     columns: [
       {
-        title: "Shop Unisex",
+        title: "Shop Men",
         links: [
           { href: "/collections/shirts-and-tshirts", label: "Shirts & T-shirts" },
           { href: "/collections/bottoms-unisex", label: "Bottoms" },

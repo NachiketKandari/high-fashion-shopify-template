@@ -45,7 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className={`${dmSans.variable} flex min-h-dvh flex-col font-sans antialiased`}>
         <a
           href="#main-content"
-          className="type-control sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:flex focus:h-9 focus:items-center focus:border focus:border-ink focus:bg-paper focus:px-5 focus:text-ink"
+          className="type-control sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-(--z-skip) focus:flex focus:h-9 focus:items-center focus:border focus:border-ink focus:bg-paper focus:px-5 focus:text-ink"
         >
           Skip to content
         </a>

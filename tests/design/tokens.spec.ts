@@ -62,8 +62,9 @@ test.describe("design tokens", () => {
     expect(probe.navFontWeight).toBe("400");
     expect(probe.navLineHeight).toBe("18px");
     expect(probe.headerHeight).toBeCloseTo(186, 0);
+    // The wordmark asset is 950x82, so the masthead keeps its aspect at 1016 wide.
     expect(probe.wordmarkWidth).toBeCloseTo(1016, 0);
-    expect(probe.wordmarkHeight).toBeCloseTo(82, 0);
+    expect(probe.wordmarkHeight).toBeCloseTo((1016 * 82) / 950, 0);
   });
 
   test("mobile tokens and shell geometry", async ({ page }) => {
@@ -93,12 +94,12 @@ test.describe("design tokens", () => {
       };
     });
 
-    expect(probe.gutter).toBe("20px");
+    expect(probe.gutter).toBe("24px");
     expect(probe.sectionGap).toBe("40px");
     expect(probe.headerHeight).toBeCloseTo(56, 0);
     expect(probe.navDisplay).toBe("none");
     expect(probe.wordmarkWidth).toBeCloseTo(170, 0);
-    expect(probe.wordmarkHeight).toBeCloseTo(13.7, 1);
+    expect(probe.wordmarkHeight).toBeCloseTo((170 * 82) / 950, 1);
     expect(probe.menuWidth).toBeGreaterThanOrEqual(36);
     expect(probe.menuHeight).toBeGreaterThanOrEqual(36);
   });

@@ -42,6 +42,9 @@
 
   --font-sans: var(--font-dm-sans);
 
+  --text-display-lg: 2.25rem;
+  --text-display-lg--line-height: 3.375rem;
+  --text-display-lg--letter-spacing: -0.011em;
   --text-display: 1.375rem;
   --text-display--line-height: 1.8125rem;
   --text-display--letter-spacing: 0.05em;
@@ -75,6 +78,12 @@
   --text-nav: 0.8125rem;
   --text-nav--line-height: 1.125rem;
   --text-nav--letter-spacing: 0.05em;
+  --text-watermark: 6rem;
+  --text-watermark--line-height: 7.75rem;
+  --text-watermark--letter-spacing: 0.05em;
+  --text-watermark-lg: 8rem;
+  --text-watermark-lg--line-height: 10.4375rem;
+  --text-watermark-lg--letter-spacing: 0.05em;
 
   --radius-xs: 0px;
   --radius-sm: 0px;
@@ -126,7 +135,7 @@
   --border: var(--rule);
   --ring: var(--ink);
 
-  --gutter: 20px;
+  --gutter: 24px;
   --page-top: 24px;
   --section-gap: 40px;
   --grid-gap: 3px;
@@ -174,6 +183,14 @@
     --drawer-cart: 440px;
     --modal-narrow: 448px;
   }
+}
+
+@utility type-display-lg {
+  font-size: var(--text-display-lg);
+  line-height: var(--text-display-lg--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-display-lg--letter-spacing);
+  text-transform: uppercase;
 }
 
 @utility type-display {
@@ -259,6 +276,22 @@
   line-height: var(--text-nav--line-height);
   font-weight: 400;
   letter-spacing: var(--text-nav--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-watermark {
+  font-size: var(--text-watermark);
+  line-height: var(--text-watermark--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-watermark--letter-spacing);
+  text-transform: uppercase;
+}
+
+@utility type-watermark-lg {
+  font-size: var(--text-watermark-lg);
+  line-height: var(--text-watermark-lg--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-watermark-lg--letter-spacing);
   text-transform: uppercase;
 }
 

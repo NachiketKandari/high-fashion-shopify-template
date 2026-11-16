@@ -8,7 +8,7 @@ import {
   serializeCollectionParams,
 } from "@shopify/hydrogen";
 import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
-import { CheckIcon, ChevronDownIcon, LoaderCircleIcon, XIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 import {
   type KeyboardEvent,
   type MouseEventHandler,
@@ -22,13 +22,13 @@ import { Link } from "@/components/ui/link";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Swatch } from "@/components/ui/swatch";
 import { parseFilterInput } from "@/lib/collections";
-import { shopConfig } from "@/lib/config";
-import { getActiveFilterBadges } from "@/lib/filters";
+import { formatPriceRangeLabel, getActiveFilterBadges } from "@/lib/filters";
 import type { Filter, PriceRange } from "@/lib/filters/types";
-import { formatCurrencySymbol, formatPrice } from "@/lib/money";
+import { formatCurrencySymbol } from "@/lib/money";
 import { getColorSwatch } from "@/lib/product/color-swatches";
 
 import { usePublishedFacets } from "./collection-browse-provider";
+import { FilterBadge } from "./filter-badge";
 
 interface FilterSheetProps {
   children: ReactNode;
@@ -271,45 +271,6 @@ function FilterSection({ children, title }: FilterSectionProps) {
   );
 }
 
-interface FilterBadgeProps {
-  href?: string;
-  label: string;
-  onRemove: () => void;
-}
-
-function FilterBadge({ href, label, onRemove }: FilterBadgeProps) {
-  const className =
-    "type-label focus-ring inline-flex min-h-9 cursor-pointer items-center gap-1 bg-surface px-2.5 text-ink transition-colors hover:bg-rule";
-  const content = (
-    <>
-      {label}
-      <XIcon className="size-3" strokeWidth={1.25} />
-    </>
-  );
-  const removeLabel = `Remove filter: ${label}`;
-  if (!href) {
-    return (
-      <button aria-label={removeLabel} className={className} onClick={onRemove} type="button">
-        {content}
-      </button>
-    );
-  }
-  return (
-    <Link
-      aria-label={removeLabel}
-      className={className}
-      href={href}
-      scroll={false}
-      onClick={(event) => {
-        event.preventDefault();
-        onRemove();
-      }}
-    >
-      {content}
-    </Link>
-  );
-}
-
 interface FilterOptionProps {
   count?: number;
   href: string;
@@ -399,20 +360,6 @@ function findFilterInput(filters: Filter[], key: string, value: string): string 
   return filters
     .find((filter) => filter.paramKey === key)
     ?.values.find((item) => item.value === value)?.input;
-}
-
-function formatPriceRangeLabel(
-  min: number | null,
-  max: number | null,
-  currencyCode: string | undefined,
-): string {
-  const format = (value: number) =>
-    currencyCode
-      ? formatPrice({ amount: String(value), currencyCode })
-      : new Intl.NumberFormat(shopConfig.localization.locale).format(value);
-  if (min !== null && max !== null) return `${format(min)} - ${format(max)}`;
-  if (min !== null) return `From ${format(min)}`;
-  return `Up to ${format(max ?? 0)}`;
 }
 
 function parsePriceValue(value: string): number | null {
