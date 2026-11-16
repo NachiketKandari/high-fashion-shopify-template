@@ -74,6 +74,19 @@ tagging that the catalogue does not carry. Until it does, both modes feature the
 3. Whether the Customer Account API exposes a store credit balance to a storefront, or whether it is
    checkout-only. Determines whether the wallet is `Build` or `Gated` in P11.
 
+## Capability results
+
+| Capability             | Result               | Evidence                                                                                                  |
+| ---------------------- | -------------------- | --------------------------------------------------------------------------------------------------------- |
+| Store credit balance   | Buildable            | `StoreCreditAccount.balance`, `expirableBalance`, `transactions` in the installed Customer Account schema |
+| Order tracking         | Buildable, signed in | `Fulfillment.status`, `latestShipmentStatus`, `events`, `estimatedDeliveryAt`, `trackingInformation`      |
+| Cancellation write     | Admin-side           | No `orderCancel` in the Customer Account or Storefront schemas                                            |
+| Returns write          | Admin-side or app    | No return mutation in either schema                                                                       |
+| Tax invoices           | App                  | Not a Shopify storefront concern                                                                          |
+| Pincode serviceability | External             | Shiprocket, per D5 default                                                                                |
+
+Three of six are settled and the wallet and stepper move from Gated to Build: 105 Build, 25 Gated.
+
 ## Artifacts on disk
 
 | Artifact                                        | State                                                 |
@@ -95,8 +108,9 @@ tagging that the catalogue does not carry. Until it does, both modes feature the
 
 ## Next action
 
-P0: build the capability table for the full post-purchase suite, starting with the store-credit
-question, since it decides whether the wallet frames are buildable at all. Then C0.
+Resolve D2's home frame, then build P9 (account hub, wallet, orders) against the Customer Account
+API, since the wallet and the stepper are now confirmed buildable. Cancellation and returns stay
+gated until an Admin-side write path is agreed.
 
 ## Credentials
 

@@ -21,9 +21,9 @@ The execution order these verdicts feed is `docs/WIREFRAME-EXECUTION-PLAN.md`.
 
 | Verdict        | Frames |
 | -------------- | ------ |
-| Build          | 93     |
+| Build          | 105    |
 | Shopify-hosted | 60     |
-| Gated          | 37     |
+| Gated          | 25     |
 | Skip           | 31     |
 
 | Surface                                         | Frames | Desktop | Mobile |
@@ -209,26 +209,26 @@ Frames exist, but identity is Shopify Customer Account OAuth. Only entry, failur
 
 The hub, sub-pages and the states inside each one. Route target: `/account`.
 
-| Frame      | State                                    | Viewport | Size      | Verdict | Note                                          |
-| ---------- | ---------------------------------------- | -------- | --------- | ------- | --------------------------------------------- |
-| `3:296`    | Wallet Balance Active State              | desktop  | 1440×5011 | Skip    | legacy, superseded by 14.                     |
-| `108:717`  | Wallet Balance Active State              | desktop  | 1440×5011 | Skip    | legacy, superseded by 14.                     |
-| `67:16095` | 11. Overview Hub                         | desktop  | 1440×949  | Build   |                                               |
-| `67:16144` | 11. Mobile — Overview Hub                | mobile   | 390×1435  | Build   |                                               |
-| `67:16186` | 12. Populated Orders List                | desktop  | 1440×1207 | Build   |                                               |
-| `67:16241` | 12. Mobile — Populated Orders List       | mobile   | 390×1398  | Build   |                                               |
-| `67:16289` | 13. Empty Orders State                   | desktop  | 1440×854  | Build   |                                               |
-| `67:16318` | 13. Mobile — Empty Orders State          | mobile   | 390×844   | Build   |                                               |
-| `67:16340` | 14. Active Balance Display               | desktop  | 1440×929  | Gated   | needs a balance or document source.           |
-| `67:16382` | 14. Mobile — Active Balance Display      | mobile   | 390×1108  | Gated   | needs a balance or document source.           |
-| `67:16417` | 15. Zero Balance State                   | desktop  | 1440×854  | Gated   | needs a balance or document source.           |
-| `67:16449` | 15. Mobile — Zero Balance State          | mobile   | 390×844   | Gated   | needs a balance or document source.           |
-| `67:16474` | 16. Tax Invoices & Credit Notes          | desktop  | 1440×1050 | Gated   | needs a document source, not storefront data. |
-| `67:16524` | 16. Mobile — Tax Invoices & Credit Notes | mobile   | 390×1258  | Gated   | needs a document source, not storefront data. |
-| `67:16567` | 17. Saved Addresses Grid                 | desktop  | 1440×854  | Build   |                                               |
-| `67:16604` | 17. Mobile — Saved Addresses Grid        | mobile   | 390×1016  | Build   |                                               |
-| `67:16634` | 18. Profile Details Form                 | desktop  | 1440×1157 | Build   |                                               |
-| `67:16687` | 18. Mobile — Profile Details Form        | mobile   | 390×1278  | Build   |                                               |
+| Frame      | State                                    | Viewport | Size      | Verdict | Note                                             |
+| ---------- | ---------------------------------------- | -------- | --------- | ------- | ------------------------------------------------ |
+| `3:296`    | Wallet Balance Active State              | desktop  | 1440×5011 | Skip    | legacy, superseded by 14.                        |
+| `108:717`  | Wallet Balance Active State              | desktop  | 1440×5011 | Skip    | legacy, superseded by 14.                        |
+| `67:16095` | 11. Overview Hub                         | desktop  | 1440×949  | Build   |                                                  |
+| `67:16144` | 11. Mobile — Overview Hub                | mobile   | 390×1435  | Build   |                                                  |
+| `67:16186` | 12. Populated Orders List                | desktop  | 1440×1207 | Build   |                                                  |
+| `67:16241` | 12. Mobile — Populated Orders List       | mobile   | 390×1398  | Build   |                                                  |
+| `67:16289` | 13. Empty Orders State                   | desktop  | 1440×854  | Build   |                                                  |
+| `67:16318` | 13. Mobile — Empty Orders State          | mobile   | 390×844   | Build   |                                                  |
+| `67:16340` | 14. Active Balance Display               | desktop  | 1440×929  | Build   | Customer Account API storeCreditAccounts.balance |
+| `67:16382` | 14. Mobile — Active Balance Display      | mobile   | 390×1108  | Build   | Customer Account API storeCreditAccounts.balance |
+| `67:16417` | 15. Zero Balance State                   | desktop  | 1440×854  | Build   | Customer Account API storeCreditAccounts.balance |
+| `67:16449` | 15. Mobile — Zero Balance State          | mobile   | 390×844   | Build   | Customer Account API storeCreditAccounts.balance |
+| `67:16474` | 16. Tax Invoices & Credit Notes          | desktop  | 1440×1050 | Gated   | needs a document source, not storefront data.    |
+| `67:16524` | 16. Mobile — Tax Invoices & Credit Notes | mobile   | 390×1258  | Gated   | needs a document source, not storefront data.    |
+| `67:16567` | 17. Saved Addresses Grid                 | desktop  | 1440×854  | Build   |                                                  |
+| `67:16604` | 17. Mobile — Saved Addresses Grid        | mobile   | 390×1016  | Build   |                                                  |
+| `67:16634` | 18. Profile Details Form                 | desktop  | 1440×1157 | Build   |                                                  |
+| `67:16687` | 18. Mobile — Profile Details Form        | mobile   | 390×1278  | Build   |                                                  |
 
 ### Private wishlist
 
@@ -268,14 +268,14 @@ Each frame needs a data source Shopify does not expose to a storefront by defaul
 | `55:239`   | Mobile Public Track Order — Initial Form (No Login)           | mobile   | 390×844   | Gated          | Admin API or Shiprocket.                               |
 | `55:312`   | Public Track Order — Invalid Order Match Alert                | desktop  | 1440×854  | Gated          | Admin API or Shiprocket.                               |
 | `55:390`   | Mobile Public Track Order — Invalid Order Match Alert         | mobile   | 390×844   | Gated          | Admin API or Shiprocket.                               |
-| `55:463`   | Order Tracking — Pre-Delivery 4-Step Stepper                  | desktop  | 1440×1044 | Gated          | Admin API or Shiprocket.                               |
-| `55:579`   | Mobile Order Tracking — Pre-Delivery 4-Step Stepper           | mobile   | 390×1617  | Gated          | Admin API or Shiprocket.                               |
-| `55:686`   | Order Tracking — Order Locked for Dispatch                    | desktop  | 1440×910  | Gated          | Admin API or Shiprocket.                               |
-| `55:802`   | Mobile Order Tracking — Order Locked for Dispatch             | mobile   | 390×1449  | Gated          | Admin API or Shiprocket.                               |
-| `55:909`   | Order Tracking — Delivered (In Return Window)                 | desktop  | 1440×880  | Gated          | Admin API or Shiprocket.                               |
-| `55:1025`  | Mobile Order Tracking — Delivered (In Return Window)          | mobile   | 390×1419  | Gated          | Admin API or Shiprocket.                               |
-| `55:1132`  | Order Tracking — Delivered (Window Closed)                    | desktop  | 1440×939  | Gated          | Admin API or Shiprocket.                               |
-| `55:1248`  | Mobile Order Tracking — Delivered (Window Closed)             | mobile   | 390×1478  | Gated          | Admin API or Shiprocket.                               |
+| `55:463`   | Order Tracking — Pre-Delivery 4-Step Stepper                  | desktop  | 1440×1044 | Build          | Customer Account API Fulfillment.status and events     |
+| `55:579`   | Mobile Order Tracking — Pre-Delivery 4-Step Stepper           | mobile   | 390×1617  | Build          | Customer Account API Fulfillment.status and events     |
+| `55:686`   | Order Tracking — Order Locked for Dispatch                    | desktop  | 1440×910  | Build          | Customer Account API Fulfillment.status and events     |
+| `55:802`   | Mobile Order Tracking — Order Locked for Dispatch             | mobile   | 390×1449  | Build          | Customer Account API Fulfillment.status and events     |
+| `55:909`   | Order Tracking — Delivered (In Return Window)                 | desktop  | 1440×880  | Build          | Customer Account API Fulfillment.status and events     |
+| `55:1025`  | Mobile Order Tracking — Delivered (In Return Window)          | mobile   | 390×1419  | Build          | Customer Account API Fulfillment.status and events     |
+| `55:1132`  | Order Tracking — Delivered (Window Closed)                    | desktop  | 1440×939  | Build          | Customer Account API Fulfillment.status and events     |
+| `55:1248`  | Mobile Order Tracking — Delivered (Window Closed)             | mobile   | 390×1478  | Build          | Customer Account API Fulfillment.status and events     |
 | `55:1355`  | Cancellation Flow — Cancellation ≤ 24h Modal                  | desktop  | 1440×1044 | Gated          | Admin API or Shiprocket.                               |
 | `55:1471`  | Mobile Cancellation Flow — Cancellation ≤ 24h Modal           | mobile   | 390×844   | Gated          | Admin API or Shiprocket.                               |
 | `55:1578`  | Cancellation Flow — Cancellation > 24h (Member)               | desktop  | 1440×985  | Gated          | Admin API or Shiprocket.                               |

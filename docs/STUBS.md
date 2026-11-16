@@ -22,14 +22,20 @@ reads an unverified source ships with a stub and a row here, or does not ship.
 | Surface                | Needed                                       | Status      | Stub                                                      | Unblocked by                               |
 | ---------------------- | -------------------------------------------- | ----------- | --------------------------------------------------------- | ------------------------------------------ |
 | Pincode serviceability | Shiprocket serviceability API                | Unverified  | `lib/serviceability/index.ts`, created and not yet called | D5 decision plus API credentials           |
-| Waitlist / notify me   | No source chosen                             | Not started | —                                                         | D3 decision                                |
+| Waitlist / notify me   | No source chosen                             | Not started | —                                                         | No storage decision for a waitlist yet     |
 | Size recommendation    | Fit data on the product                      | Not started | —                                                         | Metafield schema or a fit app              |
-| Order tracking events  | Shiprocket API or Admin API                  | Not started | —                                                         | P11 scope, Shiprocket credentials          |
 | Public order lookup    | Order lookup by number plus email            | Not started | —                                                         | Security decision on enumeration           |
 | Cancellation write     | Admin API `orderCancel`                      | Not started | —                                                         | Decision on a server-side admin credential |
 | Returns write          | Shopify Returns or Shiprocket reverse pickup | Not started | —                                                         | P11 scope                                  |
-| Store credit balance   | Customer Account API, unconfirmed            | Unverified  | —                                                         | One API check before any wallet UI         |
 | Tax invoices           | GST invoice app or Admin API plus generation | Not started | —                                                         | App procurement decision                   |
+
+## Verified during P0
+
+These were checked against the installed Customer Account API schema and are not stubs.
+
+| Surface                         | Evidence                                                                                                                                              |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cancellation and returns writes | Absent from the Customer Account and Storefront schemas. `orderCancel` and return creation are Admin API or app concerns, so those frames stay gated. |
 
 ## Writing a stub
 
