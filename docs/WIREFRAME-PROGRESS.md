@@ -6,8 +6,9 @@ next action only.
 
 ## Current phase
 
-**P6 remainder.** Browse is complete: the active-filtered, zero-results and load-more boundary states
-are built. Product detail owes the stock states — low-stock alert, out-of-stock, notify-me.
+**P6 remainder.** Browse is complete and product detail matches the default frame: 800/592 split,
+20:27 gallery, 432 px buy column, full-bleed recommendation row. Three decisions are open on the page
+itself, and the stock states are blocked on frames the API would not serve.
 
 ## Phase status
 
@@ -48,6 +49,26 @@ Deviations, each a decision rather than an oversight:
   `streetwear` are placeholders, not destinations.
 - **Header and footer are untouched.** The frame's 76 px bar without the masthead, and its 361 px
   footer, are separate surfaces. Both remain as shipped.
+
+## Product page
+
+Built from `product-desktop-frame-16-7053.md`: the column split, the 20:27 gallery with 10 px gaps,
+the 432 px buy column and the full-bleed recommendation row with 48 px captions.
+
+Not changed, because the frame's value is a decision rather than a detail:
+
+- **Name and price** stay `type-display` 22/29 against the frame's 12/600 and 10/600.
+- **Add to bag** stays a 36 px ink control beside the quantity picker; the frame draws 432 × 40 in
+  `#666666` with a 4 px radius, which the zero-radius rule rejects.
+- **Page padding** stays `--gutter` 30 against the frame's 24.
+
+The frame draws four images; catalogue products carry up to fifteen, so the stacked gallery runs to
+about 16,000 px and the recommendation row sits far below the fold. A gallery pattern for long
+galleries is an open decision, not a styling fix.
+
+The stock states — low-stock alert `1:1090`, out-of-stock `1:1910`, notify-me `16:7696`, mobile
+`16:6714` and `16:8009` — stay unbuilt: the nodes endpoint answers HTTP 429 for the file, and no
+Shopify surface here provides a waitlist to submit to.
 
 ## Browse states
 
@@ -186,9 +207,9 @@ A vector master is still needed — at the 1016px masthead the 950px raster is u
 
 ## Next action
 
-P6's stock states: low-stock alert, out-of-stock and notify-me on the product page. After that, P9
-(account hub, wallet, orders) against the Customer Account API. Cancellation and returns stay gated
-until an Admin-side write path is agreed.
+Decide the product page's title scale and its gallery pattern for long media sets, then P6's stock
+states once the frames can be read. After that, P9 (account hub, wallet, orders) against the Customer
+Account API. Cancellation and returns stay gated until an Admin-side write path is agreed.
 
 Two formatting questions are open for the owner: cards render `₹50,000.00` because Hydrogen formats
 INR at its ISO exponent, while the frame writes `9,000`, and the footer's price line has the same

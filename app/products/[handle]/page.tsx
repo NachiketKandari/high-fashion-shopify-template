@@ -10,7 +10,6 @@ import {
 import { RecentlyViewedRecorder } from "@/components/product-detail/recently-viewed";
 import { DeferredRelatedProducts } from "@/components/product/deferred-related-products";
 import { RelatedProductsSection } from "@/components/product/related-products-section";
-import { Container } from "@/components/ui/container";
 import { Page } from "@/components/ui/page";
 import { shopConfig } from "@/lib/config";
 import { defaultSelectedOptions, parseSelectedOptions, toSelectedOptionList } from "@/lib/product";
@@ -149,13 +148,9 @@ async function ProductPageContent({
         variantPromise={variantPromise}
       />
       {relatedProductsPromise ? (
-        <Container>
-          <div className="py-16 desktop:py-20">
-            <DeferredRelatedProducts>
-              <RelatedProductsSection limit={4} productsPromise={relatedProductsPromise} />
-            </DeferredRelatedProducts>
-          </div>
-        </Container>
+        <DeferredRelatedProducts>
+          <RelatedProductsSection limit={4} productsPromise={relatedProductsPromise} />
+        </DeferredRelatedProducts>
       ) : null}
     </>
   );

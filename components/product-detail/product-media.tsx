@@ -255,7 +255,7 @@ function GridItem({
 }) {
   const [ref, near] = useNearViewport(priority);
   return (
-    <div ref={ref} className="relative w-full overflow-hidden aspect-[2/3]">
+    <div ref={ref} className="relative w-full overflow-hidden aspect-[20/27]">
       {!near ? (
         <div className="size-full bg-surface" />
       ) : item.type === "video" ? (
@@ -324,7 +324,7 @@ function Grid({
   }
 
   const grid = (
-    <div className="grid grid-cols-1">
+    <div className="grid grid-cols-1 gap-2.5">
       {children}
       {mediaItems.map((item, idx) => (
         <GridItem
