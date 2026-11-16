@@ -8,20 +8,10 @@ interface MediaTileProps {
   href: string;
   image: string;
   label?: string;
-  labelTone?: "ink" | "inverse";
   priority?: boolean;
-  watermark?: string;
 }
 
-export function MediaTile({
-  className,
-  href,
-  image,
-  label,
-  labelTone = "ink",
-  priority = false,
-  watermark,
-}: MediaTileProps) {
+export function MediaTile({ className, href, image, label, priority = false }: MediaTileProps) {
   return (
     <Link className={cn("group relative block overflow-hidden bg-surface", className)} href={href}>
       <Image
@@ -33,23 +23,8 @@ export function MediaTile({
         sizes="100vw"
         src={image}
       />
-      {watermark ? (
-        <span
-          aria-hidden="true"
-          className="type-display desktop:type-watermark pointer-events-none absolute bottom-4 left-(--gutter) text-inverse/50"
-        >
-          {watermark}
-        </span>
-      ) : null}
       {label ? (
-        <span
-          className={cn(
-            "type-h3 absolute inset-x-0 bottom-0 px-(--gutter) pt-12 pb-5",
-            labelTone === "inverse"
-              ? "bg-gradient-to-t from-black/45 to-transparent text-inverse"
-              : "text-ink",
-          )}
-        >
+        <span className="type-body-sm absolute inset-x-0 bottom-0 bg-gradient-to-t from-paper/85 via-paper/50 to-transparent px-9 pt-16 pb-6.5 text-ink">
           {label}
         </span>
       ) : null}

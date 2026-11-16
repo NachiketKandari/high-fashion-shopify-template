@@ -90,6 +90,7 @@ There is no monospace role on storefront surfaces; the wordmark is an SVG, not t
 
 | Token               | Role utility        | Size / line | Weight | Case      | Use                                        |
 | ------------------- | ------------------- | ----------- | ------ | --------- | ------------------------------------------ |
+| `text-display-lg`   | `type-display-lg`   | 36 / 54     | 400    | uppercase | Home hero title, banner word               |
 | `text-display`      | `type-display`      | 22 / 29     | 400    | uppercase | PDP title, price, large editorial heading  |
 | `text-h2`           | `type-h2`           | 18 / 23     | 400    | uppercase | Collection title, rail title, modal title  |
 | `text-h3`           | `type-h3`           | 14 / 18     | 400    | uppercase | Section labels, cart drawer title          |

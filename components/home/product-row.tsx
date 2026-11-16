@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { ProductCard, ProductCardSkeleton } from "@/components/product-card/product-card";
 import { getCollectionResults } from "@/lib/collections/server";
 
-const GRID_CLASS = "grid grid-cols-2 gap-x-(--grid-gap) gap-y-(--grid-row-gap) desktop:grid-cols-4";
+const GRID_CLASS = "grid grid-cols-2 gap-y-(--grid-row-gap) desktop:grid-cols-4 desktop:gap-y-0";
 
 interface ProductRowProps {
   handle: string;
@@ -24,7 +24,12 @@ async function ProductRowContent({ handle, limit }: { handle: string; limit: num
   return (
     <div className={GRID_CLASS}>
       {products.slice(0, limit).map((product, index) => (
-        <ProductCard key={product.id} loading={index === 0 ? "eager" : "lazy"} product={product} />
+        <ProductCard
+          captionLayout="row"
+          key={product.id}
+          loading={index === 0 ? "eager" : "lazy"}
+          product={product}
+        />
       ))}
     </div>
   );

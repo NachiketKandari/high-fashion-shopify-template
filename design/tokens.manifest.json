@@ -18,6 +18,11 @@
       "size": "1.375rem",
       "weight": 400
     },
+    "display-lg": {
+      "lineHeight": "3.375rem",
+      "size": "2.25rem",
+      "weight": 400
+    },
     "h2": {
       "lineHeight": "1.4375rem",
       "size": "1.125rem",

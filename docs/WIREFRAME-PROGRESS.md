@@ -6,10 +6,8 @@ next action only.
 
 ## Current phase
 
-**P0 — Decisions and capability gates.** Status: in progress. D1, D2 and D3 answered 2026-11-16 and
-the post-purchase capability table is done. The home frame is specified at
-`docs/reference/figma/home-desktop-frame-40-313.md`; building it is blocked on four presentation
-decisions listed under Open questions.
+**P5/P6 follow-ups.** The home page is built to `Homepage - default` (40:313). Browse still owes the
+zero-results, active-filtered and load-more boundary states; product detail owes the stock states.
 
 ## Phase status
 
@@ -29,6 +27,27 @@ decisions listed under Open questions.
 | P11 Post-purchase                    | Not started                                       |
 | P12 Content and agent surface        | Not started                                       |
 | P13 Hardening and launch             | Not started                                       |
+
+## Home build
+
+Built from `home-desktop-frame-40-313.md`. Section order, full-bleed 1440 rows, 10 px rhythm, the
+4-up 330 × 400 Get the Look band and the centred Exclusives group all follow the frame.
+
+Deviations, each a decision rather than an oversight:
+
+- **Hero and Exclusives keep their photography.** The frame draws flat grounds; the owner chose an
+  image behind the type, so both carry a 30 % paper scrim and the frame's title and button on top.
+- **Type.** Hero title is `type-display-lg` 36/54 at desktop and `type-display` 22/29 below it; the
+  Get the Look heading is `type-h2` 18/23 against the frame's 16/24. Product captions stay
+  `type-h4` 12/16 uppercase rather than the frame's 12/600 lowercase, and the price stays 12/16
+  rather than 10/13, because the card is shared with browse and DM Sans ships 300/400/500.
+- **Get the Look ground** is `--surface` `#f2f2f2`, not the frame's `#BEBEBE`; the palette has one
+  grey. The fourth tile is Corsets, since the frame repeats one placeholder four times.
+- **Copy.** `NURRATIVE` is corrected to `NARRATIVE` and `Shop for Man` becomes `Shop for Men`. The
+  second editorial pair keeps `Flagship Store` and `Journal`; the frame's `Outdoor Bodysuit` and
+  `streetwear` are placeholders, not destinations.
+- **Header and footer are untouched.** The frame's 76 px bar without the masthead, and its 361 px
+  footer, are separate surfaces. Both remain as shipped.
 
 ## Notes on closed phases
 
@@ -57,30 +76,25 @@ tagging that the catalogue does not carry. Until it does, both modes feature the
 
 ## Decisions
 
-| ID  | Question                                                                  | Answer                                                                                 | Date       |
-| --- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------- |
-| D1  | Identity gate before checkout, or guest checkout with phone verification? | Guest checkout; accounts required only for wallet, invoices, wishlist and cancellation | 2026-11-16 |
-| D2  | Is the shipped home page (`home-desktop-frame-64.md`) still the target?   | Rebuild to `Homepage - default` (40:313); specified in `home-desktop-frame-40-313.md`  | 2026-11-16 |
-| D3  | Which post-purchase features ship at launch?                              | Full suite: tracking, pincode, cancellation, wallet, invoices, returns 05-10           | 2026-11-16 |
-| D4  | Keep the 2/4-column and model/image/item selectors, or fix one layout?    | Open; default is keep content mode, fix density                                        | —          |
-| D5  | Where does pincode serviceability data come from?                         | Open; default is Shiprocket                                                            | —          |
-| D6  | Does the wireframe's negative tracking replace the template's roles?      | Open; default is display and headings only                                             | —          |
+| ID  | Question                                                                  | Answer                                                                                  | Date       |
+| --- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------- |
+| D1  | Identity gate before checkout, or guest checkout with phone verification? | Guest checkout; accounts required only for wallet, invoices, wishlist and cancellation  | 2026-11-16 |
+| D2  | Is the shipped home page (`home-desktop-frame-64.md`) still the target?   | Rebuild to `Homepage - default` (40:313); specified in `home-desktop-frame-40-313.md`   | 2026-11-16 |
+| D3  | Which post-purchase features ship at launch?                              | Full suite: tracking, pincode, cancellation, wallet, invoices, returns 05-10            | 2026-11-16 |
+| D4  | Keep the 2/4-column and model/image/item selectors, or fix one layout?    | Open; default is keep content mode, fix density                                         | —          |
+| D5  | Where does pincode serviceability data come from?                         | Open; default is Shiprocket                                                             | —          |
+| D6  | Does the wireframe's negative tracking replace the template's roles?      | Display only: `type-display-lg` carries −0.011em, every other role stays 0.05em         | 2026-11-16 |
+| D7  | What sits behind the home hero's title and button?                        | Photography with a 30 % paper scrim; the frame's flat ground is a wireframe placeholder | 2026-11-16 |
+| D8  | Full-bleed rows, or keep the `--gutter` inset?                            | Full-bleed: 4 × 360 columns edge to edge, no column gap                                 | 2026-11-16 |
+| D9  | Rebuild the global footer to the home frame's 361 px version?             | Not yet; the footer is every route's surface and keeps its shipped composition          | 2026-11-16 |
+| D10 | Bare numerals on cards and `INR` in the cart, or `₹` everywhere?          | `₹` from Shopify's formatted amount everywhere                                          | 2026-11-16 |
 
 ## Open questions blocking the next phase
 
-1. **Home type scale.** The frame sets every non-product string in Helvetica at 36, 16, 14 and 12.
-   The storefront ships DM Sans as `--font-sans` and its largest role is `--text-display` at 22.
-   Default: add `type-display-lg` 36/54 and `type-h2` stays for 16, keep DM Sans.
-2. **Home grid.** The frame is full-bleed: 4 × 360.8 columns and 4 × 330 tiles edge to edge, with
-   −1 px gaps. `Container`/`--gutter` inset by 30 px at 1440. Default: full-bleed rows, no column
-   gap, keep `--grid-row-gap` when columns stack.
-3. **Footer scope.** The frame's 361 px footer drops the flagship address, payment marks and currency
-   selector from every route. Default: keep the shipped footer until the footer frame itself is
-   specified, and treat footer parity as its own phase.
-4. **Price format.** The frame writes `9,000` bare and the cart copy writes `INR`; the storefront
-   renders `₹9,000` from Shopify's INR amount. Default: keep shopify-formatted ₹ on cards and `INR`
-   in the cart summary's total line.
-5. Store password (`GAP-CLOSURE-PLAN.md` G5) — blocks P7 verification, and therefore P0's checkout row.
+1. Store password (`GAP-CLOSURE-PLAN.md` G5) — blocks P7 verification, and therefore P0's checkout row.
+2. INR price formatting: prices render `₹50,000.00` because Hydrogen formats at the currency's ISO
+   exponent, while the frame writes `9,000`. Dropping the zeros for whole-rupee amounts is a
+   formatting change to `lib/money` and touches every surface.
 
 ## Capability results
 
@@ -143,24 +157,30 @@ A vector master is still needed — at the 1016px masthead the 950px raster is u
 
 ## Verification evidence
 
-| Check                                             | Result                                                                              |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Figma REST `?depth=2` on `TzeMmJHUVWuiuknAcm1hq4` | 200; 221 top-level frames on one page (`Wireframe`)                                 |
-| File metadata                                     | Version `2421747092237574279`, last modified `2026-11-14T17:37:18Z`, `role: viewer` |
-| Components, component sets, published styles      | 0, 0, 0                                                                             |
-| Frame classification                              | 93 Build, 60 Shopify-hosted, 37 Gated, 31 Skip                                      |
-| Payment frames text nodes                         | 0 across all five `Payment Screen` frames                                           |
-| `pnpm lint`, `pnpm typecheck`                     | Pass; design gate 167 files                                                         |
-| Design suite (`tests/design`)                     | 16/16 headless after the wordmark contract change                                   |
-| INR across home, collection, PDP                  | 6/6 headless: rupee prices on all three, no dollar amounts                          |
-| New wordmark in the shell                         | 5/5 headless: loads at 342x30, 950/82 aspect, masthead renders                      |
+| Check                                             | Result                                                                                                                                        |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Figma REST `?depth=2` on `TzeMmJHUVWuiuknAcm1hq4` | 200; 221 top-level frames on one page (`Wireframe`)                                                                                           |
+| File metadata                                     | Version `2421747092237574279`, last modified `2026-11-14T17:37:18Z`, `role: viewer`                                                           |
+| Components, component sets, published styles      | 0, 0, 0                                                                                                                                       |
+| Frame classification                              | 93 Build, 60 Shopify-hosted, 37 Gated, 31 Skip                                                                                                |
+| Payment frames text nodes                         | 0 across all five `Payment Screen` frames                                                                                                     |
+| `pnpm lint`, `pnpm typecheck`                     | Pass; design gate 167 files                                                                                                                   |
+| Design suite (`tests/design`)                     | 16/16 headless after the wordmark contract change                                                                                             |
+| INR across home, collection, PDP                  | 6/6 headless: rupee prices on all three, no dollar amounts                                                                                    |
+| New wordmark in the shell                         | 5/5 headless: loads at 342x30, 950/82 aspect, masthead renders                                                                                |
+| Home against frame 40:313                         | 15/16 headless: section heights 700/588/700/527/700/588/700, 4 x 360 columns, 48 px captions, 36/54 hero title, no horizontal overflow at 390 |
+| Design suite after the home rebuild               | 16/16 headless                                                                                                                                |
 
 ## Next action
 
-Build the home from `home-desktop-frame-40-313.md` once the four presentation defaults above are
-confirmed, starting with the two product rows and the two editorial pairs, which need no new tokens.
-Then P9 (account hub, wallet, orders) against the Customer Account API. Cancellation and returns stay
-gated until an Admin-side write path is agreed.
+P5's remaining browse states — zero results, active-filtered, load-more boundary — then P6's stock
+states: low-stock alert, out-of-stock, notify-me. After that, P9 (account hub, wallet, orders)
+against the Customer Account API. Cancellation and returns stay gated until an Admin-side write path
+is agreed.
+
+Two formatting questions are open for the owner: cards render `₹50,000.00` because Hydrogen formats
+INR at its ISO exponent, while the frame writes `9,000`, and the footer's price line has the same
+shape.
 
 ## Credentials
 

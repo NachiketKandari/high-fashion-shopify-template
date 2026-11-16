@@ -3,21 +3,22 @@ import Image, { getImageProps } from "next/image";
 
 import { MediaTile } from "@/components/home/media-tile";
 import { ProductRow } from "@/components/home/product-row";
+import { Button } from "@/components/ui/button";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
 import { shopConfig } from "@/lib/config";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 
-const EDITORIAL_TILES = [
+const CATEGORY_TILES = [
   {
     href: "/collections/women",
     image: "/reference/clone/lookbook-01.jpg",
-    watermark: "Women",
+    label: "Shop for Women",
   },
   {
     href: "/collections/unisex-1",
     image: "/reference/clone/lookbook-02.jpg",
-    watermark: "Men",
+    label: "Shop for Men",
   },
 ];
 
@@ -29,6 +30,7 @@ const LOOK_TILES = [
     label: "Essentials",
   },
   { href: "/collections/signature", image: "/reference/editorial-elevated.jpg", label: "Elevated" },
+  { href: "/collections/corsets", image: "/reference/editorial-corsets.jpg", label: "Corsets" },
 ];
 
 const STORY_TILES = [
@@ -45,7 +47,7 @@ function CampaignImage() {
   const {
     props: { srcSet: desktopSrcSet },
   } = getImageProps({
-    alt: `${shopConfig.site.name} campaign`,
+    alt: "",
     fill: true,
     sizes: "100vw",
     src: "/reference/hero-desktop.jpg",
@@ -53,7 +55,7 @@ function CampaignImage() {
   const {
     props: { srcSet: mobileSrcSet, ...mobileProps },
   } = getImageProps({
-    alt: `${shopConfig.site.name} campaign`,
+    alt: "",
     fill: true,
     loading: "eager",
     sizes: "100vw",
@@ -92,77 +94,77 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function HomePage() {
   return (
-    <Page className="pt-0">
-      <h1 className="sr-only">{shopConfig.site.name} | High Fashion Clothing</h1>
-
+    <Page className="flex flex-col gap-2.5 pt-0">
       <section aria-label="Campaign">
-        <Link className="block" href="/collections/new-in">
-          <div className="relative h-[calc(100svh-var(--header-total-h))] overflow-hidden desktop:aspect-[1440/784] desktop:h-auto">
-            <CampaignImage />
-          </div>
-        </Link>
+        <div className="relative h-[calc(100svh-var(--header-total-h))] overflow-hidden bg-surface desktop:aspect-[1440/700] desktop:h-auto">
+          <CampaignImage />
+          <div aria-hidden="true" className="absolute inset-0 bg-paper/30" />
+          <h1 className="type-display desktop:type-display-lg absolute inset-x-0 top-[41%] px-(--gutter) text-center text-ink">
+            Control Your Narrative
+          </h1>
+          <Button
+            className="absolute inset-x-0 bottom-11 mx-auto w-fit"
+            render={<Link href="/collections/all" />}
+            size="lg"
+            variant="outline"
+          >
+            Explore Collections
+          </Button>
+        </div>
       </section>
 
-      <section aria-label="New arrivals" className="px-(--gutter) py-10">
+      <section aria-label="New arrivals">
         <ProductRow handle="new-in" />
       </section>
 
       <section aria-label="Shop by category" className="grid grid-cols-1 desktop:grid-cols-2">
-        {EDITORIAL_TILES.map((tile) => (
+        {CATEGORY_TILES.map((tile) => (
           <MediaTile
-            className="aspect-[3/5] desktop:aspect-[720/893]"
+            className="aspect-[3/5] desktop:aspect-[720/700]"
             href={tile.href}
             image={tile.image}
-            key={tile.watermark}
-            watermark={tile.watermark}
+            key={tile.href}
+            label={tile.label}
           />
         ))}
       </section>
 
-      <section aria-label="Get the look" className="grid gap-10 px-(--gutter) py-20">
-        <h2 className="type-h2 text-center">Get the Look</h2>
-        <div className="grid grid-cols-1 gap-(--grid-gap) desktop:grid-cols-3">
+      <section aria-label="Get the look" className="grid gap-6 bg-surface px-6 py-10">
+        <h2 className="type-h2">Get the Look</h2>
+        <div className="grid grid-cols-2 gap-6 desktop:grid-cols-4">
           {LOOK_TILES.map((tile) => (
             <MediaTile
-              className="aspect-[480/557]"
+              className="aspect-[33/40]"
               href={tile.href}
               image={tile.image}
-              key={tile.label}
+              key={tile.href}
               label={tile.label}
-              labelTone="inverse"
             />
           ))}
         </div>
       </section>
 
-      <section aria-label="Exclusives">
-        <Link
-          className="group relative block aspect-[4/5] overflow-hidden bg-surface desktop:aspect-[1440/700]"
-          href="/collections/new-in"
-        >
-          <Image
-            alt=""
-            className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within:scale-[1.03] group-hover:scale-[1.03] motion-reduce:transform-none"
-            fill
-            sizes="100vw"
-            src="/reference/hero-desktop.jpg"
-          />
-          <span className="absolute inset-0 flex items-center justify-center gap-10">
-            <span
-              aria-hidden="true"
-              className="type-display desktop:type-watermark-lg text-inverse/50"
-            >
-              Exclusives
-            </span>
-            <span
-              aria-hidden="true"
-              className="size-17 rounded-full border-[19.5px] border-inverse/50"
-            />
-          </span>
-        </Link>
+      <section
+        aria-label="Exclusives"
+        className="relative aspect-[4/5] overflow-hidden bg-surface desktop:aspect-[1440/700]"
+      >
+        <Image
+          alt=""
+          className="object-cover"
+          fill
+          sizes="100vw"
+          src="/reference/hero-desktop.jpg"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-paper/30" />
+        <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-6 px-(--gutter) pb-20.5">
+          <h2 className="type-display desktop:type-display-lg text-center text-ink">Exclusives</h2>
+          <Button render={<Link href="/collections/new-in" />} size="lg" variant="outline">
+            Explore Collection
+          </Button>
+        </div>
       </section>
 
-      <section aria-label="Bestsellers" className="px-(--gutter) py-10">
+      <section aria-label="Bestsellers">
         <ProductRow handle="bestsellers" />
       </section>
 
@@ -172,9 +174,8 @@ export default function HomePage() {
             className="aspect-[4/5] desktop:aspect-[720/700]"
             href={tile.href}
             image={tile.image}
-            key={tile.label}
+            key={tile.href}
             label={tile.label}
-            labelTone="inverse"
           />
         ))}
       </section>
