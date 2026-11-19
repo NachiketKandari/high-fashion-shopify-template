@@ -12,15 +12,15 @@ Source of truth for the visuals: [`DESIGN-I-CHECKOUT-JOURNEY.md`](./DESIGN-I-CHE
 
 ## 1. Workstreams
 
-| #   | Worktree                          | Branch                    | Scope                                                                                 | Depends on                 | Est.  |
-| --- | --------------------------------- | ------------------------- | ------------------------------------------------------------------------------------- | -------------------------- | ----- |
-| 0   | `hf-worktrees/design-foundation`  | `work/design-foundation`  | Tokens, route groups, header/footer, product card/row, shared primitives, design gate | —                          | 2–3 d |
-| 1   | `hf-worktrees/design-home`        | `work/design-home`        | Home desktop + mobile composition                                                     | 0                          | 1–2 d |
-| 2   | `hf-worktrees/design-menu-search` | `work/design-menu-search` | Desktop/mobile menu, full-page search, five search states                             | 0                          | 2–3 d |
-| 3   | `hf-worktrees/design-pdp`         | `work/design-pdp`         | PDP geometry, buy panel, gallery, try-on, modals, recs                                | 0                          | 3–4 d |
-| 4   | `hf-worktrees/design-cart`        | `work/design-cart`        | Cart page desktop + mobile, states, sticky bar, add confirmation                      | 0                          | 2–3 d |
-| 5   | `hf-worktrees/design-auth`        | `work/design-auth`        | Identity gate UI + Shopify handoff, validation states; OTP screens gated              | 0, D2                      | 1–2 d |
-| 6   | `hf-worktrees/design-checkout`    | `work/design-checkout`    | Address and shipping pre-checkout step, summary, serviceability, promo/gift           | 0, D3, 4 (cart components) | 3–5 d |
+| #   | Worktree                          | Branch                    | Scope                                                                                 | Depends on                 | Est.  | Status          |
+| --- | --------------------------------- | ------------------------- | ------------------------------------------------------------------------------------- | -------------------------- | ----- | --------------- |
+| 0   | `hf-worktrees/design-foundation`  | `work/design-foundation`  | Tokens, route groups, header/footer, product card/row, shared primitives, design gate | —                          | 2–3 d | Merged          |
+| 1   | `hf-worktrees/design-home`        | `work/design-home`        | Home desktop + mobile composition                                                     | 0                          | 1–2 d | Not started     |
+| 2   | `hf-worktrees/design-menu-search` | `work/design-menu-search` | Desktop/mobile menu, full-page search, five search states                             | 0                          | 2–3 d | Built, unmerged |
+| 3   | `hf-worktrees/design-pdp`         | `work/design-pdp`         | PDP geometry, buy panel, gallery, try-on, modals, recs                                | 0                          | 3–4 d | Merged          |
+| 4   | `hf-worktrees/design-cart`        | `work/design-cart`        | Cart page desktop + mobile, states, sticky bar, add confirmation                      | 0                          | 2–3 d | Merged          |
+| 5   | `hf-worktrees/design-auth`        | `work/design-auth`        | Identity gate UI + Shopify handoff, validation states; OTP screens gated              | 0, D2                      | 1–2 d | Not started     |
+| 6   | `hf-worktrees/design-checkout`    | `work/design-checkout`    | Address and shipping pre-checkout step, summary, serviceability, promo/gift           | 0, D3, 4 (cart components) | 3–5 d | Merged          |
 
 Waves:
 

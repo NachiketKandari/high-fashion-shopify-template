@@ -15,24 +15,28 @@ Mobile is now built for the three surfaces that already exist on desktop — hom
 from `mobile-frames.md`. The 24 px gutter, the 36 px hero, the 4-up overflow rows, the full-bleed
 2-up browse grid and the 24/40 product column all come from the 390 frames.
 
+**P7 handoff.** The cart and the pre-checkout Address and Shipping step are built. The next action
+is the cart Checkout handoff to `/checkout/address`; the PDP slide-over and the shared
+recommendation-card variant remain with their owners.
+
 ## Phase status
 
-| Phase                                | Status                                                          |
-| ------------------------------------ | --------------------------------------------------------------- |
-| P0 Decisions and capability gates    | In progress                                                     |
-| P1 Specification inventory           | Done — inventory written; design delta still open               |
-| P2 Shopify connectivity verification | Not started                                                     |
-| P3 Design contract in code           | Not started                                                     |
-| P4 Shell and navigation              | Done — bar, panel and mobile header match the frames            |
-| P5 Browse                            | Not started                                                     |
-| P6 Product page                      | Not started                                                     |
-| P7 Cart and checkout handoff         | In progress — pre-checkout step built; cart CTA handoff pending |
-| P8 Search                            | Not started                                                     |
-| P9 Account                           | Not started                                                     |
-| P10 Private wishlist                 | Not started                                                     |
-| P11 Post-purchase                    | Not started                                                     |
-| P12 Content and agent surface        | Not started                                                     |
-| P13 Hardening and launch             | Not started                                                     |
+| Phase                                | Status                                                                   |
+| ------------------------------------ | ------------------------------------------------------------------------ |
+| P0 Decisions and capability gates    | In progress                                                              |
+| P1 Specification inventory           | Done — inventory written; design delta still open                        |
+| P2 Shopify connectivity verification | Not started                                                              |
+| P3 Design contract in code           | Not started                                                              |
+| P4 Shell and navigation              | Done — bar, panel and mobile header match the frames                     |
+| P5 Browse                            | Not started                                                              |
+| P6 Product page                      | Not started                                                              |
+| P7 Cart and checkout handoff         | In progress — cart and pre-checkout step built; cart CTA handoff pending |
+| P8 Search                            | Not started                                                              |
+| P9 Account                           | Not started                                                              |
+| P10 Private wishlist                 | Not started                                                              |
+| P11 Post-purchase                    | Not started                                                              |
+| P12 Content and agent surface        | Not started                                                              |
+| P13 Hardening and launch             | Not started                                                              |
 
 ## Home build
 
@@ -245,14 +249,21 @@ one image.
 
 ## Cart
 
-Built from `1:1599` and `22:8538`: the page is titled `Cart`, carries the sign-in prompt above an
-order summary of `Subtotal`, `Delivery`, `TOTAL`, checkout, the promotional-code line and
-`need help? contact us`, and closes with the `May interest you` four-up row.
+Built as the full-page bag at `/cart` from `docs/DESIGN-I-CHECKOUT-JOURNEY.md` §4.5. Desktop renders
+the 800 + 592 split, 123 × 191 line art, 431 px summary and 4-up recommendations; mobile renders
+342 px lines with 123 × 191 art and 195 px details, the body summary and promo, 2-up
+recommendations, and a fixed TOTAL + 40 px Checkout bar with safe-area padding. Empty, updating
+(`Recalculating`, disabled Checkout) and inline out-of-stock states are built; the header Bag links
+to `/cart`. Cart writes stay on `/api/cart`; totals and prices come from Shopify. `Delivery` reads
+`Free` once the subtotal clears the free-shipping threshold and `Calculated at checkout` below it;
+Shopify returns no shipping cost until checkout.
 
-`Delivery` reads `Free` once the subtotal clears the free-shipping threshold and
-`Calculated at checkout` below it, rather than the frame's fixed `Free`, because Shopify does not
-return a shipping cost until checkout. The sign-in state is read inside the page's Suspense boundary
-so the route still prerenders.
+Recommendations use `new-in` because `bestsellers` is empty, and the cart rec row hides the shared
+card's swatches and actions. The shared card still renders full-column 2/3 media and a 24 px row
+caption, so the frame's 250 × 447 desktop art and 8 px mobile caption need a foundation card
+variant. The cart Checkout still opens Shopify directly; the built pre-checkout step at
+`/checkout/address` needs the cart-owned handoff. The PDP add-to-bag drawer still opens until the PDP
+workstream ships its slide-over confirmation.
 
 ## Checkout
 
