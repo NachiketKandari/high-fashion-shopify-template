@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Info, X } from "lucide-react";
 
 import { SizeGuide as SizeGuideContent } from "@/components/content/size-guide";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -11,10 +11,11 @@ export function SizeGuide({ category }: { category?: string }) {
       <SheetTrigger
         render={
           <button
-            className="type-control focus-ring -my-2.5 inline-flex min-h-9 shrink-0 cursor-pointer items-center text-ink-muted underline underline-offset-4 hover:text-ink"
+            className="type-control focus-ring -my-2.5 inline-flex min-h-9 shrink-0 cursor-pointer items-center gap-1.5 text-ink-muted hover:text-ink"
             type="button"
           >
-            Size guide
+            <Info aria-hidden="true" className="size-3.5" strokeWidth={1.25} />
+            <span className="underline underline-offset-4">Size guide</span>
           </button>
         }
       />
