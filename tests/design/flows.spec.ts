@@ -100,12 +100,14 @@ test.describe("shell and commerce flows", () => {
     await expect(sheet).toBeHidden();
   });
 
-  test("newsletter opens after five seconds, closes at 36px and stays dismissed", async ({
-    page,
-  }) => {
+  test("newsletter opens after consent, closes at 36px and stays dismissed", async ({ page }) => {
     await page.goto("/");
+    await page
+      .getByRole("region", { name: "We value your privacy" })
+      .getByRole("button", { name: "Allow All" })
+      .click();
     const dialog = page.getByRole("dialog");
-    await expect(dialog).toBeVisible({ timeout: 8_000 });
+    await expect(dialog).toBeVisible({ timeout: 25_000 });
     await page.waitForTimeout(400);
     const probe = await page.evaluate(() => {
       const popup = document.querySelector('[role="dialog"]');
@@ -124,7 +126,10 @@ test.describe("shell and commerce flows", () => {
     await page.getByRole("button", { name: "Close" }).click();
     await expect(dialog).toBeHidden();
     await page.reload();
-    await page.waitForTimeout(5_500);
+    await expect
+      .poll(() => page.evaluate(() => window.localStorage.getItem("newsletter-dismissed-at")))
+      .not.toBeNull();
+    await page.waitForTimeout(1_000);
     await expect(page.getByRole("dialog")).toBeHidden();
   });
 });

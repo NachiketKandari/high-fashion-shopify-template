@@ -60,8 +60,9 @@ fallbacks, and the `503` returned when `app/api/agent/session` cannot prepare a 
 
 ## Analytics
 
-- GA4 loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. GTM loads when `NEXT_PUBLIC_GTM_ID` is set
-  and takes precedence, because the GA4 page view is expected to come from the container.
+- GA4 loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set and the visitor chooses Allow All in the
+  cookie bar. GTM loads on the same consent and takes precedence, because the GA4 page view is
+  expected to come from the container. No tag renders while consent is absent or essential-only.
 - Vercel Analytics and Speed Insights are wired in `components/analytics/index.tsx` but default to
   `false` in `lib/config/index.ts`.
 - Shopify analytics, consent and WebMCP are opt-in through `shopConfig.analytics.shopify` and

@@ -1,10 +1,8 @@
-import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import type { ShopifyScriptsI18n, ShopifyScriptsShop } from "@shopify/hydrogen";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { isShopifyScriptsEnabled, shopConfig } from "@/lib/config";
 
+import { ConsentAwareAnalytics } from "./consent-gate";
 import { ShopifyScriptsTracker } from "./shopify-client";
 
 export function AnalyticsComponents() {
@@ -22,14 +20,7 @@ export function AnalyticsComponents() {
 
   return (
     <>
-      {shopConfig.analytics.vercel.isEnabled && <Analytics />}
-      {shopConfig.analytics.speedInsights.isEnabled && <SpeedInsights />}
-      {/* GTM owns the GA4 page view when configured; the direct tag would double-count it. */}
-      {gtmId ? (
-        <GoogleTagManager gtmId={gtmId} />
-      ) : gaMeasurementId ? (
-        <GoogleAnalytics gaId={gaMeasurementId} />
-      ) : null}
+      <ConsentAwareAnalytics gaMeasurementId={gaMeasurementId} gtmId={gtmId} />
       {isShopifyScriptsEnabled && <ShopifyScriptsTracker i18n={i18n} shop={shop} />}
     </>
   );

@@ -12,22 +12,23 @@ was verified, and what still depends on Shopify credentials or production decisi
 
 ## Implemented
 
-| Surface       | What changed                                                                                                                                                                                                                        |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Global system | DM Sans, 300/400/500; 14px/21px body; 0.05em tracking; black, white, `#4d4d4d` and `#e1e1e1`; zero radii; 20px mobile / 30px desktop gutters.                                                                                       |
-| Announcement  | Two rotating messages, pause on hover, 30px desktop / 35px mobile.                                                                                                                                                                  |
-| Header        | Large homepage masthead (`1016 × 82` at 1440), compact header elsewhere, sticky collapse on scroll, desktop nav with hover/focus mega menus, mobile menu drawer.                                                                    |
-| Utilities     | Currency selector, search drawer, help/contact drawer, cart count, mobile icon row.                                                                                                                                                 |
-| Search        | 440px right drawer with predictive products, recent products when empty, clear and view-all actions.                                                                                                                                |
-| Homepage      | Full-bleed campaign hero, two-up editorial tiles, “Our Picks” scroll rail, 3-up collection edits, 4 link tiles.                                                                                                                     |
-| Collection    | 18px uppercase title, chips row, inline desktop toolbar, 2/3/4-column responsive grid, 2:3 product images, 3px column gap, colour swatches, size list, wishlist toggle, hover image, filter drawer, sort, infinite loading.         |
-| Product       | 50/50 split, stacked 2:3 gallery, mobile snap gallery, 408px centred info column, inline colour and size selectors, size-guide drawer, quantity, outlined add-to-cart, black buy-now, four description tabs, related-products grid. |
-| Cart          | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                            |
-| Footer        | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                          |
-| Newsletter    | Modal after five seconds with 30-day local dismissal; footer form.                                                                                                                                                                  |
-| Our World     | About Us page with studio, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                            |
-| Help          | Shopify care guide, size guide with a find-my-size form and measurement tables, Shopify FAQ with native details/summary, contact channels and message form, shipping and returns pages.                                             |
-| Policies      | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                                |
+| Surface        | What changed                                                                                                                                                                                                                        |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Global system  | DM Sans, 300/400/500; 14px/21px body; 0.05em tracking; black, white, `#4d4d4d` and `#e1e1e1`; zero radii; 20px mobile / 30px desktop gutters.                                                                                       |
+| Announcement   | Two rotating messages, pause on hover, 30px desktop / 35px mobile.                                                                                                                                                                  |
+| Header         | Large homepage masthead (`1016 × 82` at 1440), compact header elsewhere, sticky collapse on scroll, desktop nav with hover/focus mega menus, mobile menu drawer.                                                                    |
+| Utilities      | Currency selector, search drawer, help/contact drawer, cart count, mobile icon row.                                                                                                                                                 |
+| Search         | 440px right drawer with predictive products, recent products when empty, clear and view-all actions.                                                                                                                                |
+| Homepage       | Full-bleed campaign hero, two-up editorial tiles, “Our Picks” scroll rail, 3-up collection edits, 4 link tiles.                                                                                                                     |
+| Collection     | 18px uppercase title, chips row, inline desktop toolbar, 2/3/4-column responsive grid, 2:3 product images, 3px column gap, colour swatches, size list, wishlist toggle, hover image, filter drawer, sort, infinite loading.         |
+| Product        | 50/50 split, stacked 2:3 gallery, mobile snap gallery, 408px centred info column, inline colour and size selectors, size-guide drawer, quantity, outlined add-to-cart, black buy-now, four description tabs, related-products grid. |
+| Cart           | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                            |
+| Footer         | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                          |
+| Newsletter     | Home-only modal after 20 seconds and full cookie consent, with 30-day local dismissal; footer form.                                                                                                                                 |
+| Cookie consent | Fixed bottom bar with essential/all choice, stored for 180 days; analytics tags mount only after Allow All.                                                                                                                         |
+| Our World      | About Us page with studio, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                            |
+| Help           | Shopify care guide, size guide with a find-my-size form and measurement tables, Shopify FAQ with native details/summary, contact channels and message form, shipping and returns pages.                                             |
+| Policies       | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                                |
 
 ## Flows and screenshots
 
@@ -45,8 +46,9 @@ The locally rebuilt flows were checked in a browser at 1440 × 1000, 768 × 1024
 
 ## GA4
 
-`@next/third-parties` renders GA4 when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. The local environment
-uses `G-SQVPB589E7`. Verified in the browser network panel: `googletagmanager.com/gtag/js` loads
+`@next/third-parties` renders GA4 when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set and the visitor chooses
+Allow All in the cookie bar. The local environment uses `G-SQVPB589E7`. Verified in the browser
+network panel: after consent, `googletagmanager.com/gtag/js` loads
 and `google-analytics.com/g/collect` receives `en=page_view` for `/`, `/pages/about-us`,
 `/collections/all`, `/collections/*`, `/products/*`, `/cart` and `/pages/wishlist`. GTM takes
 precedence when `NEXT_PUBLIC_GTM_ID` is also set, matching `components/analytics/index.tsx`.

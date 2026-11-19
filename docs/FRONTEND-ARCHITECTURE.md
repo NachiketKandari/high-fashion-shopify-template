@@ -333,7 +333,7 @@ effects, browser APIs and handlers live in leaves.
 
 | Surface        | Key files                                                                                                                                                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| App shell      | `app/layout.tsx`, `components/currency/provider.tsx`, `components/cart/context.tsx`, `components/newsletter/popup.tsx`, `components/action-bar/index.tsx`                                                                 |
+| App shell      | `app/layout.tsx`, `components/consent/banner.tsx`, `components/currency/provider.tsx`, `components/cart/context.tsx`, `components/newsletter/popup.tsx`, `components/action-bar/index.tsx`                                |
 | Home           | `app/page.tsx`, `components/product/home-product-rail.tsx`, `components/product/product-rail.tsx`, `components/product-card/product-card.tsx`                                                                             |
 | Header and nav | `components/nav/index.tsx`, `header.tsx`, `announcement.tsx`, `desktop-nav.tsx`, `mobile-menu.tsx`, `search-modal.tsx`, `contact-drawer.tsx`, `cart.tsx`, `account.tsx`, `lib/nav/index.ts`                               |
 | Search         | `components/nav/search-modal.tsx`, `app/search/page.tsx`, `components/collections/browse.tsx`                                                                                                                             |
@@ -352,6 +352,7 @@ effects, browser APIs and handlers live in leaves.
 ### Provider tree
 
 ```
+ConsentBanner
 CurrencyProvider
   └─ CartProviderWrapper            Hydrogen CartProvider + cart-drawer state
       ├─ Nav                        (PredictiveSearchProvider scoped to the search modal)
@@ -368,18 +369,19 @@ form and quick shop, and Hydrogen's `CollectionProvider` in the collection layou
 
 ### State ownership
 
-| State                                                      | Owner                                                                    |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Product options, collection filters and sort, search query | URL search params                                                        |
-| Cart lines and optimistic mutations                        | Hydrogen cart store, persisted by the cart cookie                        |
-| Cart drawer open/closed                                    | `CartDrawerProvider`                                                     |
-| Customer identity                                          | Hydrogen customer session cookie                                         |
-| Display currency                                           | INR only; `localStorage["ps_display_currency"]` is accepted only for INR |
-| Wishlist                                                   | `localStorage["wishlist"]` (product snapshots; per-browser)              |
-| Recently viewed                                            | `localStorage["template-recently-viewed-v1"]`                            |
-| Newsletter dismissal                                       | `localStorage["newsletter-dismissed-at"]`                                |
-| Eve conversation                                           | `localStorage["template-eve-chat-v1"]`                                   |
-| Header scroll, menus, filters, forms                       | Local React state                                                        |
+| State                                                      | Owner                                                                     |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Product options, collection filters and sort, search query | URL search params                                                         |
+| Cart lines and optimistic mutations                        | Hydrogen cart store, persisted by the cart cookie                         |
+| Cart drawer open/closed                                    | `CartDrawerProvider`                                                      |
+| Customer identity                                          | Hydrogen customer session cookie                                          |
+| Display currency                                           | INR only; `localStorage["ps_display_currency"]` is accepted only for INR  |
+| Wishlist                                                   | `localStorage["wishlist"]` (product snapshots; per-browser)               |
+| Recently viewed                                            | `localStorage["template-recently-viewed-v1"]`                             |
+| Newsletter dismissal                                       | `localStorage["newsletter-dismissed-at"]`                                 |
+| Cookie consent                                             | `document.cookie["lorem-ipsum-consent"]` (`essential` or `all`, 180 days) |
+| Eve conversation                                           | `localStorage["template-eve-chat-v1"]`                                    |
+| Header scroll, menus, filters, forms                       | Local React state                                                         |
 
 ## 8. Design system
 
@@ -529,7 +531,7 @@ This is the current backlog, deduplicated across the docs. Historical records su
 | Product data depth             | Description-only; no structured fabric, fit, composition, origin or size-chart assignment          |
 | Shipping and fulfilment        | Shopify native rates; no Shiprocket code                                                           |
 | Localization                   | Single locale US/EN; no next-intl or Markets                                                       |
-| Analytics and consent          | GA4 only; no consent management, Vercel Analytics or Speed Insights                                |
+| Analytics and consent          | GA4 gated by the cookie bar; Vercel Analytics and Speed Insights disabled                          |
 | Public Shop Agent              | Disabled; launch controls are external                                                             |
 
 ### C. Frontend code remaining
@@ -548,7 +550,7 @@ This is the current backlog, deduplicated across the docs. Historical records su
 | Add CI for lint, typecheck, build and design tests                   | repository root                                                            |
 | Sync wishlist to Customer Account if chosen                          | `lib/wishlist/client.ts`, `lib/customer/action.ts`                         |
 | Move navigation to Shopify menus if chosen                           | `lib/nav/index.ts`, nav components                                         |
-| Add ecommerce analytics events and consent handling                  | `components/analytics`, `lib/analytics/client.ts`                          |
+| Add ecommerce analytics events                                       | `components/analytics`, `lib/analytics/client.ts`                          |
 | Remove or resolve dead config and components                         | `pdp.complementaryProducts`, unused product-card/lightbox variants         |
 
 ### D. Content and data remaining

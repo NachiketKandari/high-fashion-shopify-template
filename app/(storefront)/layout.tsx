@@ -20,7 +20,9 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
       </main>
       <Footer />
       <CartUI />
-      <NewsletterPopup />
+      <Suspense fallback={null}>
+        <NewsletterPopup />
+      </Suspense>
       <Suspense>
         <ActionBar>{shopConfig.agent.isEnabled && <AgentButton />}</ActionBar>
       </Suspense>

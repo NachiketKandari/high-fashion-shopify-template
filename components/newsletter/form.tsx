@@ -8,30 +8,22 @@ interface NewsletterFormProps {
 }
 
 export function NewsletterForm({ className, inputId }: NewsletterFormProps) {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "unavailable">("idle");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
-  }
-
-  if (submitted) {
-    return (
-      <p className={className} role="status">
-        Newsletter signup is not connected yet.
-      </p>
-    );
+    setStatus("unavailable");
   }
 
   return (
     <form className={className} onSubmit={handleSubmit}>
-      <div className="flex items-center gap-3 border-b border-ink pb-1.5">
+      <div className="relative flex items-center gap-3 border-b border-ink pb-1.5 focus-within:after:absolute focus-within:after:inset-x-0 focus-within:after:-bottom-px focus-within:after:h-0.5 focus-within:after:bg-ink focus-within:after:content-['']">
         <label className="sr-only" htmlFor={inputId}>
           Your e-mail
         </label>
         <input
           autoComplete="email"
-          className="type-body-sm h-9 min-w-0 flex-1 border-0 bg-transparent px-0 tracking-[0.05em] text-ink placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
+          className="type-body-sm h-9 min-w-0 flex-1 border-0 bg-transparent px-0 text-ink placeholder:text-ink-muted focus-visible:outline-none"
           id={inputId}
           name="email"
           placeholder="Your e-mail"
@@ -42,6 +34,11 @@ export function NewsletterForm({ className, inputId }: NewsletterFormProps) {
           Subscribe
         </button>
       </div>
+      {status === "unavailable" ? (
+        <p className="type-body-sm pt-3 text-ink-muted" role="status">
+          Newsletter signup is not available yet.
+        </p>
+      ) : null}
     </form>
   );
 }

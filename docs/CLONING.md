@@ -72,18 +72,18 @@ and never publicly cached.
 
 ## Shell rebuild
 
-| Surface      | Implementation                                                                                | Behaviour                                                                                                                         |
-| ------------ | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Announcement | `components/nav/announcement.tsx`                                                             | Two messages rotate every 3s, pause on hover and while the tab is hidden; 35px mobile / 30px desktop.                             |
-| Header       | `components/nav/header.tsx`, `components/nav/index.tsx`                                       | Sticky header; homepage masthead with the 1016×82 wordmark, compact bar elsewhere. Scroll past 24px collapses the masthead.       |
-| Desktop nav  | `components/nav/desktop-nav.tsx`                                                              | Visible at `xl`; hover, click and keyboard focus open the mega menu; Escape closes it.                                            |
-| Mega menus   | Data in `lib/nav/index.ts`                                                                    | `Woman`, `Unisex`, `Edit` and `Our World` combine link columns with two portrait tiles; `New In` is a direct link.                |
-| Mobile menu  | `components/nav/mobile-menu.tsx`                                                              | Right-side sheet; nested sections use native `<details>`; wishlist is appended; USD and optional account row at the bottom.       |
-| Search       | `components/nav/search-modal.tsx`                                                             | 440px right drawer; Cmd/Ctrl+K toggles it; predictive product results, recently viewed products when empty, and View all results. |
-| Contact      | `components/nav/contact-drawer.tsx`                                                           | 440px drawer with WhatsApp, call, email and flagship-store rows.                                                                  |
-| Cart         | `components/cart/overlay.tsx`, `components/cart/context.tsx`, `components/cart/cart-page.tsx` | 440px drawer with $500 free-shipping progress; two-column cart page with line items, summary and checkout.                        |
-| Footer       | `components/footer/index.tsx`                                                                 | Address and wordmark, Help, Policies, The Brand, Socials, newsletter, currency selector, copyright and SVG payment marks.         |
-| Newsletter   | `components/newsletter/popup.tsx`, `components/newsletter/form.tsx`                           | Modal after 5s with a 30-day `localStorage` dismissal; footer form reuses the same form component.                                |
+| Surface      | Implementation                                                                                | Behaviour                                                                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Announcement | `components/nav/announcement.tsx`                                                             | Two messages rotate every 3s, pause on hover and while the tab is hidden; 35px mobile / 30px desktop.                                  |
+| Header       | `components/nav/header.tsx`, `components/nav/index.tsx`                                       | Sticky header; homepage masthead with the 1016×82 wordmark, compact bar elsewhere. Scroll past 24px collapses the masthead.            |
+| Desktop nav  | `components/nav/desktop-nav.tsx`                                                              | Visible at `xl`; hover, click and keyboard focus open the mega menu; Escape closes it.                                                 |
+| Mega menus   | Data in `lib/nav/index.ts`                                                                    | `Woman`, `Unisex`, `Edit` and `Our World` combine link columns with two portrait tiles; `New In` is a direct link.                     |
+| Mobile menu  | `components/nav/mobile-menu.tsx`                                                              | Right-side sheet; nested sections use native `<details>`; wishlist is appended; USD and optional account row at the bottom.            |
+| Search       | `components/nav/search-modal.tsx`                                                             | 440px right drawer; Cmd/Ctrl+K toggles it; predictive product results, recently viewed products when empty, and View all results.      |
+| Contact      | `components/nav/contact-drawer.tsx`                                                           | 440px drawer with WhatsApp, call, email and flagship-store rows.                                                                       |
+| Cart         | `components/cart/overlay.tsx`, `components/cart/context.tsx`, `components/cart/cart-page.tsx` | 440px drawer with $500 free-shipping progress; two-column cart page with line items, summary and checkout.                             |
+| Footer       | `components/footer/index.tsx`                                                                 | Address and wordmark, Help, Policies, The Brand, Socials, newsletter, currency selector, copyright and SVG payment marks.              |
+| Newsletter   | `components/newsletter/popup.tsx`, `components/newsletter/form.tsx`                           | Home-only modal after 20s and full cookie consent, with a 30-day `localStorage` dismissal; footer form reuses the same form component. |
 
 ## Page rebuild
 

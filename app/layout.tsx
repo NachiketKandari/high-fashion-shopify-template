@@ -8,6 +8,7 @@ import "./globals.css";
 import { AnalyticsComponents } from "@/components/analytics";
 import { CartProviderWrapper } from "@/components/cart/context";
 import { CartStandardActionsScript } from "@/components/cart/standard-actions";
+import { ConsentBanner } from "@/components/consent/banner";
 import { CurrencyProvider } from "@/components/currency/provider";
 import { SiteSchema } from "@/components/schema/site-schema";
 import { botIdProtectedRoutes } from "@/lib/botid";
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <SiteSchema />
+        <ConsentBanner />
 
         <CurrencyProvider>
           <CartProviderWrapper cartData={cartData}>
