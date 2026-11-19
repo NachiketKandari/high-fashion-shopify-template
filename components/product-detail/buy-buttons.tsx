@@ -2,7 +2,7 @@
 
 import { getShopPayButtonUrl } from "@shopify/hydrogen";
 import { cn } from "cn";
-import { Loader2, MinusIcon, PlusIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
 import { useCartDrawer } from "@/components/cart/context";
@@ -18,7 +18,6 @@ interface BuyButtonsProps {
   buyWithShop?: boolean;
   fallbackVariant: ProductFormVariant | undefined;
   onAddToCart?: () => void;
-  quantityPicker?: boolean;
 }
 
 export function BuyButtons({
@@ -26,13 +25,11 @@ export function BuyButtons({
   buyWithShop = true,
   fallbackVariant,
   onAddToCart,
-  quantityPicker = true,
 }: BuyButtonsProps) {
   const { formProps, pending, register, selectedVariant: storeVariant } = useProductForm();
   const selectedVariant = storeVariant ?? fallbackVariant;
   const isSelectionUnresolved = !storeVariant;
   const [isBuyingNow, setIsBuyingNow] = useState(false);
-  const [quantity, setQuantity] = useState(1);
   const [purchaseOption, setPurchaseOption] = useState("");
   const { plans, selectedPlan } = getProductPurchaseOptions(selectedVariant, purchaseOption);
   const missingRequiredPlan = Boolean(selectedVariant?.requiresSellingPlan && !selectedPlan);
@@ -53,11 +50,11 @@ export function BuyButtons({
   // Keep href while buying: removing it during the click cancels the anchor's navigation.
   const buyNowUrl = getShopPayButtonUrl({
     disabled: isSelectionUnresolved || isOutOfStock || requiresBundleConfiguration || pending,
-    variants: [{ id: selectedVariant.id, quantity }],
+    variants: [{ id: selectedVariant.id, quantity: 1 }],
   });
   const getButtonText = () => {
     if (pending) return "Adding to cart…";
-    if (isSelectionUnresolved) return "Add to cart";
+    if (isSelectionUnresolved) return "Select size";
     if (requiresBundleConfiguration) return "Choose bundle items";
     if (missingRequiredPlan) return "Subscription unavailable";
     if (isOutOfStock) return "Out of stock";
@@ -81,7 +78,7 @@ export function BuyButtons({
           openOverlay();
         },
       })}
-      className="grid gap-2.5"
+      className="grid gap-6"
     >
       <PurchaseOptions
         disabled={pending || isSelectionUnresolved}
@@ -93,63 +90,28 @@ export function BuyButtons({
       />
       <input type="hidden" name="sellingPlanId" value={selectedPlan?.sellingPlan.id ?? ""} />
       <input type="hidden" {...register("merchandiseId", {})} />
-      <input type="hidden" {...register("quantity", { value: quantity })} />
-      <div className="flex flex-wrap gap-2.5">
-        {quantityPicker ? (
-          <div
-            aria-label="Item quantity"
-            className="grid h-9 w-24 shrink-0 grid-cols-[2.25rem_1.5rem_2.25rem] border border-rule"
-            role="group"
-          >
-            <button
-              type="button"
-              aria-label="Decrease quantity"
-              className="focus-ring flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={quantity === 1}
-              onClick={() => setQuantity((currentQuantity) => Math.max(1, currentQuantity - 1))}
-            >
-              <MinusIcon className="size-3 shrink-0" />
-            </button>
-            <span
-              aria-live="polite"
-              className="type-label flex h-9 items-center justify-center tabular-nums"
-              role="status"
-            >
-              {quantity}
-            </span>
-            <button
-              type="button"
-              aria-label="Increase quantity"
-              className="focus-ring flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={quantity === 99}
-              onClick={() => setQuantity((currentQuantity) => Math.min(99, currentQuantity + 1))}
-            >
-              <PlusIcon className="size-3 shrink-0" />
-            </button>
-          </div>
-        ) : null}
-        <Button
-          {...register("addToCart", {})}
-          data-selection-unresolved={isSelectionUnresolved && !pending}
-          disabled={
-            isSelectionUnresolved ||
-            isOutOfStock ||
-            requiresBundleConfiguration ||
-            missingRequiredPlan ||
-            pending
-          }
-          className="h-9 min-w-0 flex-1 justify-center border border-ink bg-transparent text-ink hover:bg-ink hover:text-inverse data-[selection-unresolved=true]:disabled:opacity-100"
-        >
-          {getButtonText()}
-        </Button>
-      </div>
+      <input type="hidden" {...register("quantity", { value: 1 })} />
+      <Button
+        {...register("addToCart", {})}
+        data-selection-unresolved={isSelectionUnresolved && !pending}
+        disabled={
+          isSelectionUnresolved ||
+          isOutOfStock ||
+          requiresBundleConfiguration ||
+          missingRequiredPlan ||
+          pending
+        }
+        className="h-10 w-full justify-center disabled:bg-surface disabled:text-ink-muted disabled:opacity-100"
+      >
+        {getButtonText()}
+      </Button>
       {buyWithShop && !selectedPlan && !selectedVariant.requiresSellingPlan ? (
         <a
           aria-busy={isBuyingNow || undefined}
           aria-disabled={buyNowUrl ? undefined : true}
           aria-label="Buy it now"
           className={cn(
-            "type-control flex h-9 w-full cursor-pointer items-center justify-center bg-ink px-4 text-inverse transition-opacity hover:opacity-80 aria-busy:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50 data-[selection-unresolved=true]:aria-disabled:opacity-100",
+            "type-control flex h-10 w-full cursor-pointer items-center justify-center bg-ink px-4 text-inverse transition-opacity hover:opacity-80 aria-busy:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:opacity-50 data-[selection-unresolved=true]:aria-disabled:opacity-100",
             !availableForSale && "invisible",
           )}
           data-selection-unresolved={isSelectionUnresolved}

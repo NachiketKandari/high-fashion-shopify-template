@@ -20,6 +20,7 @@ export function ProductAccordion({ descriptionHtml }: { descriptionHtml: string 
           )}
         </div>
       ),
+      defaultOpen: true,
       id: "description",
       label: "Description",
     },
@@ -35,5 +36,5 @@ export function ProductAccordion({ descriptionHtml }: { descriptionHtml: string 
     },
   ];
 
-  return <Accordion items={items} />;
+  return <Accordion className="[&>details:first-child]:border-t-0" items={items} />;
 }

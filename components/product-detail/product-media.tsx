@@ -2,7 +2,7 @@
 
 import { cn } from "cn";
 import Image, { getImageProps } from "next/image";
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { preload } from "react-dom";
 
 import { AutoPlayVideo } from "@/components/ui/auto-play-video";
@@ -28,6 +28,8 @@ const LAZY_IMAGE_PROPS = { decoding: "async", fetchPriority: "low", loading: "la
 const DESKTOP_MEDIA = "(min-width: 1100px)";
 // Only the first stacked image is above the fold; later images stay lazy on both layouts.
 const DESKTOP_GRID_PRELOAD_COUNT = 1;
+// Design I draws a 800x1432 hero over two 2-up rows; the rest stay available in the mobile carousel.
+const DESKTOP_GRID_LIMIT = 5;
 
 // The preload must share the <img>'s srcset and sizes, or the browser downloads the tile twice.
 function preloadDesktopGridImage(image: ImageType) {
@@ -147,97 +149,24 @@ function MediaVideo({
   );
 }
 
-function Carousel({
-  mediaItems,
-  title,
-  hasColorSlot,
-  children,
-}: {
-  mediaItems: MediaSlot[];
-  title: string;
-  hasColorSlot: boolean;
-  children?: ReactNode;
-}) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [itemCount, setItemCount] = useState(mediaItems.length);
-  const [container, setContainer] = useState<HTMLDivElement | null>(null);
-  const scrollToImage = (index: number) => {
-    if (!container) return;
-    container.scrollTo({
-      left: index * container.offsetWidth,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-    });
-    setSelectedIndex(index);
-  };
-  useEffect(() => {
-    if (!container) return;
-
-    // Variant/video items arrive via slot children, so count the rendered DOM, not just mediaItems.
-    const sync = () => {
-      const width = container.offsetWidth;
-      if (width === 0) return;
-      const total = Math.max(1, container.children.length);
-      setItemCount(total);
-      setSelectedIndex(Math.min(Math.max(0, Math.round(container.scrollLeft / width)), total - 1));
-    };
-
-    // New media set: snap back to the first slide before observers take over.
-    container.scrollTo({ left: 0 });
-    sync();
-
-    container.addEventListener("scroll", sync, { passive: true });
-    const resizeObserver = new ResizeObserver(sync);
-    resizeObserver.observe(container);
-    const mutationObserver = new MutationObserver(sync);
-    mutationObserver.observe(container, { childList: true });
-
-    return () => {
-      container.removeEventListener("scroll", sync);
-      resizeObserver.disconnect();
-      mutationObserver.disconnect();
-    };
-  }, [container]);
+function Carousel({ mediaItems, title }: { mediaItems: MediaSlot[]; title: string }) {
   return (
-    <div className="grid gap-3">
-      <div
-        ref={setContainer}
-        aria-label={`${title} images`}
-        className="focus-ring relative flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain scrollbar-hide"
-        role="region"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        tabIndex={0}
-      >
-        {children}
-        {mediaItems.map((item, idx) => (
-          <CarouselSlide
-            key={mediaKey(item)}
-            item={item}
-            title={title}
-            idx={idx}
-            priority={!hasColorSlot && idx === 0}
-          />
-        ))}
-      </div>
-
-      {/* Dot indicators – reserve space but hide when there's only one image */}
-      <div className={cn("flex flex-wrap justify-center gap-1.5", itemCount <= 1 && "invisible")}>
-        {Array.from({ length: itemCount }, (_, idx) => (
-          <button
-            type="button"
-            key={idx}
-            onClick={() => scrollToImage(idx)}
-            className="focus-ring flex size-9 items-center justify-center"
-            aria-label={`Go to image ${idx + 1}`}
-          >
-            <span
-              className={cn(
-                "block size-1.5 rounded-full transition-opacity",
-                idx === selectedIndex ? "bg-ink" : "bg-ink/25 hover:bg-ink/50",
-              )}
-            />
-          </button>
-        ))}
-      </div>
+    <div
+      aria-label={`${title} images`}
+      className="focus-ring relative flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain scrollbar-hide"
+      role="region"
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      tabIndex={0}
+    >
+      {mediaItems.map((item, idx) => (
+        <CarouselSlide
+          key={`${mediaKey(item)}-${idx}`}
+          item={item}
+          title={title}
+          idx={idx}
+          priority={idx === 0}
+        />
+      ))}
     </div>
   );
 }
@@ -247,15 +176,17 @@ function GridItem({
   title,
   idx,
   priority,
+  className,
 }: {
   item: MediaSlot;
   title: string;
   idx: number;
   priority: boolean;
+  className?: string;
 }) {
   const [ref, near] = useNearViewport(priority);
   return (
-    <div ref={ref} className="relative w-full overflow-hidden aspect-[20/27]">
+    <div ref={ref} className={cn("relative w-full overflow-hidden", className)}>
       {!near ? (
         <div className="size-full bg-surface" />
       ) : item.type === "video" ? (
@@ -301,97 +232,63 @@ function CarouselSlide({
   );
 }
 
-function Grid({
-  mediaItems,
-  title,
-  hasColorSlot,
-  interactive = true,
-  children,
-}: {
-  mediaItems: MediaSlot[];
-  title: string;
-  hasColorSlot: boolean;
-  interactive?: boolean;
-  children?: ReactNode;
-}) {
-  // The color slot (children) occupies the first tile when present.
-  const firstTileOffset = hasColorSlot ? 1 : 0;
-  for (const [idx, item] of mediaItems.entries()) {
-    const tile = idx + firstTileOffset;
-    if (tile >= DESKTOP_GRID_PRELOAD_COUNT) break;
+function Grid({ mediaItems, title }: { mediaItems: MediaSlot[]; title: string }) {
+  const visible = mediaItems.slice(0, DESKTOP_GRID_LIMIT);
+  for (const [idx, item] of visible.entries()) {
+    if (idx >= DESKTOP_GRID_PRELOAD_COUNT) break;
     // Tile 0 is the LCP image and already preloaded via next/image's `preload` prop.
-    if (tile > 0 && item.type === "image") preloadDesktopGridImage(item.image);
+    if (idx > 0 && item.type === "image") preloadDesktopGridImage(item.image);
   }
 
-  const grid = (
-    <div className="grid grid-cols-1 gap-2.5">
-      {children}
-      {mediaItems.map((item, idx) => (
-        <GridItem
-          key={mediaKey(item)}
-          item={item}
-          title={title}
-          idx={idx}
-          priority={!hasColorSlot && idx === 0}
-        />
-      ))}
-    </div>
+  const [hero, ...tiles] = visible;
+  return (
+    <Lightbox label={title}>
+      <div className="grid grid-cols-2 gap-0">
+        <div className="relative col-span-2 aspect-[800/1432] overflow-hidden border border-ink">
+          {hero ? (
+            hero.type === "video" ? (
+              <MediaVideo item={hero} priority />
+            ) : hero.type === "placeholder" ? (
+              <ImagePlaceholder className="size-full" />
+            ) : (
+              <LightboxTrigger image={hero.image}>
+                <MediaImage item={hero} title={title} idx={0} priority />
+              </LightboxTrigger>
+            )
+          ) : null}
+        </div>
+        {tiles.map((item, idx) => (
+          <GridItem
+            className="aspect-[3/4]"
+            item={item}
+            title={title}
+            idx={idx + 1}
+            key={`${mediaKey(item)}-${idx}`}
+            priority={false}
+          />
+        ))}
+      </div>
+    </Lightbox>
   );
-
-  return interactive ? <Lightbox label={title}>{grid}</Lightbox> : grid;
-}
-
-export function ColorImageGrid({ images, title }: { images: ImageType[]; title: string }) {
-  return images.map((image, idx) => (
-    <GridItem
-      key={image.url}
-      item={{ type: "image", image }}
-      title={title}
-      idx={idx}
-      priority={idx === 0}
-    />
-  ));
-}
-
-export function ColorImageCarouselItems({ images, title }: { images: ImageType[]; title: string }) {
-  return images.map((image, idx) => (
-    <div
-      key={image.url}
-      className="relative shrink-0 w-full snap-start snap-always overflow-hidden aspect-[2/3]"
-    >
-      <Image
-        src={image.url}
-        alt={image.altText || `${title} image ${idx + 1}`}
-        height={image.height}
-        width={image.width}
-        className="absolute inset-0 size-full object-cover"
-        sizes="100vw"
-        {...(idx === 0 ? LCP_IMAGE_PROPS : LAZY_IMAGE_PROPS)}
-        draggable={false}
-      />
-    </div>
-  ));
 }
 
 export function ProductMedia({
+  colorImage,
   media,
   title,
   className,
-  desktopSlot,
-  mobileSlot,
 }: {
+  colorImage?: ImageType | null;
   media: MediaItem[];
   title: string;
   className?: string;
-  desktopSlot?: ReactNode;
-  mobileSlot?: ReactNode;
 }) {
-  const hasColorSlot = !!mobileSlot || !!desktopSlot;
+  const hasColorSlot = !!colorImage;
   const isEmpty = media.length === 0 && !hasColorSlot;
-  const mediaItems = useMemo<MediaSlot[]>(
-    () => (isEmpty ? [{ type: "placeholder" }] : media),
-    [isEmpty, media],
-  );
+  const mediaItems = useMemo<MediaSlot[]>(() => {
+    if (isEmpty) return [{ type: "placeholder" }];
+    return colorImage ? [{ type: "image", image: colorImage }, ...media] : media;
+  }, [colorImage, isEmpty, media]);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -400,7 +297,7 @@ export function ProductMedia({
       (item): item is Extract<MediaItem, { type: "image" }> => item.type === "image",
     );
     // With a colour slot the first media item is the image after the LCP; without one, the LCP is mediaItems[0].
-    const next = hasColorSlot ? images[0] : mediaItems[0]?.type === "image" ? images[1] : images[0];
+    const next = hasColorSlot ? images[1] : mediaItems[0]?.type === "image" ? images[1] : images[0];
     if (!root || !next || !canPrefetchMedia()) return;
 
     let cancelled = false;
@@ -443,26 +340,12 @@ export function ProductMedia({
   }, [hasColorSlot, mediaItems]);
 
   return (
-    <div className={className} ref={rootRef}>
+    <div className={className} ref={rootRef} data-slot="product-gallery">
       <div className="desktop:hidden">
-        <Carousel
-          key={mediaItems.map(mediaKey).join(",")}
-          mediaItems={mediaItems}
-          title={title}
-          hasColorSlot={hasColorSlot}
-        >
-          {mobileSlot}
-        </Carousel>
+        <Carousel key={mediaItems.map(mediaKey).join(",")} mediaItems={mediaItems} title={title} />
       </div>
-      <div className="hidden desktop:block">
-        <Grid
-          mediaItems={mediaItems}
-          title={title}
-          hasColorSlot={hasColorSlot}
-          interactive={!isEmpty}
-        >
-          {desktopSlot}
-        </Grid>
+      <div className="hidden desktop:block desktop:pt-[calc(75px-var(--header-bar-h))]">
+        <Grid mediaItems={mediaItems} title={title} />
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export function SizeGuide({ category }: { category?: string }) {
       <SheetTrigger
         render={
           <button
-            className="type-control focus-ring ml-auto flex h-9 shrink-0 cursor-pointer items-center underline underline-offset-4"
+            className="type-control focus-ring -my-2.5 inline-flex min-h-9 shrink-0 cursor-pointer items-center text-ink-muted underline underline-offset-4 hover:text-ink"
             type="button"
           >
             Size guide

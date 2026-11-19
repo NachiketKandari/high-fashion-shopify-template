@@ -1,8 +1,5 @@
-import { cn } from "cn";
-import { MinusIcon, PlusIcon } from "lucide-react";
 import { type ReactNode, Suspense } from "react";
 
-import { WishlistButton } from "@/components/product-card/wishlist-button";
 import { BundleComponents, BundleParents } from "@/components/product-detail/bundle-components";
 import { BuyButtons, PurchaseOptions } from "@/components/product-detail/buy-buttons";
 import { GiftCardPurchaseForm } from "@/components/product-detail/gift-card-purchase-form";
@@ -14,11 +11,7 @@ import {
   ProductFormPrice,
 } from "@/components/product-detail/product-form";
 import { ProductInfoOptions } from "@/components/product-detail/product-info";
-import {
-  ColorImageCarouselItems,
-  ColorImageGrid,
-  ProductMedia,
-} from "@/components/product-detail/product-media";
+import { ProductMedia } from "@/components/product-detail/product-media";
 import { ProductPrice } from "@/components/product-detail/product-price";
 import { ProductSchema } from "@/components/product-detail/schema";
 import { BreadcrumbSchema } from "@/components/schema/breadcrumb-schema";
@@ -93,13 +86,11 @@ function ProductMediaArea({
     return <ProductMedia media={product.media} title={product.title} />;
   }
 
-  const image = getSelectedColorImage(product, selectedOptions);
   return (
     <ProductMedia
+      colorImage={getSelectedColorImage(product, selectedOptions)}
       media={getSharedMedia(product.media, product.options)}
       title={product.title}
-      desktopSlot={image ? <ColorImageGrid images={[image]} title={product.title} /> : null}
-      mobileSlot={image ? <ColorImageCarouselItems images={[image]} title={product.title} /> : null}
     />
   );
 }
@@ -117,27 +108,11 @@ function ProductInfoArea({
   const showBuyLabel = uniformStock && !singleVariant;
   const allInStock = product.defaultVariant?.availableForSale ?? product.availableForSale;
   const hasOptions = options.some((option) => option.values.length > 1);
-  const wishlistProduct = {
-    availableForSale: product.availableForSale,
-    compareAtPrice: product.compareAtPrice,
-    featuredImage: product.featuredImage,
-    handle: product.handle,
-    hoverImage: product.hoverImage,
-    id: product.id,
-    isGiftCard: product.isGiftCard,
-    maxPrice: product.maxPrice,
-    price: product.price,
-    title: product.title,
-    vendor: product.vendor,
-  };
   return (
-    <div className="px-(--gutter) py-6 desktop:sticky desktop:top-[76px] desktop:max-h-[calc(100svh-76px)] desktop:self-start desktop:overflow-y-auto desktop:px-0 desktop:pb-6 desktop:pt-[64px]">
+    <div className="px-(--gutter) pt-(--gutter) pb-10 desktop:sticky desktop:top-(--header-bar-h) desktop:max-h-[calc(100svh-var(--header-bar-h))] desktop:self-start desktop:overflow-y-auto desktop:px-20 desktop:pt-[calc(140px-var(--header-bar-h))] desktop:pb-[140px]">
       <div className="mx-auto grid w-full max-w-[432px] gap-10">
-        <div className="grid gap-2" data-slot="product-info-header">
-          <div className="flex items-start justify-between gap-4">
-            <h1 className="type-display text-ink tracking-normal">{product.title}</h1>
-            <WishlistButton product={wishlistProduct} variant="inline" />
-          </div>
+        <div className="grid gap-3" data-slot="product-info-header">
+          <h1 className="type-control text-ink">{product.title}</h1>
           {product.hasUniformPricing ? (
             <ProductPrice
               amount={product.priceRange.minVariantPrice.amount}
@@ -147,7 +122,7 @@ function ProductInfoArea({
           ) : null}
         </div>
 
-        <div className="grid gap-7">
+        <div className="grid gap-10">
           {singleVariant ? (
             <ProductInfoContent
               priceSlot={
@@ -181,12 +156,12 @@ function ProductInfoArea({
 
           <ProductAccordion descriptionHtml={descriptionHtml} />
 
-          <div className="sticky bottom-0 flex justify-end bg-paper py-2">
+          <div className="flex">
             <a
-              className="type-control focus-ring flex h-9 items-center underline underline-offset-4"
+              className="type-control focus-ring inline-flex min-h-9 items-center text-ink-muted underline underline-offset-4"
               href={`mailto:${shopConfig.site.contact.email}`}
             >
-              Need help?
+              need help? contact us
             </a>
           </div>
         </div>
@@ -255,7 +230,6 @@ function ProductInfoContent({
             fallbackVariant={fallbackVariant}
             availableForSale={product.availableForSale}
             buyWithShop={shopConfig.pdp.buyWithShop.isEnabled}
-            quantityPicker={shopConfig.pdp.quantityPicker.isEnabled}
           />
         )}
       </div>
@@ -333,26 +307,9 @@ function GiftCardPurchaseFormFallback() {
           </div>
         </div>
       </div>
-      <div className="type-control flex h-9 w-full cursor-not-allowed items-center justify-center bg-ink text-inverse opacity-50">
+      <div className="type-control flex h-10 w-full cursor-not-allowed items-center justify-center bg-ink text-inverse opacity-50">
         Add to cart
       </div>
-    </div>
-  );
-}
-
-function QuantityPickerFallback() {
-  return (
-    <div
-      aria-hidden="true"
-      className="grid h-9 w-24 shrink-0 grid-cols-[2.25rem_1.5rem_2.25rem] border border-rule bg-paper"
-    >
-      <span className="flex size-9 items-center justify-center opacity-50">
-        <MinusIcon className="size-3 shrink-0" />
-      </span>
-      <span className="flex h-9 w-8 items-center justify-center text-xs tabular-nums">1</span>
-      <span className="flex size-9 items-center justify-center">
-        <PlusIcon className="size-3 shrink-0" />
-      </span>
     </div>
   );
 }
@@ -368,7 +325,7 @@ function BuyButtonsFallback({
 }) {
   const { plans, selectedPlan } = getProductPurchaseOptions(variant);
   return (
-    <div className="grid gap-2.5">
+    <div className="grid gap-6">
       {variant ? (
         <PurchaseOptions
           disabled
@@ -378,22 +335,9 @@ function BuyButtonsFallback({
           selectedPlan={selectedPlan}
         />
       ) : null}
-      <div className="flex flex-wrap gap-2.5">
-        {shopConfig.pdp.quantityPicker.isEnabled ? <QuantityPickerFallback /> : null}
-        <div className="type-control flex h-9 min-w-0 flex-1 items-center justify-center border border-ink text-ink">
-          {showLabel ? (allInStock ? "Add to cart" : "Out of stock") : null}
-        </div>
+      <div className="type-label flex h-10 w-full items-center justify-center bg-surface text-ink-muted">
+        {showLabel ? (allInStock ? "Add to cart" : "Out of stock") : null}
       </div>
-      {shopConfig.pdp.buyWithShop.isEnabled && !selectedPlan && !variant?.requiresSellingPlan ? (
-        <div
-          className={cn(
-            "type-control flex h-9 items-center justify-center bg-ink px-4 text-inverse",
-            !allInStock && "invisible",
-          )}
-        >
-          Buy it now
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -406,34 +350,44 @@ export function ProductDetailSkeleton() {
     >
       <div>
         <div className="aspect-[2/3] w-full bg-surface desktop:hidden" />
-        <div className="hidden aspect-[20/27] w-full bg-surface desktop:block" />
-      </div>
-      <div className="px-(--gutter) py-6 desktop:sticky desktop:top-[76px] desktop:px-0 desktop:pt-[64px]">
-        <div className="mx-auto grid w-full max-w-[432px] gap-10">
-          <div className="grid gap-2">
-            <Skeleton className="h-7 w-3/4" />
-            <Skeleton className="h-7 w-24" />
+        <div className="hidden desktop:block desktop:pt-[75px]">
+          <div className="aspect-[800/1432] w-full border border-ink bg-surface" />
+          <div className="grid grid-cols-2">
+            <div className="aspect-[3/4] w-full bg-surface" />
+            <div className="aspect-[3/4] w-full bg-surface" />
           </div>
-          <div className="grid gap-7">
-            <div className="grid gap-5">
+        </div>
+      </div>
+      <div className="px-(--gutter) pt-(--gutter) pb-10 desktop:sticky desktop:top-(--header-bar-h) desktop:px-20 desktop:pb-[140px] desktop:pt-[calc(140px-var(--header-bar-h))]">
+        <div className="mx-auto grid w-full max-w-[432px] gap-10">
+          <div className="grid gap-3">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+          <div className="grid gap-10">
+            <div className="grid gap-3">
               <Skeleton className="h-4 w-24" />
               <div className="flex items-center gap-3">
-                <Skeleton className="h-3 w-16" />
-                <Skeleton className="size-2.5" />
-                <Skeleton className="size-2.5" />
-                <Skeleton className="size-2.5" />
+                <Skeleton className="size-4" />
+                <Skeleton className="size-4" />
+                <Skeleton className="size-4" />
               </div>
             </div>
-            <div className="grid gap-2.5">
-              <div className="flex flex-wrap gap-2.5">
-                {shopConfig.pdp.quantityPicker.isEnabled ? <QuantityPickerFallback /> : null}
-                <Skeleton className="h-9 min-w-0 flex-1" />
+            <div className="grid gap-3">
+              <Skeleton className="h-4 w-16" />
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: 7 }, (_, index) => (
+                  <Skeleton className="h-[26px] w-10 desktop:h-11 desktop:w-14" key={index} />
+                ))}
               </div>
-              {shopConfig.pdp.buyWithShop.isEnabled ? <Skeleton className="h-9 w-full" /> : null}
+            </div>
+            <div className="grid gap-6">
+              <Skeleton className="h-10 w-full" />
+              {shopConfig.pdp.buyWithShop.isEnabled ? <Skeleton className="h-10 w-full" /> : null}
             </div>
           </div>
           <div className="grid gap-4">
-            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-40" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-5/6" />
           </div>

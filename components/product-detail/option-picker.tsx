@@ -23,43 +23,34 @@ export function OptionPicker({
   sizeGuideCategory,
   ...props
 }: OptionPickerProps) {
+  const isSize = option.name.toLowerCase().includes("size");
   return (
-    <div className={cn("flex flex-wrap items-center gap-2 gap-y-2", className)} {...props}>
-      <span className={cn("type-h4 shrink-0", compact ? "w-11" : "w-full desktop:w-16")}>
-        {option.name}
-      </span>
-      <div
-        className={cn(
-          "flex flex-1 flex-wrap items-center gap-y-2",
-          compact ? "gap-x-1" : "gap-x-2",
-        )}
-      >
+    <div className={cn("grid gap-3", className)} {...props}>
+      <div className="flex items-center justify-between gap-3">
+        <span className="type-control text-ink-strong">{option.name}</span>
+        {isSize ? <SizeGuide category={sizeGuideCategory} /> : null}
+      </div>
+      <div className={cn("flex flex-wrap gap-3", compact && "gap-x-1 gap-y-1")}>
         {option.values.map((value) => {
-          const classes = cn(
-            "type-body-sm focus-ring inline-flex min-h-9 min-w-9 cursor-pointer items-center justify-center font-normal transition-colors",
-            !value.exists
-              ? "cursor-not-allowed text-ink-muted/50 line-through"
-              : value.selected
-                ? "text-ink"
-                : "text-ink-muted hover:text-ink",
-            value.exists && !value.available && "cursor-not-allowed line-through opacity-50",
+          const targetClass = "focus-ring inline-flex min-h-9 min-w-9 cursor-pointer items-center";
+          const boxClass = cn(
+            "inline-flex items-center justify-center border transition-colors",
+            compact
+              ? "type-body-sm min-h-8 px-2"
+              : "type-label min-h-[26px] px-1.5 desktop:h-11 desktop:px-4",
+            value.selected
+              ? "border-ink bg-ink text-inverse"
+              : value.exists && value.available
+                ? "border-ink text-ink group-hover:bg-surface desktop:border-rule desktop:text-ink-muted desktop:group-hover:border-ink desktop:group-hover:text-ink"
+                : "border-rule bg-surface text-ink-muted line-through",
           );
-          const label = (
-            <span
-              className={cn(
-                "border-b pb-0.5",
-                value.selected ? "border-ink" : "border-transparent",
-              )}
-            >
-              {value.name}
-            </span>
-          );
+          const label = <span className={boxClass}>{value.name}</span>;
 
           if (!value.exists || (!value.available && !value.selected)) {
             return (
               <button
                 aria-label={`${option.name}: ${value.name} (unavailable)`}
-                className={classes}
+                className={cn(targetClass, "cursor-not-allowed")}
                 disabled
                 key={value.name}
                 type="button"
@@ -72,7 +63,7 @@ export function OptionPicker({
           return (
             <Link
               aria-current={value.selected ? "true" : undefined}
-              className={classes}
+              className={cn("group", targetClass)}
               href={value.href}
               key={value.name}
               onClick={
@@ -90,10 +81,7 @@ export function OptionPicker({
           );
         })}
       </div>
-      {option.name.toLowerCase().includes("size") ? (
-        <SizeGuide category={sizeGuideCategory} />
-      ) : null}
-      {footnote ? <p className="type-body-sm mt-1 w-full text-ink">{footnote}</p> : null}
+      {footnote ? <p className="type-control text-ink">{footnote}</p> : null}
     </div>
   );
 }

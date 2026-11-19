@@ -25,13 +25,13 @@ export function ProductPrice({
       <Price
         amount={amount}
         currencyCode={currencyCode}
-        className="type-display font-normal text-ink"
+        className="type-label text-ink desktop:type-h4"
       />
       {markedDown && (
         <Price
           amount={compareAtAmount}
           currencyCode={currencyCode}
-          className="type-display font-normal text-ink/35 line-through"
+          className="type-label text-ink/35 line-through desktop:type-h4"
         />
       )}
       {discountPercent !== null ? <DiscountBadge percent={discountPercent} /> : null}
