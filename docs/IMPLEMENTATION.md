@@ -83,6 +83,10 @@ published reference catalog:
 - Product descriptions come from the reference `body_html`. Per-product Fabric and Fit tab copy is
   not imported yet; the PDP renders its current static copy for those tabs.
 
+On 19 November 2026 the design-i build unpublished the 95 imported reference products from the
+**Lorem Ipsum** channel so the storefront shows the 27 UniPlus `new-in` products only. They remain
+in the Shopify admin and can be republished without re-importing.
+
 A separate client catalog adds 39 UniPlus products and 354 variants. 27 are `ACTIVE` and published
 to the **Lorem Ipsum** channel with final INR prices and complete colour imagery; they populate
 `/collections/new-in`. The other 12 remain `DRAFT`: ten for missing photos and two for a wrong
