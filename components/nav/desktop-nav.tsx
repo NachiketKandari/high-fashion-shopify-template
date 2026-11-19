@@ -34,7 +34,7 @@ export function DesktopNav() {
   return (
     <>
       <nav aria-label="Menu" className="hidden desktop:block">
-        <ul className="flex items-center gap-2.5" role="list">
+        <ul className="flex items-center gap-6" role="list">
           {MAIN_NAV.map((entry, index) => (
             <li key={entry.label}>
               <button
@@ -69,7 +69,7 @@ export function DesktopNav() {
             role="dialog"
           >
             <div className="flex h-[73px] shrink-0 items-center justify-between px-6">
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-6">
                 {MAIN_NAV.map((entry, index) => (
                   <button
                     aria-pressed={entry.label === item.label}
