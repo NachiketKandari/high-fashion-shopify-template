@@ -39,7 +39,7 @@ export function AddressStep({
                   aria-pressed={isSelected}
                   className={cn(
                     "focus-ring grid w-full max-w-[453px] cursor-pointer gap-4 border bg-paper p-6 text-left transition-colors",
-                    isSelected ? "border-ink" : "border-input hover:border-ink",
+                    isSelected ? "border-ink" : "border-ink/40 hover:border-ink",
                   )}
                   key={address.id}
                   onClick={() =>
@@ -60,7 +60,7 @@ export function AddressStep({
               aria-pressed={selection.mode === "new"}
               className={cn(
                 "focus-ring flex h-16 w-full max-w-[453px] cursor-pointer items-center border bg-paper px-6 text-left transition-colors",
-                selection.mode === "new" ? "border-ink" : "border-input hover:border-ink",
+                selection.mode === "new" ? "border-ink" : "border-ink/40 hover:border-ink",
               )}
               onClick={() => onChange({ ...selection, mode: "new" })}
               type="button"

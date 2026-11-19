@@ -76,13 +76,13 @@ function CheckoutItem({ line }: { line: CartLine }) {
     <li aria-busy={isPending || undefined} className="flex gap-6">
       {href ? (
         <Link
-          className="relative h-[191px] w-[123px] shrink-0 overflow-hidden bg-surface transition-opacity hover:opacity-80"
+          className="relative h-[191px] w-[123px] shrink-0 overflow-hidden border border-ink bg-surface transition-opacity hover:opacity-80"
           href={href}
         >
           {imageContent}
         </Link>
       ) : (
-        <div className="relative h-[191px] w-[123px] shrink-0 overflow-hidden bg-surface">
+        <div className="relative h-[191px] w-[123px] shrink-0 overflow-hidden border border-ink bg-surface">
           {imageContent}
         </div>
       )}

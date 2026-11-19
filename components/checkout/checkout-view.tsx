@@ -53,6 +53,10 @@ export function CheckoutView({ addresses, isSignedIn }: CheckoutViewProps) {
     void handleCheckout();
   }
 
+  const appliedCodes = cart.discountCodes
+    .filter((discount) => discount.applicable)
+    .map((discount) => discount.code);
+
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-6 py-10 desktop:flex-row desktop:gap-0 desktop:py-0">
       <div className="contents desktop:flex desktop:w-[800px] desktop:shrink-0 desktop:flex-col desktop:gap-8 desktop:py-6 desktop:pr-10 desktop:pl-6">
@@ -107,6 +111,12 @@ export function CheckoutView({ addresses, isSignedIn }: CheckoutViewProps) {
                 />
               </dd>
             </div>
+            {appliedCodes.length > 0 ? (
+              <div className="flex items-baseline justify-between gap-8">
+                <dt className="type-h4">Promo code</dt>
+                <dd className="type-h4">{appliedCodes.join(", ")}</dd>
+              </div>
+            ) : null}
             <div className="flex items-baseline justify-between gap-8">
               <dt className="type-h4">Delivery</dt>
               <dd className="type-h4">Calculated at checkout</dd>
