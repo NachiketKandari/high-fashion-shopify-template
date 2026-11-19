@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",
-    "@next/third-parties": "16.4.3",
+    "@next/third-parties": "16.4.6",
     "@shopify/hydrogen": "2026.10.2",
     "@tailwindcss/turbopack": "4.3.3",
     "@tailwindcss/typography": "0.5.20",
@@ -37,7 +37,7 @@
     "cn": "0.5.1",
     "eve": "0.87.0",
     "lucide-react": "1.65.0",
-    "next": "16.4.3",
+    "next": "16.4.6",
     "oxfmt": "0.75.0",
     "oxlint": "1.90.0",
     "react": "19.3.1",

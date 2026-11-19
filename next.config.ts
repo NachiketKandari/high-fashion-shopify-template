@@ -7,6 +7,9 @@ import { withShopConfig } from "./lib/config/server";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  experimental: {
+    agentUpgrade: "security",
+  },
   images: {
     deviceSizes: [1320, 1920],
     imageSizes: [],
