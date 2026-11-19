@@ -87,6 +87,12 @@ On 19 November 2026 the design-i build unpublished the 95 imported reference pro
 **Lorem Ipsum** channel so the storefront shows the 27 UniPlus `new-in` products only. They remain
 in the Shopify admin and can be republished without re-importing.
 
+The four Design I products now carry the design's imagery and ₹10,000 price: Racer back mini dress,
+Double Mesh skirt (created), Corset back elevated tshirt and Micro pleated shorts. The source PNGs
+are in the gitignored `tmp/design-i-assets/`; three were pulled through the Figma MCP before its
+Starter-plan call limit, so Micro pleated shorts keeps its UniPlus photography until the limit
+resets. Shopify's Search & Discovery index picks up the new Double Mesh skirt after its own delay.
+
 A separate client catalog adds 39 UniPlus products and 354 variants. 27 are `ACTIVE` and published
 to the **Lorem Ipsum** channel with final INR prices and complete colour imagery; they populate
 `/collections/new-in`. The other 12 remain `DRAFT`: ten for missing photos and two for a wrong

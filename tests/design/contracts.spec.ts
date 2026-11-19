@@ -108,7 +108,7 @@ test.describe("storefront contracts", () => {
 
   test("product detail disclosures, typography and gallery targets", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.goto("/products/alma-lace-corset-top");
+    await page.goto("/products/micro-pleated-shorts");
     await page.locator("main h1").waitFor();
     await page.locator("[data-slot=accordion] summary").first().waitFor();
     const pdp = await page.evaluate(() => {
@@ -143,7 +143,7 @@ test.describe("storefront contracts", () => {
     expect(pdp.addToCartHeight).toBeGreaterThanOrEqual(36);
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/products/alma-lace-corset-top");
+    await page.goto("/products/micro-pleated-shorts");
     await page
       .locator('[data-slot="product-gallery"] [role="region"]')
       .waitFor({ state: "visible" });
@@ -168,7 +168,7 @@ test.describe("storefront contracts", () => {
       "/blogs/journal-2",
       "/collections/all",
       "/pages/size-guide",
-      "/products/alma-lace-corset-top",
+      "/products/micro-pleated-shorts",
       "/search?q=corset",
     ];
     for (const width of [1440, 390]) {
