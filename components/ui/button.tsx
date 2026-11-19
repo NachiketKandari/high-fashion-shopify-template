@@ -13,6 +13,7 @@ const buttonVariants = cva(
         ghost: "text-ink hover:bg-surface",
         link: "h-auto border-0 bg-transparent p-0 text-ink underline underline-offset-4 hover:opacity-60",
         outline: "border-ink bg-paper text-ink hover:bg-surface",
+        overlay: "border-paper bg-transparent text-paper hover:bg-paper/10",
         secondary: "bg-surface text-ink hover:bg-rule",
       },
       size: {

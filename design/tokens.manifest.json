@@ -48,6 +48,11 @@
       "size": "0.75rem",
       "weight": 400
     },
+    "marquee": {
+      "lineHeight": "1.875rem",
+      "size": "1.25rem",
+      "weight": 700
+    },
     "body": {
       "lineHeight": "1.3125rem",
       "size": "0.875rem",

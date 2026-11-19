@@ -8,10 +8,18 @@ interface MediaTileProps {
   href: string;
   image: string;
   label?: string;
+  labelClassName?: string;
   priority?: boolean;
 }
 
-export function MediaTile({ className, href, image, label, priority = false }: MediaTileProps) {
+export function MediaTile({
+  className,
+  href,
+  image,
+  label,
+  labelClassName,
+  priority = false,
+}: MediaTileProps) {
   return (
     <Link className={cn("group relative block overflow-hidden bg-surface", className)} href={href}>
       <Image
@@ -24,7 +32,13 @@ export function MediaTile({ className, href, image, label, priority = false }: M
         src={image}
       />
       {label ? (
-        <span className="type-body-sm absolute inset-x-0 bottom-0 bg-gradient-to-t from-paper/85 via-paper/50 to-transparent px-9 pt-16 pb-6.5 text-ink">
+        <span
+          className={cn(
+            "type-body-sm absolute inset-x-0 bottom-0",
+            labelClassName ??
+              "bg-gradient-to-t from-paper/85 via-paper/50 to-transparent px-9 pt-16 pb-6.5 text-ink",
+          )}
+        >
           {label}
         </span>
       ) : null}

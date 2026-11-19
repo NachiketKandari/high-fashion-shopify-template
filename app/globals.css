@@ -65,6 +65,9 @@
   --text-label: 0.75rem;
   --text-label--line-height: 1rem;
   --text-label--letter-spacing: 0;
+  --text-marquee: 1.25rem;
+  --text-marquee--line-height: 1.875rem;
+  --text-marquee--letter-spacing: 0;
   --text-body: 0.875rem;
   --text-body--line-height: 1.3125rem;
   --text-body--letter-spacing: 0;
@@ -254,6 +257,13 @@
   line-height: var(--text-label--line-height);
   font-weight: 400;
   letter-spacing: var(--text-label--letter-spacing);
+}
+
+@utility type-marquee {
+  font-size: var(--text-marquee);
+  line-height: var(--text-marquee--line-height);
+  font-weight: 700;
+  letter-spacing: var(--text-marquee--letter-spacing);
 }
 
 @utility type-body {
@@ -476,6 +486,15 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: var(--shimmer-text-fill, transparent);
   animation: tw-shimmer var(--shimmer-duration, 2s) linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

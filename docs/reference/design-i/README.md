@@ -46,7 +46,7 @@ valid for account, post-purchase, returns, wishlist, support and errors until th
 | Payment (out of scope)                        | `52:14969`–`52:15022`                                                | `52:15051`–`52:15063`                                                  |
 
 The measured PDP geometry is in [`pdp.md`](./pdp.md), copied from the try-on implementation's
-`docs/figma/pdp-design-spec.md`.
+`docs/figma/pdp-design-spec.md`. The home composition is in [`home.md`](./home.md).
 
 ## Reading a frame
 
