@@ -17,7 +17,7 @@ interface CheckoutItemsProps {
 
 export function CheckoutItems({ cart, className }: CheckoutItemsProps) {
   return (
-    <details className={cn("group border-y border-ink", className)}>
+    <details className={cn("group border-b border-ink", className)}>
       <summary className="type-body-sm flex h-[49px] cursor-pointer list-none items-center justify-between [&::-webkit-details-marker]:hidden">
         ITEMS
         <ChevronDownIcon

@@ -79,11 +79,11 @@ export function CheckoutView({ addresses, isSignedIn }: CheckoutViewProps) {
         </div>
       </div>
 
-      <aside className="contents desktop:flex desktop:w-[592px] desktop:shrink-0 desktop:flex-col desktop:gap-10 desktop:border desktop:border-ink desktop:px-20 desktop:pt-1.5 desktop:pb-35">
+      <aside className="contents desktop:sticky desktop:top-0 desktop:flex desktop:w-[592px] desktop:shrink-0 desktop:flex-col desktop:gap-10 desktop:self-start desktop:border-l desktop:border-ink desktop:px-20 desktop:pt-1.5 desktop:pb-35">
         <CheckoutItems cart={cart} className="order-1 desktop:order-1" />
 
         {isSignedIn ? null : (
-          <div className="order-2 grid gap-3 desktop:order-3">
+          <div className="order-2 grid gap-3 border-b border-ink pb-6 desktop:order-3 desktop:border-b-0 desktop:pb-0">
             <p className="type-body-sm text-ink-muted">Enjoy a faster shopping experience</p>
             <Link
               className="type-control focus-ring w-fit uppercase underline underline-offset-4"

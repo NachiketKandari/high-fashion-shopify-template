@@ -100,7 +100,7 @@ export function AddressStep({
                   {field.key === "phone" ? (
                     <div
                       className={cn(
-                        "flex h-10 w-[300px] max-w-full items-center gap-6 border bg-transparent px-6 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ink",
+                        "flex h-10 w-[300px] max-w-full items-center gap-6 border-0 border-b bg-transparent px-6 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ink",
                         error ? "border-error-rule" : "border-ink",
                       )}
                     >
@@ -125,7 +125,7 @@ export function AddressStep({
                       aria-describedby={error ? `${id}-error` : undefined}
                       aria-invalid={error ? true : undefined}
                       autoComplete={field.autoComplete}
-                      className="h-10 w-[300px] max-w-full border-ink px-6"
+                      className="h-10 w-[300px] max-w-full rounded-none border-0 border-b border-ink px-6 focus-visible:outline-offset-4"
                       id={id}
                       inputMode={field.key === "postcode" ? "numeric" : undefined}
                       maxLength={field.key === "postcode" ? 6 : undefined}

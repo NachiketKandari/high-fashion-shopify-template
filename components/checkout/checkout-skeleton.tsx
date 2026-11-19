@@ -17,7 +17,7 @@ export function CheckoutSkeleton() {
         </div>
       </div>
 
-      <aside className="contents desktop:flex desktop:w-[592px] desktop:shrink-0 desktop:flex-col desktop:gap-10 desktop:border desktop:border-ink desktop:px-20 desktop:pt-1.5 desktop:pb-35">
+      <aside className="contents desktop:flex desktop:w-[592px] desktop:shrink-0 desktop:flex-col desktop:gap-10 desktop:border-l desktop:border-ink desktop:px-20 desktop:pt-1.5 desktop:pb-35">
         <Skeleton className="order-1 h-[49px] w-full" />
         <Skeleton className="order-5 h-16 w-full desktop:order-2" />
         <div className="order-6 grid gap-8 desktop:order-4">
