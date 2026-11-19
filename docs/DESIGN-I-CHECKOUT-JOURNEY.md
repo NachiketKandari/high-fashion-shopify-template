@@ -42,18 +42,18 @@ geometry; this document adds the journey context and the deltas the Shopify temp
 
 ## 2. What the repo has today
 
-| Surface              | Current implementation                                                                                                                                                     | Verdict                                                                                                                                                                                     |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Home                 | `app/page.tsx` composed from the older wireframe/clone: 700 px hero, product rails, 2-up category tiles, Get the Look, Exclusives, Bestsellers, Stories                    | Composition differs from design I. Desktop and mobile need re-composition, not a colour pass.                                                                                               |
-| Header               | `components/nav/header.tsx`: sticky 76 px white bar at every breakpoint; every nav item is a bordered "chip"; wordmark 125 px; mobile shows icon actions                   | Design I desktop is a plain 74 px text bar; mobile is a 76 px bar with bordered Menu / Bag / Help pills and no search/account icons. The default-over-hero and scrolled states are missing. |
-| Desktop menu         | `components/nav/desktop-nav.tsx`: 592 px sheet, links only, no tiles                                                                                                       | Design I is a 709 px two-column panel: 354 px links + 354 px image tiles.                                                                                                                   |
-| Mobile menu          | `components/nav/mobile-menu.tsx`: full screen, links + tiles                                                                                                               | Close to the frames; spacing, typography, utility links and the 440 px tile stack need alignment.                                                                                           |
-| Search               | `components/nav/search-modal.tsx` opens a right drawer; `app/search/page.tsx` renders the generic browse grid                                                              | Design I is a full-width search surface under the header with a 1,076 + 276 px input row, trending list and 4-up results. Empty, typing, results, zero-result and typo states are missing.  |
-| Auth                 | `components/nav/account.tsx` links straight to `/account/login`; Hydrogen redirects to Shopify-hosted OAuth. No designed gate or OTP screen exists.                        | Not built. The designed OTP screens cannot be reproduced inside a Shopify-hosted login without a separate identity project.                                                                 |
-| Product detail       | `components/product-detail/*` is the template PDP (stacked gallery, 36 px controls, template typography)                                                                   | Design I geometry and type are not applied; the try-on additions are not integrated.                                                                                                        |
-| Cart                 | `app/cart/page.tsx` + `components/cart/*`: template page, 310 px sidebar, 36 px quantity control, no mobile sticky bar                                                     | Design I is a full-page bag with an 800 + 592 split, 123 × 191 line art, 40 px CTA and a mobile fixed summary bar. Empty/updating/out-of-stock variants need explicit work.                 |
-| Address and shipping | No route. Checkout hands off to Shopify via `prepareCheckoutAction`.                                                                                                       | Not built. A storefront address step is a pre-checkout surface, not Shopify checkout itself. See D3.                                                                                        |
-| Tokens               | `type-*` roles are uppercase with +0.05em tracking, weights 300/400; zero radius; `ink #000`, `rule #e1e1e1`, `surface #f2f2f2`; gate forbids `font-medium` and any radius | Design I is sentence case, weights 400–700, 4 px control radius, `#353535` text, `#666` muted, `#DCDCDC` borders, `#DFDFDF`/`#999` disabled. The token layer must change before page work.  |
+| Surface              | Current implementation                                                                                                                                                          | Verdict                                                                                                                                                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home                 | `app/page.tsx` composed from the older wireframe/clone: 700 px hero, product rails, 2-up category tiles, Get the Look, Exclusives, Bestsellers, Stories                         | Composition differs from design I. Desktop and mobile need re-composition, not a colour pass.                                                                                               |
+| Header               | `components/nav/header.tsx`: sticky 76 px white bar at every breakpoint; every nav item is a bordered "chip"; wordmark 125 px; mobile shows icon actions                        | Design I desktop is a plain 74 px text bar; mobile is a 76 px bar with bordered Menu / Bag / Help pills and no search/account icons. The default-over-hero and scrolled states are missing. |
+| Desktop menu         | `components/nav/desktop-nav.tsx`: 592 px sheet, links only, no tiles                                                                                                            | Design I is a 709 px two-column panel: 354 px links + 354 px image tiles.                                                                                                                   |
+| Mobile menu          | `components/nav/mobile-menu.tsx`: full screen, links + tiles                                                                                                                    | Close to the frames; spacing, typography, utility links and the 440 px tile stack need alignment.                                                                                           |
+| Search               | `components/nav/search-modal.tsx` opens a right drawer; `app/search/page.tsx` renders the generic browse grid                                                                   | Design I is a full-width search surface under the header with a 1,076 + 276 px input row, trending list and 4-up results. Empty, typing, results, zero-result and typo states are missing.  |
+| Auth                 | `components/nav/account.tsx` links straight to `/account/login`; Hydrogen redirects to Shopify-hosted OAuth. No designed gate or OTP screen exists.                             | Not built. The designed OTP screens cannot be reproduced inside a Shopify-hosted login without a separate identity project.                                                                 |
+| Product detail       | `components/product-detail/*` is the template PDP (stacked gallery, 36 px controls, template typography)                                                                        | Design I geometry and type are not applied; the try-on additions are not integrated.                                                                                                        |
+| Cart                 | `app/cart/page.tsx` + `components/cart/*`: template page, 310 px sidebar, 36 px quantity control, no mobile sticky bar                                                          | Design I is a full-page bag with an 800 + 592 split, 123 × 191 line art, 40 px CTA and a mobile fixed summary bar. Empty/updating/out-of-stock variants need explicit work.                 |
+| Address and shipping | `app/(checkout)/checkout/address/page.tsx` with `components/checkout/*` and `lib/checkout/*`: guest form, saved cards, delivery, open items list, gift, promo, totals, Proceed. | Built as the pre-checkout surface. Guest flow verified; saved-address save and credit display need an authenticated session. See 4.6 and `STUBS.md`.                                        |
+| Tokens               | `type-*` roles are uppercase with +0.05em tracking, weights 300/400; zero radius; `ink #000`, `rule #e1e1e1`, `surface #f2f2f2`; gate forbids `font-medium` and any radius      | Design I is sentence case, weights 400–700, 4 px control radius, `#353535` text, `#666` muted, `#DCDCDC` borders, `#DFDFDF`/`#999` disabled. The token layer must change before page work.  |
 
 ## 3. Decisions that block an exact match
 
@@ -291,20 +291,24 @@ must be reflected from Shopify responses.
 `45:14400`: 60 px brand bar; 800 px left column (choose address cards or guest form, delivery date,
 gift checkbox, items accordion) + 592 px summary (items, gift, promo, subtotal, delivery, credits,
 TOTAL, Proceed to Payment 431 × 40 black, help). Mobile: 390 × 844/1,177/1,272, 60 px brand bar,
-341 px content, 40 px controls, summary and fixed CTA. States: saved address, new address, gift,
-invalid promo, non-serviceable pincode, account-credit coverage.
+341 px content, 40 px controls, summary and inline CTA (the frames place it at the end of the
+column). States: saved address, new address, gift, invalid promo, non-serviceable pincode,
+account-credit coverage.
 
-**Current.** No route. `lib/serviceability` is a stub. Customer addresses exist for authenticated
-members. Cart totals exist.
+**Current.** `app/(checkout)/checkout/address/page.tsx` with `components/checkout/*` and
+`lib/checkout/*`; the shared `(checkout)` layout supplies the 60 px brand bar. The page renders the
+800 + 592 split, the guest form with `+91` phone and pincode validation, saved-address cards for
+members, the delivery block, an ITEMS accordion that opens by default, gift attributes and note,
+promo apply/remove/invalid, totals and the Proceed handoff. Signed-in customers can save a new
+address as default.
 
-**Work.** Add the `(checkout)` group and the address step; read the cart and saved addresses; build
-the guest form with `+91` phone; add pincode serviceability using the stub's explicit
-`unverified` state (render nothing rather than a promise); add gift and promo via cart attributes /
-discount codes; add the summary; primary action calls `prepareCheckoutAction` and leaves for Shopify
-checkout. Persist no address outside the cart/customer API.
+**Remaining work.** Point the cart page's Checkout action at `/checkout/address` (cart-owned);
+verify the saved-address and store-credit paths with an authenticated HTTPS session; add Shiprocket
+serviceability and ETA when credentials exist.
 
-**Gated.** Account credits and balance coverage (not exposed to the Storefront API), real delivery
-dates/ETA (Shiprocket), address prefill in Shopify checkout (D3), payment entry (payment project).
+**Gated.** Account-credit application (the balance is read-only from
+`customer.storeCreditAccounts`; Shopify applies it at checkout), address prefill in Shopify
+checkout (D3), payment entry (payment project).
 
 ## 5. Shared primitives and tokens the designs introduce
 

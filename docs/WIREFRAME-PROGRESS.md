@@ -17,22 +17,22 @@ from `mobile-frames.md`. The 24 px gutter, the 36 px hero, the 4-up overflow row
 
 ## Phase status
 
-| Phase                                | Status                                               |
-| ------------------------------------ | ---------------------------------------------------- |
-| P0 Decisions and capability gates    | In progress                                          |
-| P1 Specification inventory           | Done — inventory written; design delta still open    |
-| P2 Shopify connectivity verification | Not started                                          |
-| P3 Design contract in code           | Not started                                          |
-| P4 Shell and navigation              | Done — bar, panel and mobile header match the frames |
-| P5 Browse                            | Not started                                          |
-| P6 Product page                      | Not started                                          |
-| P7 Cart and checkout handoff         | Not started                                          |
-| P8 Search                            | Not started                                          |
-| P9 Account                           | Not started                                          |
-| P10 Private wishlist                 | Not started                                          |
-| P11 Post-purchase                    | Not started                                          |
-| P12 Content and agent surface        | Not started                                          |
-| P13 Hardening and launch             | Not started                                          |
+| Phase                                | Status                                                          |
+| ------------------------------------ | --------------------------------------------------------------- |
+| P0 Decisions and capability gates    | In progress                                                     |
+| P1 Specification inventory           | Done — inventory written; design delta still open               |
+| P2 Shopify connectivity verification | Not started                                                     |
+| P3 Design contract in code           | Not started                                                     |
+| P4 Shell and navigation              | Done — bar, panel and mobile header match the frames            |
+| P5 Browse                            | Not started                                                     |
+| P6 Product page                      | Not started                                                     |
+| P7 Cart and checkout handoff         | In progress — pre-checkout step built; cart CTA handoff pending |
+| P8 Search                            | Not started                                                     |
+| P9 Account                           | Not started                                                     |
+| P10 Private wishlist                 | Not started                                                     |
+| P11 Post-purchase                    | Not started                                                     |
+| P12 Content and agent surface        | Not started                                                     |
+| P13 Hardening and launch             | Not started                                                     |
 
 ## Home build
 
@@ -253,6 +253,20 @@ order summary of `Subtotal`, `Delivery`, `TOTAL`, checkout, the promotional-code
 `Calculated at checkout` below it, rather than the frame's fixed `Free`, because Shopify does not
 return a shipping cost until checkout. The sign-in state is read inside the page's Suspense boundary
 so the route still prerenders.
+
+## Checkout
+
+Built as the pre-checkout Address and Shipping step at `/checkout/address` from
+`docs/DESIGN-I-CHECKOUT-JOURNEY.md` §4.6. The `(checkout)` group renders the 60 px brand bar and the
+800 + 592 split: guest form with `+91` and pincode validation, saved-address cards for members,
+delivery, an ITEMS accordion that opens by default with quantity and remove, gift attributes, promo
+codes, totals and the Proceed handoff through `prepareCheckoutAction`.
+
+`Delivery` reads `Calculated at checkout`; no ETA or pincode promise is drawn while Shiprocket is
+unverified. Account credit balances are read from the Customer Account API and applied by Shopify at
+checkout, so the pre-checkout toggle only projects the deduction. The cart page's Checkout action
+still opens Shopify directly; the step is reachable at `/checkout/address` until the cart owner links
+it.
 
 ## Mobile
 
