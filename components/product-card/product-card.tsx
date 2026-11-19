@@ -20,6 +20,7 @@ export interface ProductCardProps {
   showActions?: boolean;
   showPrice?: boolean;
   showSwatches?: boolean;
+  variant?: "browse" | "default";
 }
 
 function swatchStyle(swatch: { color?: string; image?: string } | undefined) {
@@ -47,7 +48,9 @@ export function ProductCard({
   showActions = true,
   showPrice = true,
   showSwatches = true,
+  variant = "default",
 }: ProductCardProps) {
+  const isBrowse = variant === "browse";
   const href = buildProductUrl(product.handle, product.defaultVariantSelectedOptions ?? []);
   const colorOption = product.options?.find((option) =>
     option.values.some((value) => cardSwatch(value)),
@@ -62,16 +65,26 @@ export function ProductCard({
       data-slot="product-card"
     >
       <div
-        className={cn(
-          "relative overflow-hidden bg-surface",
-          mediaAspect === "5/9" ? "aspect-[5/9]" : "aspect-[2/3]",
-        )}
+        className={
+          isBrowse
+            ? "relative aspect-[3/4] overflow-hidden bg-paper desktop:aspect-[4/5] [[data-card-density=gallery]_&]:aspect-[2/3]"
+            : cn(
+                "relative overflow-hidden bg-surface",
+                mediaAspect === "5/9" ? "aspect-[5/9]" : "aspect-[2/3]",
+              )
+        }
       >
         <Link aria-hidden="true" className="absolute inset-0 block" href={href} tabIndex={-1}>
           {product.featuredImage ? (
             <Image
               alt={product.featuredImage.altText || product.title}
-              className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within/card:scale-[1.03] group-hover/card:scale-[1.03] motion-reduce:transform-none"
+              className={cn(
+                "transition-transform duration-(--motion-image) ease-(--ease-standard)",
+                isBrowse
+                  ? "object-contain [[data-card-view=image]_&]:object-cover [[data-card-view=item]_&]:scale-125 [[data-card-view=item]_&]:object-cover"
+                  : "object-cover group-focus-within/card:scale-[1.03] group-hover/card:scale-[1.03] motion-reduce:transform-none",
+                isBrowse && product.hoverImage ? "[[data-card-view=image]_&]:hidden" : undefined,
+              )}
               fill
               loading={loading}
               sizes="100vw"
@@ -81,16 +94,28 @@ export function ProductCard({
             <ImagePlaceholder className="size-full" />
           )}
           {product.hoverImage ? (
-            // Display-gated so the browser skips the lazy fetch until hover/focus; touch devices never download it.
-            <Image
-              alt=""
-              aria-hidden="true"
-              className="hidden object-cover group-focus-within/card:block group-hover/card:block"
-              fill
-              loading="lazy"
-              sizes="100vw"
-              src={product.hoverImage.url}
-            />
+            isBrowse ? (
+              <Image
+                alt=""
+                aria-hidden="true"
+                className="hidden object-cover [[data-card-view=image]_&]:block"
+                fill
+                loading="lazy"
+                sizes="100vw"
+                src={product.hoverImage.url}
+              />
+            ) : (
+              // Display-gated so the browser skips the lazy fetch until hover/focus; touch devices never download it.
+              <Image
+                alt=""
+                aria-hidden="true"
+                className="hidden object-cover group-focus-within/card:block group-hover/card:block"
+                fill
+                loading="lazy"
+                sizes="100vw"
+                src={product.hoverImage.url}
+              />
+            )
           ) : null}
         </Link>
 
@@ -100,7 +125,7 @@ export function ProductCard({
           </span>
         ) : null}
 
-        {showSwatches && colorValues.length > 0 ? (
+        {showSwatches && !isBrowse && colorValues.length > 0 ? (
           <span className="absolute top-3.5 right-3.5 flex gap-2">
             {colorValues.map((value) => (
               <span
@@ -114,7 +139,7 @@ export function ProductCard({
           </span>
         ) : null}
 
-        {showActions ? (
+        {showActions && !isBrowse ? (
           <>
             <WishlistButton product={product} />
             <QuickShop
@@ -128,7 +153,35 @@ export function ProductCard({
         ) : null}
       </div>
 
-      {captionLayout === "row" ? (
+      {isBrowse ? (
+        <div className="grid gap-1 px-6 pt-2 desktop:pt-6">
+          <h3 className="type-caption min-w-0 truncate text-ink">
+            <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
+              {product.title}
+            </Link>
+          </h3>
+          {showPrice ? (
+            <div className="flex flex-wrap items-baseline gap-x-1.5">
+              {product.maxPrice.amount !== product.price.amount ? (
+                <span className="type-body-sm text-ink-muted">From</span>
+              ) : null}
+              <Price
+                amount={product.price.amount}
+                className="type-body-sm text-ink"
+                currencyCode={product.price.currencyCode}
+              />
+              {product.compareAtPrice &&
+              Number(product.compareAtPrice.amount) > Number(product.price.amount) ? (
+                <Price
+                  amount={product.compareAtPrice.amount}
+                  className="type-body-sm text-ink-muted line-through"
+                  currencyCode={product.compareAtPrice.currencyCode}
+                />
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      ) : captionLayout === "row" ? (
         <div className="flex items-center justify-between gap-3 px-6 py-1.5">
           <h3 className="type-caption min-w-0 truncate text-ink">
             <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
@@ -144,7 +197,7 @@ export function ProductCard({
           ) : null}
         </div>
       ) : (
-        <div className="grid gap-1 px-2 pt-2 pb-2 [[data-card-view=model]_&]:hidden">
+        <div className="grid gap-1 px-2 pt-2 pb-2">
           <h3 className="type-caption min-w-0 truncate text-ink">
             <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
               {product.title}
@@ -171,9 +224,7 @@ export function ProductCard({
             </div>
           ) : null}
           {sizes.length > 0 ? (
-            <p className="type-body-sm truncate text-ink-muted [[data-card-view=image]_&]:hidden">
-              {sizes.join(" ")}
-            </p>
+            <p className="type-body-sm truncate text-ink-muted">{sizes.join(" ")}</p>
           ) : null}
         </div>
       )}

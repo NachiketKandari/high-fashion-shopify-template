@@ -103,6 +103,11 @@
       "size": "0.75rem",
       "weight": 500
     },
+    "tab-active": {
+      "lineHeight": "1.125rem",
+      "size": "0.875rem",
+      "weight": 700
+    },
     "nav": {
       "lineHeight": "1.3125rem",
       "size": "0.875rem",

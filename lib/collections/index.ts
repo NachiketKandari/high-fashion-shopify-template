@@ -32,6 +32,17 @@ export const SORT_VALUES = [
   "created-descending",
 ] as const;
 
+export const SORT_LABELS: Record<SortValue, string> = {
+  "best-selling": "Best Selling",
+  "created-ascending": "Date: Old to New",
+  "created-descending": "Date: New to Old",
+  manual: "Featured",
+  "price-ascending": "Price: Low to High",
+  "price-descending": "Price: High to Low",
+  "title-ascending": "Name: A-Z",
+  "title-descending": "Name: Z-A",
+};
+
 // Storefront `search` only sorts by RELEVANCE and PRICE.
 export const SEARCH_SORT_EXCLUDE: SortValue[] = [
   "best-selling",

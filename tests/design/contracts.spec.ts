@@ -67,17 +67,17 @@ test.describe("storefront contracts", () => {
       };
     });
     expect(desktop.columns).toBe(4);
-    expect(desktop.columnGap).toBe("3px");
-    expect(desktop.rowGap).toBe("20px");
+    expect(desktop.columnGap).toBe("0px");
+    expect(desktop.rowGap).toBe("120px");
     expect(desktop.heading).toEqual({ lineHeight: "23px", size: "18px", weight: "400" });
     expect(desktop.title).toEqual({ lineHeight: "18px", size: "14px", weight: "400" });
     expect(desktop.price).toEqual({
-      color: "rgb(102, 102, 102)",
-      lineHeight: "18px",
-      size: "14px",
+      color: "rgb(53, 53, 53)",
+      lineHeight: "16px",
+      size: "12px",
       weight: "400",
     });
-    expect(desktop.mediaRatio).toBeCloseTo(1.5, 2);
+    expect(desktop.mediaRatio).toBeCloseTo(1.25, 2);
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/collections/all");
@@ -90,19 +90,19 @@ test.describe("storefront contracts", () => {
       const card = document.querySelector('[data-slot="product-card"]');
       const grid = card?.parentElement;
       const gridStyle = grid ? getComputedStyle(grid) : null;
-      const sort = document.querySelector('[data-slot="select-trigger"]');
-      const sortRect = sort?.getBoundingClientRect();
+      const filter = document.querySelector('[data-slot="filter-trigger"]');
+      const filterRect = filter?.getBoundingClientRect();
       return {
         columns: gridStyle?.gridTemplateColumns.split(" ").length,
+        filterHeight: filterRect?.height,
         innerWidth: window.innerWidth,
         rowGap: gridStyle?.rowGap,
         scrollWidth: document.documentElement.scrollWidth,
-        sortHeight: sortRect?.height,
       };
     });
     expect(mobile.columns).toBe(2);
-    expect(mobile.rowGap).toBe("1px");
-    expect(mobile.sortHeight).toBeGreaterThanOrEqual(36);
+    expect(mobile.rowGap).toBe("0px");
+    expect(mobile.filterHeight).toBeGreaterThanOrEqual(36);
     expect(mobile.scrollWidth).toBeLessThanOrEqual(mobile.innerWidth);
   });
 

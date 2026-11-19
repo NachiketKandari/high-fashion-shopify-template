@@ -15,23 +15,20 @@ export function BrowseEmpty({ browseAllHref, query }: BrowseEmptyProps) {
   const actions = useCollectionActions();
 
   return (
-    <div className="grid justify-items-center gap-4 py-20 text-center">
-      <h2 className="type-h2">No products found</h2>
-      <p className="type-body-sm max-w-100 text-ink-muted">
+    <div className="grid justify-items-center gap-5 px-(--gutter) py-20 text-center">
+      <p className="type-body">
         {hasFilters
-          ? "Nothing matches these filters. Remove one to see more."
+          ? "No clothing matching your filters"
           : query
-            ? `No products match "${query}".`
-            : "This collection has no products available yet."}
+            ? `No clothing matching “${query}”`
+            : "No clothing available yet"}
       </p>
       {hasFilters ? (
-        <Button onClick={() => actions.reset()} type="button" variant="outline">
-          Clear filters
+        <Button onClick={() => actions.reset()} type="button">
+          Reset filter
         </Button>
       ) : browseAllHref ? (
-        <Button render={<Link href={browseAllHref} />} variant="outline">
-          Browse all products
-        </Button>
+        <Button render={<Link href={browseAllHref} />}>Browse all products</Button>
       ) : null}
     </div>
   );

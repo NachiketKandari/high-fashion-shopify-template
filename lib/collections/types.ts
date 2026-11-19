@@ -24,6 +24,8 @@ export interface BrowseResults extends ProductPage {
   total?: number;
 }
 
+export type CardDensity = "compact" | "gallery";
+
 export type CardView = "image" | "item" | "model";
 
 export interface Collection {

@@ -1,20 +1,23 @@
+import { cn } from "cn";
 import { type ReactNode, Suspense } from "react";
 
 import { CollectionViewedTracker } from "@/components/analytics/trackers";
 import { CollectionActiveFilters } from "@/components/collections/active-filters";
 import { BrowseResultsFallback } from "@/components/collections/browse";
+import { BrowseGridSkeleton } from "@/components/collections/browse-grid";
 import { CollectionBrowseFrame } from "@/components/collections/collection-browse-provider";
 import { CollectionFiltersSkeleton } from "@/components/collections/filters";
 import { PublishedCollectionFilters } from "@/components/collections/filters-client";
-import { BrowseFallback, BrowseToolbar } from "@/components/collections/toolbar";
+import { BrowseToolbar, BrowseToolbarFallback } from "@/components/collections/toolbar";
 import { BreadcrumbSchema } from "@/components/schema/breadcrumb-schema";
 import { CollectionSchema } from "@/components/schema/collection-schema";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCollections } from "@/lib/collections/server";
+import { PRODUCTS_PER_PAGE } from "@/lib/collections";
 import type { Collection, SortValue } from "@/lib/collections/types";
+import { COLLECTION_TABS } from "@/lib/nav";
 
 interface CollectionLayoutProps {
   children: ReactNode;
@@ -23,42 +26,35 @@ interface CollectionLayoutProps {
   sortExclude?: SortValue[];
 }
 
-// The static and refine routes share this layout, so the header, toolbar, and filter sheet stay mounted when a filter switches between them.
-export async function CollectionLayout({
+// The static and refine routes share this layout, so the toolbar and filter sheet stay mounted when a filter switches between them.
+export function CollectionLayout({
   children,
   collection,
   handle,
   sortExclude,
 }: CollectionLayoutProps) {
-  const collections = await getCollections().catch(() => []);
   return (
     <>
       {collection.id ? (
         <CollectionViewedTracker collection={{ handle: collection.handle, id: collection.id }} />
       ) : null}
-      <Page>
-        <Container>
-          <div className="grid min-w-0 gap-4">
-            <CollectionHeader collection={collection} handle={handle} homeLabel="Home" />
-            <CollectionBrowseFrame handle={handle} path={`/collections/${handle}`}>
-              <div className="grid min-w-0 gap-4">
-                <div className="flex min-w-0 flex-col gap-4 desktop:flex-row desktop:items-center desktop:gap-10">
-                  <CollectionChips activeHandle={handle} collections={collections} />
-                  <div className="min-w-0 desktop:ml-auto desktop:shrink-0">
-                    <BrowseToolbar
-                      filters={
-                        <PublishedCollectionFilters fallback={<CollectionFiltersSkeleton />} />
-                      }
-                      sortExclude={sortExclude}
-                    />
-                  </div>
-                </div>
+      <Page className="pt-6">
+        <CollectionBrowseFrame handle={handle} path={`/collections/${handle}`}>
+          <CollectionHeader collection={collection} handle={handle} homeLabel="Home" />
+          <Container>
+            <div className="grid gap-6">
+              <CollectionTabs activeHandle={handle} />
+              <div className="grid gap-2">
+                <BrowseToolbar
+                  filters={<PublishedCollectionFilters fallback={<CollectionFiltersSkeleton />} />}
+                  sortExclude={sortExclude}
+                />
                 <CollectionActiveFilters />
-                {children}
               </div>
-            </CollectionBrowseFrame>
-          </div>
-        </Container>
+            </div>
+          </Container>
+          <div className="mt-4 desktop:mt-6">{children}</div>
+        </CollectionBrowseFrame>
       </Page>
     </>
   );
@@ -89,61 +85,43 @@ async function SearchParamsRead({ searchParams }: { searchParams: Promise<unknow
 
 export function CollectionDetailSkeleton() {
   return (
-    <Page aria-busy="true">
+    <Page aria-busy="true" className="pt-6">
       <Container>
-        <div className="grid gap-5 desktop:gap-6">
-          <div className="grid gap-2.5">
-            <Skeleton className="h-6 w-32" />
-            <Skeleton className="h-4 w-full max-w-xl" />
+        <div className="grid gap-6">
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            {[56, 44, 38, 48, 42, 60, 66, 48, 82, 38, 42].map((width, index) => (
+              <Skeleton className="h-5" key={index} style={{ width }} />
+            ))}
           </div>
-          <BrowseFallback />
+          <BrowseToolbarFallback />
         </div>
       </Container>
+      <div className="mt-4 desktop:mt-6">
+        <BrowseGridSkeleton count={PRODUCTS_PER_PAGE} />
+      </div>
     </Page>
   );
 }
 
-function CollectionChips({
-  activeHandle,
-  collections,
-}: {
-  activeHandle: string;
-  collections: Collection[];
-}) {
-  const chipHandles = new Set([
-    "bottoms-women",
-    "co-ord-sets",
-    "corsets",
-    "dresses-and-jumpsuits",
-    "knits",
-    "new-in",
-    "tops",
-  ]);
-  const visible = collections.filter((collection) => chipHandles.has(collection.handle));
+function CollectionTabs({ activeHandle }: { activeHandle: string }) {
   return (
-    <nav
-      aria-label="Collections"
-      className="scrollbar-hide -mx-(--gutter) flex w-full min-w-0 gap-5 overflow-x-auto px-(--gutter) desktop:mx-0 desktop:px-0"
-    >
-      <Link
-        aria-current={activeHandle === "all" ? "page" : undefined}
-        className="type-chip focus-ring flex min-h-9 min-w-9 shrink-0 items-center justify-center border-b border-transparent data-[active=true]:border-ink"
-        data-active={activeHandle === "all"}
-        href="/collections/all"
-      >
-        All products
-      </Link>
-      {visible.map((collection) => (
-        <Link
-          aria-current={collection.handle === activeHandle ? "page" : undefined}
-          className="type-chip focus-ring flex min-h-9 min-w-9 shrink-0 items-center justify-center border-b border-transparent data-[active=true]:border-ink"
-          data-active={collection.handle === activeHandle}
-          href={`/collections/${collection.handle}`}
-          key={collection.handle}
-        >
-          {collection.title}
-        </Link>
-      ))}
+    <nav aria-label="Collections" className="flex flex-wrap items-center gap-x-6 gap-y-2">
+      {COLLECTION_TABS.map((tab) => {
+        const active = tab.href === `/collections/${activeHandle}`;
+        return (
+          <Link
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "focus-ring flex min-h-9 min-w-9 items-center justify-center",
+              active ? "type-tab-active" : "type-caption",
+            )}
+            href={tab.href}
+            key={tab.href}
+          >
+            {tab.label}
+          </Link>
+        );
+      })}
     </nav>
   );
 }
@@ -168,19 +146,7 @@ function CollectionHeader({
     <>
       <BreadcrumbSchema items={breadcrumbItems} />
       <CollectionSchema collection={{ handle, title, description, updatedAt }} />
-      <div>
-        <h1 className="type-h2">
-          <Link
-            className="focus-ring inline-flex min-h-9 items-center"
-            href={`/collections/${handle}`}
-          >
-            {title}
-          </Link>
-        </h1>
-        {description && (
-          <p className="type-body-sm mt-1.5 max-w-[60rem] text-ink-muted">{description}</p>
-        )}
-      </div>
+      <h1 className="sr-only type-h2">{title}</h1>
     </>
   );
 }

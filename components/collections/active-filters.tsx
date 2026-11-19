@@ -1,9 +1,10 @@
 "use client";
 
-import { getFilterRemovalUrl, serializeCollectionParams } from "@shopify/hydrogen";
+import { getFilterRemovalUrl, getSortByValue, serializeCollectionParams } from "@shopify/hydrogen";
 import { useCollection, useCollectionActions } from "@shopify/hydrogen/react";
 
-import { parseFilterInput } from "@/lib/collections";
+import { parseFilterInput, SORT_LABELS } from "@/lib/collections";
+import type { SortValue } from "@/lib/collections/types";
 import { formatPriceRangeLabel, getActiveFilterBadges } from "@/lib/filters";
 
 import { usePublishedFacets } from "./collection-browse-provider";
@@ -15,7 +16,9 @@ export function CollectionActiveFilters() {
   const state = useCollection();
   const actions = useCollectionActions();
 
-  if (state.filters.length === 0) return null;
+  const currentSort = state.sortKey ? getSortByValue(state.sortKey, state.reverse) : "manual";
+  const showSort = currentSort !== "manual";
+  if (state.filters.length === 0 && !showSort) return null;
 
   const filters = facets?.filters ?? [];
   const badges = getActiveFilterBadges(filters, state.filters);
@@ -49,6 +52,13 @@ export function CollectionActiveFilters() {
             facets?.priceRange?.currencyCode,
           )}
           onRemove={() => actions.setFilters(state.filters.filter((filter) => !filter.price))}
+        />
+      ) : null}
+      {showSort ? (
+        <FilterBadge
+          label={SORT_LABELS[currentSort as SortValue] ?? "Featured"}
+          onRemove={() => actions.setSortByValue("manual")}
+          removeLabel={`Clear sort: ${SORT_LABELS[currentSort as SortValue] ?? "Featured"}`}
         />
       ) : null}
       <button

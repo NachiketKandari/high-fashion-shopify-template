@@ -29,17 +29,17 @@ export interface FooterColumn {
 // Mirrors the header in menu-woman (1:152) and menu-man (1:309).
 export const MAIN_NAV: NavItem[] = [
   {
-    href: "/collections/women",
+    href: "/collections/womenswear",
     label: "Woman",
     columns: [
       {
         title: "Shop Woman",
         links: [
-          { href: "/collections/women", label: "All" },
+          { href: "/collections/womenswear", label: "All" },
           { href: "/collections/bralettes", label: "Bralettes" },
           { href: "/collections/bodysuits", label: "Bodysuits" },
           { href: "/collections/dresses", label: "Dress" },
-          { href: "/collections/bottoms-women", label: "Pants" },
+          { href: "/collections/bottoms", label: "Pants" },
           { href: "/collections/racer-backs", label: "Racer Backs" },
           { href: "/collections/shirts", label: "Shirts" },
           { href: "/collections/skirts", label: "Skirt" },
@@ -103,6 +103,21 @@ export const SECONDARY_NAV: NavItem[] = [
   { href: "/collections/new-in", label: "New In" },
   { href: "/pages/lookbooks", label: "Edit" },
   { href: "/pages/about-us", label: "Our World" },
+];
+
+// The PLP category row in PLP - 4 Column, Model (2044:1155).
+export const COLLECTION_TABS: NavLink[] = [
+  { href: "/collections/womenswear", label: "All" },
+  { href: "/collections/bottoms", label: "Pants" },
+  { href: "/collections/skirts", label: "Skirt" },
+  { href: "/collections/shorts", label: "Shorts" },
+  { href: "/collections/dresses", label: "Dress" },
+  { href: "/collections/bralettes", label: "Bralettes" },
+  { href: "/collections/bodysuits", label: "Bodysuits" },
+  { href: "/collections/tshirts", label: "T-shirt" },
+  { href: "/collections/racer-backs", label: "Racer Backs" },
+  { href: "/collections/tops", label: "Tops" },
+  { href: "/collections/shirts", label: "Shirts" },
 ];
 
 export const FOOTER_COLUMNS: FooterColumn[] = [

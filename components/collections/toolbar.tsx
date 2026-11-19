@@ -1,86 +1,55 @@
 import type { ReactNode } from "react";
 
-import { ProductsGridSkeleton } from "@/components/product/products-grid";
-import { PRODUCTS_PER_PAGE } from "@/lib/collections";
 import type { SortValue } from "@/lib/collections/types";
 
+import { CardDensityToggle } from "./card-density-toggle";
 import { CardViewToggle } from "./card-view-toggle";
 import { CollectionActiveFilterCountBadge } from "./collection-browse-provider";
 import { FilterSheet } from "./filters-client";
-import { CollectionsSortSelect } from "./sort-select";
+import { CollectionsSortOptions } from "./sort-options";
 
 const FILTER_TRIGGER_CLASS =
-  "type-chip focus-ring flex h-9 min-w-9 cursor-pointer items-center justify-center gap-2 bg-transparent";
+  "type-caption focus-ring flex h-9 min-w-9 cursor-pointer items-center justify-center gap-2 bg-transparent";
 
 interface BrowseToolbarProps {
   filters: ReactNode;
-  resultCount?: ReactNode;
   sortExclude?: SortValue[];
 }
 
-export function BrowseToolbar({ filters, resultCount, sortExclude }: BrowseToolbarProps) {
+export function BrowseToolbar({ filters, sortExclude }: BrowseToolbarProps) {
   return (
-    <ToolbarLayout
-      filterSheet={
-        <FilterSheet
-          label="Filter"
-          trigger={
-            <button className={FILTER_TRIGGER_CLASS} type="button">
-              <span>Filter</span>
-              <CollectionActiveFilterCountBadge />
-            </button>
-          }
-        >
-          {filters}
-        </FilterSheet>
-      }
-      cardView={<CardViewToggle />}
-      resultCount={resultCount}
-      sortSelect={<CollectionsSortSelect exclude={sortExclude} />}
-    />
-  );
-}
-
-interface BrowseFallbackProps {
-  resultCount?: ReactNode;
-}
-
-export function BrowseFallback({ resultCount }: BrowseFallbackProps) {
-  return (
-    <>
-      <ToolbarLayout
-        filterSheet={
-          <button className={FILTER_TRIGGER_CLASS} type="button">
+    <div className="flex min-w-0 items-center justify-between gap-4">
+      <div className="flex min-w-0 items-center gap-6">
+        <CardDensityToggle />
+        <CardViewToggle />
+      </div>
+      <FilterSheet
+        label="Filter"
+        trigger={
+          <button className={FILTER_TRIGGER_CLASS} data-slot="filter-trigger" type="button">
             <span>Filter</span>
+            <CollectionActiveFilterCountBadge />
           </button>
         }
-        cardView={<CardViewToggle />}
-        resultCount={resultCount}
-        sortSelect={<span className="type-chip flex h-9 items-center">Featured</span>}
-      />
-      <ProductsGridSkeleton count={PRODUCTS_PER_PAGE} />
-    </>
+      >
+        <div className="grid gap-2 py-4">
+          <p className="type-h4">Sort</p>
+          <CollectionsSortOptions exclude={sortExclude} />
+        </div>
+        {filters}
+      </FilterSheet>
+    </div>
   );
 }
 
-interface ToolbarLayoutProps {
-  cardView: ReactNode;
-  filterSheet: ReactNode;
-  resultCount?: ReactNode;
-  sortSelect: ReactNode;
-}
-
-function ToolbarLayout({ cardView, filterSheet, resultCount, sortSelect }: ToolbarLayoutProps) {
+export function BrowseToolbarFallback() {
   return (
-    <div className="flex min-w-0 items-center gap-4">
-      <div className="shrink-0">{cardView}</div>
-      <div className="shrink-0">{filterSheet}</div>
-      {resultCount !== undefined && (
-        <div className="type-body-sm hidden min-w-0 items-center truncate text-ink-muted tablet:flex">
-          {resultCount}
-        </div>
-      )}
-      <div className="ml-auto shrink-0">{sortSelect}</div>
+    <div className="flex min-w-0 items-center justify-between gap-4">
+      <div className="flex min-w-0 items-center gap-6">
+        <CardDensityToggle />
+        <CardViewToggle />
+      </div>
+      <span className="type-caption flex h-9 items-center">Filter</span>
     </div>
   );
 }

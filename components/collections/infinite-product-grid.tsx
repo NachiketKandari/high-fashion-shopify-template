@@ -14,13 +14,18 @@ import type { ProductCard as ProductCardType } from "@/lib/product/types";
 
 interface InfiniteProductGridProps {
   children: ReactNode;
+  gridClassName?: string;
   initialPageInfo: PageInfo;
   initialProductIds: string[];
   source: BrowseSource;
 }
 
+const DEFAULT_GRID_CLASS =
+  "-mx-(--gutter) grid grid-cols-2 gap-px tablet:mx-0 tablet:grid-cols-3 tablet:gap-x-(--grid-gap) tablet:gap-y-(--grid-row-gap) desktop:grid-cols-4";
+
 export function InfiniteProductGrid({
   children,
+  gridClassName = DEFAULT_GRID_CLASS,
   initialPageInfo,
   initialProductIds,
   source,
@@ -88,7 +93,7 @@ export function InfiniteProductGrid({
       data-pending={isPending}
     >
       <h2 className="sr-only">Products</h2>
-      <div className="-mx-(--gutter) grid grid-cols-2 gap-px tablet:mx-0 tablet:grid-cols-3 tablet:gap-x-(--grid-gap) tablet:gap-y-(--grid-row-gap) desktop:grid-cols-4">
+      <div className={gridClassName}>
         {children}
         {additionalProducts.map((product) => (
           <ProductCard key={product.id} product={product} outOfStockText="Out of stock" />

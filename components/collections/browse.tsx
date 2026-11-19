@@ -1,24 +1,11 @@
-import { type ReactNode, Suspense } from "react";
-
 import { ProductCard } from "@/components/product-card/product-card";
-import { ProductsGridSkeleton } from "@/components/product/products-grid";
 import { PRODUCTS_PER_PAGE } from "@/lib/collections";
-import type { BrowseResults, BrowseState, SortValue } from "@/lib/collections/types";
+import type { BrowseResults } from "@/lib/collections/types";
 
 import { BrowseEmpty } from "./browse-empty";
-import { BrowsePublisher, CollectionBrowseProvider } from "./collection-browse-provider";
-import { CollectionFilters } from "./filters";
+import { BROWSE_GRID_CLASS, BrowseGridSkeleton } from "./browse-grid";
+import { BrowsePublisher } from "./collection-browse-provider";
 import { InfiniteProductGrid } from "./infinite-product-grid";
-import { BrowseToolbar } from "./toolbar";
-
-interface BrowseProps {
-  path: string;
-  resultCount?: ReactNode;
-  results: Promise<BrowseResults>;
-  sortExclude?: SortValue[];
-  state: Promise<BrowseState>;
-  storeKey: string;
-}
 
 interface CollectionResultsProps {
   results: BrowseResults | Promise<BrowseResults>;
@@ -28,26 +15,11 @@ interface BrowseResultsGridProps {
   results: BrowseResults;
 }
 
-export function Browse({ path, resultCount, results, sortExclude, state, storeKey }: BrowseProps) {
-  return (
-    <CollectionBrowseProvider handle={storeKey} path={path} state={state}>
-      <BrowseToolbar
-        filters={<CollectionFilters facets={results.then(({ facets }) => facets)} />}
-        resultCount={resultCount}
-        sortExclude={sortExclude}
-      />
-      <Suspense fallback={<BrowseResultsFallback />}>
-        <StreamedResultsGrid results={results} />
-      </Suspense>
-    </CollectionBrowseProvider>
-  );
-}
-
 export function BrowseResultsFallback() {
-  return <ProductsGridSkeleton count={PRODUCTS_PER_PAGE} />;
+  return <BrowseGridSkeleton count={PRODUCTS_PER_PAGE} />;
 }
 
-// Renders a collection page's grid under the layout's CollectionBrowseFrame and hands its facets and data search to the layout's toolbar.
+// Streams the collection page's grid under the layout's CollectionBrowseFrame and hands its facets and data search to the layout's toolbar.
 export async function CollectionResults({ results }: CollectionResultsProps) {
   const resolved = await results;
   return (
@@ -56,10 +28,6 @@ export async function CollectionResults({ results }: CollectionResultsProps) {
       <BrowseResultsGrid results={resolved} />
     </>
   );
-}
-
-async function StreamedResultsGrid({ results }: { results: Promise<BrowseResults> }) {
-  return <BrowseResultsGrid results={await results} />;
 }
 
 function BrowseResultsGrid({ results }: BrowseResultsGridProps) {
@@ -76,6 +44,7 @@ function BrowseResultsGrid({ results }: BrowseResultsGridProps) {
   }
   return (
     <InfiniteProductGrid
+      gridClassName={BROWSE_GRID_CLASS}
       key={`${JSON.stringify(source)}?${dataSearch}`}
       initialPageInfo={pageInfo}
       initialProductIds={products.map((product) => product.id)}
@@ -85,8 +54,9 @@ function BrowseResultsGrid({ results }: BrowseResultsGridProps) {
         <ProductCard
           key={product.id}
           loading={index < 4 ? "eager" : "lazy"}
-          product={product}
           outOfStockText="Out of stock"
+          product={product}
+          variant="browse"
         />
       ))}
     </InfiniteProductGrid>

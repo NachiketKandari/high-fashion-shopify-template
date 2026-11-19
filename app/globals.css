@@ -98,6 +98,9 @@
   --text-tab: 0.75rem;
   --text-tab--line-height: 1rem;
   --text-tab--letter-spacing: 0;
+  --text-tab-active: 0.875rem;
+  --text-tab-active--line-height: 1.125rem;
+  --text-tab-active--letter-spacing: 0;
   --text-nav: 0.875rem;
   --text-nav--line-height: 1.3125rem;
   --text-nav--letter-spacing: -0.011em;
@@ -349,6 +352,13 @@
   line-height: var(--text-tab--line-height);
   font-weight: 500;
   letter-spacing: var(--text-tab--letter-spacing);
+}
+
+@utility type-tab-active {
+  font-size: var(--text-tab-active);
+  line-height: var(--text-tab-active--line-height);
+  font-weight: 700;
+  letter-spacing: var(--text-tab-active--letter-spacing);
 }
 
 @utility type-nav {

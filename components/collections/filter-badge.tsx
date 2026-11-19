@@ -6,9 +6,10 @@ interface FilterBadgeProps {
   href?: string;
   label: string;
   onRemove: () => void;
+  removeLabel?: string;
 }
 
-export function FilterBadge({ href, label, onRemove }: FilterBadgeProps) {
+export function FilterBadge({ href, label, onRemove, removeLabel }: FilterBadgeProps) {
   const className =
     "type-label focus-ring inline-flex min-h-9 cursor-pointer items-center gap-1 bg-surface px-2.5 text-ink transition-colors hover:bg-rule";
   const content = (
@@ -17,17 +18,22 @@ export function FilterBadge({ href, label, onRemove }: FilterBadgeProps) {
       <XIcon className="size-3" strokeWidth={1.25} />
     </>
   );
-  const removeLabel = `Remove filter: ${label}`;
+  const accessibleRemoveLabel = removeLabel ?? `Remove filter: ${label}`;
   if (!href) {
     return (
-      <button aria-label={removeLabel} className={className} onClick={onRemove} type="button">
+      <button
+        aria-label={accessibleRemoveLabel}
+        className={className}
+        onClick={onRemove}
+        type="button"
+      >
         {content}
       </button>
     );
   }
   return (
     <Link
-      aria-label={removeLabel}
+      aria-label={accessibleRemoveLabel}
       className={className}
       href={href}
       scroll={false}
