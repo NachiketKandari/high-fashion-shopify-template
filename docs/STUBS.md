@@ -21,6 +21,9 @@ reads an unverified source ships with a stub and a row here, or does not ship.
 
 | Surface                | Needed                                       | Status      | Stub                                                      | Unblocked by                                          |
 | ---------------------- | -------------------------------------------- | ----------- | --------------------------------------------------------- | ----------------------------------------------------- |
+| Account credits        | Customer balance exposed to the storefront    | Not exposed | — — the control is absent                                 | A credits service or Plus checkout extensibility      |
+| Address prefill        | Write a shipping address into Shopify checkout | Blocked   | — — the pre-checkout step collects it only; Shopify asks again | D3 decision                                       |
+| Delivery ETA           | Shiprocket delivery estimate                 | Unverified  | — — no date or promise is rendered                        | Shiprocket API credentials                            |
 | Pincode serviceability | Shiprocket serviceability API                | Unverified  | `lib/serviceability/index.ts`, created and not yet called | D5 decision plus API credentials                      |
 | Waitlist / notify me   | A place to store an email per variant        | Blocked     | — — the control is absent until a sink exists             | A storage decision: metafield, app or list provider   |
 | Low stock line         | `quantityAvailable` on the storefront token  | Unverified  | `getLowStockLabel` in `lib/product/index.ts` returns null | `unauthenticated_read_product_inventory` on the token |
