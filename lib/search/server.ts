@@ -1,5 +1,7 @@
 import { PRODUCTS_PER_PAGE } from "@/lib/collections";
 import type { BrowseResults, BrowseState } from "@/lib/collections/types";
+import type { ProductCard } from "@/lib/product/types";
+import { withFallback } from "@/lib/shopify/errors/server";
 import {
   fetchSearchFacets,
   fetchSearchIndexProducts,
@@ -33,4 +35,11 @@ export async function fetchSearchResults({
     source: { query, type: "search" },
     total,
   };
+}
+
+export async function fetchClosestSearchResults(): Promise<ProductCard[]> {
+  return withFallback(
+    fetchSearchIndexProducts({ limit: 8 }).then((page) => page.products),
+    [],
+  );
 }

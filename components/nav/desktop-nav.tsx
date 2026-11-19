@@ -17,6 +17,8 @@ const UTILITY_LINKS = [
   { href: "/pages/contact-us", label: "Contact Us" },
 ];
 
+const PANEL_LINK_CLASS = "type-h4 focus-ring flex transition-colors hover:text-ink-muted";
+
 export function DesktopNav() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -91,7 +93,7 @@ export function DesktopNav() {
           <div
             aria-label={`${navLabel(item.label)} menu`}
             aria-modal="true"
-            className="fixed inset-y-0 left-0 z-(--z-overlay) flex w-[709px] max-w-full flex-col bg-paper outline-none"
+            className="fixed inset-y-0 left-0 z-(--z-overlay) hidden h-dvh w-[709px] max-w-full flex-col bg-paper outline-none desktop:flex"
             id="nav-panel"
             onKeyDown={handleKeyDown}
             ref={panelRef}
@@ -103,7 +105,7 @@ export function DesktopNav() {
                 {MAIN_NAV.map((entry, index) => (
                   <button
                     aria-pressed={entry.label === item.label}
-                    className={NAV_ITEM_CLASS}
+                    className={`${NAV_ITEM_CLASS} aria-pressed:underline aria-pressed:underline-offset-4`}
                     key={entry.label}
                     onClick={() => setOpenIndex(index)}
                     type="button"
@@ -126,26 +128,28 @@ export function DesktopNav() {
             </div>
 
             <div className="grid min-h-0 flex-1 grid-cols-2">
-              <div className="flex min-h-0 flex-col overflow-y-auto">
-                <ul className="grid gap-0 px-6 pt-4" role="list">
-                  {item.columns?.[0]?.links.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        className="type-body focus-ring flex min-h-9 items-center text-ink"
-                        href={link.href}
-                        onClick={() => setOpenIndex(null)}
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex min-h-0 flex-col">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6">
+                  <ul className="grid gap-4" role="list">
+                    {item.columns?.[0]?.links.map((link) => (
+                      <li key={link.label}>
+                        <Link
+                          className={`${PANEL_LINK_CLASS} text-ink`}
+                          href={link.href}
+                          onClick={() => setOpenIndex(null)}
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-                <ul className="mt-auto grid gap-0 px-6 pt-16 pb-6" role="list">
+                <ul className="grid shrink-0 gap-3 px-6 py-6" role="list">
                   {UTILITY_LINKS.map((link) => (
                     <li key={link.label}>
                       <Link
-                        className="type-body focus-ring flex min-h-9 items-center text-ink-muted"
+                        className={`${PANEL_LINK_CLASS} text-ink-muted`}
                         href={link.href}
                         onClick={() => setOpenIndex(null)}
                       >
@@ -156,7 +160,7 @@ export function DesktopNav() {
                 </ul>
               </div>
 
-              <div className="flex min-h-0 flex-col overflow-y-auto">
+              <div className="min-h-0 overflow-y-auto overscroll-contain">
                 {item.tiles?.map((tile) => (
                   <Link
                     className="relative block aspect-[354/442] shrink-0 overflow-hidden bg-surface"

@@ -11,7 +11,7 @@ import { getColorSwatch } from "@/lib/product/color-swatches";
 import type { ProductCard as ProductCardType } from "@/lib/product/types";
 
 export interface ProductCardProps {
-  captionLayout?: "row" | "stack";
+  captionLayout?: "compact" | "row" | "stack";
   className?: string;
   loading?: "eager" | "lazy";
   mediaAspect?: "2/3" | "5/9";
@@ -179,6 +179,21 @@ export function ProductCard({
                 />
               ) : null}
             </div>
+          ) : null}
+        </div>
+      ) : captionLayout === "compact" ? (
+        <div className="grid gap-1 px-3 pt-3 desktop:px-6 desktop:pt-6">
+          <h3 className="type-caption min-w-0 truncate text-ink">
+            <Link className="focus-ring inline-flex" href={href}>
+              {product.title}
+            </Link>
+          </h3>
+          {showPrice ? (
+            <Price
+              amount={product.price.amount}
+              className="type-label text-ink"
+              currencyCode={product.price.currencyCode}
+            />
           ) : null}
         </div>
       ) : captionLayout === "row" ? (

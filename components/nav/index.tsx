@@ -38,7 +38,7 @@ export function Nav() {
               className="focus-ring flex size-9 items-center justify-center text-ink"
               href="/search"
             >
-              <SearchIcon className="size-5" strokeWidth={1.25} />
+              <SearchIcon className="size-6" strokeWidth={1.5} />
             </Link>
           )}
           <Suspense fallback={<CartIconFallback />}>

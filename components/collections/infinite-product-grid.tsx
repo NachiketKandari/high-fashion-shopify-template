@@ -4,7 +4,7 @@ import { useCollection } from "@shopify/hydrogen/react";
 import { LoaderCircleIcon } from "lucide-react";
 import { type ReactNode, useEffect, useEffectEvent, useRef, useState } from "react";
 
-import { ProductCard } from "@/components/product-card/product-card";
+import { ProductCard, type ProductCardProps } from "@/components/product-card/product-card";
 import { Button } from "@/components/ui/button";
 import { getBrowseSearch } from "@/lib/collections";
 import { loadMoreBrowseProductsAction } from "@/lib/collections/action";
@@ -13,10 +13,12 @@ import type { PageInfo } from "@/lib/pagination/types";
 import type { ProductCard as ProductCardType } from "@/lib/product/types";
 
 interface InfiniteProductGridProps {
+  cardProps?: Omit<ProductCardProps, "loading" | "product">;
   children: ReactNode;
   gridClassName?: string;
   initialPageInfo: PageInfo;
   initialProductIds: string[];
+  showEndMessage?: boolean;
   source: BrowseSource;
 }
 
@@ -24,10 +26,12 @@ const DEFAULT_GRID_CLASS =
   "-mx-(--gutter) grid grid-cols-2 gap-px tablet:mx-0 tablet:grid-cols-3 tablet:gap-x-(--grid-gap) tablet:gap-y-(--grid-row-gap) desktop:grid-cols-4";
 
 export function InfiniteProductGrid({
+  cardProps,
   children,
   gridClassName = DEFAULT_GRID_CLASS,
   initialPageInfo,
   initialProductIds,
+  showEndMessage = true,
   source,
 }: InfiniteProductGridProps) {
   // The store, not a server snapshot, is the single source of truth for filters and sort mid-scroll.
@@ -96,7 +100,12 @@ export function InfiniteProductGrid({
       <div className={gridClassName}>
         {children}
         {additionalProducts.map((product) => (
-          <ProductCard key={product.id} product={product} outOfStockText="Out of stock" />
+          <ProductCard
+            key={product.id}
+            outOfStockText="Out of stock"
+            {...cardProps}
+            product={product}
+          />
         ))}
       </div>
 
@@ -104,7 +113,7 @@ export function InfiniteProductGrid({
         {announcement}
       </p>
 
-      {!pageInfo.hasNextPage && (
+      {!pageInfo.hasNextPage && showEndMessage && (
         <p className="type-body-sm py-10 text-center text-ink-muted">
           {`You've seen all ${count} ${count === 1 ? "product" : "products"}.`}
         </p>

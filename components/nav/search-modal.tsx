@@ -1,22 +1,24 @@
 "use client";
 
+import { Dialog } from "@base-ui/react/dialog";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { SearchExplorer } from "@/components/search/search-explorer";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Container } from "@/components/ui/container";
 
 import { NAV_ITEM_CLASS } from "./nav-chip";
 
 export function SearchModal() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const onSearchPage = pathname === "/search";
 
   useEffect(() => {
     function handleShortcut(event: globalThis.KeyboardEvent) {
       if (event.key !== "k" || !(event.metaKey || event.ctrlKey)) return;
       event.preventDefault();
-      if (pathname === "/search") {
+      if (onSearchPage) {
         document.getElementById("search-input")?.focus();
         return;
       }
@@ -24,32 +26,49 @@ export function SearchModal() {
     }
     document.addEventListener("keydown", handleShortcut);
     return () => document.removeEventListener("keydown", handleShortcut);
-  }, [pathname]);
+  }, [onSearchPage]);
+
+  if (onSearchPage) {
+    return (
+      <button
+        className={NAV_ITEM_CLASS}
+        onClick={() => document.getElementById("search-input")?.focus()}
+        type="button"
+      >
+        Search
+      </button>
+    );
+  }
 
   return (
-    <Sheet onOpenChange={setOpen} open={open}>
-      <SheetTrigger
+    <Dialog.Root onOpenChange={setOpen} open={open}>
+      <Dialog.Trigger
         render={
-          <button className={pathname === "/search" ? "hidden" : NAV_ITEM_CLASS} type="button">
+          <button
+            className={`${NAV_ITEM_CLASS} ${open ? "invisible pointer-events-none" : ""}`}
+            type="button"
+          >
             Search
           </button>
         }
       />
-      <SheetContent
-        className="inset-0 h-dvh w-full max-w-full gap-0 rounded-none border-0 p-0 shadow-none"
-        closeButton={false}
-        side="top"
-      >
-        <SheetTitle className="sr-only">Search</SheetTitle>
-        <div className="min-h-0 flex-1 overflow-y-auto px-(--gutter) pt-6 desktop:pt-1.5">
-          <SearchExplorer
-            autoFocus
-            closeOnNavigate
-            inputId="search-drawer-input"
-            onClose={() => setOpen(false)}
-          />
-        </div>
-      </SheetContent>
-    </Sheet>
+      <Dialog.Portal>
+        <Dialog.Popup
+          aria-modal="true"
+          className="fixed inset-x-0 top-(--header-bar-h) bottom-0 z-(--z-overlay) flex flex-col overflow-y-auto overscroll-contain bg-paper outline-none"
+          initialFocus={() => document.getElementById("search-drawer-input")}
+          role="dialog"
+        >
+          <Dialog.Title className="sr-only">Search</Dialog.Title>
+          <Container className="py-10 desktop:py-20">
+            <SearchExplorer
+              closeOnNavigate
+              inputId="search-drawer-input"
+              onClose={() => setOpen(false)}
+            />
+          </Container>
+        </Dialog.Popup>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

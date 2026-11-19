@@ -15,7 +15,7 @@ import { PRODUCTS_PER_PAGE } from "@/lib/collections";
 import { readBrowseState } from "@/lib/collections/server";
 import type { BrowseResults, BrowseState } from "@/lib/collections/types";
 import { TRENDING_SEARCH_TERMS } from "@/lib/search";
-import { fetchSearchResults } from "@/lib/search/server";
+import { fetchClosestSearchResults, fetchSearchResults } from "@/lib/search/server";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -66,8 +66,8 @@ export default function SearchPage({ searchParams }: PageProps<"/search">) {
     fetchSearchResults({ query: getParam(resolved, "q")?.trim(), statePromise }),
   );
   return (
-    <Page className="pt-6 desktop:pt-1.5">
-      <Container>
+    <Page className="pt-0">
+      <Container className="py-10 desktop:py-20">
         <Suspense fallback={<SearchPageSkeleton />}>
           <SearchExperience
             resultsPromise={resultsPromise}
@@ -126,23 +126,26 @@ async function SearchResults({
   }
 
   return (
-    <div className="grid gap-10">
+    <div className="grid gap-10 [--grid-row-gap:40px]">
       <h1 className="type-h3 text-ink">showing all results for ‘{query}’</h1>
       <CollectionBrowseProvider handle={`search:${query}`} path="/search" state={statePromise}>
         <InfiniteProductGrid
+          cardProps={{
+            captionLayout: "compact",
+            className: "[&>div:first-child]:aspect-[348/447]",
+            showActions: false,
+            showSwatches: false,
+          }}
           initialPageInfo={results.pageInfo}
           initialProductIds={results.products.map((product) => product.id)}
+          showEndMessage={false}
           source={results.source}
         >
           {results.products.map((product, index) => (
-            <ProductCard
-              captionLayout="row"
-              className="[&>div:first-child]:aspect-[348/447]"
+            <SearchProductCard
               key={product.id}
               loading={index < 4 ? "eager" : "lazy"}
               product={product}
-              showActions={false}
-              showSwatches={false}
             />
           ))}
         </InfiniteProductGrid>
@@ -151,27 +154,62 @@ async function SearchResults({
   );
 }
 
-function SearchZeroState({ query }: { query: string }) {
+function SearchProductCard({
+  loading,
+  product,
+}: {
+  loading?: "eager" | "lazy";
+  product: BrowseResults["products"][number];
+}) {
   return (
-    <div className="grid gap-8">
-      <div className="grid gap-2">
+    <ProductCard
+      captionLayout="compact"
+      className="[&>div:first-child]:aspect-[348/447]"
+      loading={loading}
+      product={product}
+      showActions={false}
+      showSwatches={false}
+    />
+  );
+}
+
+async function SearchZeroState({ query }: { query: string }) {
+  const closest = await fetchClosestSearchResults();
+
+  if (closest.length === 0) {
+    return (
+      <div className="grid gap-8">
         <h1 className="type-h3 text-ink">No results found for ‘{query}’</h1>
-        <p className="type-body text-ink-muted">Check the spelling, or try a different term.</p>
+        <div className="grid gap-4 pl-8">
+          <p className="type-h3 text-ink-muted">Trending search -</p>
+          <ul className="grid gap-4" role="list">
+            {TRENDING_SEARCH_TERMS.map((trending) => (
+              <li key={trending}>
+                <Link
+                  className="type-h3 focus-ring flex text-ink"
+                  href={`/search?q=${encodeURIComponent(trending)}`}
+                >
+                  {trending}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <div className="grid gap-4 pl-8">
-        <p className="type-h3 text-ink-muted">Trending searches</p>
-        <ul className="grid gap-px" role="list">
-          {TRENDING_SEARCH_TERMS.map((trending) => (
-            <li key={trending}>
-              <Link
-                className="type-h3 focus-ring flex min-h-9 items-center text-ink"
-                href={`/search?q=${encodeURIComponent(trending)}`}
-              >
-                {trending}
-              </Link>
-            </li>
-          ))}
-        </ul>
+    );
+  }
+
+  return (
+    <div className="grid gap-10 [--grid-row-gap:40px]">
+      <h1 className="type-h3 text-ink">No results found for ‘{query}’, closest results -</h1>
+      <div className="-mx-(--gutter) grid grid-cols-2 gap-px tablet:mx-0 tablet:grid-cols-3 tablet:gap-x-(--grid-gap) tablet:gap-y-(--grid-row-gap) desktop:grid-cols-4">
+        {closest.map((product, index) => (
+          <SearchProductCard
+            key={product.id}
+            loading={index < 4 ? "eager" : "lazy"}
+            product={product}
+          />
+        ))}
       </div>
     </div>
   );
@@ -179,7 +217,7 @@ function SearchZeroState({ query }: { query: string }) {
 
 function SearchResultsSkeleton() {
   return (
-    <div aria-busy="true" className="grid gap-10">
+    <div aria-busy="true" className="grid gap-10 [--grid-row-gap:40px]">
       <Skeleton className="h-5 w-64" />
       <ProductsGridSkeleton count={Math.min(PRODUCTS_PER_PAGE, 8)} />
     </div>
@@ -189,8 +227,11 @@ function SearchResultsSkeleton() {
 function SearchPageSkeleton() {
   return (
     <div aria-busy="true" className="grid gap-10">
-      <Skeleton className="h-[57px] w-full" />
-      <div className="grid gap-3">
+      <div className="grid gap-3 desktop:grid-cols-[1fr_276px] desktop:gap-10">
+        <Skeleton className="h-[57px] w-full" />
+        <Skeleton className="h-[57px] w-full" />
+      </div>
+      <div className="grid gap-4 pl-8">
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-5 w-28" />
       </div>

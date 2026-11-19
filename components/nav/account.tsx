@@ -1,4 +1,4 @@
-import { UserRound } from "lucide-react";
+import { UserRound, UserRoundPlus } from "lucide-react";
 
 import { NAV_CHIP_CLASS } from "@/components/nav/nav-chip";
 import { Link } from "@/components/ui/link";
@@ -15,7 +15,7 @@ export async function NavAccount() {
       <>
         {/* oxlint-disable-next-line next/no-html-link-for-pages -- Sign-in must be a full document navigation that is never prefetched, because the proxy starts OAuth. */}
         <a aria-label="Account" className={MOBILE_ACCOUNT_CLASS} href="/account/login">
-          <UserRound className="size-5" strokeWidth={1.25} />
+          <UserRoundPlus className="size-6" strokeWidth={1.5} />
         </a>
         {/* oxlint-disable-next-line next/no-html-link-for-pages -- Sign-in must be a full document navigation that is never prefetched, because the proxy starts OAuth. */}
         <a className={ACCOUNT_CLASS} href="/account/login">
@@ -27,7 +27,7 @@ export async function NavAccount() {
   return (
     <>
       <Link aria-label="Account" className={MOBILE_ACCOUNT_CLASS} href="/account">
-        <UserRound className="size-5" strokeWidth={1.25} />
+        <UserRound className="size-6" strokeWidth={1.5} />
       </Link>
       <Link className={ACCOUNT_CLASS} href="/account">
         Account
@@ -40,7 +40,7 @@ export function NavAccountFallback() {
   return (
     <>
       <span aria-hidden="true" className={MOBILE_ACCOUNT_CLASS}>
-        <UserRound className="size-5" strokeWidth={1.25} />
+        <UserRoundPlus className="size-6" strokeWidth={1.5} />
       </span>
       <span aria-hidden="true" className={ACCOUNT_CLASS}>
         Account

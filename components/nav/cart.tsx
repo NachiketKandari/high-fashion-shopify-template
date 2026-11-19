@@ -1,4 +1,4 @@
-import { HandbagIcon } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 
 import { getCart } from "@/lib/cart/server";
 import { withFallback } from "@/lib/shopify/errors/server";
@@ -13,7 +13,7 @@ export async function CartIcon() {
 export function CartIconFallback() {
   return (
     <span className="flex h-9 w-9 items-center justify-center text-ink">
-      <HandbagIcon className="size-5" strokeWidth={1.25} />
+      <ShoppingBag className="size-6" strokeWidth={1.5} />
       <span className="sr-only">Bag</span>
     </span>
   );

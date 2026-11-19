@@ -8,6 +8,7 @@ import { type FormEvent, type KeyboardEvent, type ReactNode, useRef, useState } 
 import { Link } from "@/components/ui/link";
 import { SEARCH_TERM_MAX_LENGTH, TRENDING_SEARCH_TERMS } from "@/lib/search";
 import { usePredictiveSearch } from "@/lib/search/client";
+import type { SearchSuggestion } from "@/lib/search/types";
 
 interface SearchExplorerProps {
   autoFocus?: boolean;
@@ -40,8 +41,8 @@ function SearchExplorerContent({
   const { activeIndex, reset, results, setActiveIndex, setQuery } = usePredictiveSearch();
   const term = value.trim();
   const isTyping = term.length > 0 && term !== initialQuery;
-  const suggestions = isTyping ? (results?.queries.map((entry) => entry.text) ?? []) : [];
-  const items = isTyping ? [...suggestions, term] : [];
+  const suggestions = isTyping ? (results?.queries ?? []) : [];
+  const items = isTyping ? [...suggestions.map((suggestion) => suggestion.text), term] : [];
 
   function navigate(next: string) {
     const nextTerm = next.trim();
@@ -104,11 +105,11 @@ function SearchExplorerContent({
         onSubmit={handleSubmit}
         role="search"
       >
-        <div className="flex h-[57px] items-center gap-2 border-b border-ink pr-2 focus-within:border-b-2">
+        <div className="flex h-[57px] items-center gap-2 border-b border-ink pr-4 focus-within:border-b-2">
           <SearchIcon
             aria-hidden="true"
-            className="ml-4 size-6 shrink-0 text-ink-muted"
-            strokeWidth={1.25}
+            className="size-6 shrink-0 text-ink-muted"
+            strokeWidth={1.5}
           />
           <input
             aria-activedescendant={
@@ -143,7 +144,7 @@ function SearchExplorerContent({
           ) : null}
         </div>
         <button
-          className="type-nav flex h-[57px] items-center justify-center rounded-control bg-ink text-inverse uppercase"
+          className="type-nav flex h-[57px] items-center justify-center rounded-control bg-ink-strong text-inverse uppercase"
           type="submit"
         >
           Search
@@ -153,30 +154,30 @@ function SearchExplorerContent({
       {isTyping ? (
         <ul
           aria-label="Search suggestions"
-          className="mt-4 grid gap-px pl-8"
+          className="mt-6 grid gap-4 pl-8"
           id={`${inputId}-suggestions`}
           role="listbox"
         >
           {suggestions.map((suggestion, index) => (
-            <li key={suggestion} role="presentation">
+            <li key={suggestion.text} role="presentation">
               <button
                 aria-selected={activeIndex === index}
-                className="type-h3 focus-ring flex min-h-9 w-full items-center text-left text-ink"
+                className="type-h3 focus-ring flex w-full items-center text-left"
                 id={`${inputId}-option-${index}`}
-                onClick={() => navigate(suggestion)}
+                onClick={() => navigate(suggestion.text)}
                 onMouseEnter={() => setActiveIndex(index)}
                 role="option"
                 tabIndex={-1}
                 type="button"
               >
-                {suggestion}
+                <SuggestionLabel suggestion={suggestion} />
               </button>
             </li>
           ))}
           <li role="presentation">
             <button
               aria-selected={activeIndex === suggestions.length}
-              className="type-h3 focus-ring flex min-h-9 w-full items-center text-left text-ink"
+              className="type-h3 focus-ring flex w-full items-center text-left text-ink-muted"
               id={`${inputId}-option-${suggestions.length}`}
               onClick={() => navigate(term)}
               onMouseEnter={() => setActiveIndex(suggestions.length)}
@@ -190,12 +191,12 @@ function SearchExplorerContent({
         </ul>
       ) : term === "" ? (
         <div className="mt-10 pl-8">
-          <p className="type-h3 text-ink-muted">Trending searches</p>
-          <ul className="mt-4 grid gap-px" role="list">
+          <p className="type-h3 text-ink-muted">Trending search -</p>
+          <ul className="mt-6 grid gap-4" role="list">
             {TRENDING_SEARCH_TERMS.map((trending) => (
               <li key={trending}>
                 <Link
-                  className="type-h3 focus-ring flex min-h-9 items-center text-ink"
+                  className="type-h3 focus-ring flex text-ink"
                   href={`/search?q=${encodeURIComponent(trending)}`}
                   onClick={closeOnNavigate ? onClose : undefined}
                 >
@@ -209,5 +210,43 @@ function SearchExplorerContent({
         <div className="mt-10">{children}</div>
       ) : null}
     </div>
+  );
+}
+
+function parseStyledSuggestion(styledText: string) {
+  const parts: Array<{ matched: boolean; text: string }> = [];
+  let matched = false;
+  for (const segment of styledText.split(/(<b>|<\/b>)/i)) {
+    if (/^<b>$/i.test(segment)) {
+      matched = true;
+      continue;
+    }
+    if (/^<\/b>$/i.test(segment)) {
+      matched = false;
+      continue;
+    }
+    if (segment) parts.push({ matched, text: segment });
+  }
+  return parts;
+}
+
+function SuggestionLabel({ suggestion }: { suggestion: SearchSuggestion }) {
+  const parts = parseStyledSuggestion(suggestion.styledText);
+
+  if (parts.length === 0) {
+    return <span className="text-ink-muted">{suggestion.text}</span>;
+  }
+
+  return (
+    <>
+      {parts.map((part, index) => (
+        <span
+          className={part.matched ? "text-ink" : "text-ink-muted"}
+          key={`${index}-${part.text}`}
+        >
+          {part.text}
+        </span>
+      ))}
+    </>
   );
 }

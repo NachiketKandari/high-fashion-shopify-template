@@ -1,6 +1,6 @@
 "use client";
 
-import { HandbagIcon } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 
 import { Link } from "@/components/ui/link";
 import { useCart } from "@/lib/cart/client";
@@ -26,7 +26,7 @@ export function CartIconClient({ cartLabel, initialCart }: CartIconClientProps) 
         className="focus-ring flex size-9 items-center justify-center desktop:hidden"
         href="/cart"
       >
-        <HandbagIcon className="size-6" strokeWidth={1.25} />
+        <ShoppingBag className="size-6" strokeWidth={1.5} />
       </Link>
       <Link
         aria-label={`${cartLabel} (${quantity})`}
