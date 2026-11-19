@@ -10,10 +10,16 @@ interface CartWarningsProps {
   lineId?: string;
 }
 
+const UNAVAILABLE_CODES = new Set([
+  "MERCHANDISE_NOT_ENOUGH_STOCK",
+  "MERCHANDISE_OUT_OF_STOCK",
+  "PRODUCT_UNAVAILABLE_IN_BUYER_LOCATION",
+]);
+
 export function CartWarnings({ lineId }: CartWarningsProps) {
   const errors = useCart((state) => state.errors);
   const lines = useCart((state) => state.data.lines.nodes);
-  const visibleLineIds = new Set(lines.map((line) => line.id));
+  const visibleLineIds = new Set(lines.filter((line) => line.quantity > 0).map((line) => line.id));
   const groups = lineId
     ? [errors.lines.get(lineId)]
     : [
@@ -34,6 +40,11 @@ function CartWarningMessages({ group }: { group: CartErrorGroup }) {
   const [dismissed, setDismissed] = useState(false);
   if (dismissed) return null;
   const messages = [...group.userErrors, ...group.warnings];
+  const heading = group.userErrors.length
+    ? "We couldn't update your cart"
+    : group.warnings.some((warning) => UNAVAILABLE_CODES.has(warning.code))
+      ? "Some items are unavailable"
+      : "Your cart was updated";
   return (
     <div
       role={group.userErrors.length ? "alert" : "status"}
@@ -42,9 +53,7 @@ function CartWarningMessages({ group }: { group: CartErrorGroup }) {
       <div className="flex items-start gap-2.5">
         <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />
         <div className="grid flex-1 gap-1">
-          <p className="type-h4">
-            {group.userErrors.length ? "We couldn't update your cart" : "Your cart was updated"}
-          </p>
+          <p className="type-h4">{heading}</p>
           <ul className="grid gap-0.5 text-ink-muted">
             {messages.map((message, index) => (
               <li key={`${message.code}:${index}`}>{message.message}</li>

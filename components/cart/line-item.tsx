@@ -18,10 +18,11 @@ interface CartLineItemsProps {
 }
 
 export function CartLineItems({ lines }: CartLineItemsProps) {
-  const keys = getLineRowKeys(lines);
+  const visibleLines = lines.filter((line) => line.quantity > 0);
+  const keys = getLineRowKeys(visibleLines);
   return (
     <ul aria-label="Cart items" className="grid gap-8">
-      {lines.map((line, index) => (
+      {visibleLines.map((line, index) => (
         <CartLineItem item={line} key={keys[index]} />
       ))}
     </ul>

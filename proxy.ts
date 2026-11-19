@@ -1,4 +1,4 @@
-import { handleShopifyRoutes } from "@shopify/hydrogen";
+import { getCartId, handleShopifyRoutes } from "@shopify/hydrogen";
 import {
   createCustomerAccountServerHandlers,
   CUSTOMER_ACCOUNT_AUTHORIZE_PATH,
@@ -15,7 +15,11 @@ import {
   getCustomerRequestOrigin,
   getHydrogenCustomerSession,
 } from "@/lib/auth/request";
-import { cartHandlers, createCustomerCartHandlers } from "@/lib/cart/request";
+import {
+  cartHandlers,
+  createCustomerCartHandlers,
+  syncCartBuyerIdentity,
+} from "@/lib/cart/request";
 import { getRefinedCollectionPath, isRefinedCollectionPath } from "@/lib/collections";
 import { shopConfig } from "@/lib/config";
 import { getMarkdownRewritePath } from "@/lib/markdown/representation";
@@ -45,6 +49,10 @@ export async function proxy(request: NextRequest): Promise<Response> {
     routeTemplates: SHOPIFY_ROUTE_TEMPLATES,
     storefrontClient: createRequestStorefrontClient(requestContext),
   };
+  if (pathname === "/api/cart" && request.method === "POST") {
+    const cartId = getCartId({ cookie: request.headers.get("cookie") ?? undefined });
+    if (cartId) await syncCartBuyerIdentity(routeOptions.storefrontClient, cartId);
+  }
   const shopifyRoute = customerSession
     ? handleShopifyRoutes({
         ...routeOptions,
