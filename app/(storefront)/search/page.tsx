@@ -2,17 +2,20 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { SearchViewedTracker } from "@/components/analytics/trackers";
-import { Browse } from "@/components/collections/browse";
-import { BrowseFallback } from "@/components/collections/toolbar";
+import { CollectionBrowseProvider } from "@/components/collections/collection-browse-provider";
+import { CollectionFilters } from "@/components/collections/filters";
+import { InfiniteProductGrid } from "@/components/collections/infinite-product-grid";
+import { BrowseFallback, BrowseToolbar } from "@/components/collections/toolbar";
+import { ProductCard } from "@/components/product-card/product-card";
+import { SearchExplorer } from "@/components/search/search-explorer";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
-import { Sections } from "@/components/ui/sections";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SEARCH_SORT_EXCLUDE } from "@/lib/collections";
 import { readBrowseState } from "@/lib/collections/server";
 import type { BrowseResults, BrowseState } from "@/lib/collections/types";
-import { formatCount } from "@/lib/content";
+import { TRENDING_SEARCH_TERMS } from "@/lib/search";
 import { fetchSearchResults } from "@/lib/search/server";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 
@@ -61,39 +64,24 @@ export default function SearchPage({ searchParams }: PageProps<"/search">) {
   // Don't await searchParams here — it would force the route fully dynamic.
   const statePromise = readBrowseState(searchParams);
   const resultsPromise = searchParams.then((resolved) =>
-    fetchSearchResults({ query: getParam(resolved, "q"), statePromise }),
+    fetchSearchResults({ query: getParam(resolved, "q")?.trim(), statePromise }),
   );
   return (
-    <Page>
+    <Page className="pt-6 desktop:pt-1.5">
       <Container>
-        <Sections>
-          <Suspense fallback={null}>
-            <SearchAnalyticsTracker searchParamsPromise={searchParams} />
-          </Suspense>
-          <div>
-            <h1 className="type-display">
-              <Link className="focus-ring inline-flex min-h-9 items-center" href="/search">
-                Search
-              </Link>
-              <Suspense fallback={null}>
-                <SearchQueryLabel searchParamsPromise={searchParams} />
-              </Suspense>
-            </h1>
-          </div>
-          <Suspense fallback={<BrowseFallback resultCount={<Skeleton className="h-4 w-20" />} />}>
-            <SearchBrowse
-              resultsPromise={resultsPromise}
-              searchParamsPromise={searchParams}
-              statePromise={statePromise}
-            />
-          </Suspense>
-        </Sections>
+        <Suspense fallback={<SearchPageSkeleton />}>
+          <SearchExperience
+            resultsPromise={resultsPromise}
+            searchParamsPromise={searchParams}
+            statePromise={statePromise}
+          />
+        </Suspense>
       </Container>
     </Page>
   );
 }
 
-async function SearchBrowse({
+async function SearchExperience({
   resultsPromise,
   searchParamsPromise,
   statePromise,
@@ -102,47 +90,107 @@ async function SearchBrowse({
   searchParamsPromise: PageProps<"/search">["searchParams"];
   statePromise: Promise<BrowseState>;
 }) {
-  const query = getParam(await searchParamsPromise, "q") ?? "";
-
-  // A new term rebuilds the browse store so stale filters never carry across searches.
+  const query = (getParam(await searchParamsPromise, "q") ?? "").trim();
   return (
-    <Browse
-      path="/search"
-      resultCount={
-        <Suspense fallback={<Skeleton className="h-4 w-20" />}>
-          <SearchResultCount resultsPromise={resultsPromise} />
-        </Suspense>
-      }
-      results={resultsPromise}
-      sortExclude={SEARCH_SORT_EXCLUDE}
-      state={statePromise}
-      storeKey={`search:${query}`}
-    />
+    <>
+      <Suspense fallback={null}>
+        <SearchViewedTracker searchTerm={query} />
+      </Suspense>
+      <SearchExplorer initialQuery={query} key={query}>
+        {query ? (
+          <Suspense fallback={<BrowseFallback />}>
+            <SearchResults
+              query={query}
+              resultsPromise={resultsPromise}
+              statePromise={statePromise}
+            />
+          </Suspense>
+        ) : null}
+      </SearchExplorer>
+    </>
   );
 }
 
-async function SearchAnalyticsTracker({
-  searchParamsPromise,
+async function SearchResults({
+  query,
+  resultsPromise,
+  statePromise,
 }: {
-  searchParamsPromise: PageProps<"/search">["searchParams"];
+  query: string;
+  resultsPromise: Promise<BrowseResults>;
+  statePromise: Promise<BrowseState>;
 }) {
-  const query = getParam(await searchParamsPromise, "q");
-  return <SearchViewedTracker searchTerm={query ?? ""} />;
+  const results = await resultsPromise;
+
+  if (results.products.length === 0) {
+    return <SearchZeroState query={query} />;
+  }
+
+  return (
+    <div className="grid gap-6">
+      <h1 className="type-h3 text-ink">showing all results for ‘{query}’</h1>
+      <CollectionBrowseProvider handle={`search:${query}`} path="/search" state={statePromise}>
+        <div className="grid gap-6">
+          <BrowseToolbar
+            filters={<CollectionFilters facets={results.facets} />}
+            sortExclude={SEARCH_SORT_EXCLUDE}
+          />
+          <InfiniteProductGrid
+            initialPageInfo={results.pageInfo}
+            initialProductIds={results.products.map((product) => product.id)}
+            source={results.source}
+          >
+            {results.products.map((product, index) => (
+              <ProductCard
+                captionLayout="row"
+                key={product.id}
+                loading={index < 4 ? "eager" : "lazy"}
+                product={product}
+                showActions={false}
+                showSwatches={false}
+              />
+            ))}
+          </InfiniteProductGrid>
+        </div>
+      </CollectionBrowseProvider>
+    </div>
+  );
 }
 
-async function SearchQueryLabel({
-  searchParamsPromise,
-}: {
-  searchParamsPromise: PageProps<"/search">["searchParams"];
-}) {
-  const resolvedSearchParams = await searchParamsPromise;
-  const query = getParam(resolvedSearchParams, "q");
-  if (!query) return null;
-  return ` for "${query}"`;
+function SearchZeroState({ query }: { query: string }) {
+  return (
+    <div className="grid gap-8">
+      <div className="grid gap-2">
+        <h1 className="type-h3 text-ink">No results found for ‘{query}’</h1>
+        <p className="type-body text-ink-muted">Check the spelling, or try a different term.</p>
+      </div>
+      <div className="grid gap-4 pl-8">
+        <p className="type-h3 text-ink-muted">Trending searches</p>
+        <ul className="grid gap-px" role="list">
+          {TRENDING_SEARCH_TERMS.map((trending) => (
+            <li key={trending}>
+              <Link
+                className="type-h3 focus-ring flex min-h-9 items-center text-ink"
+                href={`/search?q=${encodeURIComponent(trending)}`}
+              >
+                {trending}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
 }
 
-async function SearchResultCount({ resultsPromise }: { resultsPromise: Promise<BrowseResults> }) {
-  const { total } = await resultsPromise;
-  if (!total) return null;
-  return formatCount(total, "Item");
+function SearchPageSkeleton() {
+  return (
+    <div aria-busy="true" className="grid gap-10">
+      <Skeleton className="h-[57px] w-full" />
+      <div className="grid gap-3">
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-5 w-28" />
+      </div>
+    </div>
+  );
 }

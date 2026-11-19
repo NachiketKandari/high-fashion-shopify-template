@@ -34,6 +34,7 @@ reads an unverified source ships with a stub and a row here, or does not ship.
 | Tax invoices           | GST invoice app or Admin API plus generation           | Not started | —                                                                                                                           | App procurement decision                                                                            |
 | Newsletter signup      | A list provider or marketing-consent sink              | Blocked     | `NewsletterForm` renders an unavailable status                                                                              | A provider plus a consent policy                                                                    |
 | Contact form           | A mailbox or ticketing transport                       | Blocked     | `ContactForm` renders an unavailable status                                                                                 | A transport endpoint or a ticketing app                                                             |
+| Search typo correction | A did-you-mean result set                              | Gated (D6)  | `SearchZeroState` shows the honest zero-result copy and trending terms, and never fabricates closest products               | A search service or synonym dictionary; Shopify predictive search returns query suggestions only    |
 
 ## Verified 2026-11-16
 

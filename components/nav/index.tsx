@@ -1,4 +1,3 @@
-import { PredictiveSearchProvider } from "@shopify/hydrogen/react";
 import { SearchIcon } from "lucide-react";
 import { Suspense } from "react";
 
@@ -52,17 +51,7 @@ export function Nav() {
           )}
         </>
       }
-      search={
-        shopConfig.search.isEnabled ? (
-          <PredictiveSearchProvider
-            debounceInMs={300}
-            limit={4}
-            types={["PRODUCT", "COLLECTION", "QUERY"]}
-          >
-            <SearchModal />
-          </PredictiveSearchProvider>
-        ) : null
-      }
+      search={shopConfig.search.isEnabled ? <SearchModal /> : null}
     />
   );
 }

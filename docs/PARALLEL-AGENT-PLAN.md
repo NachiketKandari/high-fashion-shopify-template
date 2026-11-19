@@ -39,6 +39,31 @@ must rebase on the foundation and cart merge before review. They are gated by de
 in the journey document; do not invent a custom identity service or a custom payment checkout in
 these worktrees.
 
+### Local development ports
+
+Each worktree serves on its own fixed port, so parallel sessions and their browsers never share a
+server. Point the design suite at the same port with `DESIGN_BASE_URL`.
+
+| Worktree    | Port |
+| ----------- | ---- |
+| foundation  | 3000 |
+| home        | 3001 |
+| menu-search | 3002 |
+| pdp         | 3003 |
+| cart        | 3004 |
+| auth        | 3005 |
+| checkout    | 3006 |
+
+```sh
+PORT=3002 corepack pnpm dev
+DESIGN_BASE_URL=http://localhost:3002 corepack pnpm test:design
+DESIGN_BASE_URL=http://localhost:3002 corepack pnpm exec playwright test tests/design --headed
+```
+
+Playwright is headless by default; `--headed` opens a browser window without changing the port. A
+browser automation session can attach to the same URL. Before moving a worktree to its slot, stop
+only that worktree's server: `lsof -ti tcp:<port> | xargs kill`.
+
 ## 2. Exclusive file ownership
 
 Rule: a workstream edits only its column. If a shared file must change, the foundation workstream
