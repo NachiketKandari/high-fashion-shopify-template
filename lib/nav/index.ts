@@ -61,7 +61,7 @@ export const MAIN_NAV: NavItem[] = [
   },
   {
     href: "/collections/menswear",
-    label: "Men",
+    label: "Man",
     columns: [
       {
         title: "Shop Men",
