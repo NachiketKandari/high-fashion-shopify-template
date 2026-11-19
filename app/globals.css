@@ -366,9 +366,23 @@
 }
 
 @utility focus-ring {
-  &:focus-visible {
+  &:focus-visible:not(.focus-underline):not(.focus-none) {
     outline: 2px solid var(--ink);
     outline-offset: 2px;
+  }
+}
+
+@utility focus-underline {
+  &:focus-visible,
+  &:focus-within {
+    outline: none;
+    box-shadow: inset 0 -2px 0 0 var(--ink-strong);
+  }
+}
+
+@utility focus-none {
+  &:focus-visible {
+    outline: none;
   }
 }
 

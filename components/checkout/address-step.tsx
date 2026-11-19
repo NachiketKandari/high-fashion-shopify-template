@@ -2,6 +2,7 @@
 
 import { cn } from "cn";
 
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { DELIVERY_FIELDS, getAddressSummary } from "@/lib/checkout";
 import type { DeliveryDraft, DeliveryErrors, DeliverySelection } from "@/lib/checkout/types";
@@ -11,7 +12,12 @@ interface AddressStepProps {
   addresses: CustomerAddress[];
   className?: string;
   errors: DeliveryErrors;
+  isSignedIn: boolean;
+  isSavingAddress: boolean;
   onChange: (selection: DeliverySelection) => void;
+  onSaveAddressChange: (saveAddress: boolean) => void;
+  saveAddress: boolean;
+  saveError: string | null;
   selection: DeliverySelection;
 }
 
@@ -19,7 +25,12 @@ export function AddressStep({
   addresses,
   className,
   errors,
+  isSignedIn,
+  isSavingAddress,
   onChange,
+  onSaveAddressChange,
+  saveAddress,
+  saveError,
   selection,
 }: AddressStepProps) {
   const showForm = selection.mode === "new" || addresses.length === 0;
@@ -100,18 +111,18 @@ export function AddressStep({
                   {field.key === "phone" ? (
                     <div
                       className={cn(
-                        "flex h-[41px] w-[300px] max-w-full items-center gap-6 border-0 border-b bg-transparent px-6 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ink",
+                        "flex h-[41px] w-[300px] max-w-full items-center gap-6 border-0 border-b bg-transparent px-6 focus-underline",
                         error ? "border-error-rule" : "border-ink",
                       )}
                     >
-                      <span aria-hidden="true" className="type-control">
+                      <span aria-hidden="true" className="type-meta-medium">
                         +91
                       </span>
                       <Input
                         aria-describedby={error ? `${id}-error` : undefined}
                         aria-invalid={error ? true : undefined}
                         autoComplete={field.autoComplete}
-                        className="type-meta-medium h-full w-full border-0 px-0 py-0 focus-visible:outline-none"
+                        className="type-meta-medium focus-none h-full w-full border-0 px-0 py-0 focus-visible:outline-none"
                         id={id}
                         inputMode="numeric"
                         maxLength={10}
@@ -125,7 +136,7 @@ export function AddressStep({
                       aria-describedby={error ? `${id}-error` : undefined}
                       aria-invalid={error ? true : undefined}
                       autoComplete={field.autoComplete}
-                      className="type-meta-medium h-[41px] w-[300px] max-w-full rounded-none border-0 border-b border-ink px-6 py-3 focus-visible:outline-offset-4"
+                      className="type-meta-medium h-[41px] w-[300px] max-w-full rounded-none border-0 border-b border-ink px-6 py-3 focus-underline"
                       id={id}
                       inputMode={field.key === "postcode" ? "numeric" : undefined}
                       maxLength={field.key === "postcode" ? 6 : undefined}
@@ -143,6 +154,23 @@ export function AddressStep({
               );
             })}
           </div>
+
+          {isSignedIn ? (
+            <div className="grid gap-1">
+              <Checkbox
+                checked={saveAddress}
+                className="type-meta min-h-0 text-ink"
+                disabled={isSavingAddress}
+                label="Save as my default address"
+                onCheckedChange={onSaveAddressChange}
+              />
+              {saveError ? (
+                <p className="type-meta text-error-rule" role="alert">
+                  {saveError}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       ) : null}
     </section>

@@ -1,9 +1,10 @@
-import type { CustomerAddress } from "@/lib/customer/types";
+import type { CustomerAddress, CustomerAddressInput } from "@/lib/customer/types";
 
 import type { DeliveryDraft, DeliveryErrors, DeliverySelection } from "./types";
 
 export const GIFT_ATTRIBUTE = "gift";
 export const GIFT_NOTE_ATTRIBUTE = "gift_note";
+export const DELIVERY_COUNTRY_CODE = "IN";
 
 export const EMPTY_DELIVERY_DRAFT: DeliveryDraft = {
   address1: "",
@@ -88,4 +89,21 @@ export function getAddressSummary(address: CustomerAddress): string[] {
   return [address.address1, address.address2, address.city, address.zip].filter(
     (line): line is string => Boolean(line),
   );
+}
+
+export function toCustomerAddressInput(draft: DeliveryDraft): CustomerAddressInput {
+  const [firstName = "", ...rest] = draft.name.trim().split(/\s+/);
+  const address2 = draft.address2.trim();
+  const lastName = rest.join(" ");
+
+  return {
+    address1: draft.address1.trim(),
+    ...(address2 ? { address2 } : {}),
+    city: draft.city.trim(),
+    countryCode: DELIVERY_COUNTRY_CODE,
+    ...(firstName ? { firstName } : {}),
+    ...(lastName ? { lastName } : {}),
+    phoneNumber: `+91${draft.phone.trim()}`,
+    zip: draft.postcode.trim(),
+  };
 }

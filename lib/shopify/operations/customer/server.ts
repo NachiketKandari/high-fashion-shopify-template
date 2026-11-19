@@ -10,6 +10,7 @@ import type {
   CustomerOrdersPage,
   CustomerProfile,
 } from "@/lib/customer/types";
+import type { Money } from "@/lib/money/types";
 import {
   customerAccountFetch,
   isCustomerAccountUnauthorized,
@@ -91,6 +92,21 @@ const GET_CUSTOMER_ADDRESSES_QUERY = gql(
 `,
   [ADDRESS_FRAGMENT],
 );
+
+const GET_CUSTOMER_STORE_CREDIT_QUERY = gql(`#graphql
+  query getCustomerStoreCredit {
+    customer {
+      storeCreditAccounts(first: 10) {
+        nodes {
+          balance {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  }
+`);
 
 const CUSTOMER_ADDRESS_CREATE_MUTATION = gql(`#graphql
   mutation customerAddressCreate($address: CustomerAddressInput!, $defaultAddress: Boolean) {
@@ -260,6 +276,16 @@ export async function fetchCustomerAddresses(): Promise<CustomerAddress[]> {
   );
 
   return addresses.sort((a, b) => Number(b.isDefault) - Number(a.isDefault));
+}
+
+export async function fetchCustomerStoreCredit(): Promise<Money[]> {
+  const data = await customerFetch({
+    document: GET_CUSTOMER_STORE_CREDIT_QUERY,
+    operation: "getCustomerStoreCredit",
+    returnTo: "/checkout/address",
+  });
+
+  return data.customer?.storeCreditAccounts.nodes.map((account) => account.balance) ?? [];
 }
 
 // Shopify validates the code against its CountryCode enum and rejects unknown values.

@@ -3,6 +3,7 @@
 import { cn } from "cn";
 import { ChevronDownIcon, XIcon } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 import { Price } from "@/components/product/price";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
@@ -16,8 +17,14 @@ interface CheckoutItemsProps {
 }
 
 export function CheckoutItems({ cart, className }: CheckoutItemsProps) {
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
-    <details className={cn("group", className)}>
+    <details
+      className={cn("group", className)}
+      onToggle={(event) => setIsOpen(event.currentTarget.open)}
+      open={isOpen}
+    >
       <summary className="type-meta flex h-[49px] cursor-pointer list-none items-center justify-between text-ink-strong [&::-webkit-details-marker]:hidden">
         ITEMS
         <ChevronDownIcon
