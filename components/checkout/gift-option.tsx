@@ -1,0 +1,112 @@
+"use client";
+
+import { cn } from "cn";
+import { useRef } from "react";
+
+import { Checkbox } from "@/components/ui/checkbox";
+import { useCart, useCartForm } from "@/lib/cart/client";
+import type { Cart } from "@/lib/cart/types";
+import { GIFT_ATTRIBUTE, GIFT_NOTE_ATTRIBUTE } from "@/lib/checkout";
+
+interface GiftOptionProps {
+  cart: Cart;
+  className?: string;
+}
+
+export function GiftOption({ cart, className }: GiftOptionProps) {
+  const { formProps, register } = useCartForm();
+  const isPending = useCart((state) => state.pending.attributes);
+  const attributeErrors = useCart((state) => state.errors.attributes);
+  const attributes = cart.attributes ?? [];
+  const isGift = attributes.find((attribute) => attribute.key === GIFT_ATTRIBUTE)?.value === "true";
+  const savedNote =
+    attributes.find((attribute) => attribute.key === GIFT_NOTE_ATTRIBUTE)?.value ?? "";
+  const form = useRef<HTMLFormElement>(null);
+  const submit = useRef<HTMLButtonElement>(null);
+  const giftValue = useRef<HTMLInputElement>(null);
+  const otherAttributes = attributes.filter(
+    (attribute) => attribute.key !== GIFT_ATTRIBUTE && attribute.key !== GIFT_NOTE_ATTRIBUTE,
+  );
+  const error = Array.from(attributeErrors.values())
+    .flatMap((group) => group.userErrors)
+    .find((userError) => userError.field?.includes(GIFT_ATTRIBUTE))?.message;
+
+  return (
+    <form
+      aria-busy={isPending || undefined}
+      className={cn("border border-ink p-4", className)}
+      ref={form}
+      {...formProps()}
+    >
+      {otherAttributes.map((attribute) => (
+        <input
+          key={attribute.key}
+          type="hidden"
+          {...register("attributeValue", {
+            key: attribute.key,
+            value: attribute.value ?? "",
+          })}
+        />
+      ))}
+      <input
+        ref={giftValue}
+        type="hidden"
+        {...register("attributeValue", { key: GIFT_ATTRIBUTE, value: isGift ? "true" : "false" })}
+      />
+      <button
+        {...register("attributes-update")}
+        aria-hidden="true"
+        className="sr-only"
+        ref={submit}
+        tabIndex={-1}
+        type="submit"
+      />
+
+      <Checkbox
+        checked={isGift}
+        className="text-ink-muted"
+        disabled={isPending}
+        label="Make this order a gift"
+        onCheckedChange={(nextGift) => {
+          if (giftValue.current) giftValue.current.value = nextGift ? "true" : "false";
+          if (submit.current) form.current?.requestSubmit(submit.current);
+        }}
+      />
+
+      <div className={cn("mt-3 grid gap-3 pl-7", !isGift && "hidden")}>
+        <p className="type-body-sm text-ink-muted">Hide the price tag · Gift wrapping</p>
+        <label className="grid gap-1">
+          <span className="sr-only">Gift note</span>
+          <textarea
+            className="type-body-sm min-h-16 w-full resize-y border border-ink bg-transparent px-4 py-3 placeholder:text-ink-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            key={savedNote}
+            placeholder="Add a note"
+            {...register("attributeValue", {
+              key: GIFT_NOTE_ATTRIBUTE,
+              defaultValue: savedNote,
+            })}
+          />
+        </label>
+        <div className="flex min-h-9 items-center justify-between gap-4">
+          <button
+            {...register("attributes-update")}
+            className="type-control focus-ring cursor-pointer underline underline-offset-4 disabled:cursor-not-allowed disabled:opacity-40"
+            disabled={isPending}
+            type="submit"
+          >
+            Save note
+          </button>
+          <span className="type-body-sm text-ink-muted">
+            {savedNote ? "Note saved" : "Optional"}
+          </span>
+        </div>
+      </div>
+
+      {error ? (
+        <p className="type-body-sm mt-2 text-error-rule" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </form>
+  );
+}
