@@ -43,6 +43,7 @@ for (const [role, token] of Object.entries(TOKENS.type)) {
 }
 for (const [name, value] of Object.entries(TOKENS.spacing.base))
   assertToken(name, value, "spacing");
+for (const [name, value] of Object.entries(TOKENS.radius ?? {})) assertToken(name, value, "radius");
 for (const [name, value] of Object.entries(TOKENS.spacing.desktop)) {
   if (
     !new RegExp(

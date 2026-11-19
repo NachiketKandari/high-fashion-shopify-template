@@ -13,7 +13,7 @@ interface PriceProps extends ComponentProps<"span"> {
 export function Price({ amount, currencyCode, className, ...props }: PriceProps) {
   const format = useDisplayPrice();
   return (
-    <span className={cn("font-light normal-case tabular-nums text-ink", className)} {...props}>
+    <span className={cn("tabular-nums text-ink", className)} {...props}>
       {format({ amount, currencyCode })}
     </span>
   );

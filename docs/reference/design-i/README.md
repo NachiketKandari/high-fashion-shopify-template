@@ -5,12 +5,12 @@ earlier wireframe. This directory is the repo-resident reading of that file.
 
 ## Source of truth
 
-| Item | Value |
-| ---- | ----- |
-| Figma file | `Lorem Ipsum Design I (Copy)` |
-| Export | `~/Downloads/lorem-ipsum-design-i-(copy)-export.json` (7.1 MB, exported 2026-11-16) |
-| Exporter | `docs/reference/figma/export-plugin/` — a Figma plugin, not the REST API |
-| Pages | `design system` (3 frames), `All desings` (221 frames), `Journey` (7 curated frames) |
+| Item       | Value                                                                                |
+| ---------- | ------------------------------------------------------------------------------------ |
+| Figma file | `Lorem Ipsum Design I (Copy)`                                                        |
+| Export     | `~/Downloads/lorem-ipsum-design-i-(copy)-export.json` (7.1 MB, exported 2026-11-16)  |
+| Exporter   | `docs/reference/figma/export-plugin/` — a Figma plugin, not the REST API             |
+| Pages      | `design system` (3 frames), `All desings` (221 frames), `Journey` (7 curated frames) |
 
 The plugin reads the document through the plugin API, which has no REST quota, and trims every node
 to the shape the specs are written from: `id`, `name`, `type`, `absoluteBoundingBox`, layout props,
@@ -29,21 +29,21 @@ valid for account, post-purchase, returns, wishlist, support and errors until th
 
 ## Canonical frames
 
-| Surface | Desktop | Mobile |
-| ------- | ------- | ------ |
-| Home default | `2003:263` 1441×2944 | `5:874` 390×4825 (duplicate `6:1166`; hero-only `2022:2955`) |
-| Home scrolled header | `2003:177` 1441×2944 | header inside `5:874` |
-| Menu woman / man | `2022:2660` / `1:309` 1440×748 | `2022:4641` / `2022:4768` 440×956 |
-| Search empty / typing / results / zero / typo | `1:461`, `1:485`, `1:517`, `7:1426`, `2044:1016` | no mobile frame |
-| Auth gate / validation | `1:3745`, `30:11706` | `30:11557`, `30:11731` |
-| Login OTP / password / errors / retry | `1:3844`, `30:12263`, `30:12449`, `30:12525`, `30:11917`, `30:12098` | `30:11826`, `30:12305`, `30:12489`, `30:12565`, `30:11959`, `30:12220` |
-| New client OTP / verified hand-off | `1:3777`, `30:12637` | `30:12601`, `30:12695` |
-| PDP default / selected / low stock / OOS | `2044:2602`, `2044:2736`, `2050:3697`, `2050:4111` | `16:6217`, `16:6601`, `16:6714` |
-| PDP modals | `2050:4539`, `2050:4689`, `2044:2869` | `16:7270`, `16:8009`, `16:8341` |
-| Cart active / updating / OOS / empty | `2068:8220`, `2075:8767`, `2075:9160`, `2075:9064` | `22:8538`, `22:8976`, `30:11398`, `22:9199`, `45:13616` |
-| Address member / guest / gift | `39:12982`, `39:13055`, `39:13165` | `37:12867`, `39:13019`, `39:13113`, `39:13223` |
-| Address promo / pincode / credits | `51:14764`, `45:13446`, `45:13852`, `45:14049`, `46:14396` | `51:14868`, `45:13896`, `45:14134`, `46:14500` |
-| Payment (out of scope) | `52:14969`–`52:15022` | `52:15051`–`52:15063` |
+| Surface                                       | Desktop                                                              | Mobile                                                                 |
+| --------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Home default                                  | `2003:263` 1441×2944                                                 | `5:874` 390×4825 (duplicate `6:1166`; hero-only `2022:2955`)           |
+| Home scrolled header                          | `2003:177` 1441×2944                                                 | header inside `5:874`                                                  |
+| Menu woman / man                              | `2022:2660` / `1:309` 1440×748                                       | `2022:4641` / `2022:4768` 440×956                                      |
+| Search empty / typing / results / zero / typo | `1:461`, `1:485`, `1:517`, `7:1426`, `2044:1016`                     | no mobile frame                                                        |
+| Auth gate / validation                        | `1:3745`, `30:11706`                                                 | `30:11557`, `30:11731`                                                 |
+| Login OTP / password / errors / retry         | `1:3844`, `30:12263`, `30:12449`, `30:12525`, `30:11917`, `30:12098` | `30:11826`, `30:12305`, `30:12489`, `30:12565`, `30:11959`, `30:12220` |
+| New client OTP / verified hand-off            | `1:3777`, `30:12637`                                                 | `30:12601`, `30:12695`                                                 |
+| PDP default / selected / low stock / OOS      | `2044:2602`, `2044:2736`, `2050:3697`, `2050:4111`                   | `16:6217`, `16:6601`, `16:6714`                                        |
+| PDP modals                                    | `2050:4539`, `2050:4689`, `2044:2869`                                | `16:7270`, `16:8009`, `16:8341`                                        |
+| Cart active / updating / OOS / empty          | `2068:8220`, `2075:8767`, `2075:9160`, `2075:9064`                   | `22:8538`, `22:8976`, `30:11398`, `22:9199`, `45:13616`                |
+| Address member / guest / gift                 | `39:12982`, `39:13055`, `39:13165`                                   | `37:12867`, `39:13019`, `39:13113`, `39:13223`                         |
+| Address promo / pincode / credits             | `51:14764`, `45:13446`, `45:13852`, `45:14049`, `46:14396`           | `51:14868`, `45:13896`, `45:14134`, `46:14500`                         |
+| Payment (out of scope)                        | `52:14969`–`52:15022`                                                | `52:15051`–`52:15063`                                                  |
 
 The measured PDP geometry is in [`pdp.md`](./pdp.md), copied from the try-on implementation's
 `docs/figma/pdp-design-spec.md`.
@@ -98,11 +98,16 @@ Python is easier for a full geometry dump; any agent can adapt the walker from
   missing layer.
 - The mobile PDP frame is padded to 4080 px with 1,704 px of empty white; build to the 2,375.56 px
   content height.
+- The 390 px PDP and cart frames draw the older 76 px `Menu / wordmark / Bag / Help` header. The
+  440 px `Home` and `Mobile Menu` frames draw the current 56 px wordmark-left icon bar. The
+  storefront builds the 56 px bar; treat the 76 px bar as stale.
 - Mobile PDP image boxes are 390×585 placeholders with no image fill; use the desktop hero asset
   until an export exists.
 - Recommendation image boxes overflow their 250×447 holders and differ per card; implement the
   holder, not the misplaced rectangles.
 - `size recommendation` is drawn but has no data source; see `docs/STUBS.md`.
+- The mobile header decision in `docs/reference/figma/mobile-frames.md` is resolved in favour of
+  Design I: 56 px, wordmark left, search / bag / account / menu icons right.
 - `Use account credits` is drawn but the Storefront API does not expose the balance; hide it.
 
 ## Design-system notes

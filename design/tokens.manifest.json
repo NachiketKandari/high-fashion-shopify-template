@@ -2,12 +2,17 @@
   "$schema": "design-system-manifest/v1",
   "colors": {
     "--paper": "#ffffff",
-    "--ink": "#000000",
-    "--ink-muted": "#4d4d4d",
-    "--rule": "#e1e1e1",
-    "--input": "#cccccc",
+    "--ink": "#353535",
+    "--ink-strong": "#000000",
+    "--ink-muted": "#666666",
+    "--rule": "#dcdcdc",
+    "--rule-soft": "#e1e1e1",
+    "--input": "#dcdcdc",
     "--surface": "#f2f2f2",
-    "--inverse": "#f9f9f9",
+    "--surface-strong": "#e5e5e5",
+    "--disabled": "#dfdfdf",
+    "--disabled-strong": "#999999",
+    "--inverse": "#ffffff",
     "--error": "#d94c4c",
     "--error-rule": "#c7261b",
     "--error-soft": "#fff5f5"
@@ -29,48 +34,58 @@
       "weight": 400
     },
     "h3": {
+      "lineHeight": "1.3125rem",
+      "size": "1rem",
+      "weight": 500
+    },
+    "h4": {
       "lineHeight": "1.125rem",
       "size": "0.875rem",
       "weight": 400
     },
-    "h4": {
+    "label": {
       "lineHeight": "1rem",
       "size": "0.75rem",
-      "weight": 400
-    },
-    "label": {
-      "lineHeight": "0.875rem",
-      "size": "0.5625rem",
       "weight": 400
     },
     "body": {
       "lineHeight": "1.3125rem",
       "size": "0.875rem",
-      "weight": 300
+      "weight": 400
     },
     "body-sm": {
-      "lineHeight": "1.125rem",
+      "lineHeight": "1rem",
       "size": "0.75rem",
-      "weight": 300
+      "weight": 400
     },
     "control": {
-      "lineHeight": "0.875rem",
-      "size": "0.6875rem",
-      "weight": 400
+      "lineHeight": "1rem",
+      "size": "0.75rem",
+      "weight": 500
     },
     "chip": {
       "lineHeight": "1.125rem",
       "size": "0.75rem",
-      "weight": 400
+      "weight": 500
     },
     "tab": {
       "lineHeight": "1rem",
-      "size": "0.6875rem",
-      "weight": 400
+      "size": "0.75rem",
+      "weight": 500
     },
     "nav": {
+      "lineHeight": "1.3125rem",
+      "size": "0.875rem",
+      "weight": 700
+    },
+    "caption": {
       "lineHeight": "1.125rem",
-      "size": "0.8125rem",
+      "size": "0.875rem",
+      "weight": 400
+    },
+    "wordmark": {
+      "lineHeight": "1.6875rem",
+      "size": "1.125rem",
       "weight": 400
     },
     "watermark": {
@@ -95,9 +110,12 @@
     },
     "desktop": {
       "--grid-row-gap": "20px",
-      "--gutter": "30px",
+      "--gutter": "24px",
       "--section-gap": "60px"
     }
+  },
+  "radius": {
+    "--radius-control": "4px"
   },
   "motion": {
     "--ease-standard": "cubic-bezier(0.2, 0.6, 0.2, 1)",

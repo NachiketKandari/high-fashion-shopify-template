@@ -95,7 +95,11 @@ function ProductCardContent({ className, children, ...props }: ComponentProps<"d
 
 function ProductCardTitle({ className, children, ...props }: ComponentProps<"h3">) {
   return (
-    <h3 data-slot="product-card-title" className={cn("type-h4 line-clamp-1", className)} {...props}>
+    <h3
+      data-slot="product-card-title"
+      className={cn("type-caption line-clamp-1", className)}
+      {...props}
+    >
       {children}
     </h3>
   );
@@ -124,7 +128,7 @@ function ProductCardPrice({
           <Price
             amount={amount}
             currencyCode={currencyCode}
-            className="type-h4 font-light text-ink-muted"
+            className="type-caption text-ink-muted"
           />
         </span>
         {discountPercent !== null && compareAtAmount && compareAtCurrencyCode ? (

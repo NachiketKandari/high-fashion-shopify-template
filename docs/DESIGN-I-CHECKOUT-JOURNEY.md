@@ -22,15 +22,15 @@ desings`; `Journey` changes nothing.
 
 In scope, in journey order:
 
-| # | Surface | Desktop frame | Mobile frame |
-| - | ------- | ------------- | ------------ |
-| 1 | Home | `2003:263` default · `2003:177` scrolled | `5:874` (duplicate `6:1166`, hero `2022:2955`) |
-| 2 | Menu and search | `2022:2660` / `1:309`; search `1:461`, `1:485`, `1:517`, `7:1426`, `2044:1016` | `2022:4641` / `2022:4768`; search has no mobile frame |
-| 3 | Login and register | `1:3745`, `30:11706`, `1:3844`, `30:12263`, `30:12449`, `30:12525`, `30:11917`, `30:12098`, `1:3777`, `30:12637` | `30:11557`, `30:11731`, `30:11826`, `30:12305`, `30:12489`, `30:12565`, `30:12601`, `30:12695`, `30:11959`, `30:12220` |
-| 4 | Default chrome and states | `2003:263` / `2003:177` header | mobile header in `5:874` and `22:8538` |
-| 5 | Product detail | `2044:2602` (+ `2736`, `3697`, `4111`, modals `4539`, `4689`, `2869`) | `16:6217` (+ `16:6601`, `16:6714`, modals `16:7270`, `16:8009`, `16:8341`) |
-| 6 | Cart / bag | `2068:8220` (+ `2075:8767`, `2075:9160`, `2075:9064`) | `22:8538` (+ `22:8976`, `30:11398`, `22:9199`, `45:13616`) |
-| 7 | Address and shipping | `39:12982`, `37:12809`, `39:13055`, `39:13165`, `45:13852`, `45:14049`, `51:14764`, `46:14396`, `45:13446` | `37:12867`, `39:13019`, `39:13113`, `39:13223`, `45:13896`, `45:14134`, `51:14868`, `46:14500` |
+| #   | Surface                   | Desktop frame                                                                                                    | Mobile frame                                                                                                           |
+| --- | ------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 1   | Home                      | `2003:263` default · `2003:177` scrolled                                                                         | `5:874` (duplicate `6:1166`, hero `2022:2955`)                                                                         |
+| 2   | Menu and search           | `2022:2660` / `1:309`; search `1:461`, `1:485`, `1:517`, `7:1426`, `2044:1016`                                   | `2022:4641` / `2022:4768`; search has no mobile frame                                                                  |
+| 3   | Login and register        | `1:3745`, `30:11706`, `1:3844`, `30:12263`, `30:12449`, `30:12525`, `30:11917`, `30:12098`, `1:3777`, `30:12637` | `30:11557`, `30:11731`, `30:11826`, `30:12305`, `30:12489`, `30:12565`, `30:12601`, `30:12695`, `30:11959`, `30:12220` |
+| 4   | Default chrome and states | `2003:263` / `2003:177` header                                                                                   | mobile header in `5:874` and `22:8538`                                                                                 |
+| 5   | Product detail            | `2044:2602` (+ `2736`, `3697`, `4111`, modals `4539`, `4689`, `2869`)                                            | `16:6217` (+ `16:6601`, `16:6714`, modals `16:7270`, `16:8009`, `16:8341`)                                             |
+| 6   | Cart / bag                | `2068:8220` (+ `2075:8767`, `2075:9160`, `2075:9064`)                                                            | `22:8538` (+ `22:8976`, `30:11398`, `22:9199`, `45:13616`)                                                             |
+| 7   | Address and shipping      | `39:12982`, `37:12809`, `39:13055`, `39:13165`, `45:13852`, `45:14049`, `51:14764`, `46:14396`, `45:13446`       | `37:12867`, `39:13019`, `39:13113`, `39:13223`, `45:13896`, `45:14134`, `51:14868`, `46:14500`                         |
 
 Out of scope for this pass: payment screens (`52:*`; five frames contain zero text nodes), order
 confirmation and tracking (`3:*`, `54:*`, `55:*`), returns, account hub, wishlist, support pages and
@@ -42,18 +42,18 @@ geometry; this document adds the journey context and the deltas the Shopify temp
 
 ## 2. What the repo has today
 
-| Surface | Current implementation | Verdict |
-| ------- | ---------------------- | ------- |
-| Home | `app/page.tsx` composed from the older wireframe/clone: 700 px hero, product rails, 2-up category tiles, Get the Look, Exclusives, Bestsellers, Stories | Composition differs from design I. Desktop and mobile need re-composition, not a colour pass. |
-| Header | `components/nav/header.tsx`: sticky 76 px white bar at every breakpoint; every nav item is a bordered "chip"; wordmark 125 px; mobile shows icon actions | Design I desktop is a plain 74 px text bar; mobile is a 76 px bar with bordered Menu / Bag / Help pills and no search/account icons. The default-over-hero and scrolled states are missing. |
-| Desktop menu | `components/nav/desktop-nav.tsx`: 592 px sheet, links only, no tiles | Design I is a 709 px two-column panel: 354 px links + 354 px image tiles. |
-| Mobile menu | `components/nav/mobile-menu.tsx`: full screen, links + tiles | Close to the frames; spacing, typography, utility links and the 440 px tile stack need alignment. |
-| Search | `components/nav/search-modal.tsx` opens a right drawer; `app/search/page.tsx` renders the generic browse grid | Design I is a full-width search surface under the header with a 1,076 + 276 px input row, trending list and 4-up results. Empty, typing, results, zero-result and typo states are missing. |
-| Auth | `components/nav/account.tsx` links straight to `/account/login`; Hydrogen redirects to Shopify-hosted OAuth. No designed gate or OTP screen exists. | Not built. The designed OTP screens cannot be reproduced inside a Shopify-hosted login without a separate identity project. |
-| Product detail | `components/product-detail/*` is the template PDP (stacked gallery, 36 px controls, template typography) | Design I geometry and type are not applied; the try-on additions are not integrated. |
-| Cart | `app/cart/page.tsx` + `components/cart/*`: template page, 310 px sidebar, 36 px quantity control, no mobile sticky bar | Design I is a full-page bag with an 800 + 592 split, 123 × 191 line art, 40 px CTA and a mobile fixed summary bar. Empty/updating/out-of-stock variants need explicit work. |
-| Address and shipping | No route. Checkout hands off to Shopify via `prepareCheckoutAction`. | Not built. A storefront address step is a pre-checkout surface, not Shopify checkout itself. See D3. |
-| Tokens | `type-*` roles are uppercase with +0.05em tracking, weights 300/400; zero radius; `ink #000`, `rule #e1e1e1`, `surface #f2f2f2`; gate forbids `font-medium` and any radius | Design I is sentence case, weights 400–700, 4 px control radius, `#353535` text, `#666` muted, `#DCDCDC` borders, `#DFDFDF`/`#999` disabled. The token layer must change before page work. |
+| Surface              | Current implementation                                                                                                                                                     | Verdict                                                                                                                                                                                     |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home                 | `app/page.tsx` composed from the older wireframe/clone: 700 px hero, product rails, 2-up category tiles, Get the Look, Exclusives, Bestsellers, Stories                    | Composition differs from design I. Desktop and mobile need re-composition, not a colour pass.                                                                                               |
+| Header               | `components/nav/header.tsx`: sticky 76 px white bar at every breakpoint; every nav item is a bordered "chip"; wordmark 125 px; mobile shows icon actions                   | Design I desktop is a plain 74 px text bar; mobile is a 76 px bar with bordered Menu / Bag / Help pills and no search/account icons. The default-over-hero and scrolled states are missing. |
+| Desktop menu         | `components/nav/desktop-nav.tsx`: 592 px sheet, links only, no tiles                                                                                                       | Design I is a 709 px two-column panel: 354 px links + 354 px image tiles.                                                                                                                   |
+| Mobile menu          | `components/nav/mobile-menu.tsx`: full screen, links + tiles                                                                                                               | Close to the frames; spacing, typography, utility links and the 440 px tile stack need alignment.                                                                                           |
+| Search               | `components/nav/search-modal.tsx` opens a right drawer; `app/search/page.tsx` renders the generic browse grid                                                              | Design I is a full-width search surface under the header with a 1,076 + 276 px input row, trending list and 4-up results. Empty, typing, results, zero-result and typo states are missing.  |
+| Auth                 | `components/nav/account.tsx` links straight to `/account/login`; Hydrogen redirects to Shopify-hosted OAuth. No designed gate or OTP screen exists.                        | Not built. The designed OTP screens cannot be reproduced inside a Shopify-hosted login without a separate identity project.                                                                 |
+| Product detail       | `components/product-detail/*` is the template PDP (stacked gallery, 36 px controls, template typography)                                                                   | Design I geometry and type are not applied; the try-on additions are not integrated.                                                                                                        |
+| Cart                 | `app/cart/page.tsx` + `components/cart/*`: template page, 310 px sidebar, 36 px quantity control, no mobile sticky bar                                                     | Design I is a full-page bag with an 800 + 592 split, 123 × 191 line art, 40 px CTA and a mobile fixed summary bar. Empty/updating/out-of-stock variants need explicit work.                 |
+| Address and shipping | No route. Checkout hands off to Shopify via `prepareCheckoutAction`.                                                                                                       | Not built. A storefront address step is a pre-checkout surface, not Shopify checkout itself. See D3.                                                                                        |
+| Tokens               | `type-*` roles are uppercase with +0.05em tracking, weights 300/400; zero radius; `ink #000`, `rule #e1e1e1`, `surface #f2f2f2`; gate forbids `font-medium` and any radius | Design I is sentence case, weights 400–700, 4 px control radius, `#353535` text, `#666` muted, `#DCDCDC` borders, `#DFDFDF`/`#999` disabled. The token layer must change before page work.  |
 
 ## 3. Decisions that block an exact match
 
@@ -110,8 +110,9 @@ category pair. The older clone home is a different composition.
 **Recommendation:** desktop follows `2003:263`; mobile follows `5:874`. Treat the missing desktop
 Get the Look/Exclusives/Bestsellers as a mobile-only composition, not a defect to copy. Confirm the
 hero copy: `2003:263` draws an image-only hero with dots, while mobile draws “CONTROL YOUR NURRATIVE”
-+ “Explore Collections”. The home workstream should keep the mobile title/button and the desktop
-dots unless product says otherwise.
+
+- “Explore Collections”. The home workstream should keep the mobile title/button and the desktop
+  dots unless product says otherwise.
 
 ### D5 — Chrome per route group
 
@@ -138,9 +139,10 @@ synonym dictionary.
 
 ### 4.0 Foundation — tokens, chrome, shared primitives
 
-**Target.** 74 px desktop header (transparent over the home hero, white when scrolled); 76 px mobile
-header with Menu / wordmark / Bag + Help pills; 60 px brand-only bar for auth and checkout; design-I
-footer; design-I product card and product row; design-I type, palette and control radius.
+**Target.** 74 px desktop header (transparent over the home hero, white when scrolled); 56 px mobile
+header with the wordmark left and search / bag / account / menu icons right; 60 px brand-only bar for
+auth and checkout; design-I footer; design-I product card and product row; design-I type, palette and
+control radius.
 
 **Current.** 76 px white header everywhere, bordered chips, icon actions on mobile, template footer
 with address block, payment marks and currency, template cards with 12 px uppercase captions and
@@ -154,8 +156,8 @@ quick-shop overlay, zero radius.
 2. Route groups: `app/(storefront)/layout.tsx` with Nav + Footer + Newsletter + ActionBar;
    `app/(auth)/layout.tsx` and `app/(checkout)/layout.tsx` with the brand bar. Move existing page
    routes without changing URLs.
-3. `components/nav/header.tsx`: scroll-aware solid/transparent state, desktop plain text nav, mobile
-   pills, action slots that do not assume an icon toolbar.
+3. `components/nav/header.tsx`: scroll-aware solid/transparent state, desktop plain text nav, 56 px
+   mobile wordmark-left icon bar, and action slots that work in both bars.
 4. `components/footer/index.tsx`: 419 px design footer: LOREM IPSUM 36 px, four link columns,
    newsletter; drop the address block, payment marks, currency and legal row from this surface.
 5. `components/product-card/*` and `components/home/product-row.tsx`: 250 × 447 image, 14 px
@@ -306,36 +308,36 @@ dates/ETA (Shiprocket), address prefill in Shopify checkout (D3), payment entry 
 
 ## 5. Shared primitives and tokens the designs introduce
 
-| Primitive | Used by | Notes |
-| --------- | ------- | ----- |
-| Scroll-aware header | all storefront | transparent over the home hero; white after scroll; 74/76 px |
-| Quantity stepper | PDP, cart, checkout summary | 16 px text, no 36 px box |
-| Checkbox | checkout | 16 px, 4 px radius, black check |
-| OTP input | auth | 6 boxes, 45 × 49 / 30 × 49 |
-| Accordion | PDP, cart/checkout items | 1 px black border, 49/81 px rows |
-| Stepper / progress | checkout | not drawn in the in-scope frames; defer |
-| Sheet / slide-over | search, menu, size guide, add confirmation | existing `Sheet`; sizes 592/720/440 |
-| Empty state | cart, search | icon-free, sentence copy, one primary action |
-| Product card | home, search, PDP recs, cart recs | 250 × 447 image, 14/400 caption |
-| Marquee | home | 50 px sentence band |
-| Text-only brand bar | auth, checkout | 60 px, 18 px wordmark |
+| Primitive           | Used by                                    | Notes                                                        |
+| ------------------- | ------------------------------------------ | ------------------------------------------------------------ |
+| Scroll-aware header | all storefront                             | transparent over the home hero; white after scroll; 74/76 px |
+| Quantity stepper    | PDP, cart, checkout summary                | 16 px text, no 36 px box                                     |
+| Checkbox            | checkout                                   | 16 px, 4 px radius, black check                              |
+| OTP input           | auth                                       | 6 boxes, 45 × 49 / 30 × 49                                   |
+| Accordion           | PDP, cart/checkout items                   | 1 px black border, 49/81 px rows                             |
+| Stepper / progress  | checkout                                   | not drawn in the in-scope frames; defer                      |
+| Sheet / slide-over  | search, menu, size guide, add confirmation | existing `Sheet`; sizes 592/720/440                          |
+| Empty state         | cart, search                               | icon-free, sentence copy, one primary action                 |
+| Product card        | home, search, PDP recs, cart recs          | 250 × 447 image, 14/400 caption                              |
+| Marquee             | home                                       | 50 px sentence band                                          |
+| Text-only brand bar | auth, checkout                             | 60 px, 18 px wordmark                                        |
 
 ## 6. Stubs and unavailable data
 
 Follows [`STUBS.md`](./STUBS.md). A stub never fabricates a commerce value.
 
-| Need | Status | Behaviour |
-| ---- | ------ | --------- |
-| In-storefront OTP / Google auth | Blocked (D2) | gate hands off to Shopify; OTP screens not built |
-| Address prefill / custom checkout | Blocked (D3) | address step is pre-checkout; Shopify collects again |
-| Pincode serviceability | Unverified | render nothing until Shiprocket is live |
-| Delivery ETA | Unverified | no promise, no invented date |
-| Account credits / balance | Not exposed | hide the control |
-| Low stock | Unverified (`quantityAvailable` null) | omit the line |
-| Waitlist / notify me | Blocked (no sink) | omit the control |
-| Size recommendation | No data | omit or present as a link to the size guide |
-| Search typo correction | No data (D6) | zero-result + closest-title results, honest copy |
-| Newsletter / contact transport | Blocked | existing unavailable status |
+| Need                              | Status                                | Behaviour                                            |
+| --------------------------------- | ------------------------------------- | ---------------------------------------------------- |
+| In-storefront OTP / Google auth   | Blocked (D2)                          | gate hands off to Shopify; OTP screens not built     |
+| Address prefill / custom checkout | Blocked (D3)                          | address step is pre-checkout; Shopify collects again |
+| Pincode serviceability            | Unverified                            | render nothing until Shiprocket is live              |
+| Delivery ETA                      | Unverified                            | no promise, no invented date                         |
+| Account credits / balance         | Not exposed                           | hide the control                                     |
+| Low stock                         | Unverified (`quantityAvailable` null) | omit the line                                        |
+| Waitlist / notify me              | Blocked (no sink)                     | omit the control                                     |
+| Size recommendation               | No data                               | omit or present as a link to the size guide          |
+| Search typo correction            | No data (D6)                          | zero-result + closest-title results, honest copy     |
+| Newsletter / contact transport    | Blocked                               | existing unavailable status                          |
 
 ## 7. Verification
 

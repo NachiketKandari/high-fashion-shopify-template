@@ -10,7 +10,7 @@ import { FilterSheet } from "./filters-client";
 import { CollectionsSortSelect } from "./sort-select";
 
 const FILTER_TRIGGER_CLASS =
-  "type-chip focus-ring flex h-9 cursor-pointer items-center gap-2 bg-transparent";
+  "type-chip focus-ring flex h-9 min-w-9 cursor-pointer items-center justify-center gap-2 bg-transparent";
 
 interface BrowseToolbarProps {
   filters: ReactNode;

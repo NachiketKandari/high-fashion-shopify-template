@@ -120,8 +120,9 @@ type.
 ## Open decisions
 
 1. **Header chrome.** The 390 wireframe draws bordered `Menu` / `Bag` / `Help` text buttons at 76 px;
-   the design file draws a wordmark-left bar with search, bag, account and menu icons. The storefront
-   ships the wireframe's closed bar and the design file's open panel.
+   the design file draws a 56 px wordmark-left bar with search, bag, account and menu icons. Resolved
+   for the Design I build: the 56 px bar is the storefront header, and the 74 px design-file panel is
+   the open menu. The 76 px bar in the 390 frames is stale.
 2. **Menu tiles.** The design file uses generated placeholder images; the storefront uses one
    editorial image per tile (Core, Elevated, Core; Jacket, Shirt).
 3. **Gallery affordance.** The frame shows no indicator, but products here carry up to 15 images; the

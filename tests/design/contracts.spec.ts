@@ -70,12 +70,12 @@ test.describe("storefront contracts", () => {
     expect(desktop.columnGap).toBe("3px");
     expect(desktop.rowGap).toBe("20px");
     expect(desktop.heading).toEqual({ lineHeight: "23px", size: "18px", weight: "400" });
-    expect(desktop.title).toEqual({ lineHeight: "16px", size: "12px", weight: "400" });
+    expect(desktop.title).toEqual({ lineHeight: "18px", size: "14px", weight: "400" });
     expect(desktop.price).toEqual({
-      color: "rgb(77, 77, 77)",
-      lineHeight: "16px",
-      size: "12px",
-      weight: "300",
+      color: "rgb(102, 102, 102)",
+      lineHeight: "18px",
+      size: "14px",
+      weight: "400",
     });
     expect(desktop.mediaRatio).toBeCloseTo(1.5, 2);
 

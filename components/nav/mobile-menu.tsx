@@ -1,13 +1,11 @@
 "use client";
 
-import { Search, ShoppingBag, UserRound, X } from "lucide-react";
+import { Menu as MenuIcon, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 import { Link } from "@/components/ui/link";
 import { MAIN_NAV } from "@/lib/nav";
-
-import { NAV_CHIP_CLASS } from "./nav-chip";
 
 // Built from Mobile Menu-Women (2022:4641) and Mobile Menu-Men (2022:4768).
 const UTILITY_LINKS = [
@@ -46,12 +44,12 @@ export function MobileMenu() {
         aria-controls="mobile-menu"
         aria-expanded={openIndex !== null}
         aria-label={openIndex === null ? "Open menu" : "Close menu"}
-        className={`${NAV_CHIP_CLASS} desktop:hidden`}
+        className="focus-ring flex size-9 items-center justify-center text-ink"
         onClick={() => setOpenIndex(openIndex === null ? 0 : null)}
         ref={triggerRef}
         type="button"
       >
-        Menu
+        <MenuIcon className="size-5" strokeWidth={1.25} />
       </button>
 
       {item ? (

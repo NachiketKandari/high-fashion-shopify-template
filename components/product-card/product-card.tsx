@@ -14,8 +14,12 @@ export interface ProductCardProps {
   captionLayout?: "row" | "stack";
   className?: string;
   loading?: "eager" | "lazy";
+  mediaAspect?: "2/3" | "5/9";
   outOfStockText?: string;
   product: ProductCardType;
+  showActions?: boolean;
+  showPrice?: boolean;
+  showSwatches?: boolean;
 }
 
 function swatchStyle(swatch: { color?: string; image?: string } | undefined) {
@@ -37,8 +41,12 @@ export function ProductCard({
   captionLayout = "stack",
   className,
   loading = "lazy",
+  mediaAspect = "2/3",
   outOfStockText = "Out of stock",
   product,
+  showActions = true,
+  showPrice = true,
+  showSwatches = true,
 }: ProductCardProps) {
   const href = buildProductUrl(product.handle, product.defaultVariantSelectedOptions ?? []);
   const colorOption = product.options?.find((option) =>
@@ -53,7 +61,12 @@ export function ProductCard({
       className={cn("group/card relative flex h-full flex-col", className)}
       data-slot="product-card"
     >
-      <div className="relative aspect-[2/3] overflow-hidden bg-surface">
+      <div
+        className={cn(
+          "relative overflow-hidden bg-surface",
+          mediaAspect === "5/9" ? "aspect-[5/9]" : "aspect-[2/3]",
+        )}
+      >
         <Link aria-hidden="true" className="absolute inset-0 block" href={href} tabIndex={-1}>
           {product.featuredImage ? (
             <Image
@@ -87,7 +100,7 @@ export function ProductCard({
           </span>
         ) : null}
 
-        {colorValues.length > 0 ? (
+        {showSwatches && colorValues.length > 0 ? (
           <span className="absolute top-3.5 right-3.5 flex gap-2">
             {colorValues.map((value) => (
               <span
@@ -101,54 +114,62 @@ export function ProductCard({
           </span>
         ) : null}
 
-        <WishlistButton product={product} />
-        <QuickShop
-          handle={product.handle}
-          href={href}
-          image={product.featuredImage?.url ?? null}
-          label="Quick shop"
-          title={product.title}
-        />
+        {showActions ? (
+          <>
+            <WishlistButton product={product} />
+            <QuickShop
+              handle={product.handle}
+              href={href}
+              image={product.featuredImage?.url ?? null}
+              label="Quick shop"
+              title={product.title}
+            />
+          </>
+        ) : null}
       </div>
 
       {captionLayout === "row" ? (
         <div className="flex items-center justify-between gap-3 px-6 py-1.5">
-          <h3 className="type-h4 min-w-0 truncate text-ink">
+          <h3 className="type-caption min-w-0 truncate text-ink">
             <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
               {product.title}
             </Link>
           </h3>
-          <Price
-            amount={product.price.amount}
-            className="type-h4 shrink-0 font-light text-ink-muted normal-case"
-            currencyCode={product.price.currencyCode}
-          />
+          {showPrice ? (
+            <Price
+              amount={product.price.amount}
+              className="type-caption shrink-0 text-ink-muted"
+              currencyCode={product.price.currencyCode}
+            />
+          ) : null}
         </div>
       ) : (
         <div className="grid gap-1 px-2 pt-2 pb-2 [[data-card-view=model]_&]:hidden">
-          <h3 className="type-h4 min-w-0 truncate text-ink">
+          <h3 className="type-caption min-w-0 truncate text-ink">
             <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
               {product.title}
             </Link>
           </h3>
-          <div className="flex flex-wrap items-baseline gap-x-1.5">
-            {product.maxPrice.amount !== product.price.amount ? (
-              <span className="type-body-sm text-ink-muted">From</span>
-            ) : null}
-            <Price
-              amount={product.price.amount}
-              className="type-h4 font-light text-ink-muted normal-case"
-              currencyCode={product.price.currencyCode}
-            />
-            {product.compareAtPrice &&
-            Number(product.compareAtPrice.amount) > Number(product.price.amount) ? (
+          {showPrice ? (
+            <div className="flex flex-wrap items-baseline gap-x-1.5">
+              {product.maxPrice.amount !== product.price.amount ? (
+                <span className="type-body-sm text-ink-muted">From</span>
+              ) : null}
               <Price
-                amount={product.compareAtPrice.amount}
-                className="type-label font-light text-ink-muted line-through"
-                currencyCode={product.compareAtPrice.currencyCode}
+                amount={product.price.amount}
+                className="type-caption text-ink-muted"
+                currencyCode={product.price.currencyCode}
               />
-            ) : null}
-          </div>
+              {product.compareAtPrice &&
+              Number(product.compareAtPrice.amount) > Number(product.price.amount) ? (
+                <Price
+                  amount={product.compareAtPrice.amount}
+                  className="type-label text-ink-muted line-through"
+                  currencyCode={product.compareAtPrice.currencyCode}
+                />
+              ) : null}
+            </div>
+          ) : null}
           {sizes.length > 0 ? (
             <p className="type-body-sm truncate text-ink-muted [[data-card-view=image]_&]:hidden">
               {sizes.join(" ")}
@@ -160,10 +181,21 @@ export function ProductCard({
   );
 }
 
-export function ProductCardSkeleton({ className }: { className?: string }) {
+export function ProductCardSkeleton({
+  className,
+  mediaAspect = "2/3",
+}: {
+  className?: string;
+  mediaAspect?: "2/3" | "5/9";
+}) {
   return (
     <div className={cn("flex flex-col", className)}>
-      <ImagePlaceholder className="aspect-[2/3] animate-pulse motion-reduce:animate-none" />
+      <ImagePlaceholder
+        className={cn(
+          "animate-pulse motion-reduce:animate-none",
+          mediaAspect === "5/9" ? "aspect-[5/9]" : "aspect-[2/3]",
+        )}
+      />
       <div className="grid gap-2 px-2 py-2">
         <div className="h-3 w-full animate-pulse bg-surface motion-reduce:animate-none" />
         <div className="h-3 w-1/3 animate-pulse bg-surface motion-reduce:animate-none" />

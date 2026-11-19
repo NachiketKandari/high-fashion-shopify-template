@@ -8,12 +8,7 @@ const SRC = "/brand/wordmark.png";
 const WIDTH = 950;
 const HEIGHT = 82;
 
-const VARIANTS = {
-  footer: "w-[315px]",
-  nav: "w-[125px]",
-} as const;
-
-export type WordmarkVariant = keyof typeof VARIANTS;
+export type WordmarkVariant = "bar" | "footer" | "nav";
 
 interface WordmarkProps {
   className?: string;
@@ -22,23 +17,36 @@ interface WordmarkProps {
 }
 
 export function Wordmark({ className, priority = false, variant }: WordmarkProps) {
+  const linkClass = cn("flex min-h-9 shrink-0 items-center", className);
+
+  if (variant === "nav") {
+    return (
+      <Link aria-label={shopConfig.site.name} className={linkClass} data-wordmark="nav" href="/">
+        <Image
+          alt={shopConfig.site.name}
+          className="h-auto w-[194px] desktop:w-[303px]"
+          height={HEIGHT}
+          loading={priority ? "eager" : "lazy"}
+          priority={priority}
+          sizes="100vw"
+          src={SRC}
+          width={WIDTH}
+        />
+      </Link>
+    );
+  }
+
+  if (variant === "bar") {
+    return (
+      <Link aria-label={shopConfig.site.name} className={linkClass} data-wordmark="bar" href="/">
+        <span className="type-wordmark">Lorem Ipsum</span>
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      aria-label={shopConfig.site.name}
-      className={cn("flex min-h-9 shrink-0 items-center", className)}
-      data-wordmark={variant}
-      href="/"
-    >
-      <Image
-        alt={shopConfig.site.name}
-        className={cn("h-auto", VARIANTS[variant])}
-        height={HEIGHT}
-        loading={priority ? "eager" : "lazy"}
-        priority={priority}
-        sizes="100vw"
-        src={SRC}
-        width={WIDTH}
-      />
+    <Link aria-label={shopConfig.site.name} className={linkClass} data-wordmark="footer" href="/">
+      <span className="type-display-lg uppercase">Lorem Ipsum</span>
     </Link>
   );
 }

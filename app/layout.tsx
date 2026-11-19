@@ -1,21 +1,14 @@
 import { BotIdClient } from "botid/client";
 import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
-
-import "./globals.css";
 import { Suspense } from "react";
 
-import { ActionBar } from "@/components/action-bar";
-import { AgentButton } from "@/components/agent/agent-button";
+import "./globals.css";
+
 import { AnalyticsComponents } from "@/components/analytics";
-import { CartUI } from "@/components/cart/cart-ui";
 import { CartProviderWrapper } from "@/components/cart/context";
 import { CartStandardActionsScript } from "@/components/cart/standard-actions";
 import { CurrencyProvider } from "@/components/currency/provider";
-import { Footer } from "@/components/footer";
-import { Nav } from "@/components/nav";
-import { NavFallback } from "@/components/nav/fallback";
-import { NewsletterPopup } from "@/components/newsletter/popup";
 import { SiteSchema } from "@/components/schema/site-schema";
 import { botIdProtectedRoutes } from "@/lib/botid";
 import { seedCartData } from "@/lib/cart/server";
@@ -30,7 +23,7 @@ export const viewport: Viewport = {
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
-  weight: ["300", "400", "500"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -53,18 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
         <CurrencyProvider>
           <CartProviderWrapper cartData={cartData}>
-            <Suspense fallback={<NavFallback />}>
-              <Nav />
-            </Suspense>
-            <main id="main-content" className="flex flex-1 flex-col min-w-0">
-              {children}
-            </main>
-            <Footer />
-            <CartUI />
-            <NewsletterPopup />
-            <Suspense>
-              <ActionBar>{shopConfig.agent.isEnabled && <AgentButton />}</ActionBar>
-            </Suspense>
+            {children}
             <Suspense>
               <AnalyticsComponents />
             </Suspense>
