@@ -26,7 +26,7 @@ export function ConsentBanner() {
       aria-describedby="consent-description"
       aria-labelledby="consent-title"
       aria-live="polite"
-      className="fixed inset-x-0 bottom-0 z-(--z-header) border-t border-rule bg-paper px-6 pt-10 pb-10 desktop:px-10 desktop:pt-10 desktop:pb-20"
+      className="sticky bottom-0 z-(--z-header) border-t border-rule bg-paper px-6 pt-10 pb-10 desktop:px-10 desktop:pt-10 desktop:pb-20"
       data-slot="consent-banner"
     >
       <div className="flex flex-col gap-10 desktop:flex-row desktop:items-center desktop:gap-8">

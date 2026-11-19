@@ -44,7 +44,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <SiteSchema />
-        <ConsentBanner />
 
         <CurrencyProvider>
           <CartProviderWrapper cartData={cartData}>
@@ -54,6 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Suspense>
           </CartProviderWrapper>
         </CurrencyProvider>
+        <ConsentBanner />
       </body>
     </html>
   );

@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
     deviceSizes: [1320, 1920],
     imageSizes: [],
     minimumCacheTTL: 31536000,
+    qualities: [75, 90],
     remotePatterns: [
       {
         hostname: "cdn.shopify.com",

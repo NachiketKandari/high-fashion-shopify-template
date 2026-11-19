@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image, { getImageProps } from "next/image";
+import Image from "next/image";
 
 import { MediaTile } from "@/components/home/media-tile";
 import { ProductRow } from "@/components/home/product-row";
@@ -68,40 +68,6 @@ const LOOK_TILES = [
   { href: "/collections/racer-backs", image: "/reference/editorial-corsets.jpg" },
 ];
 
-// Art direction: <picture> fetches only the viewport's campaign image, so mobile never downloads the desktop hero.
-function CampaignImage() {
-  const {
-    props: { srcSet: desktopSrcSet },
-  } = getImageProps({
-    alt: "",
-    fill: true,
-    sizes: "100vw",
-    src: "/reference/design-i/home/hero-desktop.jpg",
-  });
-  const {
-    props: { srcSet: mobileSrcSet, ...mobileProps },
-  } = getImageProps({
-    alt: "",
-    fill: true,
-    loading: "eager",
-    sizes: "100vw",
-    src: "/reference/hero-mobile.jpg",
-  });
-
-  return (
-    <picture>
-      <source media="(min-width: 1100px)" srcSet={desktopSrcSet} />
-      <img
-        {...mobileProps}
-        className="object-cover"
-        decoding="async"
-        fetchPriority="high"
-        srcSet={mobileSrcSet}
-      />
-    </picture>
-  );
-}
-
 export async function generateMetadata(): Promise<Metadata> {
   const title = "Everyday Luxury Clothing";
   const description = "Explore featured clothing, curated collections, and seasonal campaigns.";
@@ -122,11 +88,18 @@ export default function HomePage() {
   return (
     <Page className="-mt-(--header-total-h) pt-0">
       <section aria-label="Campaign" className="relative">
-        <div className="relative h-svh overflow-hidden bg-surface desktop:aspect-[1440/812] desktop:h-auto">
-          <CampaignImage />
-          <div aria-hidden="true" className="absolute inset-0 bg-paper/30 desktop:hidden" />
+        <div className="relative h-svh overflow-hidden bg-neutral-200 desktop:aspect-[1440/812] desktop:h-auto">
+          <Image
+            alt=""
+            className="object-cover object-[80%_50%] mix-blend-color-burn desktop:object-center"
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            src="/reference/design-i/home/hero-desktop.jpg"
+          />
           <h1 className="type-display-lg absolute inset-x-0 top-[42.5%] px-3 text-center text-ink desktop:sr-only">
-            Control Your Narrative
+            Control Your Nurrative
           </h1>
           <Button
             className="absolute inset-x-0 bottom-[117px] mx-auto w-fit desktop:hidden"
@@ -140,8 +113,12 @@ export default function HomePage() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 hidden desktop:block"
           >
-            <span className="absolute top-[75%] left-[18.68%] size-6 rounded-full bg-paper/60" />
-            <span className="absolute top-[85.96%] left-[45.07%] size-6 rounded-full bg-paper/60" />
+            <span className="absolute top-[75%] left-[45.07%] flex size-6 items-center justify-center rounded-full bg-paper/60">
+              <span className="size-[15.11px] rounded-full bg-paper/60" />
+            </span>
+            <span className="absolute top-[85.96%] left-[18.68%] flex size-6 items-center justify-center rounded-full bg-paper/60">
+              <span className="size-[15.11px] rounded-full bg-paper/60" />
+            </span>
           </div>
         </div>
 
@@ -183,6 +160,7 @@ export default function HomePage() {
             alt=""
             className="object-cover"
             fill
+            quality={90}
             sizes="100vw"
             src="/reference/design-i/home/banner.jpg"
           />
@@ -224,6 +202,7 @@ export default function HomePage() {
           alt=""
           className="object-cover"
           fill
+          quality={90}
           sizes="100vw"
           src="/reference/hero-mobile.jpg"
         />

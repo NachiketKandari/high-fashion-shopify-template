@@ -10,6 +10,7 @@ interface MediaTileProps {
   label?: string;
   labelClassName?: string;
   priority?: boolean;
+  quality?: number;
 }
 
 export function MediaTile({
@@ -19,6 +20,7 @@ export function MediaTile({
   label,
   labelClassName,
   priority = false,
+  quality = 90,
 }: MediaTileProps) {
   return (
     <Link className={cn("group relative block overflow-hidden bg-surface", className)} href={href}>
@@ -28,6 +30,7 @@ export function MediaTile({
         fill
         loading={priority ? "eager" : "lazy"}
         priority={priority}
+        quality={quality}
         sizes="100vw"
         src={image}
       />
