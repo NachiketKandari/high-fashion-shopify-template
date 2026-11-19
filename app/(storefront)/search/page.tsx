@@ -3,16 +3,15 @@ import { Suspense } from "react";
 
 import { SearchViewedTracker } from "@/components/analytics/trackers";
 import { CollectionBrowseProvider } from "@/components/collections/collection-browse-provider";
-import { CollectionFilters } from "@/components/collections/filters";
 import { InfiniteProductGrid } from "@/components/collections/infinite-product-grid";
-import { BrowseFallback, BrowseToolbar } from "@/components/collections/toolbar";
 import { ProductCard } from "@/components/product-card/product-card";
+import { ProductsGridSkeleton } from "@/components/product/products-grid";
 import { SearchExplorer } from "@/components/search/search-explorer";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SEARCH_SORT_EXCLUDE } from "@/lib/collections";
+import { PRODUCTS_PER_PAGE } from "@/lib/collections";
 import { readBrowseState } from "@/lib/collections/server";
 import type { BrowseResults, BrowseState } from "@/lib/collections/types";
 import { TRENDING_SEARCH_TERMS } from "@/lib/search";
@@ -98,7 +97,7 @@ async function SearchExperience({
       </Suspense>
       <SearchExplorer initialQuery={query} key={query}>
         {query ? (
-          <Suspense fallback={<BrowseFallback />}>
+          <Suspense fallback={<SearchResultsSkeleton />}>
             <SearchResults
               query={query}
               resultsPromise={resultsPromise}
@@ -127,31 +126,26 @@ async function SearchResults({
   }
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-10">
       <h1 className="type-h3 text-ink">showing all results for ‘{query}’</h1>
       <CollectionBrowseProvider handle={`search:${query}`} path="/search" state={statePromise}>
-        <div className="grid gap-6">
-          <BrowseToolbar
-            filters={<CollectionFilters facets={results.facets} />}
-            sortExclude={SEARCH_SORT_EXCLUDE}
-          />
-          <InfiniteProductGrid
-            initialPageInfo={results.pageInfo}
-            initialProductIds={results.products.map((product) => product.id)}
-            source={results.source}
-          >
-            {results.products.map((product, index) => (
-              <ProductCard
-                captionLayout="row"
-                key={product.id}
-                loading={index < 4 ? "eager" : "lazy"}
-                product={product}
-                showActions={false}
-                showSwatches={false}
-              />
-            ))}
-          </InfiniteProductGrid>
-        </div>
+        <InfiniteProductGrid
+          initialPageInfo={results.pageInfo}
+          initialProductIds={results.products.map((product) => product.id)}
+          source={results.source}
+        >
+          {results.products.map((product, index) => (
+            <ProductCard
+              captionLayout="row"
+              className="[&>div:first-child]:aspect-[348/447]"
+              key={product.id}
+              loading={index < 4 ? "eager" : "lazy"}
+              product={product}
+              showActions={false}
+              showSwatches={false}
+            />
+          ))}
+        </InfiniteProductGrid>
       </CollectionBrowseProvider>
     </div>
   );
@@ -179,6 +173,15 @@ function SearchZeroState({ query }: { query: string }) {
           ))}
         </ul>
       </div>
+    </div>
+  );
+}
+
+function SearchResultsSkeleton() {
+  return (
+    <div aria-busy="true" className="grid gap-10">
+      <Skeleton className="h-5 w-64" />
+      <ProductsGridSkeleton count={Math.min(PRODUCTS_PER_PAGE, 8)} />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("accessibility and motion", () => {
-  test("search drawer traps focus, exposes a dialog and keeps a visible focus ring", async ({
+  test("search dialog traps focus, exposes a dialog and underlines the focused field", async ({
     page,
   }) => {
     await page.goto("/");
@@ -14,18 +14,17 @@ test.describe("accessibility and motion", () => {
     const probe = await page.evaluate(() => {
       const inputElement = document.querySelector("#search-drawer-input");
       const dialog = document.querySelector('[role="dialog"]');
-      const style = inputElement ? getComputedStyle(inputElement) : null;
+      const field = inputElement?.parentElement;
+      const style = field ? getComputedStyle(field) : null;
       return {
         ariaModal: dialog?.getAttribute("aria-modal"),
-        outlineStyle: style?.outlineStyle,
-        outlineWidth: style?.outlineWidth,
+        borderBottomWidth: style?.borderBottomWidth,
         role: dialog?.getAttribute("role"),
       };
     });
     expect(probe.role).toBe("dialog");
     expect(probe.ariaModal).toBe("true");
-    expect(probe.outlineStyle).not.toBe("none");
-    expect(parseFloat(probe.outlineWidth ?? "0")).toBeGreaterThanOrEqual(2);
+    expect(parseFloat(probe.borderBottomWidth ?? "0")).toBeGreaterThanOrEqual(2);
   });
 
   test("announcement stops rotating under reduced motion", async ({ page }) => {

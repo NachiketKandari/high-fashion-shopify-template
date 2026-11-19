@@ -7,7 +7,7 @@ import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Link } from "@/components/ui/link";
 import { MAIN_NAV } from "@/lib/nav";
 
-import { NAV_ITEM_CLASS } from "./nav-chip";
+import { NAV_ITEM_CLASS, navLabel } from "./nav-chip";
 
 // Built from Mobile Menu-Women (2022:4641) and Mobile Menu-Men (2022:4768).
 const UTILITY_LINKS = [
@@ -21,7 +21,6 @@ const PANEL_ICON_CLASS = "focus-ring flex size-9 items-center justify-center tex
 
 export function MobileMenu() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const item = openIndex === null ? null : MAIN_NAV[openIndex];
@@ -30,7 +29,7 @@ export function MobileMenu() {
     if (!item) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
+    panelRef.current?.focus();
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key !== "Escape") return;
       setOpenIndex(null);
@@ -77,13 +76,14 @@ export function MobileMenu() {
 
       {item ? (
         <div
-          aria-label={`${item.label} menu`}
+          aria-label={`${navLabel(item.label)} menu`}
           aria-modal="true"
-          className="fixed inset-0 z-(--z-overlay) flex flex-col bg-paper desktop:hidden"
+          className="fixed inset-0 z-(--z-overlay) flex flex-col bg-paper outline-none desktop:hidden"
           id="mobile-menu"
           onKeyDown={handleKeyDown}
           ref={panelRef}
           role="dialog"
+          tabIndex={-1}
         >
           <div className="flex h-[74px] shrink-0 items-center justify-between gap-4 px-6">
             <div className="flex items-center gap-6">
@@ -95,7 +95,7 @@ export function MobileMenu() {
                   onClick={() => setOpenIndex(index)}
                   type="button"
                 >
-                  {entry.label}
+                  {navLabel(entry.label)}
                 </button>
               ))}
             </div>
@@ -113,7 +113,6 @@ export function MobileMenu() {
                 aria-label="Close menu"
                 className={PANEL_ICON_CLASS}
                 onClick={() => setOpenIndex(null)}
-                ref={closeRef}
                 type="button"
               >
                 <X className="size-5" strokeWidth={1.25} />

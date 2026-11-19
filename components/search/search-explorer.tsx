@@ -104,7 +104,7 @@ function SearchExplorerContent({
         onSubmit={handleSubmit}
         role="search"
       >
-        <div className="flex h-[57px] items-center gap-2 border border-ink pr-2">
+        <div className="flex h-[57px] items-center gap-2 border-b border-ink pr-2 focus-within:border-b-2">
           <SearchIcon
             aria-hidden="true"
             className="ml-4 size-6 shrink-0 text-ink-muted"
@@ -119,7 +119,7 @@ function SearchExplorerContent({
             aria-expanded={isTyping}
             autoComplete="off"
             autoFocus={autoFocus}
-            className="type-h3 h-full min-w-0 flex-1 border-0 bg-transparent px-0 text-ink placeholder:text-ink-muted focus-ring"
+            className="type-h3 h-full min-w-0 flex-1 border-0 bg-transparent px-0 text-ink outline-none placeholder:text-ink-muted"
             id={inputId}
             maxLength={SEARCH_TERM_MAX_LENGTH}
             name="q"
@@ -128,7 +128,7 @@ function SearchExplorerContent({
             placeholder="Search"
             ref={inputRef}
             role="combobox"
-            type="search"
+            type="text"
             value={value}
           />
           {value || onClose ? (
