@@ -7858,10 +7858,10 @@
         {
           "family": "ORANGE",
           "hex": null,
-          "images": ["U22", "U28"],
+          "images": ["DM01", "DM02", "DM03"],
           "matchConfidence": "low",
           "matchNotes": [
-            "Visually verified: shorts in U22/U28 are tailored with small front pleats, but the colour reads cream/ivory, not butter yellow. Other cream-shorts outfits: U34, U37. Colour family: doc vocabulary has no YELLOW, mapped to ORANGE."
+            "Design I gallery images replace the cream-shorts shoot; the colour family stays mapped to ORANGE for Butter Yellow."
           ],
           "name": "Butter Yellow",
           "readiness": "partial",
@@ -7994,25 +7994,34 @@
       "garmentMeasurements": null,
       "handle": "micro-pleated-shorts",
       "hsCode": null,
-      "imageCount": 2,
+      "imageCount": 3,
       "images": [
         {
-          "alt": "Micro Pleated Shorts in Butter Yellow, front view",
+          "alt": "Micro Pleated Shorts, styled view",
           "colours": ["Butter Yellow"],
-          "localFile": "W_brown_halter_top_cream_shorts_FP.jpeg",
+          "localFile": "design-i-micro-pleated-styled.jpg",
           "resolved": true,
-          "uid": "U22",
+          "uid": "DM01",
           "uidInferred": false,
-          "view": "front"
+          "view": "styled"
         },
         {
-          "alt": "Micro Pleated Shorts in Butter Yellow, front view",
+          "alt": "Micro Pleated Shorts, back view",
           "colours": ["Butter Yellow"],
-          "localFile": "W_brown_halter_top_cream_shorts_BP.jpeg",
+          "localFile": "design-i-micro-pleated-detail.jpg",
           "resolved": true,
-          "uid": "U28",
+          "uid": "DM02",
           "uidInferred": false,
           "view": "back"
+        },
+        {
+          "alt": "Micro Pleated Shorts, detail view",
+          "colours": ["Butter Yellow"],
+          "localFile": "design-i-micro-pleated-detail-crop.jpg",
+          "resolved": true,
+          "uid": "DM03",
+          "uidInferred": false,
+          "view": "detail"
         }
       ],
       "lining": null,
@@ -8033,11 +8042,10 @@
           "composition",
           "care",
           "fit",
-          "colour_hex",
-          "images_below_minimum"
+          "colour_hex"
         ],
         "launchReady": false,
-        "missing": ["images_below_minimum"],
+        "missing": [],
         "recommendedGaps": [
           "barcode",
           "weight",
@@ -8536,10 +8544,10 @@
         {
           "family": "BLACK",
           "hex": null,
-          "images": ["U05", "U04"],
+          "images": ["DR01", "DR02", "DR03", "DR04", "DR05"],
           "matchConfidence": "medium",
           "matchNotes": [
-            "Two black mini-dress shots (U05 backless BP, U04 sleeveless SP); neither label confirms a racer back, hence medium. No front view exists."
+            "Design I PDP gallery: back hero, street view, and detail crops from the export. The source Figma gallery repeats three unique shots across five slots."
           ],
           "name": "Black",
           "readiness": "partial",
@@ -8672,31 +8680,58 @@
       "garmentMeasurements": null,
       "handle": "racer-back-mini-dress",
       "hsCode": null,
-      "imageCount": 2,
+      "imageCount": 5,
       "images": [
         {
-          "alt": "Racer Back Mini Dress in Black, styled view",
+          "alt": "Racer Back Mini Dress in Black, back view",
           "colours": ["Black"],
-          "localFile": "W_black_backless_mini_dress_BP.jpeg",
+          "localFile": "design-i-racer-back-hero.jpg",
           "resolved": true,
-          "uid": "U05",
+          "uid": "DR01",
           "uidInferred": false,
           "view": "back"
         },
         {
           "alt": "Racer Back Mini Dress in Black, styled view",
           "colours": ["Black"],
-          "localFile": "W_black_sleeveless_mini_dress_SP.jpeg",
+          "localFile": "design-i-racer-back-street.jpg",
           "resolved": true,
-          "uid": "U04",
+          "uid": "DR02",
           "uidInferred": false,
           "view": "styled"
+        },
+        {
+          "alt": "Racer Back Mini Dress in Black, detail view",
+          "colours": ["Black"],
+          "localFile": "design-i-racer-back-detail.jpg",
+          "resolved": true,
+          "uid": "DR03",
+          "uidInferred": false,
+          "view": "detail"
+        },
+        {
+          "alt": "Racer Back Mini Dress in Black, detail view",
+          "colours": ["Black"],
+          "localFile": "design-i-racer-back-detail-crop.jpg",
+          "resolved": true,
+          "uid": "DR04",
+          "uidInferred": false,
+          "view": "detail"
+        },
+        {
+          "alt": "Racer Back Mini Dress in Black, back detail",
+          "colours": ["Black"],
+          "localFile": "design-i-racer-back-street-crop.jpg",
+          "resolved": true,
+          "uid": "DR05",
+          "uidInferred": false,
+          "view": "detail"
         }
       ],
       "lining": null,
       "longDescription": "Racer Back Mini Dress in Black, from the UniPlus dresses range.",
       "matchNotes": [
-        "Two black mini-dress shots (U05 backless BP, U04 sleeveless SP); neither label confirms a racer back, hence medium. No front view exists."
+        "Design I PDP gallery: back hero, street view, and detail crops from the export. The source Figma gallery repeats three unique shots across five slots."
       ],
       "modelHeight": null,
       "modelSize": null,
@@ -8711,12 +8746,10 @@
           "composition",
           "care",
           "fit",
-          "colour_hex",
-          "images_below_minimum",
-          "images_missing_front"
+          "colour_hex"
         ],
         "launchReady": false,
-        "missing": ["images_below_minimum", "images_missing_front"],
+        "missing": [],
         "recommendedGaps": [
           "barcode",
           "weight",

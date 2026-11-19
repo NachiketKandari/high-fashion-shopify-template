@@ -89,9 +89,17 @@ in the Shopify admin and can be republished without re-importing.
 
 The four Design I products now carry the design's imagery and ₹10,000 price: Racer back mini dress,
 Double Mesh skirt (created), Corset back elevated tshirt and Micro pleated shorts. The source PNGs
-are in the gitignored `tmp/design-i-assets/`; three were pulled through the Figma MCP before its
-Starter-plan call limit, so Micro pleated shorts keeps its UniPlus photography until the limit
-resets. Shopify's Search & Discovery index picks up the new Double Mesh skirt after its own delay.
+are in the gitignored `tmp/design-i-assets/`. Racer's gallery uses five slots built from the three
+PDP image refs (back hero, street, detail), including the export's detail crops. Micro pleated
+shorts now uses the Design I gallery images from the PLP export. The image files live in the
+gitignored photoshoot folder and are uploaded by `pnpm import:catalog`. The menu tiles use the
+`menu-woman` / `menu-man` imagery copied to `public/reference/design-i/menu/`. Shopify's Search &
+Discovery index picks up the new Double Mesh skirt after its own delay.
+
+The home page uses the `default` frame (`2003:263`) imagery: `public/reference/design-i/home/` holds
+`hero-desktop.jpg`, `collection-denim.jpg`, `collection-tailoring.jpg` and `banner.jpg`, cropped to
+the frame's visible windows. The product row stays Shopify-driven from `new-in`, so its four cards
+follow the collection order rather than the frame's four Design I products.
 
 A separate client catalog adds 39 UniPlus products and 354 variants. 27 are `ACTIVE` and published
 to the **Lorem Ipsum** channel with final INR prices and complete colour imagery; they populate

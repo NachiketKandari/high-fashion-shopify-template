@@ -164,7 +164,13 @@ export function DesktopNav() {
                     key={`${tile.href}-${tile.label}`}
                     onClick={() => setOpenIndex(null)}
                   >
-                    <Image alt="" className="object-cover" fill sizes="100vw" src={tile.image} />
+                    <Image
+                      alt=""
+                      className="object-cover"
+                      fill
+                      sizes="(min-width: 1100px) 355px, 100vw"
+                      src={tile.image}
+                    />
                     <span className="type-nav absolute bottom-6 left-6 text-inverse uppercase">
                       {tile.label}
                     </span>

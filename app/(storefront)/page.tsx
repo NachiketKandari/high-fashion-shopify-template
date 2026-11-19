@@ -29,6 +29,21 @@ const CATEGORY_TILES = [
   },
 ];
 
+const DESKTOP_CATEGORY_TILES = [
+  {
+    href: "/collections/womenswear",
+    image: "/reference/design-i/home/collection-denim.jpg",
+    label: "Shop for Women",
+    labelClassName: "px-9 pb-6.5 text-inverse",
+  },
+  {
+    href: "/collections/menswear",
+    image: "/reference/design-i/home/collection-tailoring.jpg",
+    label: "Shop for Men",
+    labelClassName: "px-9 pb-6.5 text-ink",
+  },
+];
+
 const SECOND_CATEGORY_TILES = [
   {
     href: "/collections/dresses",
@@ -61,7 +76,7 @@ function CampaignImage() {
     alt: "",
     fill: true,
     sizes: "100vw",
-    src: "/reference/hero-desktop.jpg",
+    src: "/reference/design-i/home/hero-desktop.jpg",
   });
   const {
     props: { srcSet: mobileSrcSet, ...mobileProps },
@@ -110,10 +125,6 @@ export default function HomePage() {
         <div className="relative h-svh overflow-hidden bg-surface desktop:aspect-[1440/812] desktop:h-auto">
           <CampaignImage />
           <div aria-hidden="true" className="absolute inset-0 bg-paper/30 desktop:hidden" />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 hidden h-24 bg-gradient-to-b from-paper/85 via-paper/40 to-transparent desktop:block"
-          />
           <h1 className="type-display-lg absolute inset-x-0 top-[42.5%] px-3 text-center text-ink desktop:sr-only">
             Control Your Narrative
           </h1>
@@ -127,10 +138,10 @@ export default function HomePage() {
           </Button>
           <div
             aria-hidden="true"
-            className="absolute bottom-16 left-1/2 hidden -translate-x-1/2 items-center gap-2 desktop:flex"
+            className="pointer-events-none absolute inset-0 hidden desktop:block"
           >
-            <span className="size-6 rounded-full bg-paper/60" />
-            <span className="size-6 rounded-full bg-paper/60" />
+            <span className="absolute top-[75%] left-[18.68%] size-6 rounded-full bg-paper/60" />
+            <span className="absolute top-[85.96%] left-[45.07%] size-6 rounded-full bg-paper/60" />
           </div>
         </div>
 
@@ -140,8 +151,8 @@ export default function HomePage() {
             aria-hidden="true"
             className="flex h-full w-max animate-[marquee_40s_linear_infinite] items-center motion-reduce:animate-none"
           >
-            <span className="type-marquee pr-12 whitespace-nowrap">{MARQUEE_COPY}</span>
-            <span className="type-marquee pr-12 whitespace-nowrap">{MARQUEE_COPY}</span>
+            <span className="type-marquee pr-12 pl-6 whitespace-nowrap">{MARQUEE_COPY}</span>
+            <span className="type-marquee pr-12 pl-6 whitespace-nowrap">{MARQUEE_COPY}</span>
           </div>
         </div>
       </section>
@@ -152,7 +163,7 @@ export default function HomePage() {
 
       <section aria-label="Shop by category" className="hidden desktop:block">
         <div className="grid grid-cols-2 gap-6 px-6">
-          {CATEGORY_TILES.map((tile) => (
+          {DESKTOP_CATEGORY_TILES.map((tile) => (
             <MediaTile
               className="aspect-[684/700]"
               href={tile.href}
@@ -173,7 +184,7 @@ export default function HomePage() {
             className="object-cover"
             fill
             sizes="100vw"
-            src="/reference/clone/about-hero.png"
+            src="/reference/design-i/home/banner.jpg"
           />
         </Link>
       </section>

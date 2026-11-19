@@ -50,13 +50,21 @@ export const MAIN_NAV: NavItem[] = [
       },
     ],
     tiles: [
-      { href: "/collections/core", image: "/reference/editorial-core.jpg", label: "Core" },
+      {
+        href: "/collections/core",
+        image: "/reference/design-i/menu/woman-core.jpg",
+        label: "Core",
+      },
       {
         href: "/collections/signature",
-        image: "/reference/editorial-elevated.jpg",
+        image: "/reference/design-i/menu/woman-elevated.jpg",
         label: "Elevated",
       },
-      { href: "/collections/corsets", image: "/reference/editorial-corsets.jpg", label: "Core" },
+      {
+        href: "/collections/racer-backs",
+        image: "/reference/design-i/menu/woman-racer.jpg",
+        label: "Racer",
+      },
     ],
   },
   {
@@ -76,7 +84,16 @@ export const MAIN_NAV: NavItem[] = [
       },
     ],
     tiles: [
-      { href: "/collections/menswear", image: "/reference/clone/lookbook-men.jpg", label: "Men" },
+      {
+        href: "/collections/jackets",
+        image: "/reference/design-i/menu/man-jacket.jpg",
+        label: "Jacket",
+      },
+      {
+        href: "/collections/shirts-and-tshirts",
+        image: "/reference/design-i/menu/man-shirt.jpg",
+        label: "Shirt",
+      },
     ],
   },
 ];
