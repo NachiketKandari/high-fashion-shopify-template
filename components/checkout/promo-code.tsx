@@ -30,7 +30,7 @@ export function PromoCode({ cart, className }: PromoCodeProps) {
 
   return (
     <details className={cn("group", className)}>
-      <summary className="type-body-sm flex h-12 cursor-pointer list-none items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
+      <summary className="type-meta flex h-12 cursor-pointer list-none items-center justify-between gap-4 text-ink-strong [&::-webkit-details-marker]:hidden">
         Do you have a promotional code?
         <ChevronDownIcon
           aria-hidden="true"
@@ -48,10 +48,10 @@ export function PromoCode({ cart, className }: PromoCodeProps) {
                   className="flex min-h-16 items-center justify-between gap-4 border border-ink px-4"
                   key={discount.code}
                 >
-                  <span className="type-body-sm">{discount.code}</span>
+                  <span className="type-meta">{discount.code}</span>
                   <div className="flex items-center gap-3">
                     {!discount.applicable && !isCodePending ? (
-                      <span className="type-body-sm text-ink-muted">Invalid code</span>
+                      <span className="type-meta text-ink-muted">Invalid code</span>
                     ) : null}
                     <form {...formProps({ beforeSubmit: () => setLocalError(null) })}>
                       <input
@@ -95,7 +95,7 @@ export function PromoCode({ cart, className }: PromoCodeProps) {
               aria-label="Promotional code"
               aria-invalid={error ? true : undefined}
               autoComplete="off"
-              className="h-10 flex-1 border-ink px-4 uppercase"
+              className="type-meta-medium h-10 flex-1 border-ink px-4 uppercase"
               disabled={isPending}
               onChange={(event) => {
                 setCode(event.target.value);
@@ -108,7 +108,7 @@ export function PromoCode({ cart, className }: PromoCodeProps) {
             />
             <button
               {...register("discount-apply")}
-              className="type-control focus-ring h-10 shrink-0 cursor-pointer border border-ink px-5 transition-colors hover:bg-ink hover:text-inverse disabled:cursor-not-allowed disabled:opacity-40"
+              className="type-meta-medium focus-ring h-10 shrink-0 cursor-pointer border border-ink px-6 transition-colors hover:bg-ink hover:text-inverse disabled:cursor-not-allowed disabled:opacity-40"
               disabled={isPending}
               type="submit"
             >
@@ -118,7 +118,7 @@ export function PromoCode({ cart, className }: PromoCodeProps) {
         )}
 
         {error ? (
-          <p className="type-body-sm text-error-rule" role="alert">
+          <p className="type-meta text-error-rule" role="alert">
             {error}
           </p>
         ) : null}

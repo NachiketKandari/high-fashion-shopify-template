@@ -58,6 +58,31 @@
       "size": "0.75rem",
       "weight": 400
     },
+    "meta": {
+      "lineHeight": "1rem",
+      "size": "0.75rem",
+      "weight": 400
+    },
+    "meta-medium": {
+      "lineHeight": "1rem",
+      "size": "0.75rem",
+      "weight": 500
+    },
+    "meta-semibold": {
+      "lineHeight": "1rem",
+      "size": "0.75rem",
+      "weight": 600
+    },
+    "meta-bold": {
+      "lineHeight": "1rem",
+      "size": "0.75rem",
+      "weight": 700
+    },
+    "eyebrow": {
+      "lineHeight": "0.8125rem",
+      "size": "0.625rem",
+      "weight": 700
+    },
     "control": {
       "lineHeight": "1rem",
       "size": "0.75rem",

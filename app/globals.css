@@ -71,6 +71,21 @@
   --text-body-sm: 0.75rem;
   --text-body-sm--line-height: 1rem;
   --text-body-sm--letter-spacing: 0;
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1rem;
+  --text-meta--letter-spacing: -0.02em;
+  --text-meta-medium: 0.75rem;
+  --text-meta-medium--line-height: 1rem;
+  --text-meta-medium--letter-spacing: -0.02em;
+  --text-meta-semibold: 0.75rem;
+  --text-meta-semibold--line-height: 1rem;
+  --text-meta-semibold--letter-spacing: -0.02em;
+  --text-meta-bold: 0.75rem;
+  --text-meta-bold--line-height: 1rem;
+  --text-meta-bold--letter-spacing: -0.02em;
+  --text-eyebrow: 0.625rem;
+  --text-eyebrow--line-height: 0.8125rem;
+  --text-eyebrow--letter-spacing: -0.02em;
   --text-control: 0.75rem;
   --text-control--line-height: 1rem;
   --text-control--letter-spacing: 0;
@@ -253,6 +268,41 @@
   line-height: var(--text-body-sm--line-height);
   font-weight: 400;
   letter-spacing: var(--text-body-sm--letter-spacing);
+}
+
+@utility type-meta {
+  font-size: var(--text-meta);
+  line-height: var(--text-meta--line-height);
+  font-weight: 400;
+  letter-spacing: var(--text-meta--letter-spacing);
+}
+
+@utility type-meta-medium {
+  font-size: var(--text-meta-medium);
+  line-height: var(--text-meta-medium--line-height);
+  font-weight: 500;
+  letter-spacing: var(--text-meta-medium--letter-spacing);
+}
+
+@utility type-meta-semibold {
+  font-size: var(--text-meta-semibold);
+  line-height: var(--text-meta-semibold--line-height);
+  font-weight: 600;
+  letter-spacing: var(--text-meta-semibold--letter-spacing);
+}
+
+@utility type-meta-bold {
+  font-size: var(--text-meta-bold);
+  line-height: var(--text-meta-bold--line-height);
+  font-weight: 700;
+  letter-spacing: var(--text-meta-bold--letter-spacing);
+}
+
+@utility type-eyebrow {
+  font-size: var(--text-eyebrow);
+  line-height: var(--text-eyebrow--line-height);
+  font-weight: 700;
+  letter-spacing: var(--text-eyebrow--letter-spacing);
 }
 
 @utility type-control {

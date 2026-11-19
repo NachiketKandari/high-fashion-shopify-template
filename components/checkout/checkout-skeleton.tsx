@@ -4,9 +4,9 @@ export function CheckoutSkeleton() {
   return (
     <div
       aria-busy="true"
-      className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-6 py-10 desktop:flex-row desktop:gap-0 desktop:py-0"
+      className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-6 py-10 desktop:flex-row desktop:gap-0 desktop:py-0"
     >
-      <div className="contents desktop:flex desktop:w-[800px] desktop:shrink-0 desktop:flex-col desktop:gap-8 desktop:py-6 desktop:pr-10 desktop:pl-6">
+      <div className="contents desktop:flex desktop:max-w-[800px] desktop:min-w-0 desktop:flex-1 desktop:flex-col desktop:gap-8 desktop:py-6 desktop:pr-10 desktop:pl-6">
         <div className="order-3 grid gap-8 desktop:order-1">
           <Skeleton className="h-4 w-32" />
           <Skeleton className="h-[130px] w-full max-w-[453px]" />

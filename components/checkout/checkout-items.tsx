@@ -17,15 +17,15 @@ interface CheckoutItemsProps {
 
 export function CheckoutItems({ cart, className }: CheckoutItemsProps) {
   return (
-    <details className={cn("group border-b border-ink", className)}>
-      <summary className="type-body-sm flex h-[49px] cursor-pointer list-none items-center justify-between [&::-webkit-details-marker]:hidden">
+    <details className={cn("group", className)}>
+      <summary className="type-meta flex h-[49px] cursor-pointer list-none items-center justify-between text-ink-strong [&::-webkit-details-marker]:hidden">
         ITEMS
         <ChevronDownIcon
           aria-hidden="true"
           className="size-3 transition-transform group-open:rotate-180"
         />
       </summary>
-      <ul aria-label="Order items" className="grid gap-6 pb-6">
+      <ul aria-label="Order items" className="grid gap-8 pb-6">
         {cart.lines.nodes.map((line) => (
           <CheckoutItem key={line.id} line={line} />
         ))}
@@ -76,31 +76,31 @@ function CheckoutItem({ line }: { line: CartLine }) {
     <li aria-busy={isPending || undefined} className="flex gap-6">
       {href ? (
         <Link
-          className="relative h-[191px] w-[123px] shrink-0 overflow-hidden border border-ink bg-surface transition-opacity hover:opacity-80"
+          className="relative h-[191px] w-[123px] shrink-0 overflow-hidden border border-ink bg-disabled transition-opacity hover:opacity-80"
           href={href}
         >
           {imageContent}
         </Link>
       ) : (
-        <div className="relative h-[191px] w-[123px] shrink-0 overflow-hidden border border-ink bg-surface">
+        <div className="relative h-[191px] w-[123px] shrink-0 overflow-hidden border border-ink bg-disabled">
           {imageContent}
         </div>
       )}
 
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-4">
         <div className="flex items-start justify-between gap-4">
-          <div className="grid min-w-0 gap-1">
+          <div className="grid min-w-0 gap-2">
             {href ? (
               <Link
-                className="type-control focus-ring line-clamp-2 w-fit hover:opacity-70"
+                className="type-meta-semibold focus-ring line-clamp-2 w-fit hover:opacity-70"
                 href={href}
               >
                 {title}
               </Link>
             ) : (
-              <p className="type-control line-clamp-2">{title}</p>
+              <p className="type-meta-semibold line-clamp-2">{title}</p>
             )}
-            {variantLabel ? <p className="type-body-sm text-ink-muted">{variantLabel}</p> : null}
+            {variantLabel ? <p className="type-meta">{variantLabel}</p> : null}
           </div>
           {canRemove ? (
             <form {...formProps()}>
@@ -112,7 +112,7 @@ function CheckoutItem({ line }: { line: CartLine }) {
                 disabled={isPending}
                 type="submit"
               >
-                <XIcon aria-hidden="true" className="size-3" />
+                <XIcon aria-hidden="true" className="size-4" />
               </button>
             </form>
           ) : null}
@@ -131,19 +131,19 @@ function CheckoutItem({ line }: { line: CartLine }) {
               <button
                 {...register("decrease")}
                 aria-label={`Decrease quantity: ${title}`}
-                className="type-body-sm focus-ring flex size-9 cursor-pointer items-center justify-center disabled:cursor-not-allowed disabled:opacity-40"
+                className="type-meta focus-ring flex size-9 cursor-pointer items-center justify-center disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={isPending || quantity <= 1}
                 type="submit"
               >
                 -
               </button>
-              <span aria-live="polite" className="type-body-sm min-w-3 text-center tabular-nums">
+              <span aria-live="polite" className="type-meta min-w-3 text-center tabular-nums">
                 {quantity}
               </span>
               <button
                 {...register("increase")}
                 aria-label={`Increase quantity: ${title}`}
-                className="type-body-sm focus-ring flex size-9 cursor-pointer items-center justify-center disabled:cursor-not-allowed disabled:opacity-40"
+                className="type-meta focus-ring flex size-9 cursor-pointer items-center justify-center disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={isPending || quantity >= 99}
                 type="submit"
               >
@@ -151,11 +151,11 @@ function CheckoutItem({ line }: { line: CartLine }) {
               </button>
             </form>
           ) : (
-            <p className="type-body-sm text-ink-muted">Quantity {quantity}</p>
+            <p className="type-meta">Quantity {quantity}</p>
           )}
           <Price
             amount={cost.totalAmount.amount}
-            className="type-body-sm"
+            className="type-meta"
             currencyCode={cost.totalAmount.currencyCode}
           />
         </div>
