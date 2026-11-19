@@ -2,7 +2,6 @@
 
 import { HandbagIcon } from "lucide-react";
 
-import { useCartDrawer } from "@/components/cart/context";
 import { Link } from "@/components/ui/link";
 import { useCart } from "@/lib/cart/client";
 
@@ -19,7 +18,6 @@ export function CartIconClient({ cartLabel, initialCart }: CartIconClientProps) 
       ? (initialCart?.totalQuantity ?? state.data.totalQuantity)
       : state.data.totalQuantity,
   );
-  const { openOverlay } = useCartDrawer();
 
   return (
     <>
@@ -30,14 +28,13 @@ export function CartIconClient({ cartLabel, initialCart }: CartIconClientProps) 
       >
         <HandbagIcon className="size-6" strokeWidth={1.25} />
       </Link>
-      <button
+      <Link
         aria-label={`${cartLabel} (${quantity})`}
         className={`${NAV_CHIP_CLASS} hidden desktop:flex`}
-        onClick={openOverlay}
-        type="button"
+        href="/cart"
       >
         {quantity > 0 ? `${cartLabel} (${quantity})` : cartLabel}
-      </button>
+      </Link>
     </>
   );
 }

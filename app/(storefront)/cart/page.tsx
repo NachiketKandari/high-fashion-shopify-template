@@ -3,8 +3,8 @@ import { Suspense } from "react";
 
 import { CartViewedTracker } from "@/components/analytics/trackers";
 import { CartPageContent, CartPageSkeleton } from "@/components/cart/cart-page";
+import { CartRecommendations } from "@/components/cart/recommendations";
 import { CartSignIn } from "@/components/cart/sign-in";
-import { ProductRow } from "@/components/home/product-row";
 import { Container } from "@/components/ui/container";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -30,11 +30,11 @@ export default function CartPage() {
           }
         />
       </Suspense>
-      <section aria-label="May interest you" className="mt-14 grid gap-4">
-        <Container>
-          <h2 className="type-h4">May interest you</h2>
+      <section aria-label="You may also like" className="pt-10 pb-10 desktop:mt-6 desktop:py-20">
+        <Container className="mb-5 max-w-[1440px]">
+          <h2 className="type-control text-ink">you may also like</h2>
         </Container>
-        <ProductRow handle="bestsellers" />
+        <CartRecommendations />
       </section>
     </>
   );

@@ -1,132 +1,126 @@
 "use client";
 
-import type { ComponentProps, ReactNode } from "react";
+import { XIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
-import { useDisplayPrice } from "@/components/currency/provider";
+import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getFreeShippingStatus } from "@/lib/cart";
 import { useSuspenseCart } from "@/lib/cart/client";
-import type { Cart } from "@/lib/cart/types";
 
 import { CartLineItems } from "./line-item";
-import { CartSummary } from "./summary";
+import { CartMobileSummaryBar, CartSummary } from "./summary";
 import { CartWarnings } from "./warnings";
+
+const CART_WIDTH_CLASS = "max-w-[1440px]";
 
 export function CartPageContent({ signIn }: { signIn?: ReactNode }) {
   const cart = useSuspenseCart((state) => state.data);
 
   if (cart.totalQuantity === 0) {
-    return (
-      <Page>
-        <Container>
-          <div className="grid gap-6">
-            <h1 className="type-h2">Cart</h1>
-            <div className="grid gap-4 py-6">
-              <h2 className="type-h3">Your shopping cart is empty</h2>
-              <p className="type-body-sm max-w-[40ch] text-ink-muted">
-                Add pieces from a collection and find them here.
-              </p>
-              <Link
-                href="/collections/all"
-                className="type-control focus-ring mt-2 inline-flex h-9 w-fit cursor-pointer items-center justify-center border border-ink px-4 text-ink transition-colors hover:bg-ink hover:text-inverse"
-              >
-                Explore collections
-              </Link>
-            </div>
-          </div>
-        </Container>
-      </Page>
-    );
+    return <CartEmptyState />;
   }
 
   return (
-    <CartPageLayout
-      count={<span className="type-h4 text-ink-muted">({cart.totalQuantity})</span>}
-      summary={<CartSummary cart={cart} signIn={signIn} />}
-      warnings={<CartWarnings />}
-    >
-      <div className="grid gap-5">
-        <FreeShippingLine cart={cart} />
-        <CartLineItems lines={cart.lines.nodes} />
-      </div>
-    </CartPageLayout>
+    <>
+      <Page className="pt-0">
+        <Container className={CART_WIDTH_CLASS}>
+          <h1 className="sr-only">Cart</h1>
+          <MobileCartHeader />
+          <div className="empty:hidden pb-6">
+            <CartWarnings />
+          </div>
+          <div className="grid desktop:grid-cols-[800fr_592fr]">
+            <div className="min-w-0 px-0 pt-6 pb-8 desktop:pr-10 desktop:pb-6 desktop:pl-6">
+              <div className="empty:hidden mb-8 desktop:hidden">{signIn}</div>
+              <CartLineItems lines={cart.lines.nodes} />
+            </div>
+            <aside className="min-w-0 px-0 pb-0 desktop:flex desktop:flex-col desktop:gap-10 desktop:border desktop:border-ink desktop:px-20 desktop:py-35">
+              <div className="hidden empty:hidden desktop:block">{signIn}</div>
+              <div className="hidden desktop:block">
+                <CartSummary cart={cart} />
+              </div>
+              <div className="desktop:hidden">
+                <CartSummary cart={cart} showCheckout={false} />
+              </div>
+            </aside>
+          </div>
+        </Container>
+      </Page>
+      <CartMobileSummaryBar cart={cart} />
+    </>
   );
 }
 
-function FreeShippingLine({ cart }: { cart: Cart }) {
-  const format = useDisplayPrice();
-  const { message } = getFreeShippingStatus(
-    cart.cost.subtotalAmount.amount,
-    cart.cost.subtotalAmount.currencyCode,
-    format,
+function CartEmptyState() {
+  return (
+    <Page className="pt-0">
+      <Container className={CART_WIDTH_CLASS}>
+        <h1 className="sr-only">Cart</h1>
+        <div className="grid justify-items-center gap-6 py-16 text-center desktop:py-32">
+          <h2 className="type-display">Your bag is empty</h2>
+          <p className="type-body-sm max-w-[42ch] text-ink-muted">
+            Start adding pieces to your bag, explore our trending picks.
+          </p>
+          <Button render={<Link href="/collections/all" />} variant="outline">
+            Explore collections
+          </Button>
+        </div>
+      </Container>
+    </Page>
   );
-  return <p className="type-label border-t border-rule pt-2.5 text-ink-muted">{message}</p>;
+}
+
+function MobileCartHeader() {
+  return (
+    <div className="flex h-18 items-center justify-between desktop:hidden">
+      <p className="type-h3 text-ink">Cart</p>
+      <Link
+        aria-label="Continue shopping"
+        className="focus-ring flex size-9 items-center justify-center text-ink"
+        href="/"
+      >
+        <XIcon className="size-4" strokeWidth={1.25} />
+      </Link>
+    </div>
+  );
 }
 
 export function CartPageSkeleton() {
   return (
-    <CartPageLayout
-      aria-busy="true"
-      count={<Skeleton className="h-4 w-6" />}
-      summary={
-        <div className="grid gap-5">
-          <div className="grid gap-1">
-            <div className="flex h-7 items-center justify-between">
-              <Skeleton className="h-3 w-20" />
-              <Skeleton className="h-3 w-16" />
-            </div>
-            <Skeleton className="h-3 w-48" />
-          </div>
-          <Skeleton className="h-9" />
+    <Page aria-busy="true" className="pt-0">
+      <Container className={CART_WIDTH_CLASS}>
+        <div className="flex h-18 items-center justify-between desktop:hidden">
+          <Skeleton className="h-4 w-10" />
+          <Skeleton className="size-9" />
         </div>
-      }
-    >
-      <ul className="grid gap-5">
-        {[0, 1, 2].map((index) => (
-          <li key={index} className="flex gap-3">
-            <Skeleton className="h-[75px] w-15 shrink-0" />
-            <div className="grid min-h-[75px] flex-1 gap-3">
-              <div className="grid gap-1">
-                <Skeleton className="h-3 w-2/3" />
-                <Skeleton className="h-3 w-1/3" />
-              </div>
-              <Skeleton className="h-6 w-20" />
-            </div>
-            <Skeleton className="h-3 w-16" />
-          </li>
-        ))}
-      </ul>
-    </CartPageLayout>
-  );
-}
-
-interface CartPageLayoutProps extends ComponentProps<"div"> {
-  count: ReactNode;
-  summary: ReactNode;
-  warnings?: ReactNode;
-}
-
-function CartPageLayout({ children, count, summary, warnings, ...props }: CartPageLayoutProps) {
-  return (
-    <Page {...props}>
-      <Container>
-        <div className="grid gap-8">
-          <div className="flex items-center gap-2">
-            <h1 className="type-h2">Cart</h1>
-            {count}
+        <div className="grid desktop:grid-cols-[800fr_592fr]">
+          <div className="min-w-0 px-0 pt-6 pb-8 desktop:pr-10 desktop:pb-6 desktop:pl-6">
+            <ul className="grid gap-8">
+              {[0, 1].map((index) => (
+                <li className="flex gap-6" key={index}>
+                  <Skeleton className="h-[191px] w-[123px] shrink-0" />
+                  <div className="grid flex-1 content-start gap-4 py-6">
+                    <Skeleton className="h-4 w-2/3" />
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
-          {warnings}
-          <div className="grid gap-10 desktop:grid-cols-[minmax(0,1fr)_310px]">
-            <div className="min-w-0">{children}</div>
-            <aside className="desktop:border-l desktop:border-rule desktop:pl-8">
-              <div className="grid gap-4 desktop:sticky desktop:top-24">
-                <p className="type-label border-t border-ink pt-3">Order summary</p>
-                {summary}
+          <div className="min-w-0 px-0 pb-10 desktop:border desktop:border-ink desktop:px-20 desktop:py-35">
+            <div className="grid gap-10">
+              <Skeleton className="h-10 w-48" />
+              <div className="grid gap-6">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
               </div>
-            </aside>
+              <Skeleton className="h-10 w-full" />
+            </div>
           </div>
         </div>
       </Container>

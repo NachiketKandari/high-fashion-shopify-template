@@ -11,18 +11,24 @@ import type { cartHandlers } from "./request";
 export const { CartProvider, useCart, useCartActions, useCartForm, useSuspenseCart } =
   createCartComponents<typeof cartHandlers>();
 
+export function useCartMutating() {
+  return useCart((state) =>
+    Boolean(
+      state.pending.attributes ||
+      state.pending.cost ||
+      state.pending.discountCodes.size ||
+      state.pending.lines.size ||
+      state.pending.note,
+    ),
+  );
+}
+
 export function useCheckout() {
   const agentPending = useAgentCartPending();
   const cartState = useCart((state) => state);
-  const { data: cart, loading, pending, revalidating } = cartState;
-  const isCartMutating = Boolean(
-    agentPending ||
-    pending.attributes ||
-    pending.cost ||
-    pending.discountCodes.size ||
-    pending.lines.size ||
-    pending.note,
-  );
+  const { data: cart, loading, revalidating } = cartState;
+  const cartMutating = useCartMutating();
+  const isCartMutating = Boolean(agentPending || cartMutating);
   const isUpdatingCart = Boolean(isCartMutating || loading || revalidating);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);

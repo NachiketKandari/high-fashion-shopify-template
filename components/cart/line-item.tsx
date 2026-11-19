@@ -1,10 +1,10 @@
 "use client";
 
 import type { CartLine as HydrogenCartLine } from "@shopify/hydrogen";
-import { MinusIcon, PlusIcon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 import Image from "next/image";
 
-import { useDisplayPrice } from "@/components/currency/provider";
+import { Price } from "@/components/product/price";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Link } from "@/components/ui/link";
 import { useCart } from "@/lib/cart/client";
@@ -20,9 +20,9 @@ interface CartLineItemsProps {
 export function CartLineItems({ lines }: CartLineItemsProps) {
   const keys = getLineRowKeys(lines);
   return (
-    <ul className="grid gap-5" aria-label="Cart items">
+    <ul aria-label="Cart items" className="grid gap-8">
       {lines.map((line, index) => (
-        <CartLineItem key={keys[index]} item={line} />
+        <CartLineItem item={line} key={keys[index]} />
       ))}
     </ul>
   );
@@ -62,160 +62,175 @@ function CartLineItem({ item }: CartLineItemProps) {
     "canRemove" in instructions &&
     instructions.canRemove === false
   );
+  const isOutOfStock = !canUpdateQuantity;
   const components = (item as HydrogenCartLine).lineComponents ?? [];
   const isOptimistic = item.id.startsWith("optimistic:");
-  const format = useDisplayPrice();
+  const amount = cost.totalAmount.amount;
   const currencyCode = cost.totalAmount.currencyCode;
-  const sellingUnitPrice = Number(cost.amountPerQuantity.amount);
-  const compareAtUnitPrice = Number(cost.compareAtAmountPerQuantity?.amount ?? 0);
-  const originalUnitPrice = compareAtUnitPrice > sellingUnitPrice ? compareAtUnitPrice : 0;
-  const hasCost = Boolean(currencyCode) && sellingUnitPrice > 0;
-  const lineTotal = isPending ? sellingUnitPrice * quantity : Number(cost.totalAmount.amount);
+  const canShowPrice = Boolean(currencyCode) && amount !== "";
   const title = merchandise?.product.title || "Cart item";
-  const variantLabel = merchandise?.selectedOptions?.length
-    ? merchandise.selectedOptions
-        .filter((option) => option.value !== "Default Title")
-        .map((option) => option.value)
-        .join(" · ")
-    : "";
+  const optionValues = (merchandise?.selectedOptions ?? []).filter(
+    (option) => option.value !== "Default Title",
+  );
+  const sizeOption =
+    optionValues.length === 1
+      ? merchandise?.selectedOptions?.find((option) => option.name.toLowerCase() === "size")
+      : undefined;
+  const variantLabel = optionValues.map((option) => option.value).join(" · ");
   const lineName = variantLabel ? `${title}, ${variantLabel}` : title;
   const href = merchandise?.product.handle ? `/products/${merchandise.product.handle}` : undefined;
   const image = merchandise?.image;
   const imageContent = image?.url ? (
     <Image
-      src={image.url}
       alt={image.altText || title}
-      fill
       className="object-cover"
+      fill
       sizes="100vw"
+      src={image.url}
     />
   ) : (
     <ImagePlaceholder className="size-full" />
   );
-  const price = (amount: number) => format({ amount: String(amount), currencyCode });
+  const imageClass =
+    "relative h-[191px] w-[123px] shrink-0 self-start overflow-hidden border border-ink bg-surface";
 
   return (
-    <li className="flex gap-3" aria-busy={isPending || undefined} aria-label={title}>
+    <li
+      aria-busy={isPending || undefined}
+      aria-label={title}
+      className="flex gap-6 transition-opacity data-[pending=true]:opacity-60"
+      data-pending={isPending || undefined}
+    >
       {href ? (
-        <Link
-          href={href}
-          className="relative h-[75px] w-15 shrink-0 cursor-pointer self-start overflow-hidden bg-surface transition-opacity hover:opacity-80"
-        >
+        <Link aria-label={`View ${title}`} className={`${imageClass} focus-ring`} href={href}>
           {imageContent}
         </Link>
       ) : (
-        <div className="relative h-[75px] w-15 shrink-0 self-start overflow-hidden bg-surface">
-          {imageContent}
-        </div>
+        <div className={imageClass}>{imageContent}</div>
       )}
-      <div className="grid min-h-[75px] min-w-0 flex-1 gap-3">
-        <div className="grid gap-1">
-          <div className="flex items-start justify-between gap-3">
-            <div className="grid min-w-0 gap-1">
-              {href ? (
-                <Link
-                  className="focus-ring flex min-h-9 cursor-pointer items-center transition-opacity hover:opacity-70"
-                  href={href}
+      <CartLineForm
+        className="flex min-w-0 flex-1 flex-col gap-4 self-start py-6"
+        lineId={item.id}
+        minQuantity={canRemove ? 0 : 1}
+      >
+        {(register) => (
+          <>
+            <div className="flex items-start justify-between gap-4">
+              <div className="grid min-w-0 gap-2">
+                {href ? (
+                  <Link className="focus-ring flex min-h-9 w-fit items-center" href={href}>
+                    <h3 className="type-control line-clamp-2">{title}</h3>
+                  </Link>
+                ) : (
+                  <h3 className="type-control flex min-h-9 items-center">{title}</h3>
+                )}
+                {variantLabel ? (
+                  <p className="type-label text-ink">
+                    {sizeOption ? <span className="desktop:hidden">size </span> : null}
+                    {variantLabel}
+                  </p>
+                ) : null}
+                <div className="type-label hidden tabular-nums text-ink desktop:block">
+                  {canShowPrice ? (
+                    <Price amount={amount} className="type-label" currencyCode={currencyCode} />
+                  ) : (
+                    <span className="text-ink-muted">Updating…</span>
+                  )}
+                </div>
+                {item.sellingPlanAllocation ? (
+                  <p className="type-label text-ink-muted">
+                    {item.sellingPlanAllocation.sellingPlan.name || "Subscription"}
+                  </p>
+                ) : null}
+                {components.length ? (
+                  <div className="grid gap-1">
+                    <p className="type-label text-ink-muted">Bundle includes</p>
+                    <ul className="grid gap-0.5">
+                      {components.map((component) => (
+                        <li
+                          className="type-label flex items-center gap-1.5 text-ink-muted"
+                          key={component.id}
+                        >
+                          <span className="truncate">
+                            {component.merchandise?.product.title || "Bundle item"}
+                          </span>
+                          {component.quantity > 1 ? <span>×{component.quantity}</span> : null}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                {isOutOfStock ? (
+                  <div className="grid gap-1">
+                    <p className="type-control text-error-rule">Out of stock</p>
+                    <Link
+                      className="type-label focus-ring w-fit underline underline-offset-4"
+                      href="/pages/contact-us"
+                    >
+                      Contact us to order
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
+              {canRemove ? (
+                <button
+                  {...register("remove")}
+                  aria-label={`Remove ${lineName}`}
+                  className="focus-ring flex h-9 min-w-9 shrink-0 cursor-pointer items-center justify-center px-0 text-ink transition-colors hover:text-ink-muted disabled:cursor-not-allowed disabled:opacity-40"
+                  disabled={isOptimistic}
+                  type="submit"
                 >
-                  <h3 className="type-h4 line-clamp-2">{title}</h3>
-                </Link>
-              ) : (
-                <h3 className="type-h4 line-clamp-2">{title}</h3>
-              )}
-              {variantLabel ? <p className="type-label text-ink-muted">{variantLabel}</p> : null}
-              {item.sellingPlanAllocation ? (
-                <p className="type-label text-ink-muted">
-                  {item.sellingPlanAllocation.sellingPlan.name || "Subscription"}
-                </p>
+                  <span className="type-control hidden desktop:inline">remove</span>
+                  <Trash2Icon
+                    aria-hidden="true"
+                    className="size-4 desktop:hidden"
+                    strokeWidth={1.25}
+                  />
+                </button>
               ) : null}
             </div>
-            <div className="type-h4 grid shrink-0 gap-0.5 text-right">
-              <span className="text-ink data-[pending=true]:text-ink-muted" data-pending={!hasCost}>
-                {hasCost ? price(sellingUnitPrice) : "Updating…"}
-              </span>
-              {hasCost && quantity > 1 ? (
-                <span className="text-ink">{price(lineTotal)}</span>
-              ) : null}
-              {hasCost && originalUnitPrice > 0 ? (
-                <span className="type-label text-ink-muted line-through">
-                  {price(originalUnitPrice)}
-                </span>
-              ) : null}
-            </div>
-          </div>
-          {components.length ? (
-            <div className="grid gap-1">
-              <p className="type-label text-ink-muted">Bundle includes</p>
-              <ul className="grid gap-0.5">
-                {components.map((component) => (
-                  <li
-                    key={component.id}
-                    className="type-label flex items-center gap-1.5 text-ink-muted"
-                  >
-                    <span className="truncate">
-                      {component.merchandise?.product.title || "Bundle item"}
-                    </span>
-                    {component.quantity > 1 ? <span>×{component.quantity}</span> : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </div>
-        <CartLineForm
-          className="flex flex-col items-start gap-2"
-          lineId={item.id}
-          minQuantity={canRemove ? 0 : 1}
-        >
-          {(register) => (
-            <>
-              <div
-                aria-label="Item quantity"
-                className="grid h-9 grid-cols-[2.25rem_1.5rem_2.25rem] border border-rule"
-                role="group"
-              >
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+              <div aria-label="Item quantity" className="flex items-center" role="group">
                 <button
                   {...register("decrease")}
-                  type="submit"
                   aria-label={`Decrease quantity: ${lineName}`}
-                  className="focus-ring flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="type-body focus-ring flex size-9 cursor-pointer items-center justify-center disabled:cursor-not-allowed disabled:opacity-40"
                   disabled={isOptimistic || !canUpdateQuantity || quantity <= 1}
+                  type="submit"
                 >
-                  <MinusIcon className="size-2.5 shrink-0" />
+                  -
                 </button>
                 <input
                   key={quantity}
                   {...register("quantity", { interactive: true, value: quantity })}
                   aria-label={`Quantity: ${lineName}`}
-                  className="type-label h-9 bg-transparent text-center tabular-nums focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ink disabled:cursor-not-allowed"
+                  className="type-body h-9 w-8 bg-transparent text-center tabular-nums focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ink disabled:cursor-not-allowed"
                   disabled={isOptimistic || !canUpdateQuantity}
                   max={99}
                   min={canRemove ? 0 : 1}
                 />
                 <button
                   {...register("increase")}
-                  type="submit"
                   aria-label={`Increase quantity: ${lineName}`}
-                  className="focus-ring flex h-9 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="type-body focus-ring flex size-9 cursor-pointer items-center justify-center disabled:cursor-not-allowed disabled:opacity-40"
                   disabled={isOptimistic || !canUpdateQuantity || quantity >= 99}
+                  type="submit"
                 >
-                  <PlusIcon className="size-2.5 shrink-0" />
+                  +
                 </button>
               </div>
-              <button
-                {...register("remove")}
-                type="submit"
-                className="type-control focus-ring flex min-h-9 cursor-pointer items-center text-ink-muted underline underline-offset-2 transition-colors hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
-                disabled={isOptimistic || !canRemove}
-                aria-label={`Remove item: ${lineName}`}
-              >
-                Remove
-              </button>
-            </>
-          )}
-        </CartLineForm>
-        <CartWarnings lineId={item.id} />
-      </div>
+              <div className="type-label tabular-nums text-ink desktop:hidden">
+                {canShowPrice ? (
+                  <Price amount={amount} className="type-label" currencyCode={currencyCode} />
+                ) : (
+                  <span className="text-ink-muted">Updating…</span>
+                )}
+              </div>
+            </div>
+            <CartWarnings lineId={item.id} />
+          </>
+        )}
+      </CartLineForm>
     </li>
   );
 }
