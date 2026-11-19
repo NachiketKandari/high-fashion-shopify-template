@@ -82,7 +82,7 @@
   --text-tab--letter-spacing: 0;
   --text-nav: 0.875rem;
   --text-nav--line-height: 1.3125rem;
-  --text-nav--letter-spacing: 0;
+  --text-nav--letter-spacing: -0.011em;
   --text-caption: 0.875rem;
   --text-caption--line-height: 1.125rem;
   --text-caption--letter-spacing: 0;
@@ -296,6 +296,7 @@
   line-height: var(--text-nav--line-height);
   font-weight: 700;
   letter-spacing: var(--text-nav--letter-spacing);
+  text-transform: uppercase;
 }
 
 @utility type-watermark {

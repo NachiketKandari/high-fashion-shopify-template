@@ -46,7 +46,14 @@ export function Wordmark({ className, priority = false, variant }: WordmarkProps
 
   return (
     <Link aria-label={shopConfig.site.name} className={linkClass} data-wordmark="footer" href="/">
-      <span className="type-display-lg uppercase">Lorem Ipsum</span>
+      <Image
+        alt={shopConfig.site.name}
+        className="h-auto w-[249px]"
+        height={HEIGHT}
+        sizes="100vw"
+        src={SRC}
+        width={WIDTH}
+      />
     </Link>
   );
 }
