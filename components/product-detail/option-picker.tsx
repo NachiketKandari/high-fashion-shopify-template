@@ -39,7 +39,7 @@ export function OptionPicker({
               ? "type-body-sm min-h-8 px-2"
               : "type-label min-h-[26px] px-1.5 desktop:h-11 desktop:px-4",
             value.selected
-              ? "border-ink bg-ink text-inverse"
+              ? "border-ink bg-ink text-inverse desktop:border-rule"
               : value.exists && value.available
                 ? "border-ink text-ink group-hover:bg-surface desktop:border-rule desktop:text-ink-muted desktop:group-hover:border-ink desktop:group-hover:text-ink"
                 : "border-rule bg-surface text-ink-muted line-through",

@@ -52,14 +52,16 @@ test.describe("accessibility and motion", () => {
     const summary = first.locator("summary");
     await expect(summary).toHaveAccessibleName(/description/i);
 
-    const closed = await first.boundingBox();
-    await summary.click();
+    // Design I ships the description open.
     await expect(first).toHaveAttribute("open", "");
     const opened = await first.boundingBox();
+    await summary.click();
+    expect(await first.getAttribute("open")).toBeNull();
+    const closed = await first.boundingBox();
     expect(opened?.height ?? 0).toBeGreaterThan(closed?.height ?? 0);
 
     await summary.click();
-    expect(await first.getAttribute("open")).toBeNull();
+    await expect(first).toHaveAttribute("open", "");
   });
 
   test("reduced motion shortens authored transitions", async ({ page }) => {

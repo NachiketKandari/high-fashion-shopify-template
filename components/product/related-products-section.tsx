@@ -13,7 +13,7 @@ function RelatedProductsSectionSkeleton({ limit }: { limit: number }) {
       <div className={ROW_CLASS}>
         {Array.from({ length: limit }, (_, index) => (
           <ProductCardSkeleton
-            className="w-[180.75px] shrink-0 desktop:w-auto desktop:[&>div:first-child]:mx-auto desktop:[&>div:first-child]:w-[250px]"
+            className="w-[180.75px] shrink-0 desktop:w-auto desktop:[&>div:first-child]:mx-auto desktop:[&>div:first-child]:h-[447px] desktop:[&>div:first-child]:w-[250px]"
             key={index}
           />
         ))}
@@ -38,10 +38,12 @@ async function Render({
         {related.slice(0, limit).map((product) => (
           <ProductCard
             captionLayout="row"
-            className="w-[180.75px] shrink-0 snap-start desktop:w-auto desktop:[&>div:first-child]:mx-auto desktop:[&>div:first-child]:w-[250px]"
+            className="w-[180.75px] shrink-0 snap-start desktop:w-auto desktop:[&>div:first-child]:mx-auto desktop:[&>div:first-child]:h-[447px] desktop:[&>div:first-child]:w-[250px] desktop:[&>div:last-child]:mt-6 desktop:[&>div:last-child]:flex-col desktop:[&>div:last-child]:items-start desktop:[&>div:last-child]:gap-2 desktop:[&>div:last-child]:py-0 desktop:[&>div:last-child_h3_a]:-my-[9px] [&>div:first-child]:aspect-[2/3]"
             key={product.id}
             outOfStockText="Out of stock"
             product={product}
+            showActions={false}
+            showSwatches={false}
           />
         ))}
       </div>

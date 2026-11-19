@@ -135,7 +135,7 @@ test.describe("storefront contracts", () => {
         tabRoles: document.querySelectorAll('[role="tab"], [role="tabpanel"]').length,
       };
     });
-    expect(pdp.h1).toEqual({ lineHeight: "29px", size: "22px", weight: "400" });
+    expect(pdp.h1).toEqual({ lineHeight: "16px", size: "12px", weight: "500" });
     expect(pdp.disclosure).toEqual({ lineHeight: "16px", size: "12px", weight: "400" });
     expect(pdp.disclosureCount).toBe(3);
     expect(pdp.tabRoles).toBe(0);
@@ -144,18 +144,22 @@ test.describe("storefront contracts", () => {
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/products/alma-lace-corset-top");
-    await page.locator('[aria-label^="Go to image"]').first().waitFor({ state: "visible" });
-    const dots = await page.evaluate(() =>
-      [...document.querySelectorAll('[aria-label^="Go to image"]')].map((element) => {
-        const rect = element.getBoundingClientRect();
-        return { height: rect.height, width: rect.width };
-      }),
-    );
-    expect(dots.length).toBeGreaterThan(0);
-    for (const dot of dots) {
-      expect(dot.height).toBeGreaterThanOrEqual(36);
-      expect(dot.width).toBeGreaterThanOrEqual(36);
-    }
+    await page
+      .locator('[data-slot="product-gallery"] [role="region"]')
+      .waitFor({ state: "visible" });
+    const gallery = await page.evaluate(() => {
+      const region = document.querySelector('[data-slot="product-gallery"] [role="region"]');
+      if (!region) return null;
+      return {
+        clientWidth: region.clientWidth,
+        pageWidth: document.documentElement.scrollWidth,
+        scrollWidth: region.scrollWidth,
+        viewportWidth: window.innerWidth,
+      };
+    });
+    expect(gallery).not.toBeNull();
+    expect(gallery!.scrollWidth).toBeGreaterThan(gallery!.clientWidth);
+    expect(gallery!.pageWidth).toBeLessThanOrEqual(gallery!.viewportWidth);
   });
 
   test("visible interactive targets meet the 36px contract", async ({ page }) => {

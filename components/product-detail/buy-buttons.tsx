@@ -2,7 +2,7 @@
 
 import { getShopPayButtonUrl } from "@shopify/hydrogen";
 import { cn } from "cn";
-import { Loader2 } from "lucide-react";
+import { Loader2, MinusIcon, PlusIcon } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
 import { useCartDrawer } from "@/components/cart/context";
@@ -18,6 +18,7 @@ interface BuyButtonsProps {
   buyWithShop?: boolean;
   fallbackVariant: ProductFormVariant | undefined;
   onAddToCart?: () => void;
+  quantityPicker?: boolean;
 }
 
 export function BuyButtons({
@@ -25,11 +26,13 @@ export function BuyButtons({
   buyWithShop = true,
   fallbackVariant,
   onAddToCart,
+  quantityPicker = false,
 }: BuyButtonsProps) {
   const { formProps, pending, register, selectedVariant: storeVariant } = useProductForm();
   const selectedVariant = storeVariant ?? fallbackVariant;
   const isSelectionUnresolved = !storeVariant;
   const [isBuyingNow, setIsBuyingNow] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   const [purchaseOption, setPurchaseOption] = useState("");
   const { plans, selectedPlan } = getProductPurchaseOptions(selectedVariant, purchaseOption);
   const missingRequiredPlan = Boolean(selectedVariant?.requiresSellingPlan && !selectedPlan);
@@ -50,7 +53,7 @@ export function BuyButtons({
   // Keep href while buying: removing it during the click cancels the anchor's navigation.
   const buyNowUrl = getShopPayButtonUrl({
     disabled: isSelectionUnresolved || isOutOfStock || requiresBundleConfiguration || pending,
-    variants: [{ id: selectedVariant.id, quantity: 1 }],
+    variants: [{ id: selectedVariant.id, quantity }],
   });
   const getButtonText = () => {
     if (pending) return "Adding to cart…";
@@ -90,7 +93,43 @@ export function BuyButtons({
       />
       <input type="hidden" name="sellingPlanId" value={selectedPlan?.sellingPlan.id ?? ""} />
       <input type="hidden" {...register("merchandiseId", {})} />
-      <input type="hidden" {...register("quantity", { value: 1 })} />
+      <input type="hidden" {...register("quantity", { value: quantity })} />
+      {quantityPicker ? (
+        <div className="flex items-center justify-between gap-4">
+          <span className="type-control text-ink">quantity</span>
+          <div
+            aria-label="Item quantity"
+            className="grid h-10 w-30 shrink-0 grid-cols-[2.5rem_2rem_2.5rem] border border-rule"
+            role="group"
+          >
+            <button
+              type="button"
+              aria-label="Decrease quantity"
+              className="focus-ring flex h-10 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={quantity === 1}
+              onClick={() => setQuantity((currentQuantity) => Math.max(1, currentQuantity - 1))}
+            >
+              <MinusIcon className="size-3 shrink-0" />
+            </button>
+            <span
+              aria-live="polite"
+              className="type-control flex h-10 items-center justify-center tabular-nums"
+              role="status"
+            >
+              {quantity}
+            </span>
+            <button
+              type="button"
+              aria-label="Increase quantity"
+              className="focus-ring flex h-10 cursor-pointer items-center justify-center p-0 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={quantity === 99}
+              onClick={() => setQuantity((currentQuantity) => Math.min(99, currentQuantity + 1))}
+            >
+              <PlusIcon className="size-3 shrink-0" />
+            </button>
+          </div>
+        </div>
+      ) : null}
       <Button
         {...register("addToCart", {})}
         data-selection-unresolved={isSelectionUnresolved && !pending}
@@ -101,7 +140,14 @@ export function BuyButtons({
           missingRequiredPlan ||
           pending
         }
-        className="h-10 w-full justify-center disabled:bg-surface disabled:text-ink-muted disabled:opacity-100"
+        className={cn(
+          "w-full justify-center disabled:opacity-100",
+          isOutOfStock
+            ? "h-[50px] border-ink bg-transparent text-ink hover:bg-transparent disabled:border-ink disabled:bg-transparent disabled:text-ink"
+            : isSelectionUnresolved || pending
+              ? "h-10 disabled:bg-surface disabled:text-ink-muted"
+              : "h-12",
+        )}
       >
         {getButtonText()}
       </Button>
