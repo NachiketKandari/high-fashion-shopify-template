@@ -14,7 +14,7 @@ export function BrandBar({ className }: BrandBarProps) {
         className,
       )}
     >
-      <Wordmark priority variant="bar" />
+      <Wordmark variant="bar" />
     </header>
   );
 }

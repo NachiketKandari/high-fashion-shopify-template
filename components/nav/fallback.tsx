@@ -7,7 +7,7 @@ export function NavFallback() {
         <div className="bg-paper">
           <div className="border-y border-rule">
             <div className="flex h-(--header-bar-h) items-center px-(--gutter)">
-              <Wordmark priority variant="nav" />
+              <Wordmark variant="nav" />
             </div>
           </div>
         </div>

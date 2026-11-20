@@ -41,7 +41,7 @@ export function Header({ actions, mobileActions, search }: HeaderProps) {
         )}
       >
         <div className="flex h-full items-center justify-between gap-0 px-(--gutter) desktop:hidden">
-          <Wordmark priority variant="nav" />
+          <Wordmark variant="nav" />
           <div className="flex items-center gap-0">
             {mobileActions}
             <MobileMenu />
@@ -54,7 +54,7 @@ export function Header({ actions, mobileActions, search }: HeaderProps) {
             {search}
           </div>
 
-          <Wordmark className="justify-self-center" priority variant="nav" />
+          <Wordmark className="justify-self-center" variant="nav" />
 
           <div className="flex min-w-0 items-center justify-end gap-6">{actions}</div>
         </div>

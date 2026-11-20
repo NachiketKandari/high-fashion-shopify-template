@@ -12,33 +12,20 @@ export type WordmarkVariant = "bar" | "footer" | "nav";
 
 interface WordmarkProps {
   className?: string;
-  priority?: boolean;
   variant: WordmarkVariant;
 }
 
-export function Wordmark({ className, priority = false, variant }: WordmarkProps) {
+export function Wordmark({ className, variant }: WordmarkProps) {
   const linkClass = cn("flex min-h-9 shrink-0 items-center", className);
 
-  if (variant === "nav") {
+  if (variant === "nav" || variant === "bar") {
     return (
-      <Link aria-label={shopConfig.site.name} className={linkClass} data-wordmark="nav" href="/">
-        <Image
-          alt={shopConfig.site.name}
-          className="h-auto w-[194px] desktop:w-[303px]"
-          height={HEIGHT}
-          loading={priority ? "eager" : "lazy"}
-          priority={priority}
-          sizes="100vw"
-          src={SRC}
-          width={WIDTH}
-        />
-      </Link>
-    );
-  }
-
-  if (variant === "bar") {
-    return (
-      <Link aria-label={shopConfig.site.name} className={linkClass} data-wordmark="bar" href="/">
+      <Link
+        aria-label={shopConfig.site.name}
+        className={linkClass}
+        data-wordmark={variant}
+        href="/"
+      >
         <span className="type-wordmark font-sans">{shopConfig.site.name}</span>
       </Link>
     );
