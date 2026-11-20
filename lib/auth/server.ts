@@ -55,7 +55,7 @@ export const getCustomerAccessToken = cache(async (): Promise<string | undefined
 });
 
 export function redirectToCustomerLogin(returnTo: string): never {
-  redirect(`/account/login?return_to=${encodeURIComponent(returnTo)}`);
+  redirect(`/login?return_to=${encodeURIComponent(returnTo)}`);
 }
 
 async function getRequestedPath(fallback: string): Promise<string> {

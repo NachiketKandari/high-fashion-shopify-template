@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
@@ -16,27 +17,20 @@ export default function SignInFailedPage() {
 
   return (
     <Page className="flex flex-1 flex-col">
-      <Container className="flex flex-1 flex-col items-center justify-center text-center">
-        <div className="flex flex-col items-center gap-2.5 text-center">
-          <h1 className="type-display">Sign-in failed</h1>
-          <p className="type-body max-w-xl text-ink-muted">
+      <Container className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
+        <div className="grid max-w-xl gap-3">
+          <h1 className="type-h2">Sign-in failed</h1>
+          <p className="type-body-sm text-ink-muted">
             Your sign-in didn’t finish. Try again, or keep shopping without an account.
           </p>
-          <div className="flex flex-wrap justify-center gap-2.5">
-            {/* oxlint-disable-next-line next/no-html-link-for-pages -- Sign-in must be a full document navigation so the proxy can start OAuth. */}
-            <a
-              href="/account/login"
-              className="type-control focus-ring inline-flex h-9 cursor-pointer items-center justify-center bg-ink px-8 text-inverse transition-colors hover:bg-ink/80"
-            >
-              Try again
-            </a>
-            <Link
-              href="/"
-              className="type-control focus-ring inline-flex h-9 cursor-pointer items-center justify-center border border-ink px-8 transition-colors hover:bg-surface"
-            >
-              Continue shopping
-            </Link>
-          </div>
+        </div>
+        <div className="flex flex-wrap justify-center gap-2.5">
+          <Button className="bg-ink-strong hover:bg-ink-strong/80" render={<Link href="/login" />}>
+            Try again
+          </Button>
+          <Button render={<Link href="/" />} variant="outline">
+            Continue shopping
+          </Button>
         </div>
       </Container>
     </Page>

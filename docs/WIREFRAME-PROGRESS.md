@@ -247,6 +247,18 @@ mobile panel and the home page. Mobile uses the frame's closed bar (`Menu`, word
 no 390 frame shows the menu open, so the open state follows the desktop panel with two columns and
 one image.
 
+## Login and register
+
+Built as the identity gate at `/login` from `docs/DESIGN-I-CHECKOUT-JOURNEY.md` §4.3. Desktop is the
+592 px form panel beside the 848 px campaign image; mobile is the 341 px form under the 60 px brand
+bar. The 431 × 40 underline field, Proceed, guest link, Google button and help line follow the
+frames, and the email format error is inline. The gate hands off to `/account/login` with
+`login_hint`, `login_hint_mode=submit` and `return_to`, so Shopify still sends and verifies the code.
+The header, cart and `sign-in-failed` entries point at the gate.
+
+Gated: the OTP, password and new-user frames. The `E-mail` label drops the frame's `/Phone Number`
+because Shopify's new customer accounts do not accept a phone number.
+
 ## Cart
 
 Built as the full-page bag at `/cart` from `docs/DESIGN-I-CHECKOUT-JOURNEY.md` §4.5. Desktop renders

@@ -13,14 +13,12 @@ export async function NavAccount() {
   if (!loggedIn) {
     return (
       <>
-        {/* oxlint-disable-next-line next/no-html-link-for-pages -- Sign-in must be a full document navigation that is never prefetched, because the proxy starts OAuth. */}
-        <a aria-label="Account" className={MOBILE_ACCOUNT_CLASS} href="/account/login">
+        <Link aria-label="Account" className={MOBILE_ACCOUNT_CLASS} href="/login">
           <UserRoundPlus className="size-6" strokeWidth={1.5} />
-        </a>
-        {/* oxlint-disable-next-line next/no-html-link-for-pages -- Sign-in must be a full document navigation that is never prefetched, because the proxy starts OAuth. */}
-        <a className={ACCOUNT_CLASS} href="/account/login">
+        </Link>
+        <Link className={ACCOUNT_CLASS} href="/login">
           Account
-        </a>
+        </Link>
       </>
     );
   }

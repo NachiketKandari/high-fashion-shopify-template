@@ -49,7 +49,7 @@ geometry; this document adds the journey context and the deltas the Shopify temp
 | Desktop menu         | `components/nav/desktop-nav.tsx`: 592 px sheet, links only, no tiles                                                                                                                                                                                             | Design I is a 709 px two-column panel: 354 px links + 354 px image tiles.                                                                                                                                                                 |
 | Mobile menu          | `components/nav/mobile-menu.tsx`: full screen, links + tiles                                                                                                                                                                                                     | Close to the frames; spacing, typography, utility links and the 440 px tile stack need alignment.                                                                                                                                         |
 | Search               | `components/nav/search-modal.tsx` opens a right drawer; `app/search/page.tsx` renders the generic browse grid                                                                                                                                                    | Design I is a full-width search surface under the header with a 1,076 + 276 px input row, trending list and 4-up results. Empty, typing, results, zero-result and typo states are missing.                                                |
-| Auth                 | `components/nav/account.tsx` links straight to `/account/login`; Hydrogen redirects to Shopify-hosted OAuth. No designed gate or OTP screen exists.                                                                                                              | Not built. The designed OTP screens cannot be reproduced inside a Shopify-hosted login without a separate identity project.                                                                                                               |
+| Auth                 | `/login` renders the designed identity gate (`1:3745` / `30:11557`); `components/nav/account.tsx`, the cart and the account redirects point at it. It hands the email to `/account/login`, which Hydrogen turns into Shopify-hosted OAuth.                       | Gate and validation built. The designed OTP, password and new-user screens cannot be reproduced inside a Shopify-hosted login without a separate identity project.                                                                        |
 | Product detail       | `components/product-detail/*` is the template PDP (stacked gallery, 36 px controls, template typography)                                                                                                                                                         | Design I geometry and type are not applied; the try-on additions are not integrated.                                                                                                                                                      |
 | Cart                 | `app/(storefront)/cart/page.tsx` + `components/cart/*`: full-page bag, 800 + 592 split, 123 × 191 line art, mobile fixed TOTAL / Checkout bar, empty/updating/out-of-stock line states, promo, help, 4-up / 2-up recs.                                           | Built. Cart Checkout still opens Shopify directly; the pre-checkout step at `/checkout/address` is not linked yet. Recommendations use the shared product card, whose full-column media and row caption still differ from the cart frame. |
 | Address and shipping | `app/(checkout)/checkout/address/page.tsx` with `components/checkout/*` and `lib/checkout/*`: guest form, saved cards, delivery, collapsed items list, gift, promo, totals, Proceed.                                                                             | Built as the pre-checkout surface. Guest flow verified; saved-address save and credit display need an authenticated session. See 4.6 and `STUBS.md`.                                                                                      |
@@ -224,16 +224,21 @@ link, Google button 431 × 42 outline, help 12/500 `#666`. OTP: six 45 × 49 box
 `00:30`, password alternative. Mobile: 390 × 844, 60 px brand bar, 341 px form, 40 px controls,
 30 × 49 OTP boxes.
 
-**Current.** No designed gate. `/account/login` is a redirect.
+**Current.** `/login` renders the designed gate: a 592 px form panel beside the 848 px image at
+desktop, and the 341 px form under a 60 px brand bar at mobile. The 431 × 40 underline field and
+Proceed, guest continuation, Google handoff and help line follow the frames. The gate validates the
+email format, keeps `return_to`, and hands off to `/account/login` with `login_hint` and
+`login_hint_mode=submit`; `/account/login` remains the Hydrogen OAuth start. `sign-in-failed` uses
+the same chrome.
 
-**Work.** Add the unauthenticated group and the gate at `/account/login` (or a new gate route that
-posts to the Hydrogen handler; the implementation must decide without breaking the OAuth lifecycle).
-Build validation, guest continuation, Google affordance (hand to Shopify or hide if unavailable),
-password and OTP presentation components, wrong-code and retry states, and the sign-in-failed page.
-Link the header Account entry to the gate.
+**Work.** Built. The header and cart Account entries point at `/login`; `requireCustomerSession()` and
+`requireCustomerAccessToken()` redirect through it. The field is labelled `E-mail` because Shopify's
+new customer accounts do not accept a phone number. The Google button starts the same hosted flow, so
+it depends on the store's social sign-in setting.
 
 **Gated.** Exact in-storefront OTP/password entry (D2). The gate must not pretend to send a code it
-cannot verify. If the session is already valid, redirect to `/account`.
+cannot verify. The OTP, password and new-user frames (`1:3844`, `30:12263`, `30:12449`, `1:3777` and
+their mobile pairs) are not built. If the session is already valid, `/login` redirects to `/account`.
 
 **Data.** Customer Account OAuth via `lib/auth`; no new commerce data.
 

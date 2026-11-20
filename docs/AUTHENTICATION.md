@@ -9,10 +9,11 @@ the one-time verification code (OTP) comes from. It describes the repository as 
 **Shopify sends the OTP, not this codebase.** The sign-in screen is a Shopify-hosted page, and by
 default Shopify's new customer accounts are passwordless: the customer enters their email address,
 Shopify emails them a one-time 6-digit verification code from the store's sender email address, and
-they type it back on Shopify's page. This template never renders a sign-in form, never generates a
-verification code, and never sees the code — by the time the customer returns to this domain, they
-have already proven their identity to Shopify and this app only receives an OAuth authorization
-code, which it exchanges for tokens.
+they type it back on Shopify's page. This template renders an identity gate at `/login` that collects
+and validates the email, then hands it to Shopify as `login_hint`; it never generates a verification
+code and never sees one. By the time the customer returns to this domain, they have already proven
+their identity to Shopify and this app only receives an OAuth authorization code, which it exchanges
+for tokens.
 
 Also accurate as of today:
 
@@ -33,10 +34,11 @@ Also accurate as of today:
 
 ```
 Account icon (components/nav/account.tsx)
-  → href /account/login                       client-side link only
-  → proxy.ts customerHandlers()               lib/auth/request.ts, Hydrogen createCustomerAccountServerHandlers
+  → href /login                              designed identity gate, not prefetched
+  → Proceed                                  validates the email and hands off
+  → /account/login?return_to=…&login_hint=…  Hydrogen login handler, email prefilled
   → redirect to Shopify's hosted sign-in page  off-site, store-branded
-  → customer enters email
+  → customer enters email, if not prefilled
   → SHOPIFY EMAILS THE ONE-TIME 6-DIGIT CODE   ← Shopify platform; not our code
   → customer enters the code on Shopify's page
   → Shopify redirects to the callback URL      /account/callback on this domain
@@ -51,17 +53,18 @@ local session and performs Shopify RP-initiated logout, then returns the shopper
 
 ## What Shopify owns versus what this template owns
 
-| Concern                                    | Owner             | Details                                                                                                                                                          |
-| ------------------------------------------ | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Generating and sending the one-time code   | **Shopify**       | Email by default; SMS via Sign in with Shop. Content is not customizable.                                                                                        |
-| The sign-in screen and its branding        | **Shopify**       | Hosted on the store domain; branded through the checkout and accounts editor.                                                                                    |
-| Which sign-in options exist                | **Shopify admin** | Email code is always on; Shop, social and custom IdP are opt-in store settings.                                                                                  |
-| New-customer conversion on first sign-in   | **Shopify**       | Signing in with an unknown email creates the customer profile automatically.                                                                                     |
-| The OAuth redirect chain and callback URLs | **Template**      | Registered as the Headless storefront's callback/logout URLs; served by `proxy.ts`.                                                                              |
-| Token exchange and storage                 | **Template**      | Confidential client: token exchange uses `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID` / `..._SECRET` server-side.                                                    |
-| Session cookies and lifetime on this site  | **Template**      | See below. 7 days here; Shopify's own platform session can stay valid up to 365 days for other Shop surfaces.                                                    |
-| Refreshing tokens                          | **Template**      | Only where cookies can be written: `/account/refresh`. Server Components never refresh.                                                                          |
-| Gating account pages                       | **Template**      | `requireCustomerSession()` for routes, `requireCustomerAccessToken()` immediately before Customer Account API calls, `isCustomerLoggedIn()` for header UI state. |
+| Concern                                    | Owner             | Details                                                                                                                                                                                           |
+| ------------------------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Generating and sending the one-time code   | **Shopify**       | Email by default; SMS via Sign in with Shop. Content is not customizable.                                                                                                                         |
+| The identity gate at `/login`              | **Template**      | `components/auth/login-gate.tsx`; collects and validates the email, then hands off with `login_hint`, `login_hint_mode=submit` and `return_to`.                                                   |
+| The verification screen and its branding   | **Shopify**       | Hosted on the store domain; branded through the checkout and accounts editor.                                                                                                                     |
+| Which sign-in options exist                | **Shopify admin** | Email code is always on; Shop, social and custom IdP are opt-in store settings. `Continue with Google` starts the same hosted flow, so Google appears only when the store enables social sign-in. |
+| New-customer conversion on first sign-in   | **Shopify**       | Signing in with an unknown email creates the customer profile automatically.                                                                                                                      |
+| The OAuth redirect chain and callback URLs | **Template**      | Registered as the Headless storefront's callback/logout URLs; served by `proxy.ts`.                                                                                                               |
+| Token exchange and storage                 | **Template**      | Confidential client: token exchange uses `SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID` / `..._SECRET` server-side.                                                                                     |
+| Session cookies and lifetime on this site  | **Template**      | See below. 7 days here; Shopify's own platform session can stay valid up to 365 days for other Shop surfaces.                                                                                     |
+| Refreshing tokens                          | **Template**      | Only where cookies can be written: `/account/refresh`. Server Components never refresh.                                                                                                           |
+| Gating account pages                       | **Template**      | `requireCustomerSession()` for routes, `requireCustomerAccessToken()` immediately before Customer Account API calls, `isCustomerLoggedIn()` for header UI state.                                  |
 
 ## The template's session mechanics
 
@@ -102,7 +105,8 @@ Customer Account OAuth requires an HTTPS origin, so local testing runs through `
 or a tunnel, with the three auth variables set (all three are required while `auth.isEnabled` is
 true). The checks worth running after touching auth:
 
-1. Sign in with a real email; confirm the code arrives from the store's sender address.
+1. Open `/login`, submit a real email, and confirm the gate prefills Shopify's sign-in page; the code
+   arrives from the store's sender address.
 2. Confirm the session survives a full reload and that the header shows the signed-in state.
 3. Let the access token lapse, open an account page, and confirm `/account/refresh` returns you to
    the same page without a fresh sign-in.

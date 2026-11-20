@@ -6,10 +6,7 @@ export async function CartSignIn() {
   return (
     <div className="grid gap-3">
       <p className="type-body-sm text-ink">Enjoy a faster shopping experience</p>
-      <Link
-        className="type-eyebrow focus-ring w-fit underline underline-offset-4"
-        href="/account/login"
-      >
+      <Link className="type-eyebrow focus-ring w-fit underline underline-offset-4" href="/login">
         SIGN IN
       </Link>
     </div>
