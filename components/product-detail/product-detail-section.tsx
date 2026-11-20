@@ -1,3 +1,4 @@
+import { cn } from "cn";
 import { type ReactNode, Suspense } from "react";
 
 import { BundleComponents, BundleParents } from "@/components/product-detail/bundle-components";
@@ -21,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { shopConfig } from "@/lib/config";
 import {
+  getLowStockLabel,
   getProductPurchaseOptions,
   getSelectedColorImage,
   getSharedMedia,
@@ -29,6 +31,7 @@ import {
   toProductFormInput,
   toStaticOptionGroups,
 } from "@/lib/product";
+import { isSizeOption, sortSizeValues } from "@/lib/product/sizes";
 import { type SelectedOptions } from "@/lib/product/types";
 import type { ProductDetails, ProductVariant } from "@/lib/product/types";
 
@@ -208,6 +211,7 @@ function ProductInfoContent({
   const formProduct = toProductFormInput(product, selectedVariant);
   const fallbackVariant = formProduct.selectedOrFirstAvailableVariant ?? undefined;
   const hasOptions = product.options.some((option) => option.values.length > 1);
+  const sizeOption = product.options.find((option) => isSizeOption(option.name));
 
   return (
     <ProductForm product={formProduct}>
@@ -230,6 +234,19 @@ function ProductInfoContent({
             fallbackVariant={fallbackVariant}
             availableForSale={product.availableForSale}
             buyWithShop={shopConfig.pdp.buyWithShop.isEnabled}
+            notifyTarget={{
+              image: selectedVariant?.image ?? product.featuredImage,
+              price: selectedVariant?.price ?? product.priceRange.minVariantPrice,
+              title: product.title,
+            }}
+            sizeOption={
+              sizeOption
+                ? {
+                    name: sizeOption.name,
+                    values: sortSizeValues(sizeOption.values).map((value) => value.name),
+                  }
+                : undefined
+            }
           />
         )}
       </div>
@@ -253,6 +270,7 @@ function ProductInfoFallback({
       {!product.hasUniformPricing ? <div className="h-7" aria-hidden /> : null}
       {hasOptions ? (
         <ProductInfoOptions
+          lowStockLabel={getLowStockLabel(product.defaultVariant?.quantityAvailable)}
           options={toStaticOptionGroups(product)}
           hideImages
           sizeGuideCategory={getSizeGuideCategory(product.productType)}
@@ -324,6 +342,7 @@ function BuyButtonsFallback({
   variant: ProductVariant | undefined;
 }) {
   const { plans, selectedPlan } = getProductPurchaseOptions(variant);
+  const notifyOnly = !variant || !allInStock;
   return (
     <div className="grid gap-6">
       {variant ? (
@@ -335,8 +354,15 @@ function BuyButtonsFallback({
           selectedPlan={selectedPlan}
         />
       ) : null}
-      <div className="type-label flex h-10 w-full items-center justify-center bg-surface text-ink-muted">
-        {showLabel ? (allInStock ? "Add to cart" : "Out of stock") : null}
+      <div
+        className={cn(
+          "type-control flex w-full items-center justify-center",
+          notifyOnly
+            ? "h-[50px] border border-ink bg-transparent text-ink"
+            : "h-10 bg-surface text-ink-muted",
+        )}
+      >
+        {notifyOnly ? "Notify me when available" : showLabel ? "Add to cart" : null}
       </div>
     </div>
   );

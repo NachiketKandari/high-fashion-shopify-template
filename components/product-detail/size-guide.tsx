@@ -3,6 +3,7 @@
 import { Info, X } from "lucide-react";
 
 import { SizeGuide as SizeGuideContent } from "@/components/content/size-guide";
+import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export function SizeGuide({ category }: { category?: string }) {
@@ -24,8 +25,8 @@ export function SizeGuide({ category }: { category?: string }) {
         closeButton={false}
         side="right"
       >
-        <div className="flex h-14 shrink-0 items-center justify-between px-(--gutter)">
-          <SheetTitle className="type-h2">Size guide</SheetTitle>
+        <div className="flex h-18 shrink-0 items-center justify-between px-6">
+          <SheetTitle className="type-h3">Size guide</SheetTitle>
           <SheetClose
             aria-label="Close size guide"
             className="focus-ring flex size-9 items-center justify-center"
@@ -36,6 +37,14 @@ export function SizeGuide({ category }: { category?: string }) {
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto px-(--gutter) pb-10">
           <SizeGuideContent defaultCategory={category} key={category ?? "default"} />
+        </div>
+        <div className="shrink-0 p-6">
+          <SheetClose
+            render={<Button className="h-[53px] w-full" variant="outline" />}
+            type="button"
+          >
+            Close
+          </SheetClose>
         </div>
       </SheetContent>
     </Sheet>

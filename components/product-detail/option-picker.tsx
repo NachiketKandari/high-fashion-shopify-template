@@ -38,7 +38,7 @@ export function OptionPicker({
             compact
               ? "type-body-sm min-h-8 px-2"
               : "type-label min-h-[26px] px-1.5 desktop:h-11 desktop:px-4",
-            value.selected
+            value.selected && value.available
               ? "border-ink bg-ink text-inverse desktop:border-rule"
               : value.exists && value.available
                 ? "border-ink text-ink group-hover:bg-surface desktop:border-rule desktop:text-ink-muted desktop:group-hover:border-ink desktop:group-hover:text-ink"
@@ -46,7 +46,7 @@ export function OptionPicker({
           );
           const label = <span className={boxClass}>{value.name}</span>;
 
-          if (!value.exists || (!value.available && !value.selected)) {
+          if (!value.exists || !value.available) {
             return (
               <button
                 aria-label={`${option.name}: ${value.name} (unavailable)`}
@@ -81,7 +81,7 @@ export function OptionPicker({
           );
         })}
       </div>
-      {footnote ? <p className="type-control text-ink">{footnote}</p> : null}
+      {footnote ? <p className="type-control pt-3 text-ink">{footnote}</p> : null}
     </div>
   );
 }

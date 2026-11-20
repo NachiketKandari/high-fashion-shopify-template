@@ -331,7 +331,7 @@ checkout (D3), payment entry (payment project).
 | OTP input           | auth                                       | 6 boxes, 45 × 49 / 30 × 49                                   |
 | Accordion           | PDP, cart/checkout items                   | 1 px black border, 49/81 px rows                             |
 | Stepper / progress  | checkout                                   | not drawn in the in-scope frames; defer                      |
-| Sheet / slide-over  | search, menu, size guide, add confirmation | existing `Sheet`; sizes 592/720/440                          |
+| Sheet / slide-over  | search, menu, size guide, add confirmation | existing `Sheet`; sizes 592/440                              |
 | Empty state         | cart, search                               | icon-free, sentence copy, one primary action                 |
 | Product card        | home, search, PDP recs, cart recs          | 250 × 447 image, 14/400 caption                              |
 | Marquee             | home                                       | 50 px sentence band                                          |

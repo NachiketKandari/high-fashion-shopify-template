@@ -38,12 +38,13 @@ Mobile: 390x585 hero, 26px chip visuals on 36px targets, 342x40 CTA, no page ove
 
 ## States
 
-- **No selection** — CTA reads "Select size", disabled surface fill; size chips unselected.
-- **Selected** — 48px filled CTA, selected chip `#353535` fill with white label.
-- **Sold out size** — chip on `surface` with muted strikethrough label; CTA disabled.
-- **Out of stock** — disabled "Out of stock"; the waitlist control is absent (no sink).
-- **Low stock** — omitted; `quantityAvailable` is null on this store (see `STUBS.md`).
-- **Size guide** — right sheet on desktop, bottom sheet on mobile; the frame's chart body is empty.
+- **Selection** — the first available variant is seeded, so the CTA is enabled on load; "Select size" appears only while the live variant resolves.
+- **Selected size** — 48px filled CTA, selected chip `#353535` fill with white label.
+- **Sold out size** — chip on `surface` with muted strikethrough label and a disabled target.
+- **Out of stock** — an outlined "Notify me when available" CTA opens the Notify me panel; the panel preselects the current size, lets the shopper choose another, and confirms locally.
+- **Low stock** — `only N left in stock` sits 24px below the size chips, in ink; it is absent when `quantityAvailable` is null (see `STUBS.md`).
+- **Size guide** — 592-wide right sheet on desktop, full-width on mobile, with the chart in the scroll area and a pinned Close footer.
+- **Add to cart** — the cart slide-over opens with the new line; the PDP itself adds no second confirmation surface.
 
 The try-on image studio from the reference repo is intentionally not part of this page.
 
@@ -58,6 +59,10 @@ The try-on image studio from the reference repo is intentionally not part of thi
 - The disabled CTA uses `surface` + `ink-muted` instead of `#DFDFDF` + white for contrast.
 - The buy column is sticky (not drawn) so the CTA stays reachable beside the tall gallery.
 - Quantity is not rendered: Design I draws no quantity control in the buy box.
+- The PDP seeds the first available variant, so the default frame's unselected size row is not the first paint; the "select size" state remains for an unresolved selection.
+- The low-stock line uses ink instead of the frame's amber; the design system keeps amber out of storefront commerce copy.
+- The Notify me panel confirms locally and stores nothing; a restock-list provider replaces it (see `STUBS.md`).
+- Notify me and Size guide are full-width right sheets on mobile, consistent with the storefront's other drawers, rather than bottom sheets at y=100.
 
 ## Verification
 

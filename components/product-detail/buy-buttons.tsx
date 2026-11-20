@@ -7,26 +7,36 @@ import { useEffect, useId, useState } from "react";
 
 import { useCartDrawer } from "@/components/cart/context";
 import { useDisplayPrice } from "@/components/currency/provider";
+import {
+  NotifyMe,
+  type NotifyMeProduct,
+  type NotifyMeSizeOption,
+} from "@/components/product-detail/notify-me";
 import { Button } from "@/components/ui/button";
 import type { Money } from "@/lib/money/types";
 import { getProductPurchaseOptions } from "@/lib/product";
 import { useProductForm } from "@/lib/product/client";
+import { isSizeOption } from "@/lib/product/sizes";
 import type { ProductFormVariant, SellingPlanAllocation } from "@/lib/product/types";
 
 interface BuyButtonsProps {
   availableForSale?: boolean;
   buyWithShop?: boolean;
   fallbackVariant: ProductFormVariant | undefined;
+  notifyTarget?: NotifyMeProduct;
   onAddToCart?: () => void;
   quantityPicker?: boolean;
+  sizeOption?: NotifyMeSizeOption;
 }
 
 export function BuyButtons({
   availableForSale = true,
   buyWithShop = true,
   fallbackVariant,
+  notifyTarget,
   onAddToCart,
   quantityPicker = false,
+  sizeOption,
 }: BuyButtonsProps) {
   const { formProps, pending, register, selectedVariant: storeVariant } = useProductForm();
   const selectedVariant = storeVariant ?? fallbackVariant;
@@ -45,11 +55,32 @@ export function BuyButtons({
     window.addEventListener("pageshow", handlePageShow);
     return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
+  const selectedSize = selectedVariant?.selectedOptions.find((option) =>
+    isSizeOption(option.name),
+  )?.value;
   if (!selectedVariant) {
-    return null;
+    return notifyTarget ? (
+      <NotifyMe product={notifyTarget} selectedSize={selectedSize} sizeOption={sizeOption} />
+    ) : null;
   }
   const requiresBundleConfiguration = selectedVariant.requiresBundleConfiguration;
   const isOutOfStock = !selectedVariant.availableForSale;
+  if (isOutOfStock && notifyTarget) {
+    return (
+      <div className="grid gap-6">
+        {plans.length > 0 ? (
+          <PurchaseOptions
+            disabled
+            plans={plans}
+            price={selectedVariant.price}
+            requiresSellingPlan={selectedVariant.requiresSellingPlan}
+            selectedPlan={selectedPlan}
+          />
+        ) : null}
+        <NotifyMe product={notifyTarget} selectedSize={selectedSize} sizeOption={sizeOption} />
+      </div>
+    );
+  }
   // Keep href while buying: removing it during the click cancels the anchor's navigation.
   const buyNowUrl = getShopPayButtonUrl({
     disabled: isSelectionUnresolved || isOutOfStock || requiresBundleConfiguration || pending,

@@ -88,7 +88,7 @@ export const LOW_STOCK_THRESHOLD = 5;
 export function getLowStockLabel(quantityAvailable: number | null | undefined): string | null {
   if (quantityAvailable === null || quantityAvailable === undefined) return null;
   if (quantityAvailable <= 0 || quantityAvailable > LOW_STOCK_THRESHOLD) return null;
-  return `Only ${quantityAvailable} left in stock`;
+  return `only ${quantityAvailable} left in stock`;
 }
 
 // Only the bundle gating boolean crosses the client boundary.

@@ -134,7 +134,7 @@ The base unit is 4px. The working steps are 5, 10, 20, 24, 30, 40, 60, 64, 80, 1
 | `--drawer-search`     | 100%   | 440px         | Search and contact drawers                       |
 | `--drawer-cart`       | 100%   | 440px         | Cart drawer                                      |
 | `--drawer-filter`     | 100%   | 420px         | Filter drawer                                    |
-| `--drawer-size`       | 100%   | 720px         | Size guide                                       |
+| `--drawer-size`       | 100%   | 592px         | Size guide                                       |
 | `--modal-narrow`      | 100%   | 448px         | Newsletter                                       |
 
 Rules:
@@ -388,7 +388,7 @@ tokens. Do not move domain types into `components/ui/`.
 - Labels 12/16 400. Swatches 10px with a 1px active ring. Sizes 12/18 300 (`type-body-sm`), active
   underline, sold-out disabled. `SIZE GUIDE` right-aligned.
 - Quantity 96 × 36 with 36px buttons. Add to cart ~302 × 36 outlined; Buy it now 408 × 36 solid.
-- Tabs 11/16 400 with a complete tab keyboard model. Body copy 14/21 300. Size guide drawer 720px
+- Tabs 11/16 400 with a complete tab keyboard model. Body copy 14/21 300. Size guide drawer 592px
   with the find-my-size form and measurement tables. `NEED HELP?` pinned bottom-right.
 
 **Cart**

@@ -140,7 +140,7 @@ and streams the detail section inside Suspense. `components/product-detail/` con
 - `product-form.tsx` keeps selection in the URL while the static shell stays coherent;
   `buy-buttons.tsx` uses Hydrogen's product form, quantity picker, Add to Cart and Buy it now.
 - `product-tabs.tsx` provides Description, Shipping/Exchange/Returns, Fabric and Fit tabs.
-- `size-guide.tsx` opens a 720px right drawer with the tops table. The content-page
+- `size-guide.tsx` opens a 592px right drawer with the tops table. The content-page
   `components/content/size-guide.tsx` adds category tabs, a find-my-size form, conversion table and
   measurement notes.
 - Related products render from `components/product/related-products-section.tsx` when

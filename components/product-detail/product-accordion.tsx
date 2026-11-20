@@ -22,17 +22,17 @@ export function ProductAccordion({ descriptionHtml }: { descriptionHtml: string 
       ),
       defaultOpen: true,
       id: "description",
-      label: "Description",
+      label: "description",
     },
     {
       content: <p className="type-body-sm text-ink-muted">{STATIC_CONTENT.details}</p>,
       id: "details",
-      label: "Details",
+      label: "details",
     },
     {
       content: <p className="type-body-sm text-ink-muted">{STATIC_CONTENT.shipping}</p>,
       id: "shipping",
-      label: "Shipping",
+      label: "shipping",
     },
   ];
 
