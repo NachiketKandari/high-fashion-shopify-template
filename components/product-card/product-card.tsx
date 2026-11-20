@@ -20,7 +20,7 @@ export interface ProductCardProps {
   showActions?: boolean;
   showPrice?: boolean;
   showSwatches?: boolean;
-  variant?: "browse" | "default";
+  variant?: "browse" | "cart" | "default";
 }
 
 function swatchStyle(swatch: { color?: string; image?: string } | undefined) {
@@ -51,6 +51,7 @@ export function ProductCard({
   variant = "default",
 }: ProductCardProps) {
   const isBrowse = variant === "browse";
+  const isCart = variant === "cart";
   const href = buildProductUrl(product.handle, product.defaultVariantSelectedOptions ?? []);
   const colorOption = product.options?.find((option) =>
     option.values.some((value) => cardSwatch(value)),
@@ -66,12 +67,14 @@ export function ProductCard({
     >
       <div
         className={
-          isBrowse
-            ? "relative aspect-[3/4] overflow-hidden bg-paper desktop:aspect-[4/5] [[data-card-density=gallery]_&]:aspect-[2/3]"
-            : cn(
-                "relative overflow-hidden bg-surface",
-                mediaAspect === "5/9" ? "aspect-[5/9]" : "aspect-[2/3]",
-              )
+          isCart
+            ? "relative mx-auto aspect-[2/3] w-full max-w-[250px] overflow-hidden border border-ink bg-surface desktop:aspect-[250/447] desktop:border-0"
+            : isBrowse
+              ? "relative aspect-[3/4] overflow-hidden bg-paper desktop:aspect-[4/5] [[data-card-density=gallery]_&]:aspect-[2/3]"
+              : cn(
+                  "relative overflow-hidden bg-surface",
+                  mediaAspect === "5/9" ? "aspect-[5/9]" : "aspect-[2/3]",
+                )
         }
       >
         <Link aria-hidden="true" className="absolute inset-0 block" href={href} tabIndex={-1}>
@@ -153,7 +156,25 @@ export function ProductCard({
         ) : null}
       </div>
 
-      {isBrowse ? (
+      {isCart ? (
+        <div className="flex h-12 items-center justify-between gap-2 px-2 desktop:h-auto desktop:flex-col desktop:items-start desktop:gap-2 desktop:px-6 desktop:pt-6">
+          <h3 className="type-meta-semibold min-w-0 truncate text-ink desktop:type-h4">
+            <Link
+              className="focus-ring -my-2.5 flex min-h-9 items-center desktop:my-0 desktop:min-h-0"
+              href={href}
+            >
+              {product.title}
+            </Link>
+          </h3>
+          {showPrice ? (
+            <Price
+              amount={product.price.amount}
+              className="type-eyebrow shrink-0 text-ink desktop:type-h4"
+              currencyCode={product.price.currencyCode}
+            />
+          ) : null}
+        </div>
+      ) : isBrowse ? (
         <div className="grid gap-1 px-6 pt-2 desktop:pt-6">
           <h3 className="type-caption min-w-0 truncate text-ink">
             <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
@@ -250,10 +271,24 @@ export function ProductCard({
 export function ProductCardSkeleton({
   className,
   mediaAspect = "2/3",
+  variant = "default",
 }: {
   className?: string;
   mediaAspect?: "2/3" | "5/9";
+  variant?: "cart" | "default";
 }) {
+  if (variant === "cart") {
+    return (
+      <div className={cn("flex flex-col", className)}>
+        <ImagePlaceholder className="mx-auto aspect-[2/3] w-full max-w-[250px] animate-pulse border border-ink motion-reduce:animate-none desktop:aspect-[250/447] desktop:border-0" />
+        <div className="flex h-12 items-center justify-between gap-2 px-2 desktop:h-auto desktop:flex-col desktop:items-start desktop:gap-2 desktop:px-6 desktop:pt-6">
+          <div className="h-3 w-2/3 animate-pulse bg-surface motion-reduce:animate-none" />
+          <div className="h-2.5 w-10 animate-pulse bg-surface motion-reduce:animate-none" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("flex flex-col", className)}>
       <ImagePlaceholder

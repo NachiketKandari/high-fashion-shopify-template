@@ -4,8 +4,8 @@ import { ProductCard, ProductCardSkeleton } from "@/components/product-card/prod
 import { getCollectionResults } from "@/lib/collections/server";
 
 const ROW_CLASS =
-  "flex snap-x gap-x-(--grid-gap) overflow-x-auto desktop:grid desktop:grid-cols-4 desktop:gap-x-0 desktop:overflow-visible";
-const CARD_CLASS = "w-[46.4vw] shrink-0 snap-start desktop:w-auto";
+  "scrollbar-hide flex snap-x snap-mandatory gap-0 overflow-x-auto desktop:grid desktop:grid-cols-4 desktop:overflow-visible";
+const CARD_CLASS = "w-[180.75px] shrink-0 snap-start desktop:w-auto";
 
 export function CartRecommendations() {
   return (
@@ -29,6 +29,7 @@ async function CartRecommendationsContent() {
           product={product}
           showActions={false}
           showSwatches={false}
+          variant="cart"
         />
       ))}
     </div>
@@ -39,7 +40,7 @@ function CartRecommendationsSkeleton() {
   return (
     <div className={ROW_CLASS}>
       {Array.from({ length: 4 }, (_, index) => (
-        <ProductCardSkeleton className={CARD_CLASS} key={index} />
+        <ProductCardSkeleton className={CARD_CLASS} key={index} variant="cart" />
       ))}
     </div>
   );

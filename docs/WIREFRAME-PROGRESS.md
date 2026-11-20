@@ -252,18 +252,19 @@ one image.
 Built as the full-page bag at `/cart` from `docs/DESIGN-I-CHECKOUT-JOURNEY.md` §4.5. Desktop renders
 the 800 + 592 split, 123 × 191 line art, 431 px summary and 4-up recommendations; mobile renders
 342 px lines with 123 × 191 art and 195 px details, the body summary and promo, 2-up
-recommendations, and a fixed TOTAL + 40 px Checkout bar with safe-area padding. Empty, updating
-(`Recalculating`, disabled Checkout) and inline out-of-stock states are built; the header Bag links
-to `/cart`. Cart writes stay on `/api/cart`; totals and prices come from Shopify. `Delivery` reads
-`Free` once the subtotal clears the free-shipping threshold and `Calculated at checkout` below it;
-Shopify returns no shipping cost until checkout.
+recommendations, and a fixed TOTAL + 40 px Checkout bar with safe-area padding. The bar keeps the
+page's footer clear through its spacer. Empty, updating (`Recalculating`, disabled Checkout) and
+inline out-of-stock states are built; the updating state replaces the summary with a centred loader
+while the mobile bar keeps TOTAL beside it. Empty shows `Exclusives` and `Trending Collection`. The
+header Bag links to `/cart`. Cart writes stay on `/api/cart`; totals and prices come from Shopify.
+`Delivery` reads `Free` once the subtotal clears the free-shipping threshold and
+`Calculated at checkout` below it; Shopify returns no shipping cost until checkout.
 
-Recommendations use `new-in` because `bestsellers` is empty, and the cart rec row hides the shared
-card's swatches and actions. The shared card still renders full-column 2/3 media and a 24 px row
-caption, so the frame's 250 × 447 desktop art and 8 px mobile caption need a foundation card
-variant. The cart Checkout still opens Shopify directly; the built pre-checkout step at
-`/checkout/address` needs the cart-owned handoff. The PDP add-to-bag drawer still opens until the PDP
-workstream ships its slide-over confirmation.
+Recommendations use `new-in` because `bestsellers` is empty. They render the cart card variant:
+250 × 447 art on desktop with a 14 px stacked caption, and 180.75-wide 2/3 art on mobile with a
+12/600 title and 10 px price. The cart Checkout still opens Shopify directly; the built pre-checkout
+step at `/checkout/address` needs the cart-owned handoff. The PDP add-to-bag drawer still opens
+until the PDP workstream ships its slide-over confirmation.
 
 ## Checkout
 

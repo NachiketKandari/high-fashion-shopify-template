@@ -8,7 +8,7 @@ import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { Page } from "@/components/ui/page";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSuspenseCart } from "@/lib/cart/client";
+import { useCartMutating, useSuspenseCart } from "@/lib/cart/client";
 
 import { CartLineItems } from "./line-item";
 import { CartMobileSummaryBar, CartSummary } from "./summary";
@@ -18,6 +18,7 @@ const CART_WIDTH_CLASS = "max-w-[1440px]";
 
 export function CartPageContent({ signIn }: { signIn?: ReactNode }) {
   const cart = useSuspenseCart((state) => state.data);
+  const isMutating = useCartMutating();
 
   if (cart.totalQuantity === 0) {
     return <CartEmptyState />;
@@ -34,13 +35,19 @@ export function CartPageContent({ signIn }: { signIn?: ReactNode }) {
           </div>
           <div className="grid desktop:grid-cols-[800fr_592fr]">
             <div className="min-w-0 px-0 pt-6 pb-8 desktop:pr-10 desktop:pb-6 desktop:pl-6">
-              <div className="empty:hidden mb-8 desktop:hidden">{signIn}</div>
+              <div className="empty:hidden mb-8 desktop:hidden">{isMutating ? null : signIn}</div>
               <CartLineItems lines={cart.lines.nodes} />
             </div>
             <aside className="min-w-0 px-0 pb-0 desktop:flex desktop:flex-col desktop:gap-10 desktop:border desktop:border-ink desktop:px-20 desktop:py-35">
-              <div className="hidden empty:hidden desktop:block">{signIn}</div>
+              <div className="hidden empty:hidden desktop:block">{isMutating ? null : signIn}</div>
               <div className="hidden desktop:block">
-                <CartSummary cart={cart} />
+                <CartSummary
+                  cart={cart}
+                  className={
+                    isMutating ? "desktop:min-h-[399px] desktop:content-center" : undefined
+                  }
+                  recalculating="full"
+                />
               </div>
               <div className="desktop:hidden">
                 <CartSummary cart={cart} showCheckout={false} />
@@ -59,14 +66,19 @@ function CartEmptyState() {
     <Page className="pt-0">
       <Container className={CART_WIDTH_CLASS}>
         <h1 className="sr-only">Cart</h1>
-        <div className="grid justify-items-center gap-6 py-16 text-center desktop:py-32">
-          <h2 className="type-display">Your bag is empty</h2>
-          <p className="type-body-sm max-w-[42ch] text-ink-muted">
-            Start adding pieces to your bag, explore our trending picks.
-          </p>
-          <Button render={<Link href="/collections/all" />} variant="outline">
-            Explore collections
-          </Button>
+        <div className="grid justify-items-center gap-4 pt-16 pb-6 text-center desktop:py-32">
+          <div className="grid gap-8">
+            <h2 className="type-display">Your bag is empty</h2>
+            <p className="type-body-sm max-w-[42ch] text-ink-muted">
+              Start adding pieces to your bag, explore our trending picks.
+            </p>
+          </div>
+          <div className="grid w-full max-w-[324px] grid-cols-2 gap-4">
+            <Button render={<Link href="/collections/new-in" />} variant="outline">
+              Exclusives
+            </Button>
+            <Button render={<Link href="/collections/all" />}>Trending Collection</Button>
+          </div>
         </div>
       </Container>
     </Page>

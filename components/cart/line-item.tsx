@@ -69,21 +69,21 @@ function CartLineItem({ item }: CartLineItemProps) {
   const amount = cost.totalAmount.amount;
   const currencyCode = cost.totalAmount.currencyCode;
   const canShowPrice = Boolean(currencyCode) && amount !== "";
-  const title = merchandise?.product.title || "Cart item";
+  const productTitle = merchandise?.product.title || "Cart item";
   const optionValues = (merchandise?.selectedOptions ?? []).filter(
     (option) => option.value !== "Default Title",
   );
-  const sizeOption =
-    optionValues.length === 1
-      ? merchandise?.selectedOptions?.find((option) => option.name.toLowerCase() === "size")
-      : undefined;
-  const variantLabel = optionValues.map((option) => option.value).join(" · ");
+  const colourOption = optionValues.find((option) => /colou?r/i.test(option.name));
+  const secondaryOptions = optionValues.filter((option) => option !== colourOption);
+  const sizeOption = secondaryOptions.find((option) => /size/i.test(option.name));
+  const title = colourOption ? `${productTitle} - ${colourOption.value}` : productTitle;
+  const variantLabel = secondaryOptions.map((option) => option.value).join(" · ");
   const lineName = variantLabel ? `${title}, ${variantLabel}` : title;
   const href = merchandise?.product.handle ? `/products/${merchandise.product.handle}` : undefined;
   const image = merchandise?.image;
   const imageContent = image?.url ? (
     <Image
-      alt={image.altText || title}
+      alt={image.altText || productTitle}
       className="object-cover"
       fill
       sizes="100vw"
@@ -93,7 +93,7 @@ function CartLineItem({ item }: CartLineItemProps) {
     <ImagePlaceholder className="size-full" />
   );
   const imageClass =
-    "relative h-[191px] w-[123px] shrink-0 self-start overflow-hidden border border-ink bg-surface";
+    "relative h-[191px] w-[123px] shrink-0 self-start overflow-hidden border border-ink bg-surface desktop:border-0";
 
   return (
     <li
@@ -119,11 +119,11 @@ function CartLineItem({ item }: CartLineItemProps) {
             <div className="flex items-start justify-between gap-4">
               <div className="grid min-w-0 gap-2">
                 {href ? (
-                  <Link className="focus-ring flex min-h-9 w-fit items-center" href={href}>
-                    <h3 className="type-control line-clamp-2">{title}</h3>
+                  <Link className="focus-ring -my-2.5 flex min-h-9 w-fit items-center" href={href}>
+                    <h3 className="type-meta-semibold line-clamp-2">{title}</h3>
                   </Link>
                 ) : (
-                  <h3 className="type-control flex min-h-9 items-center">{title}</h3>
+                  <h3 className="type-meta-semibold -my-2.5 flex min-h-9 items-center">{title}</h3>
                 )}
                 {variantLabel ? (
                   <p className="type-label text-ink">
@@ -177,11 +177,11 @@ function CartLineItem({ item }: CartLineItemProps) {
                 <button
                   {...register("remove")}
                   aria-label={`Remove ${lineName}`}
-                  className="focus-ring flex h-9 min-w-9 shrink-0 cursor-pointer items-center justify-center px-0 text-ink transition-colors hover:text-ink-muted disabled:cursor-not-allowed disabled:opacity-40"
+                  className="focus-ring flex min-h-9 min-w-9 shrink-0 cursor-pointer items-start justify-center px-0 text-ink transition-colors hover:text-ink-muted disabled:cursor-not-allowed disabled:opacity-40"
                   disabled={isOptimistic}
                   type="submit"
                 >
-                  <span className="type-control hidden desktop:inline">remove</span>
+                  <span className="type-meta-bold hidden desktop:inline">remove</span>
                   <Trash2Icon
                     aria-hidden="true"
                     className="size-4 desktop:hidden"

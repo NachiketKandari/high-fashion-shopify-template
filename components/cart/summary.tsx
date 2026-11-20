@@ -1,6 +1,7 @@
 "use client";
 
 import type { CartData } from "@shopify/hydrogen";
+import { cn } from "cn";
 import { ChevronDownIcon, Loader2 } from "lucide-react";
 
 import { useDisplayPrice } from "@/components/currency/provider";
@@ -14,14 +15,36 @@ import { DiscountForm } from "./discount-form";
 
 interface CartSummaryProps {
   cart: CartData;
+  className?: string;
+  recalculating?: "full" | "totals";
   showCheckout?: boolean;
 }
 
-export function CartSummary({ cart, showCheckout = true }: CartSummaryProps) {
+export function CartSummary({
+  cart,
+  className,
+  recalculating = "totals",
+  showCheckout = true,
+}: CartSummaryProps) {
+  const isMutating = useCartMutating();
+
+  if (isMutating && recalculating === "full") {
+    return (
+      <div className={cn("grid justify-items-center gap-2.5 text-center", className)} role="status">
+        <Loader2
+          aria-hidden="true"
+          className="size-6 animate-spin motion-reduce:animate-none desktop:size-8"
+          strokeWidth={1.5}
+        />
+        <p className="type-meta-semibold text-ink">Recalculating</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid gap-10">
+    <div className={cn("grid gap-10", className)}>
       <div className="grid gap-8">
-        <CartTotals cart={cart} />
+        {isMutating ? <CartTotalsRecalculating /> : <CartTotal cart={cart} />}
         {showCheckout ? <CartCheckout /> : null}
       </div>
       <PromoDisclosure cart={cart} />
@@ -35,16 +58,19 @@ export function CartSummary({ cart, showCheckout = true }: CartSummaryProps) {
   );
 }
 
-function CartTotals({ cart }: { cart: CartData }) {
-  const isMutating = useCartMutating();
-  if (isMutating) {
-    return (
-      <div className="grid min-h-[102px] content-center" role="status">
-        <p className="type-control text-ink">Recalculating</p>
-      </div>
-    );
-  }
-  return <CartTotal cart={cart} />;
+function CartTotalsRecalculating() {
+  return (
+    <div className="grid min-h-[102px] content-center" role="status">
+      <p className="type-meta-semibold inline-flex items-center gap-2.5 text-ink">
+        <Loader2
+          aria-hidden="true"
+          className="size-4 animate-spin motion-reduce:animate-none"
+          strokeWidth={1.5}
+        />
+        Recalculating
+      </p>
+    </div>
+  );
 }
 
 export function CartTotal({ cart }: { cart: CartData }) {
@@ -72,11 +98,11 @@ export function CartTotal({ cart }: { cart: CartData }) {
         <dd className="type-h4">{remaining === 0 ? "Free" : "Calculated at checkout"}</dd>
       </div>
       <div className="flex items-baseline justify-between gap-8">
-        <dt className="type-nav">TOTAL</dt>
-        <dd className="type-nav">
+        <dt className="type-tab-active">TOTAL</dt>
+        <dd className="type-tab-active">
           <Price
             amount={cart.cost.totalAmount.amount}
-            className="type-nav"
+            className="type-tab-active"
             currencyCode={cart.cost.totalAmount.currencyCode || currencyCode}
           />
         </dd>
@@ -145,16 +171,21 @@ export function CartMobileSummaryBar({ cart }: { cart: CartData }) {
       aria-label="Cart summary"
       className="fixed inset-x-0 bottom-0 z-(--z-header) grid gap-6 border-t border-ink bg-paper px-(--gutter) pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] desktop:hidden"
     >
-      <div aria-live="polite" className="flex items-baseline justify-between gap-8">
-        <span className="type-nav">TOTAL</span>
+      <div aria-live="polite" className="flex items-center justify-between gap-8">
+        <span className="type-tab-active">TOTAL</span>
         {isMutating ? (
-          <span className="type-control" role="status">
+          <span className="type-meta-semibold inline-flex items-center gap-2.5" role="status">
+            <Loader2
+              aria-hidden="true"
+              className="size-4 animate-spin motion-reduce:animate-none"
+              strokeWidth={1.5}
+            />
             Recalculating
           </span>
         ) : (
           <Price
             amount={cart.cost.totalAmount.amount}
-            className="type-nav"
+            className="type-tab-active"
             currencyCode={currencyCode}
           />
         )}

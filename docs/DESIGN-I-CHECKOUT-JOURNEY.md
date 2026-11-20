@@ -274,22 +274,23 @@ TOTAL, 431 × 40 black Checkout, promo disclosure, help; 4-up recommendations; f
 bottom TOTAL + 342 × 40 Checkout bar.
 
 **Current.** `app/(storefront)/cart/page.tsx` + `components/cart/*`: full-page bag at `/cart`.
-Desktop renders the 800 + 592 split, 123 × 191 line art, title/size/price, quantity and remove, the
-431 px summary with sign-in, subtotal, delivery, TOTAL, 40 px Checkout, promo disclosure and help,
-then 4-up recommendations. Mobile renders 342 px lines with 123 × 191 art and 195 px details, the
-body summary and promo, 2-up recommendations, and a fixed TOTAL + 40 px Checkout bar with safe-area
-padding. Empty, optimistic-updating (`Recalculating`, disabled Checkout) and inline out-of-stock
-(`instructions.canUpdateQuantity`, contact link) states are built. The header Bag links to `/cart`.
-Cart writes stay on `/api/cart`; totals and prices come from Shopify. Recommendations use `new-in`
-because `bestsellers` is empty, and the cart rec row hides the shared card's swatches and actions.
+Desktop renders the 800 + 592 split, 123 × 191 line art with the colour in the title and size below,
+the 431 px summary with sign-in, subtotal, delivery, TOTAL, 40 px Checkout, promo disclosure and
+help, then 4-up recommendations. Mobile renders 342 px lines with 123 × 191 art and 195 px details,
+the body summary and promo, 2-up recommendations, and a fixed TOTAL + 40 px Checkout bar with
+safe-area padding; the spacer keeps the footer clear. Empty shows `Exclusives` and
+`Trending Collection`. Optimistic-updating replaces the summary with a centred loader while the
+mobile bar keeps TOTAL beside its own loader and disables Checkout; inline out-of-stock
+(`instructions.canUpdateQuantity`, contact link) remains. The header Bag links to `/cart`. Cart
+writes stay on `/api/cart`; totals and prices come from Shopify. Recommendations use `new-in`
+because `bestsellers` is empty. They render the cart card variant: 250 × 447 art on desktop with a
+14 px stacked caption, and 180.75-wide 2/3 art on mobile with a 12/600 title and 10 px price.
 
 **Remaining work.** Point the cart Checkout at `/checkout/address`; the pre-checkout step is built
 but the cart still opens Shopify directly. The PDP add-to-bag drawer still opens because
 `components/product-detail/buy-buttons.tsx` is PDP-owned; its slide-over confirmation is that
-workstream's change. The shared foundation product card still renders full-column 2/3 media and a
-24 px row caption, so the cart's 250 × 447 art and narrower mobile caption need a foundation card
-variant. Verify the out-of-stock line with real sold-out inventory; the storefront token has no
-`unauthenticated_read_product_inventory` scope today.
+workstream's change. Verify the out-of-stock line with real sold-out inventory; the storefront token
+has no `unauthenticated_read_product_inventory` scope today.
 
 **Gated.** Notify-me/waitlist (no email sink); non-serviceable pincode (checkout/D3).
 

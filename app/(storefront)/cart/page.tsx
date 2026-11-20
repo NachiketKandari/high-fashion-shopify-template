@@ -31,7 +31,7 @@ export default function CartPage() {
         />
       </Suspense>
       <section aria-label="You may also like" className="pt-10 pb-10 desktop:mt-6 desktop:py-20">
-        <Container className="mb-5 max-w-[1440px]">
+        <Container className="mb-2.5 max-w-[1440px] desktop:mb-5">
           <h2 className="type-control text-ink">you may also like</h2>
         </Container>
         <CartRecommendations />
