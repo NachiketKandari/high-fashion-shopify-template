@@ -66,8 +66,8 @@ export default function SearchPage({ searchParams }: PageProps<"/search">) {
     fetchSearchResults({ query: getParam(resolved, "q")?.trim(), statePromise }),
   );
   return (
-    <Page className="pt-0">
-      <Container className="py-10 desktop:py-20">
+    <Page className="desktop:pt-10">
+      <Container className="pb-10 desktop:pb-20">
         <Suspense fallback={<SearchPageSkeleton />}>
           <SearchExperience
             resultsPromise={resultsPromise}

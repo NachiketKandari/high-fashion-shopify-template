@@ -60,7 +60,7 @@ export function SearchModal() {
           role="dialog"
         >
           <Dialog.Title className="sr-only">Search</Dialog.Title>
-          <Container className="py-10 desktop:py-20">
+          <Container className="pt-(--page-top) pb-10 desktop:pt-10 desktop:pb-20">
             <SearchExplorer
               closeOnNavigate
               inputId="search-drawer-input"
