@@ -214,8 +214,8 @@ Next.js owns everything around the commerce call.
 
 **Routing and rendering.**
 
-- `app/` holds the routes: home, collections, products, search, cart, account, blogs, pages,
-  policies, wishlist, markdown mirrors, `llms.txt`, sitemap and robots.
+- `app/` holds the routes: home, collections, products, search, cart, login, the checkout address
+  step, account, blogs, pages, policies, wishlist, markdown mirrors, `llms.txt`, sitemap and robots.
 - Pages are Server Components by default. Client Components are leaves for state, effects, browser
   APIs and handlers.
 - Routes with runtime params render a synchronous page and suspend the async content with a route
@@ -355,10 +355,16 @@ Cart drawer or cart page
 `prepareCheckoutAction` does not mutate the cart. Payment, taxes, shipping and order creation happen
 on Shopify's hosted checkout, outside this repo.
 
+A pre-checkout address and shipping surface also exists at `/checkout/address`. It requires a
+non-empty cart and redirects to `/cart` otherwise; the cart does not link to it yet, so today's
+cart path still opens Shopify directly.
+
 ### 8.4 Customer account
 
 ```
-/account/login
+/login
+  → design gate validates the email and passes login_hint
+  → /account/login
   → proxy.ts customer account handlers
   → Shopify OAuth
   → session cookie
@@ -586,6 +592,9 @@ a substitute for the Admin API seeder.
 
 ```
 app/                         Next.js routes and route handlers
+  (auth)/                    Login gate and sign-in failure
+  (checkout)/                Pre-checkout address and shipping
+  (storefront)/              Storefront pages, account, content, cart and search
   api/webhooks/shopify/      Shopify webhook → cache tags
   api/revalidate/            Manual tag revalidation
   api/agent/session/         Eve cart preparation

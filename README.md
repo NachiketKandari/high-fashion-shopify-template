@@ -138,6 +138,7 @@ Full documentation is available at [vercel.shop](https://vercel.shop).
 Project-specific runbooks:
 
 - [`docs/FRONTEND-ARCHITECTURE.md`](./docs/FRONTEND-ARCHITECTURE.md) — the full frontend map: routes, components, data flow, caching, configuration, owners and pending work.
+- [`docs/PAGE-INVENTORY.md`](./docs/PAGE-INVENTORY.md) — every shopper-facing page with its production URL, how to reach it, and the cart-to-checkout handoff status.
 - [`docs/FRONTEND-GLOSSARY.md`](./docs/FRONTEND-GLOSSARY.md) — plain-English definitions of every UI/frontend term this template uses, with where each one lives in the code and external learning resources.
 - [`docs/AUTHENTICATION.md`](./docs/AUTHENTICATION.md) — how customers sign in, where the one-time verification code comes from, and what Shopify owns versus this template.
 - [`docs/PAYMENTS.md`](./docs/PAYMENTS.md) — checkout architecture, India gateway research and recommendation, refresh/pending-payment behavior, and payment security and compliance.

@@ -2,10 +2,12 @@
 
 This is the entry point for the storefront frontend: what runs where, why each layer exists,
 which file owns which concern, and what is still open. It describes the repository as it exists on
-7 November 2026.
+20 November 2026.
 
 Read this first. The deeper references are:
 
+- [`PAGE-INVENTORY.md`](./PAGE-INVENTORY.md) — every shopper-facing page with its production URL,
+  how to reach it, and the cart-to-checkout handoff status.
 - [`FRONTEND-GLOSSARY.md`](./FRONTEND-GLOSSARY.md) — every UI/frontend term used here, defined in
   plain English, with where it lives in the code and external learning resources.
 - [`PAYMENTS.md`](./PAYMENTS.md) — checkout, India payment gateways, pending-payment behavior and
@@ -94,18 +96,21 @@ request-time domains such as search and cart export uncached or per-request help
 
 ```
 app/                      Next.js routes, route handlers and route groups
-  account/                Customer account routes, gated by layout
+  (auth)/                 Login gate and sign-in failure
+  (checkout)/             Pre-checkout address and shipping
+  (storefront)/           Storefront pages
+    account/              Customer account routes, gated by layout
+    blogs/                Shopify blog and article routes
+    collections/          Collection index, detail and request-time refine route
+    pages/                Shopify pages plus app-owned contact, size guide, wishlist
+    policies/             Shopify policy routes
+    products/              Product detail route
+    search/               Search results route
+    wishlist/             Redirect to /pages/wishlist
   api/                    Webhook, revalidation and agent-session handlers
   agent/                  Eve UCP profile route
-  blogs/                  Shopify blog and article routes
-  collections/            Collection index, detail and request-time refine route
   md/                     Markdown mirrors for answer engines
-  pages/                  Shopify pages plus app-owned contact, size guide, wishlist
-  policies/               Shopify policy routes
-  products/               Product detail route
-  search/                 Search results route
   sitemap/                Sitemap shards
-  wishlist/               Redirect to /pages/wishlist
 components/               Presentation
   ui/                     Primitive-only building blocks
   <domain>/               Domain components (nav, cart, product, collections, account, …)
@@ -141,37 +146,44 @@ turbo.json                globalEnv declarations
 
 ## 4. Route map
 
-| Route                                                                         | File                                               | Data source                                              | Rendering / caching                                       |
-| ----------------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------- |
-| `/`                                                                           | `app/page.tsx`                                     | Shopify bestsellers collection + local editorial tiles   | Static shell; rail is a cached collection read            |
-| `/collections`                                                                | `app/collections/page.tsx`                         | `getCollectionsListing`                                  | Cached, `collections` tags                                |
-| `/collections/[handle]`                                                       | `app/collections/[handle]/page.tsx` + `layout.tsx` | `getCollection`, `getCollectionResults`                  | Default first page cached; layout resolves the collection |
-| `/collections/[handle]/refine`                                                | `refine/page.tsx`                                  | `fetchCollectionResults`                                 | Request-time; reachable only through the proxy rewrite    |
-| `/collections/all`                                                            | `app/collections/all/page.tsx`                     | `getAllProductsResults`                                  | Default first page cached                                 |
-| `/collections/all/refine`                                                     | `refine/page.tsx`                                  | `fetchSearchResults`                                     | Request-time; proxy rewrite only                          |
-| `/products/[handle]`                                                          | `app/products/[handle]/page.tsx`                   | `getProduct`; selected variant via `fetchProductVariant` | Product cached; selected variant live                     |
-| `/search`                                                                     | `app/search/page.tsx`                              | `fetchSearchResults`                                     | Request-time; `noindex`                                   |
-| `/cart`                                                                       | `app/cart/page.tsx`                                | Hydrogen cart store / handlers                           | Per-request; never cached                                 |
-| `/account/*`                                                                  | `app/account/(authenticated)/…`                    | Customer Account API                                     | Per-request; `noindex`; layout gate                       |
-| `/pages/[handle]`                                                             | `app/pages/[handle]/page.tsx`                      | `getPage`                                                | Cached, `pages` + `page-<handle>`                         |
-| `/pages/contact-us`                                                           | `app/pages/contact-us/page.tsx`                    | Local contact form and `shopConfig.site.contact`         | App-owned                                                 |
-| `/pages/size-guide`                                                           | `app/pages/size-guide/page.tsx`                    | Local size tables                                        | App-owned                                                 |
-| `/pages/wishlist`                                                             | `app/pages/wishlist/page.tsx`                      | `localStorage`                                           | Client-only; `noindex`                                    |
-| `/wishlist`                                                                   | `app/wishlist/page.tsx`                            | Redirect                                                 | Redirects to `/pages/wishlist`                            |
-| `/policies/[handle]`                                                          | `app/policies/[handle]/page.tsx`                   | `getShopPolicy`                                          | Cached, `policies`                                        |
-| `/blogs/[blogHandle]`                                                         | `app/blogs/[blogHandle]/page.tsx`                  | `getBlog`                                                | Cached, `blogs` + `blog-<handle>`                         |
-| `/blogs/[blogHandle]/[articleHandle]`                                         | article page                                       | `getBlogArticle`                                         | Cached, `articles` + `article-…`                          |
-| `/md`, `/md/products/[handle]`, `/md/collections/[handle]`, `/md/search`      | `app/md/**`                                        | Home/search static; product/collection use `get*`        | Markdown representations                                  |
-| `/llms.txt`                                                                   | `app/llms.txt/route.ts`                            | Collections + policies                                   | Plain text, one-day CDN cache                             |
-| `/sitemap.xml` and `/sitemap/[shard]`                                         | `app/sitemap*`                                     | Shopify sitemap operations                               | XML shards                                                |
-| `/robots.txt`                                                                 | `app/robots.ts`                                    | `shopConfig`                                             | Metadata route                                            |
-| `/manifest.webmanifest`                                                       | `app/manifest.ts`                                  | `shopConfig`                                             | Metadata route                                            |
-| `/api/cart`, `/api/predictive-search`                                         | `proxy.ts`                                         | Hydrogen handlers                                        | Per-request                                               |
-| `/api/webhooks/shopify`                                                       | `app/api/webhooks/shopify/route.ts`                | HMAC-verified webhook                                    | Invalidates tags                                          |
-| `/api/revalidate`                                                             | `app/api/revalidate/route.ts`                      | Bearer token                                             | Invalidates up to 20 tags                                 |
-| `/api/agent/session`                                                          | `app/api/agent/session/route.ts`                   | Cart cookie / empty cart                                 | 404 when Eve is disabled                                  |
-| `/agent/ucp-profile.json`                                                     | `app/agent/ucp-profile.json/route.ts`              | Static agent profile                                     | 404 when Eve is disabled                                  |
-| `/account/authorize`, `/account/login`, `/account/logout`, `/account/refresh` | `proxy.ts`                                         | Hydrogen customer handlers                               | OAuth lifecycle                                           |
+| Route                                                                         | File                                                            | Data source                                              | Rendering / caching                                         |
+| ----------------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------- | ----------------------------------------------------------- |
+| `/`                                                                           | `app/(storefront)/page.tsx`                                     | Shopify bestsellers collection + local editorial tiles   | Static shell; rail is a cached collection read              |
+| `/collections`                                                                | `app/(storefront)/collections/page.tsx`                         | `getCollectionsListing`                                  | Cached, `collections` tags                                  |
+| `/collections/[handle]`                                                       | `app/(storefront)/collections/[handle]/page.tsx` + `layout.tsx` | `getCollection`, `getCollectionResults`                  | Default first page cached; layout resolves the collection   |
+| `/collections/[handle]/refine`                                                | `app/(storefront)/collections/[handle]/refine/page.tsx`         | `fetchCollectionResults`                                 | Request-time; reachable only through the proxy rewrite      |
+| `/collections/all`                                                            | `app/(storefront)/collections/all/page.tsx`                     | `getAllProductsResults`                                  | Default first page cached                                   |
+| `/collections/all/refine`                                                     | `app/(storefront)/collections/all/refine/page.tsx`              | `fetchSearchResults`                                     | Request-time; proxy rewrite only                            |
+| `/products/[handle]`                                                          | `app/(storefront)/products/[handle]/page.tsx`                   | `getProduct`; selected variant via `fetchProductVariant` | Product cached; selected variant live                       |
+| `/search`                                                                     | `app/(storefront)/search/page.tsx`                              | `fetchSearchResults`                                     | Request-time; `noindex`                                     |
+| `/cart`                                                                       | `app/(storefront)/cart/page.tsx`                                | Hydrogen cart store / handlers                           | Per-request; never cached                                   |
+| `/login`                                                                      | `app/(auth)/login/page.tsx`                                     | `isCustomerLoggedIn`; `LoginGate`                        | App-owned gate; `noindex`; signed-in redirect to `/account` |
+| `/account/*`                                                                  | `app/(storefront)/account/(authenticated)/…`                    | Customer Account API                                     | Per-request; `noindex`; layout gate                         |
+| `/account/sign-in-failed`                                                     | `app/(auth)/account/sign-in-failed/page.tsx`                    | Static failure copy                                      | App-owned; `noindex`                                        |
+| `/checkout/address`                                                           | `app/(checkout)/checkout/address/page.tsx`                      | Hydrogen cart; `getCheckoutAddresses`                    | Request-time; empty cart redirects to `/cart`               |
+| `/pages/[handle]`                                                             | `app/(storefront)/pages/[handle]/page.tsx`                      | `getPage`                                                | Cached, `pages` + `page-<handle>`                           |
+| `/pages/contact-us`                                                           | `app/(storefront)/pages/contact-us/page.tsx`                    | Local contact form and `shopConfig.site.contact`         | App-owned                                                   |
+| `/pages/size-guide`                                                           | `app/(storefront)/pages/size-guide/page.tsx`                    | Local size tables                                        | App-owned                                                   |
+| `/pages/wishlist`                                                             | `app/(storefront)/pages/wishlist/page.tsx`                      | `localStorage`                                           | Client-only; `noindex`                                      |
+| `/wishlist`                                                                   | `app/(storefront)/wishlist/page.tsx`                            | Redirect                                                 | Redirects to `/pages/wishlist`                              |
+| `/policies/[handle]`                                                          | `app/(storefront)/policies/[handle]/page.tsx`                   | `getShopPolicy`                                          | Cached, `policies`                                          |
+| `/blogs/[blogHandle]`                                                         | `app/(storefront)/blogs/[blogHandle]/page.tsx`                  | `getBlog`                                                | Cached, `blogs` + `blog-<handle>`                           |
+| `/blogs/[blogHandle]/[articleHandle]`                                         | `app/(storefront)/blogs/[blogHandle]/[articleHandle]/page.tsx`  | `getBlogArticle`                                         | Cached, `articles` + `article-…`                            |
+| `/md`, `/md/products/[handle]`, `/md/collections/[handle]`, `/md/search`      | `app/md/**`                                                     | Home/search static; product/collection use `get*`        | Markdown representations                                    |
+| `/llms.txt`                                                                   | `app/llms.txt/route.ts`                                         | Collections + policies                                   | Plain text, one-day CDN cache                               |
+| `/sitemap.xml` and `/sitemap/[shard]`                                         | `app/sitemap*`                                                  | Shopify sitemap operations                               | XML shards                                                  |
+| `/robots.txt`                                                                 | `app/robots.ts`                                                 | `shopConfig`                                             | Metadata route                                              |
+| `/manifest.webmanifest`                                                       | `app/manifest.ts`                                               | `shopConfig`                                             | Metadata route                                              |
+| `/api/cart`, `/api/predictive-search`                                         | `proxy.ts`                                                      | Hydrogen handlers                                        | Per-request                                                 |
+| `/api/webhooks/shopify`                                                       | `app/api/webhooks/shopify/route.ts`                             | HMAC-verified webhook                                    | Invalidates tags                                            |
+| `/api/revalidate`                                                             | `app/api/revalidate/route.ts`                                   | Bearer token                                             | Invalidates up to 20 tags                                   |
+| `/api/agent/session`                                                          | `app/api/agent/session/route.ts`                                | Cart cookie / empty cart                                 | 404 when Eve is disabled                                    |
+| `/agent/ucp-profile.json`                                                     | `app/agent/ucp-profile.json/route.ts`                           | Static agent profile                                     | 404 when Eve is disabled                                    |
+| `/account/authorize`, `/account/login`, `/account/logout`, `/account/refresh` | `proxy.ts`                                                      | Hydrogen customer handlers                               | OAuth lifecycle                                             |
+
+The cart Checkout action and `/checkout` hand off to Shopify's hosted checkout through
+`cart.checkoutUrl`. `/checkout/address` is the storefront pre-checkout step and requires a non-empty
+cart; the cart does not link to it yet.
 
 ### Rendering rules the routes follow
 
@@ -275,6 +287,9 @@ Prices are `Money`, media are `Image`, pagination is `PageInfo`. Cross-domain pr
   entry.
 - `prepareCheckoutAction` is the only cart Server Action. It reads the confirmed checkout URL and
   does not mutate the cart.
+- The pre-checkout address and shipping step lives at `/checkout/address`, requires a non-empty
+  cart, and redirects to `/cart` otherwise. The cart Checkout action still opens Shopify's hosted
+  checkout and does not link to this step.
 - `createEmptyCart` is the one cart write that bypasses the `/api/cart` handler: it calls Hydrogen's
   `cartCreate` query directly because `/api/agent/session` must create a cart before the agent's
   first turn.
@@ -332,23 +347,25 @@ effects, browser APIs and handlers live in leaves.
 
 ### Surface-to-component map
 
-| Surface        | Key files                                                                                                                                                                                                                 |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| App shell      | `app/layout.tsx`, `components/consent/banner.tsx`, `components/currency/provider.tsx`, `components/cart/context.tsx`, `components/newsletter/popup.tsx`, `components/action-bar/index.tsx`                                |
-| Home           | `app/page.tsx`, `components/product/home-product-rail.tsx`, `components/product/product-rail.tsx`, `components/product-card/product-card.tsx`                                                                             |
-| Header and nav | `components/nav/index.tsx`, `header.tsx`, `announcement.tsx`, `desktop-nav.tsx`, `mobile-menu.tsx`, `search-modal.tsx`, `contact-drawer.tsx`, `cart.tsx`, `account.tsx`, `lib/nav/index.ts`                               |
-| Search         | `components/nav/search-modal.tsx`, `app/search/page.tsx`, `components/collections/browse.tsx`                                                                                                                             |
-| Collections    | `app/collections/**`, `components/collections/{collection-page,browse,collection-browse-provider,filters,filters-client,toolbar,sort-select,infinite-product-grid,collection-card}.tsx`                                   |
-| Product        | `app/products/[handle]/page.tsx`, `components/product-detail/{product-detail-section,product-media,product-info,product-form,buy-buttons,product-tabs,size-guide,lightbox}.tsx`, `components/product-card/quick-shop.tsx` |
-| Cart           | `components/cart/{cart-ui,context,overlay,line-item,line-form,summary,discount-form,warnings,cart-page}.tsx`, `lib/cart/client.ts`                                                                                        |
-| Footer         | `components/footer/index.tsx`, `payment-marks.tsx`, `components/newsletter/form.tsx`, `components/currency/selector.tsx`                                                                                                  |
-| Account        | `app/account/(authenticated)/**`, `components/account/**`, `components/nav/account.tsx`                                                                                                                                   |
-| Content        | `app/pages/**`, `app/policies/**`, `app/blogs/**`, `components/content/**`, `components/blog/**`                                                                                                                          |
-| Wishlist       | `app/pages/wishlist/page.tsx`, `components/wishlist/content.tsx`, `components/product-card/wishlist-button.tsx`, `lib/wishlist/client.ts`                                                                                 |
-| Agent          | `components/agent/**`, `components/action-bar/index.tsx`, `agent/**`                                                                                                                                                      |
-| Analytics      | `components/analytics/**`, `lib/analytics/client.ts`                                                                                                                                                                      |
-| Schema         | `components/schema/**`, `components/product-detail/schema.tsx`                                                                                                                                                            |
-| Errors         | `app/error.tsx`, `app/global-error.tsx`, `app/not-found.tsx`, `components/error/error-boundary-content.tsx`                                                                                                               |
+| Surface        | Key files                                                                                                                                                                                                                              |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| App shell      | `app/layout.tsx`, `components/consent/banner.tsx`, `components/currency/provider.tsx`, `components/cart/context.tsx`, `components/newsletter/popup.tsx`, `components/action-bar/index.tsx`                                             |
+| Home           | `app/(storefront)/page.tsx`, `components/product/home-product-rail.tsx`, `components/product/product-rail.tsx`, `components/product-card/product-card.tsx`                                                                             |
+| Header and nav | `components/nav/index.tsx`, `header.tsx`, `announcement.tsx`, `desktop-nav.tsx`, `mobile-menu.tsx`, `search-modal.tsx`, `contact-drawer.tsx`, `cart.tsx`, `account.tsx`, `lib/nav/index.ts`                                            |
+| Search         | `components/nav/search-modal.tsx`, `app/(storefront)/search/page.tsx`, `components/collections/browse.tsx`                                                                                                                             |
+| Collections    | `app/(storefront)/collections/**`, `components/collections/{collection-page,browse,collection-browse-provider,filters,filters-client,toolbar,sort-select,infinite-product-grid,collection-card}.tsx`                                   |
+| Product        | `app/(storefront)/products/[handle]/page.tsx`, `components/product-detail/{product-detail-section,product-media,product-info,product-form,buy-buttons,product-tabs,size-guide,lightbox}.tsx`, `components/product-card/quick-shop.tsx` |
+| Cart           | `components/cart/{cart-ui,context,overlay,line-item,line-form,summary,discount-form,warnings,cart-page}.tsx`, `lib/cart/client.ts`                                                                                                     |
+| Auth           | `app/(auth)/login/page.tsx`, `app/(auth)/account/sign-in-failed/page.tsx`, `components/auth/login-gate.tsx`, `lib/auth/**`                                                                                                             |
+| Checkout       | `app/(checkout)/checkout/address/page.tsx`, `components/checkout/**`, `lib/checkout/**`                                                                                                                                                |
+| Footer         | `components/footer/index.tsx`, `payment-marks.tsx`, `components/newsletter/form.tsx`, `components/currency/selector.tsx`                                                                                                               |
+| Account        | `app/(storefront)/account/(authenticated)/**`, `components/account/**`, `components/nav/account.tsx`                                                                                                                                   |
+| Content        | `app/(storefront)/pages/**`, `app/(storefront)/policies/**`, `app/(storefront)/blogs/**`, `components/content/**`, `components/blog/**`                                                                                                |
+| Wishlist       | `app/(storefront)/pages/wishlist/page.tsx`, `components/wishlist/content.tsx`, `components/product-card/wishlist-button.tsx`, `lib/wishlist/client.ts`                                                                                 |
+| Agent          | `components/agent/**`, `components/action-bar/index.tsx`, `agent/**`                                                                                                                                                                   |
+| Analytics      | `components/analytics/**`, `lib/analytics/client.ts`                                                                                                                                                                                   |
+| Schema         | `components/schema/**`, `components/product-detail/schema.tsx`                                                                                                                                                                         |
+| Errors         | `app/error.tsx`, `app/global-error.tsx`, `app/not-found.tsx`, `components/error/error-boundary-content.tsx`                                                                                                                            |
 
 ### Provider tree
 

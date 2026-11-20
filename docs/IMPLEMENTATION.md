@@ -18,11 +18,13 @@ was verified, and what still depends on Shopify credentials or production decisi
 | Announcement   | Two rotating messages, pause on hover, 30px desktop / 35px mobile.                                                                                                                                                                  |
 | Header         | Large homepage masthead (`1016 × 82` at 1440), compact header elsewhere, sticky collapse on scroll, desktop nav with hover/focus mega menus, mobile menu drawer.                                                                    |
 | Utilities      | Currency selector, search drawer, help/contact drawer, cart count, mobile icon row.                                                                                                                                                 |
+| Auth           | Designed identity gate at `/login` with email validation and a `login_hint` handoff to Shopify's hosted customer accounts; failures render at `/account/sign-in-failed`.                                                            |
 | Search         | 440px right drawer with predictive products, recent products when empty, clear and view-all actions.                                                                                                                                |
 | Homepage       | Full-bleed campaign hero, two-up editorial tiles, “Our Picks” scroll rail, 3-up collection edits, 4 link tiles.                                                                                                                     |
 | Collection     | 18px uppercase title, chips row, inline desktop toolbar, 2/3/4-column responsive grid, 2:3 product images, 3px column gap, colour swatches, size list, wishlist toggle, hover image, filter drawer, sort, infinite loading.         |
 | Product        | 50/50 split, stacked 2:3 gallery, mobile snap gallery, 408px centred info column, inline colour and size selectors, size-guide drawer, quantity, outlined add-to-cart, black buy-now, four description tabs, related-products grid. |
 | Cart           | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                            |
+| Checkout       | Cart at `/cart` opens Shopify's hosted checkout directly; the pre-checkout address and shipping step is built at `/checkout/address` and is reachable by direct link only. Payment and confirmation stay Shopify-hosted.            |
 | Footer         | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                          |
 | Newsletter     | Home-only modal after 20 seconds and full cookie consent, with 30-day local dismissal; footer form.                                                                                                                                 |
 | Cookie consent | Fixed bottom bar with essential/all choice, stored for 180 days; analytics tags mount only after Allow All.                                                                                                                         |
@@ -41,7 +43,8 @@ The locally rebuilt flows were checked in a browser at 1440 × 1000, 768 × 1024
 - Help drawer, newsletter modal, footer newsletter.
 - Collection grid, chips, filter drawer, sort, infinite loading.
 - Product gallery (desktop stacked, mobile snap), tabs, quantity, add-to-cart, buy-now.
-- Cart drawer empty/filled, cart page, checkout hand-off.
+- Login gate: validation, Shopify handoff, signed-in redirect and failure state.
+- Cart drawer empty/filled, cart page, pre-checkout address, checkout hand-off.
 - GA4 page views.
 
 ## GA4
