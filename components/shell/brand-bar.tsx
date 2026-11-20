@@ -1,13 +1,12 @@
 import { cn } from "cn";
 
-import { Wordmark, type WordmarkVariant } from "@/components/brand/wordmark";
+import { Wordmark } from "@/components/brand/wordmark";
 
 interface BrandBarProps {
   className?: string;
-  variant?: Extract<WordmarkVariant, "bar" | "bar-logo">;
 }
 
-export function BrandBar({ className, variant = "bar" }: BrandBarProps) {
+export function BrandBar({ className }: BrandBarProps) {
   return (
     <header
       className={cn(
@@ -15,7 +14,7 @@ export function BrandBar({ className, variant = "bar" }: BrandBarProps) {
         className,
       )}
     >
-      <Wordmark priority variant={variant} />
+      <Wordmark priority variant="bar" />
     </header>
   );
 }
