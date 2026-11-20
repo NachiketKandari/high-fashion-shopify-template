@@ -1,18 +1,29 @@
 "use client";
 
 import { cn } from "cn";
-import { Columns2, Grid2x2 } from "lucide-react";
+import { LayoutGrid, RectangleVertical, StretchVertical, type LucideIcon } from "lucide-react";
 
 import { setCardDensity, useCardDensity } from "@/lib/collections/client";
 import type { CardDensity } from "@/lib/collections/types";
 
 const OPTIONS: Array<{
-  icon: typeof Columns2;
+  desktopIcon: LucideIcon;
   label: string;
+  mobileIcon: LucideIcon;
   value: CardDensity;
 }> = [
-  { icon: Columns2, label: "Large image view", value: "gallery" },
-  { icon: Grid2x2, label: "Compact grid view", value: "compact" },
+  {
+    desktopIcon: StretchVertical,
+    label: "Large image view",
+    mobileIcon: RectangleVertical,
+    value: "gallery",
+  },
+  {
+    desktopIcon: LayoutGrid,
+    label: "Compact grid view",
+    mobileIcon: StretchVertical,
+    value: "compact",
+  },
 ];
 
 export function CardDensityToggle({ className }: { className?: string }) {
@@ -24,7 +35,7 @@ export function CardDensityToggle({ className }: { className?: string }) {
       className={cn("flex shrink-0 items-center gap-1", className)}
       role="group"
     >
-      {OPTIONS.map(({ icon: Icon, label, value }) => (
+      {OPTIONS.map(({ desktopIcon: DesktopIcon, label, mobileIcon: MobileIcon, value }) => (
         <button
           aria-label={label}
           aria-pressed={density === value}
@@ -34,7 +45,8 @@ export function CardDensityToggle({ className }: { className?: string }) {
           onClick={() => setCardDensity(value)}
           type="button"
         >
-          <Icon className="size-5" strokeWidth={1.5} />
+          <MobileIcon className="size-5 desktop:hidden" strokeWidth={1.5} />
+          <DesktopIcon className="hidden size-5 desktop:block" strokeWidth={1.5} />
         </button>
       ))}
     </div>
