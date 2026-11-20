@@ -95,7 +95,7 @@ export function PromoCode({ cart, className }: PromoCodeProps) {
               aria-label="Promotional code"
               aria-invalid={error ? true : undefined}
               autoComplete="off"
-              className="type-meta-medium h-10 flex-1 border-ink px-4 uppercase"
+              className="type-meta-medium h-10 flex-1 scroll-mt-6 border-ink px-4 uppercase focus-none focus-visible:border-2"
               disabled={isPending}
               onChange={(event) => {
                 setCode(event.target.value);

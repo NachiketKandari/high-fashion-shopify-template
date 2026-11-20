@@ -17,7 +17,7 @@ interface CheckoutItemsProps {
 }
 
 export function CheckoutItems({ cart, className }: CheckoutItemsProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <details
@@ -25,7 +25,7 @@ export function CheckoutItems({ cart, className }: CheckoutItemsProps) {
       onToggle={(event) => setIsOpen(event.currentTarget.open)}
       open={isOpen}
     >
-      <summary className="type-meta flex h-[49px] cursor-pointer list-none items-center justify-between text-ink-strong [&::-webkit-details-marker]:hidden">
+      <summary className="type-meta flex h-[49px] cursor-pointer list-none items-center justify-between border-b border-ink text-ink-strong [&::-webkit-details-marker]:hidden">
         ITEMS
         <ChevronDownIcon
           aria-hidden="true"

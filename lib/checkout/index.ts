@@ -17,12 +17,12 @@ export const EMPTY_DELIVERY_DRAFT: DeliveryDraft = {
 };
 
 const REQUIRED_FIELDS: Array<keyof DeliveryDraft> = [
-  "address1",
-  "city",
-  "email",
   "name",
+  "email",
   "phone",
+  "address1",
   "postcode",
+  "city",
 ];
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

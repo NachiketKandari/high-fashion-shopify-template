@@ -39,7 +39,7 @@ export function Wordmark({ className, priority = false, variant }: WordmarkProps
   if (variant === "bar") {
     return (
       <Link aria-label={shopConfig.site.name} className={linkClass} data-wordmark="bar" href="/">
-        <span className="type-wordmark">Lorem Ipsum</span>
+        <span className="type-wordmark font-sans">{shopConfig.site.name}</span>
       </Link>
     );
   }

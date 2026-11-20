@@ -75,11 +75,11 @@ export function GiftOption({ cart, className }: GiftOptionProps) {
       />
 
       <div className={cn("grid gap-3", !isGift && "hidden")}>
-        <p className="type-meta whitespace-pre-line text-ink">
-          {
-            "Hide the price tag\nSeparates recipient delivery phone from buyer contact\nGift Wrapping"
-          }
-        </p>
+        <ul className="type-meta grid list-disc gap-1 pl-5 text-ink">
+          <li>Hide the price tag</li>
+          <li>Separates recipient delivery phone from buyer contact</li>
+          <li>Gift Wrapping</li>
+        </ul>
         {isNoteOpen || savedNote ? (
           <div className="grid gap-3">
             <label className="grid gap-1">
@@ -110,7 +110,7 @@ export function GiftOption({ cart, className }: GiftOptionProps) {
           </div>
         ) : (
           <button
-            className="type-meta-medium focus-ring h-10.5 w-full cursor-pointer rounded-control border border-ink bg-paper transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-40"
+            className="type-meta-medium focus-ring h-10 w-full cursor-pointer rounded-control border border-ink bg-paper transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-40"
             disabled={isPending}
             onClick={() => setIsNoteOpen(true)}
             type="button"

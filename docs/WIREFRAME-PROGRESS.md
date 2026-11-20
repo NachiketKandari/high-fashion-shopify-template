@@ -270,7 +270,7 @@ workstream ships its slide-over confirmation.
 Built as the pre-checkout Address and Shipping step at `/checkout/address` from
 `docs/DESIGN-I-CHECKOUT-JOURNEY.md` §4.6. The `(checkout)` group renders the 60 px brand bar and the
 800 + 592 split: guest form with `+91` and pincode validation, saved-address cards for members,
-delivery, an ITEMS accordion that opens by default with quantity and remove, gift attributes, promo
+delivery, an ITEMS accordion that starts collapsed with quantity and remove, gift attributes, promo
 codes, totals and the Proceed handoff through `prepareCheckoutAction`.
 
 `Delivery` reads `Calculated at checkout`; no ETA or pincode promise is drawn while Shiprocket is

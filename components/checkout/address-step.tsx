@@ -38,7 +38,11 @@ export function AddressStep({
     onChange({ ...selection, draft: { ...selection.draft, [field]: value } });
 
   return (
-    <section aria-label="Delivery address" className={cn("grid gap-8", className)}>
+    <section
+      aria-label="Delivery address"
+      className={cn("grid scroll-mt-6 gap-8", className)}
+      id="checkout-address"
+    >
       {addresses.length > 0 ? (
         <div className="grid gap-8">
           <h2 className="type-h4 text-ink-strong">Choose Address</h2>
@@ -122,7 +126,7 @@ export function AddressStep({
                         aria-describedby={error ? `${id}-error` : undefined}
                         aria-invalid={error ? true : undefined}
                         autoComplete={field.autoComplete}
-                        className="type-meta-medium focus-none h-full w-full border-0 px-0 py-0 focus-visible:outline-none"
+                        className="type-meta-medium focus-none h-full w-full scroll-mt-6 border-0 px-0 py-0 focus-visible:outline-none"
                         id={id}
                         inputMode="numeric"
                         maxLength={10}
@@ -136,7 +140,7 @@ export function AddressStep({
                       aria-describedby={error ? `${id}-error` : undefined}
                       aria-invalid={error ? true : undefined}
                       autoComplete={field.autoComplete}
-                      className="type-meta-medium h-[41px] w-[300px] max-w-full rounded-none border-0 border-b border-ink px-6 py-3 focus-underline"
+                      className="type-meta-medium h-[41px] w-[300px] max-w-full scroll-mt-6 rounded-none border-0 border-b border-ink px-6 py-3 focus-underline"
                       id={id}
                       inputMode={field.key === "postcode" ? "numeric" : undefined}
                       maxLength={field.key === "postcode" ? 6 : undefined}

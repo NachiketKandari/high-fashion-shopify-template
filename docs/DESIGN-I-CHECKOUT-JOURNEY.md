@@ -52,7 +52,7 @@ geometry; this document adds the journey context and the deltas the Shopify temp
 | Auth                 | `components/nav/account.tsx` links straight to `/account/login`; Hydrogen redirects to Shopify-hosted OAuth. No designed gate or OTP screen exists.                                                                                                              | Not built. The designed OTP screens cannot be reproduced inside a Shopify-hosted login without a separate identity project.                                                                                                               |
 | Product detail       | `components/product-detail/*` is the template PDP (stacked gallery, 36 px controls, template typography)                                                                                                                                                         | Design I geometry and type are not applied; the try-on additions are not integrated.                                                                                                                                                      |
 | Cart                 | `app/(storefront)/cart/page.tsx` + `components/cart/*`: full-page bag, 800 + 592 split, 123 × 191 line art, mobile fixed TOTAL / Checkout bar, empty/updating/out-of-stock line states, promo, help, 4-up / 2-up recs.                                           | Built. Cart Checkout still opens Shopify directly; the pre-checkout step at `/checkout/address` is not linked yet. Recommendations use the shared product card, whose full-column media and row caption still differ from the cart frame. |
-| Address and shipping | `app/(checkout)/checkout/address/page.tsx` with `components/checkout/*` and `lib/checkout/*`: guest form, saved cards, delivery, open items list, gift, promo, totals, Proceed.                                                                                  | Built as the pre-checkout surface. Guest flow verified; saved-address save and credit display need an authenticated session. See 4.6 and `STUBS.md`.                                                                                      |
+| Address and shipping | `app/(checkout)/checkout/address/page.tsx` with `components/checkout/*` and `lib/checkout/*`: guest form, saved cards, delivery, collapsed items list, gift, promo, totals, Proceed.                                                                             | Built as the pre-checkout surface. Guest flow verified; saved-address save and credit display need an authenticated session. See 4.6 and `STUBS.md`.                                                                                      |
 | Tokens               | `type-*` roles are uppercase with +0.05em tracking, weights 300/400; zero radius; `ink #000`, `rule #e1e1e1`, `surface #f2f2f2`; gate forbids `font-medium` and any radius                                                                                       | Design I is sentence case, weights 400–700, 4 px control radius, `#353535` text, `#666` muted, `#DCDCDC` borders, `#DFDFDF`/`#999` disabled. The token layer must change before page work.                                                |
 
 ## 3. Decisions that block an exact match
@@ -89,10 +89,10 @@ explicitly, not smuggled into a page build.
 ### D3 — Address and shipping
 
 Shopify-hosted checkout owns address, shipping and payment on a non-Plus plan. A storefront page can
-collect an address, but the Storefront API cannot write a shipping address to the cart or prefill
-Shopify checkout reliably. The reference store uses GoKwik, which is a checkout layer, and the repo's
-`PAYMENTS.md` already records that a custom Next.js GoKwik path bypasses Shopify checkout and needs
-server routes, order creation and a gateway.
+collect an address, and the installed Storefront API can add a delivery address to the cart for
+checkout, but the pre-checkout step does not write one yet. The reference store uses GoKwik, which is
+a checkout layer, and the repo's `PAYMENTS.md` already records that a custom Next.js GoKwik path
+bypasses Shopify checkout and needs server routes, order creation and a gateway.
 
 **Recommendation:** build the designed Address and Shipping page as the **pre-checkout delivery
 step**: it reads the Hydrogen cart, shows the same items and totals, captures address/serviceability
@@ -309,7 +309,7 @@ account-credit coverage.
 **Current.** `app/(checkout)/checkout/address/page.tsx` with `components/checkout/*` and
 `lib/checkout/*`; the shared `(checkout)` layout supplies the 60 px brand bar. The page renders the
 800 + 592 split, the guest form with `+91` phone and pincode validation, saved-address cards for
-members, the delivery block, an ITEMS accordion that opens by default, gift attributes and note,
+members, the delivery block, an ITEMS accordion that starts collapsed, gift attributes and note,
 promo apply/remove/invalid, totals and the Proceed handoff. Signed-in customers can save a new
 address as default.
 

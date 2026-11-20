@@ -56,7 +56,13 @@ export function CheckoutView({ addresses, isSignedIn, storeCredit }: CheckoutVie
     setSaveError(null);
     const firstError = Object.keys(nextErrors)[0];
     if (firstError) {
-      document.getElementById(`checkout-${firstError}`)?.focus();
+      const field = document.getElementById(`checkout-${firstError}`);
+      if (field) {
+        field.focus({ preventScroll: true });
+        field.scrollIntoView({ block: "center" });
+      } else {
+        document.getElementById("checkout-address")?.scrollIntoView({ block: "start" });
+      }
       return;
     }
 
