@@ -151,6 +151,7 @@ Project-specific runbooks:
 - [`docs/HYDROGEN-USAGE.md`](./docs/HYDROGEN-USAGE.md) — the Hydrogen SDK surface in use, and what is deliberately app-owned.
 - [`docs/OBSERVABILITY.md`](./docs/OBSERVABILITY.md) — logging, analytics, error reporting, health checks and the current gaps.
 - [`docs/IMPLEMENTATION.md`](./docs/IMPLEMENTATION.md) — what the template implements and what remains.
+- [`docs/CACHING.md`](./docs/CACHING.md) — cache lifetime, tag graph, Shopify webhook and manual revalidation contract, and production setup.
 - [`docs/CATALOG-IMPORT.md`](./docs/CATALOG-IMPORT.md) — catalog import result, verification and remaining gaps.
 - [`docs/UNIPLUS-ASSET-PLAN.md`](./docs/UNIPLUS-ASSET-PLAN.md) — what the UniPlus brand collateral, photography and flow diagram change in the storefront, and what blocks launch.
 - [`docs/CONTENT.md`](./docs/CONTENT.md) — content ownership, Shopify seeding and invalidation rules.

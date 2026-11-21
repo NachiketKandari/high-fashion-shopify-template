@@ -16,7 +16,8 @@
     "seed:content": "node --env-file=.env.local scripts/seed-content.mjs",
     "start": "next start",
     "test:design": "playwright test tests/design",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "webhooks:register": "node --env-file=.env.local scripts/register-shopify-webhooks.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",

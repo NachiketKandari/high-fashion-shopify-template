@@ -203,6 +203,9 @@ cart; the cart does not link to it yet.
 
 ## 5. Caching model
 
+See [`CACHING.md`](./CACHING.md) for the tag graph, webhook topic map, production setup, and
+troubleshooting.
+
 There are 15 `"use cache: remote"` directives across six files. Every one uses
 `cacheLife("max")`.
 

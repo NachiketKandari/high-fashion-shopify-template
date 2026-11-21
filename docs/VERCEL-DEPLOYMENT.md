@@ -131,6 +131,10 @@ in the Headless channel and that the token has the scopes the storefront queries
 
 ### Webhooks
 
+See [`CACHING.md`](./CACHING.md) for the topic-to-tag map, verification and troubleshooting.
+`pnpm webhooks:register --url=https://<domain>/api/webhooks/shopify` creates the six product and
+collection subscriptions from `.env.local` when the app has `write_webhooks`.
+
 Create a Shopify webhook for each topic the storefront caches:
 
 | Topic                                                            | URL                                     |
