@@ -115,7 +115,7 @@ function ProductInfoArea({
     <div className="px-(--gutter) pt-(--gutter) pb-10 desktop:sticky desktop:top-(--header-bar-h) desktop:max-h-[calc(100svh-var(--header-bar-h))] desktop:self-start desktop:overflow-y-auto desktop:px-20 desktop:pt-[calc(140px-var(--header-bar-h))] desktop:pb-[140px]">
       <div className="mx-auto grid w-full max-w-[432px] gap-10">
         <div className="grid gap-3" data-slot="product-info-header">
-          <h1 className="type-control text-ink">{product.title}</h1>
+          <h1 className="type-meta-semibold text-ink">{product.title}</h1>
           {product.hasUniformPricing ? (
             <ProductPrice
               amount={product.priceRange.minVariantPrice.amount}

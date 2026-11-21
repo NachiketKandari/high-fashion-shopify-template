@@ -118,6 +118,16 @@
       "size": "0.875rem",
       "weight": 400
     },
+    "price": {
+      "lineHeight": "1.125rem",
+      "size": "0.875rem",
+      "weight": 600
+    },
+    "price-sm": {
+      "lineHeight": "0.8125rem",
+      "size": "0.625rem",
+      "weight": 600
+    },
     "wordmark": {
       "lineHeight": "1.6875rem",
       "size": "1.125rem",

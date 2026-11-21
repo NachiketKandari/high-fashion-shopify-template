@@ -52,8 +52,6 @@ The try-on image studio from the reference repo is intentionally not part of thi
 
 - Desktop tiles use the spec's 3:4 ratio (533 high) instead of the frame's 535.71.
 - Desktop shows the frame's five gallery slots; the mobile carousel keeps every image.
-- Typography uses the nearest roles: `type-control` is 12/500 where the frame asks 12/600, and
-  `type-h4` is 14/400 where it asks 14/600. A 600 role would close this.
 - Body roles carry zero tracking; the design CSS carries `-0.02em` on 12px commerce text.
 - "size recommendation" is rendered as the Size guide link because there is no fit data.
 - The disabled CTA uses `surface` + `ink-muted` instead of `#DFDFDF` + white for contrast.

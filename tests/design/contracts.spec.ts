@@ -135,7 +135,7 @@ test.describe("storefront contracts", () => {
         tabRoles: document.querySelectorAll('[role="tab"], [role="tabpanel"]').length,
       };
     });
-    expect(pdp.h1).toEqual({ lineHeight: "16px", size: "12px", weight: "500" });
+    expect(pdp.h1).toEqual({ lineHeight: "16px", size: "12px", weight: "600" });
     expect(pdp.disclosure).toEqual({ lineHeight: "16px", size: "12px", weight: "400" });
     expect(pdp.disclosureCount).toBe(3);
     expect(pdp.tabRoles).toBe(0);

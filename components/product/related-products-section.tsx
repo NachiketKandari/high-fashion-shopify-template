@@ -9,7 +9,7 @@ const ROW_CLASS =
 function RelatedProductsSectionSkeleton({ limit }: { limit: number }) {
   return (
     <div className="grid gap-2.5 py-10 desktop:gap-5 desktop:py-20">
-      <h2 className="type-control px-(--gutter) text-ink">you may also like</h2>
+      <h2 className="type-meta-semibold px-(--gutter) text-ink">you may also like</h2>
       <div className={ROW_CLASS}>
         {Array.from({ length: limit }, (_, index) => (
           <ProductCardSkeleton
@@ -33,7 +33,7 @@ async function Render({
   if (related.length === 0) return null;
   return (
     <div className="grid gap-2.5 py-10 desktop:gap-5 desktop:py-20">
-      <h2 className="type-control px-(--gutter) text-ink">you may also like</h2>
+      <h2 className="type-meta-semibold px-(--gutter) text-ink">you may also like</h2>
       <div className={ROW_CLASS}>
         {related.slice(0, limit).map((product) => (
           <ProductCard

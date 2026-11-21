@@ -107,6 +107,12 @@
   --text-caption: 0.875rem;
   --text-caption--line-height: 1.125rem;
   --text-caption--letter-spacing: 0;
+  --text-price: 0.875rem;
+  --text-price--line-height: 1.125rem;
+  --text-price--letter-spacing: 0;
+  --text-price-sm: 0.625rem;
+  --text-price-sm--line-height: 0.8125rem;
+  --text-price-sm--letter-spacing: 0;
   --text-wordmark: 1.125rem;
   --text-wordmark--line-height: 1.6875rem;
   --text-wordmark--letter-spacing: 0.02em;
@@ -330,6 +336,20 @@
   line-height: var(--text-caption--line-height);
   font-weight: 400;
   letter-spacing: var(--text-caption--letter-spacing);
+}
+
+@utility type-price {
+  font-size: var(--text-price);
+  line-height: var(--text-price--line-height);
+  font-weight: 600;
+  letter-spacing: var(--text-price--letter-spacing);
+}
+
+@utility type-price-sm {
+  font-size: var(--text-price-sm);
+  line-height: var(--text-price-sm--line-height);
+  font-weight: 600;
+  letter-spacing: var(--text-price-sm--letter-spacing);
 }
 
 @utility type-wordmark {

@@ -33,7 +33,7 @@ export function Accordion({ className, items }: AccordionProps) {
             />
           </summary>
           <div
-            className="type-body-sm pb-5 text-ink-muted desktop:pb-8"
+            className="type-body-sm pb-5 text-ink-muted desktop:pt-3 desktop:pb-8"
             data-slot="accordion-content"
           >
             {item.content}
