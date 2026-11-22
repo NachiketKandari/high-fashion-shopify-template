@@ -1,7 +1,7 @@
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 
 export const BROWSE_GRID_CLASS =
-  "grid grid-cols-2 gap-x-0 gap-y-0 pt-4 tablet:grid-cols-3 desktop:grid-cols-4 desktop:gap-y-30 desktop:pt-10 [[data-card-density=gallery]_&]:grid-cols-1 [[data-card-density=gallery]_&]:gap-y-10 tablet:[[data-card-density=gallery]_&]:grid-cols-2 desktop:[[data-card-density=gallery]_&]:mx-auto desktop:[[data-card-density=gallery]_&]:max-w-240 desktop:[[data-card-density=gallery]_&]:grid-cols-2 desktop:[[data-card-density=gallery]_&]:gap-y-20";
+  "grid grid-cols-2 gap-x-0 gap-y-6 pt-4 tablet:grid-cols-3 desktop:grid-cols-4 desktop:gap-y-30 desktop:pt-10 [[data-card-density=gallery]_&]:grid-cols-1 [[data-card-density=gallery]_&]:gap-y-10 tablet:[[data-card-density=gallery]_&]:grid-cols-2 desktop:[[data-card-density=gallery]_&]:mx-auto desktop:[[data-card-density=gallery]_&]:max-w-240 desktop:[[data-card-density=gallery]_&]:grid-cols-2 desktop:[[data-card-density=gallery]_&]:gap-y-20";
 
 export function BrowseProductCardSkeleton() {
   return (
