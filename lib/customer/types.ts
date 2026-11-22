@@ -16,17 +16,36 @@ export interface CustomerProfile {
   lastName: string | null;
 }
 
+export interface OrderFulfillmentEvent {
+  happenedAt: string;
+  status: string;
+}
+
+export interface OrderFulfillment {
+  carrier: string | null;
+  createdAt: string;
+  estimatedDeliveryAt: string | null;
+  events: OrderFulfillmentEvent[];
+  latestShipmentStatus: string | null;
+  status: string | null;
+  trackingNumber: string | null;
+  trackingUrl: string | null;
+}
+
 export interface OrderLineItem {
   image: Image | null;
   quantity: number;
   title: string;
   totalPrice: Money | null;
+  variantOptions: Array<{ name: string; value: string }>;
   variantTitle: string | null;
 }
 
 export interface CustomerOrderSummary {
+  cancelledAt: string | null;
   financialStatus: string | null;
   fulfillmentStatus: string;
+  fulfillments: OrderFulfillment[];
   id: string;
   name: string;
   number: number;
@@ -34,17 +53,39 @@ export interface CustomerOrderSummary {
   totalPrice: Money;
 }
 
-export interface CustomerOrder extends CustomerOrderSummary {
+export interface CustomerOrderListRow extends CustomerOrderSummary {
   lineItems: OrderLineItem[];
+  lineItemsTruncated: boolean;
+  totalQuantity: number;
+}
+
+export interface OrderEditableLineItem {
+  lineItemId: string;
+  quantity: number;
+}
+
+export interface OrderRequestedEdit {
+  id: string;
+  status: string;
+}
+
+export interface CustomerOrder extends CustomerOrderSummary {
+  cancelReason: string | null;
+  createdAt: string;
+  editableLineItems: OrderEditableLineItem[];
+  hasEditableLineItems: boolean;
+  lineItems: OrderLineItem[];
+  requestedEdits: OrderRequestedEdit[];
   shippingAddress: CustomerAddress | null;
   statusPageUrl: string;
   subtotal: Money | null;
+  totalRefunded: Money;
   totalShipping: Money | null;
   totalTax: Money | null;
 }
 
 export interface CustomerOrdersPage {
-  orders: CustomerOrderSummary[];
+  orders: CustomerOrderListRow[];
   pageInfo: PageInfo;
 }
 

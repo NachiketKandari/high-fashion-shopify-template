@@ -17,7 +17,7 @@ import {
 } from "@/lib/shopify/customer-account/server";
 import { CUSTOMER_PROFILE_FRAGMENT } from "@/lib/shopify/fragments/customer";
 import { ADDRESS_FRAGMENT } from "@/lib/shopify/fragments/customer-address";
-import { ORDER_FRAGMENT, ORDER_SUMMARY_FRAGMENT } from "@/lib/shopify/fragments/customer-order";
+import { ORDER_FRAGMENT, ORDER_LIST_FRAGMENT } from "@/lib/shopify/fragments/customer-order";
 import type {
   CustomerFetchOptions,
   CustomerUserError,
@@ -26,7 +26,7 @@ import {
   transformCustomerAddress,
   transformCustomerProfile,
   transformOrder,
-  transformOrderSummary,
+  transformOrderListRow,
 } from "@/lib/shopify/transforms/customer";
 import type { CustomerAccountResultOf } from "@/lib/shopify/types";
 
@@ -49,7 +49,7 @@ const GET_CUSTOMER_ORDERS_QUERY = gql(
     customer {
       orders(after: $after, before: $before, first: $first, last: $last, reverse: true, sortKey: PROCESSED_AT) {
         nodes {
-          ...OrderSummaryFields
+          ...OrderListFields
         }
         pageInfo {
           endCursor
@@ -61,7 +61,7 @@ const GET_CUSTOMER_ORDERS_QUERY = gql(
     }
   }
 `,
-  [ORDER_SUMMARY_FRAGMENT],
+  [ORDER_LIST_FRAGMENT],
 );
 
 const GET_CUSTOMER_ORDER_QUERY = gql(
@@ -166,6 +166,22 @@ const CUSTOMER_UPDATE_MUTATION = gql(`#graphql
   }
 `);
 
+const ORDER_REQUEST_EDIT_MUTATION = gql(`#graphql
+  mutation orderRequestEdit($orderId: ID!, $lineItems: RequestedOrderEditLineItemsInput!) {
+    orderRequestEdit(orderId: $orderId, lineItems: $lineItems) {
+      requestedOrderEdit {
+        id
+        status
+      }
+      userErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`);
+
 async function customerFetch<const Doc extends AnyCustomerAccountDocument>({
   returnTo,
   ...options
@@ -238,7 +254,7 @@ export async function fetchCustomerOrders(cursor?: {
   }
 
   return {
-    orders: orders.nodes.map(transformOrderSummary),
+    orders: orders.nodes.map(transformOrderListRow),
     pageInfo: {
       endCursor: orders.pageInfo.endCursor ?? null,
       hasNextPage: orders.pageInfo.hasNextPage,
@@ -259,6 +275,35 @@ export async function fetchCustomerOrder(id: string): Promise<CustomerOrder | nu
   if (!data.order) return null;
 
   return transformOrder(data.order);
+}
+
+export async function requestCustomerOrderCancellation(
+  orderId: string,
+  removals: Array<{ lineItemId: string; quantity: number }>,
+): Promise<{ errors: CustomerUserError[]; requestId: string | null }> {
+  const data = await customerFetch({
+    document: ORDER_REQUEST_EDIT_MUTATION,
+    operation: "orderRequestEdit",
+    returnTo: `/account/orders/${encodeURIComponent(orderId)}`,
+    variables: {
+      lineItems: {
+        removals: removals.map((removal) => ({
+          lineItemId: removal.lineItemId,
+          quantity: removal.quantity,
+        })),
+      },
+      orderId,
+    },
+  });
+
+  const payload = data.orderRequestEdit;
+  if (!payload)
+    return { errors: [{ message: "Shopify returned no cancellation request." }], requestId: null };
+
+  return {
+    errors: toUserErrors(payload.userErrors ?? []),
+    requestId: payload.requestedOrderEdit?.id ?? null,
+  };
 }
 
 export async function fetchCustomerAddresses(): Promise<CustomerAddress[]> {

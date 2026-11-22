@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button";
-
 export function SignOutButton() {
   return (
     <form action="/account/logout?return_to=/" method="post">
-      <Button className="w-full" size="sm" type="submit" variant="outline">
+      <button
+        className="type-body-sm flex min-h-9 cursor-pointer items-center text-left text-ink-strong hover:underline"
+        type="submit"
+      >
         Sign out
-      </Button>
+      </button>
     </form>
   );
 }
