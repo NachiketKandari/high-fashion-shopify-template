@@ -21,6 +21,7 @@ const UTILITY_LINKS = [
 const PANEL_LINK_CLASS = "type-h4 focus-ring flex transition-colors hover:text-ink-muted";
 
 export function DesktopNav() {
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -32,6 +33,7 @@ export function DesktopNav() {
   const openIndexRef = useRef<number | null>(null);
   const isOpen = openIndex !== null;
   const activeIndex = openIndex ?? selectedIndex;
+  const dimmedIndex = hoveredIndex ?? focusedIndex;
   const item = MAIN_NAV[activeIndex];
 
   const selectIndex = useCallback((index: number) => {
@@ -43,6 +45,7 @@ export function DesktopNav() {
   const closePanel = useCallback((restoreFocus = true) => {
     const closingIndex = openIndexRef.current;
     openIndexRef.current = null;
+    setFocusedIndex(null);
     setHoveredIndex(null);
     setOpenIndex(null);
     if (restoreFocus && closingIndex !== null) {
@@ -54,7 +57,10 @@ export function DesktopNav() {
     if (!isOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    panelRef.current?.focus();
+    const selectedBrand =
+      openIndexRef.current === null ? null : brandRefs.current[openIndexRef.current];
+    if (selectedBrand) selectedBrand.focus();
+    else panelRef.current?.focus();
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key !== "Escape") return;
       closePanel();
@@ -110,6 +116,12 @@ export function DesktopNav() {
       <nav aria-label="Menu" className="hidden desktop:block">
         <ul
           className="flex items-center gap-6"
+          onBlur={(event) => {
+            const next = event.relatedTarget;
+            if (!(next instanceof Node) || !event.currentTarget.contains(next)) {
+              setFocusedIndex(null);
+            }
+          }}
           onMouseLeave={() => setHoveredIndex(null)}
           role="list"
         >
@@ -119,7 +131,8 @@ export function DesktopNav() {
                 aria-controls="nav-panel"
                 aria-expanded={openIndex === index}
                 className={cn(NAV_ITEM_CLASS, "data-[dimmed=true]:text-ink-muted")}
-                data-dimmed={hoveredIndex !== null && hoveredIndex !== index ? true : undefined}
+                data-dimmed={dimmedIndex !== null && dimmedIndex !== index ? true : undefined}
+                onFocus={() => setFocusedIndex(index)}
                 onClick={() => (openIndex === index ? closePanel() : selectIndex(index))}
                 ref={(element) => {
                   triggerRefs.current[index] = element;
@@ -147,7 +160,7 @@ export function DesktopNav() {
         aria-label={isOpen ? `${navLabel(item.label)} menu` : undefined}
         aria-modal={isOpen || undefined}
         className={cn(
-          "fixed inset-y-0 left-0 z-(--z-overlay) hidden h-dvh w-[709px] max-w-full flex-col bg-paper outline-none transition-[clip-path,visibility] duration-(--motion-long) ease-(--ease-standard) motion-reduce:transition-none desktop:flex",
+          "fixed inset-y-0 left-0 z-(--z-overlay) hidden h-dvh w-[709px] max-w-full flex-col bg-paper outline-none transition-[clip-path,visibility] [transition-duration:var(--motion-long),0s] ease-(--ease-standard) motion-reduce:transition-none desktop:flex",
           isOpen
             ? "visible [clip-path:inset(0_0_0_0)] [transition-delay:0s]"
             : "pointer-events-none invisible [clip-path:inset(0_100%_0_0)] [transition-delay:0s,var(--motion-long)]",
@@ -168,6 +181,9 @@ export function DesktopNav() {
                 className={NAV_PANEL_ITEM_CLASS}
                 key={entry.label}
                 onClick={() => selectIndex(index)}
+                onFocus={() => {
+                  if (isOpen) selectIndex(index);
+                }}
                 onMouseEnter={() => {
                   if (isOpen) selectIndex(index);
                 }}

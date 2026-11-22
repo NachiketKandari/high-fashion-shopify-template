@@ -9,6 +9,9 @@ import { Container } from "@/components/ui/container";
 
 import { NAV_ITEM_CLASS } from "./nav-chip";
 
+const SEARCH_SIBLING_DIM_CLASS =
+  "group-has-[nav:focus-within]/navleft:text-ink-muted group-has-[nav:hover]/navleft:text-ink-muted";
+
 export function SearchModal() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -31,7 +34,7 @@ export function SearchModal() {
   if (onSearchPage) {
     return (
       <button
-        className={NAV_ITEM_CLASS}
+        className={`${NAV_ITEM_CLASS} ${SEARCH_SIBLING_DIM_CLASS}`}
         onClick={() => document.getElementById("search-input")?.focus()}
         type="button"
       >
@@ -45,7 +48,7 @@ export function SearchModal() {
       <Dialog.Trigger
         render={
           <button
-            className={`${NAV_ITEM_CLASS} ${open ? "invisible pointer-events-none" : ""}`}
+            className={`${NAV_ITEM_CLASS} ${SEARCH_SIBLING_DIM_CLASS} ${open ? "invisible pointer-events-none" : ""}`}
             type="button"
           >
             Search

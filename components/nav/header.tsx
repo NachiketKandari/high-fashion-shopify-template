@@ -49,7 +49,7 @@ export function Header({ actions, mobileActions, search }: HeaderProps) {
         </div>
 
         <div className="hidden h-full grid-cols-[1fr_auto_1fr] items-center gap-4 px-(--gutter) desktop:grid">
-          <div className="flex min-w-0 items-center gap-6">
+          <div className="group/navleft flex min-w-0 items-center gap-6">
             <DesktopNav />
             {search}
           </div>
