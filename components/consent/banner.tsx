@@ -1,33 +1,45 @@
 "use client";
 
+import { cn } from "cn";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { type ConsentChoice, readConsent, writeConsent } from "@/lib/consent";
 
 export function ConsentBanner() {
-  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [raised, setRaised] = useState(false);
 
   useEffect(() => {
     if (readConsent()) return;
-    const frame = window.requestAnimationFrame(() => setOpen(true));
-    return () => window.cancelAnimationFrame(frame);
+    setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const frame = window.requestAnimationFrame(() => setRaised(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, [mounted]);
 
   function choose(choice: ConsentChoice) {
     writeConsent(choice);
-    setOpen(false);
+    setMounted(false);
   }
 
-  if (!open) return null;
+  if (!mounted) return null;
 
   return (
     <section
       aria-describedby="consent-description"
+      aria-hidden={raised ? undefined : true}
       aria-labelledby="consent-title"
       aria-live="polite"
-      className="sticky bottom-0 z-(--z-header) border-t border-rule bg-paper px-6 pt-10 pb-10 desktop:px-10 desktop:pt-10 desktop:pb-20"
+      className={cn(
+        "fixed inset-x-0 bottom-0 z-(--z-header) border-t border-rule bg-paper px-6 pt-10 pb-10 transition-transform duration-(--motion-base) ease-(--ease-standard) motion-reduce:transition-none desktop:px-10 desktop:pt-10 desktop:pb-20",
+        raised ? "translate-y-0" : "translate-y-full",
+      )}
       data-slot="consent-banner"
+      inert={!raised}
     >
       <div className="flex flex-col gap-10 desktop:flex-row desktop:items-center desktop:gap-8">
         <div className="grid flex-1 gap-4">
