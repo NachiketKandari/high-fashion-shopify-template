@@ -13,8 +13,16 @@ export function getNumericShopifyId(gid: string): string | null {
   return match?.[1] ?? null;
 }
 export function decodeShopifyId(id: string): string {
-  if (id.startsWith("gid://")) {
-    return id;
+  let decoded = id;
+  if (decoded.includes("%")) {
+    try {
+      decoded = decodeURIComponent(decoded);
+    } catch {
+      return id;
+    }
   }
-  return Buffer.from(id, "base64").toString("utf-8");
+  if (decoded.startsWith("gid://")) {
+    return decoded;
+  }
+  return Buffer.from(decoded, "base64").toString("utf-8");
 }

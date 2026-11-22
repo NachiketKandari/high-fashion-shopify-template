@@ -7,6 +7,7 @@ import { getNumericShopifyId } from "@/lib/shopify/id/server";
 import {
   fetchProduct,
   fetchProductRecommendations,
+  fetchProductWithVariantsById,
   fetchSearchIndexProducts,
 } from "@/lib/shopify/operations/products/server";
 import type { SearchIndexProductsParams } from "@/lib/shopify/operations/products/types";
@@ -57,4 +58,16 @@ export async function getProductRecommendations(params: {
   const products = await fetchProductRecommendations(params);
   tagProducts(products);
   return products;
+}
+
+export async function getProductWithVariantsById(params: {
+  id: string;
+  locale?: CommerceLocale;
+}): Promise<ProductDetails | undefined> {
+  "use cache: remote";
+  cacheLife("max");
+  const numericId = getNumericShopifyId(params.id);
+  if (numericId) cacheTag("products", `product-${numericId}`);
+
+  return fetchProductWithVariantsById(params);
 }

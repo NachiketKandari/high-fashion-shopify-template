@@ -11,6 +11,7 @@ import type {
   CustomerProfile,
 } from "@/lib/customer/types";
 import type { Money } from "@/lib/money/types";
+import type { ReturnContext, ReturnEstimate, ReturnRequestDetail } from "@/lib/returns/types";
 import {
   customerAccountFetch,
   isCustomerAccountUnauthorized,
@@ -18,6 +19,12 @@ import {
 import { CUSTOMER_PROFILE_FRAGMENT } from "@/lib/shopify/fragments/customer";
 import { ADDRESS_FRAGMENT } from "@/lib/shopify/fragments/customer-address";
 import { ORDER_FRAGMENT, ORDER_SUMMARY_FRAGMENT } from "@/lib/shopify/fragments/customer-order";
+import {
+  CALCULATED_RETURN_FRAGMENT,
+  RETURN_FRAGMENT,
+  RETURN_SUMMARY_FRAGMENT,
+  RETURNABLE_LINE_ITEM_FRAGMENT,
+} from "@/lib/shopify/fragments/customer-return";
 import type {
   CustomerFetchOptions,
   CustomerUserError,
@@ -28,6 +35,11 @@ import {
   transformOrder,
   transformOrderSummary,
 } from "@/lib/shopify/transforms/customer";
+import {
+  transformReturnContext,
+  transformReturnEstimate,
+  transformReturnRequestDetail,
+} from "@/lib/shopify/transforms/returns";
 import type { CustomerAccountResultOf } from "@/lib/shopify/types";
 
 const ORDERS_PER_PAGE = 10;
@@ -73,6 +85,114 @@ const GET_CUSTOMER_ORDER_QUERY = gql(
   }
 `,
   [ORDER_FRAGMENT],
+);
+
+const GET_ORDER_RETURN_CONTEXT_QUERY = gql(
+  `#graphql
+  query getOrderReturnContext($id: ID!) {
+    order(id: $id) {
+      fulfillments(first: 20) {
+        nodes {
+          events(first: 20) {
+            nodes {
+              happenedAt
+              status
+            }
+          }
+          fulfillmentLineItems(first: 50) {
+            nodes {
+              lineItem {
+                id
+              }
+            }
+          }
+        }
+      }
+      id
+      lineItems(first: 50) {
+        nodes {
+          id
+          totalPrice {
+            amount
+            currencyCode
+          }
+        }
+      }
+      name
+      number
+      returnInformation {
+        nonReturnableSummary {
+          nonReturnableReasons
+        }
+        returnShippingMethodNote
+        returnableLineItems(first: 50) {
+          nodes {
+            ...ReturnableLineItemFields
+          }
+        }
+      }
+      returns(first: 20) {
+        nodes {
+          ...ReturnSummaryFields
+        }
+      }
+      shippingAddress {
+        ...AddressFields
+      }
+    }
+  }
+`,
+  [ADDRESS_FRAGMENT, RETURNABLE_LINE_ITEM_FRAGMENT, RETURN_SUMMARY_FRAGMENT],
+);
+
+const GET_ORDER_RETURN_QUERY = gql(
+  `#graphql
+  query getOrderReturn($id: ID!) {
+    order(id: $id) {
+      id
+      name
+      number
+      returns(first: 20) {
+        nodes {
+          ...ReturnFields
+        }
+      }
+      shippingAddress {
+        ...AddressFields
+      }
+    }
+  }
+`,
+  [ADDRESS_FRAGMENT, RETURN_FRAGMENT],
+);
+
+const CALCULATE_RETURN_QUERY = gql(
+  `#graphql
+  query calculateReturn($input: CalculateReturnInput!) {
+    returnCalculate(input: $input) {
+      ...CalculatedReturnFields
+    }
+  }
+`,
+  [CALCULATED_RETURN_FRAGMENT],
+);
+
+const REQUEST_RETURN_MUTATION = gql(
+  `#graphql
+  mutation requestOrderReturn($orderId: ID!, $requestedLineItems: [RequestedLineItemInput!]!) {
+    orderRequestReturn(orderId: $orderId, requestedLineItems: $requestedLineItems) {
+      return {
+        ...ReturnSummaryFields
+      }
+      userErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`,
+  [RETURN_SUMMARY_FRAGMENT],
 );
 
 const GET_CUSTOMER_ADDRESSES_QUERY = gql(
@@ -259,6 +379,115 @@ export async function fetchCustomerOrder(id: string): Promise<CustomerOrder | nu
   if (!data.order) return null;
 
   return transformOrder(data.order);
+}
+
+export async function fetchCustomerOrderReturnContext(
+  orderId: string,
+): Promise<ReturnContext | null> {
+  const data = await customerFetch({
+    document: GET_ORDER_RETURN_CONTEXT_QUERY,
+    operation: "getOrderReturnContext",
+    returnTo: `/returns/${encodeURIComponent(orderId)}`,
+    variables: { id: orderId },
+  });
+  const order = data.order;
+  if (!order) return null;
+
+  return transformReturnContext({
+    order: {
+      fulfillments: order.fulfillments,
+      id: order.id,
+      lineItems: order.lineItems,
+      name: order.name,
+      number: order.number,
+      returnInformation: {
+        nonReturnableSummary: order.returnInformation.nonReturnableSummary ?? null,
+        returnShippingMethodNote: order.returnInformation.returnShippingMethodNote ?? null,
+      },
+      returns: order.returns,
+      shippingAddress: order.shippingAddress,
+    },
+    returnableItems: order.returnInformation.returnableLineItems.nodes,
+  });
+}
+
+export async function calculateCustomerReturn(
+  orderId: string,
+  lineItems: Array<{ lineItemId: string; quantity: number }>,
+): Promise<ReturnEstimate | null> {
+  const data = await customerFetch({
+    document: CALCULATE_RETURN_QUERY,
+    operation: "calculateReturn",
+    returnTo: `/returns/${encodeURIComponent(orderId)}`,
+    variables: { input: { orderId, returnLineItems: lineItems } },
+  });
+
+  return data.returnCalculate ? transformReturnEstimate(data.returnCalculate) : null;
+}
+
+export async function requestCustomerReturn(
+  orderId: string,
+  lineItems: Array<{
+    customerNote?: string;
+    lineItemId: string;
+    quantity: number;
+    returnReasonDefinitionId?: string;
+  }>,
+): Promise<{
+  errors: CustomerUserError[];
+  request: { id: string; name: string; status: string } | null;
+}> {
+  const data = await customerFetch({
+    document: REQUEST_RETURN_MUTATION,
+    operation: "requestOrderReturn",
+    returnTo: `/returns/${encodeURIComponent(orderId)}`,
+    variables: { orderId, requestedLineItems: lineItems },
+  });
+  const payload = data.orderRequestReturn;
+
+  return {
+    errors: toUserErrors(payload?.userErrors ?? []),
+    request: payload?.return ?? null,
+  };
+}
+
+export async function fetchCustomerOrderReturnDetail(
+  orderId: string,
+  returnId: string,
+): Promise<ReturnRequestDetail | null> {
+  const data = await customerFetch({
+    document: GET_ORDER_RETURN_QUERY,
+    operation: "getOrderReturn",
+    returnTo: `/returns/${encodeURIComponent(orderId)}/request/${encodeURIComponent(returnId)}`,
+    variables: { id: orderId },
+  });
+  const order = data.order;
+  const request = order?.returns.nodes.find((node) => node.id === returnId);
+  if (!order || !request) return null;
+
+  let estimate: ReturnEstimate | null = null;
+  try {
+    estimate = await calculateCustomerReturn(
+      orderId,
+      request.returnLineItems.nodes.map((item) => ({
+        lineItemId: item.lineItem.id,
+        quantity: item.quantity,
+      })),
+    );
+  } catch {
+    // A closed return can no longer be recalculated; the status page hides the estimate then.
+  }
+
+  return transformReturnRequestDetail({
+    estimate,
+    order: {
+      id: order.id,
+      name: order.name,
+      number: order.number,
+      shippingAddress: order.shippingAddress,
+    },
+    request,
+  });
 }
 
 export async function fetchCustomerAddresses(): Promise<CustomerAddress[]> {

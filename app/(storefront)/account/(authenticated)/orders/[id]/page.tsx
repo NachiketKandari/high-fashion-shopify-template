@@ -10,10 +10,13 @@ import {
 import { AccountPageHeader } from "@/components/account/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { OrderLineItem } from "@/lib/customer/types";
+import type { CustomerOrder, OrderLineItem } from "@/lib/customer/types";
 import { formatPrice } from "@/lib/money";
 import type { Money } from "@/lib/money/types";
+import { getNonReturnableMessage, getReturnStatusLabel } from "@/lib/returns";
+import { decodeShopifyId } from "@/lib/shopify/id/server";
 import { fetchCustomerOrder } from "@/lib/shopify/operations/customer/server";
 
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -27,7 +30,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 async function OrderDetailContent({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!id) notFound();
-  const order = await fetchCustomerOrder(id);
+  const order = await fetchCustomerOrder(decodeShopifyId(id));
   if (!order) notFound();
   return (
     <>
@@ -40,7 +43,9 @@ async function OrderDetailContent({ params }: { params: Promise<{ id: string }> 
         ) : null}
       </div>
 
-      <ul className="grid divide-y rounded-none border">
+      <OrderReturns order={order} />
+
+      <ul className="grid grid-cols-1 divide-y rounded-none border">
         {order.lineItems.map((item, index) => (
           <OrderLineItemRow key={index} item={item} />
         ))}
@@ -82,6 +87,84 @@ async function OrderDetailContent({ params }: { params: Promise<{ id: string }> 
   );
 }
 
+function OrderReturns({ order }: { order: CustomerOrder }) {
+  const encodedOrderId = encodeURIComponent(order.id);
+  const hasReturns = order.returns.length > 0;
+  const canRequest = order.returnableLineItemCount > 0;
+  const nonReturnableSummary = order.nonReturnableSummary;
+  const nonReturnableMessage = nonReturnableSummary
+    ? getNonReturnableMessage(nonReturnableSummary.reasons)
+    : null;
+
+  if (!hasReturns && !canRequest && !nonReturnableSummary) return null;
+
+  return (
+    <div className="grid gap-4">
+      {hasReturns ? (
+        <div className="grid gap-3 border border-ink p-4">
+          <p className="type-body text-ink">Returns</p>
+          <ul className="grid gap-2">
+            {order.returns.map((request) => (
+              <li className="flex flex-wrap items-center justify-between gap-2" key={request.id}>
+                <span className="type-body-sm">
+                  {request.name} · {getReturnStatusLabel(request.status)}
+                </span>
+                <Link
+                  className="type-body-sm focus-ring inline-flex min-h-9 items-center text-ink underline underline-offset-4"
+                  href={`/returns/${encodedOrderId}/request/${encodeURIComponent(request.id)}`}
+                >
+                  View return
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {canRequest ? (
+        <div className="grid gap-3 border border-ink p-4">
+          <p className="type-body text-ink">
+            {hasReturns ? "Return another item" : "Return window open"}
+          </p>
+          <p className="type-body-sm text-ink-muted">
+            You can request a return while this order is within the return window. Eligibility is
+            subject to the Returns &amp; Exchange policy.
+          </p>
+          <Button
+            className="w-full"
+            render={<Link href={`/returns/${encodedOrderId}`} />}
+            size="lg"
+          >
+            {hasReturns ? "Request another return" : "Request return"}
+          </Button>
+          <Link
+            className="type-body-sm focus-ring inline-flex min-h-9 w-fit items-center text-ink underline underline-offset-4"
+            href="/pages/returns-exchanges"
+          >
+            View Returns &amp; Exchange Policy
+          </Link>
+        </div>
+      ) : null}
+
+      {!hasReturns && !canRequest && nonReturnableSummary ? (
+        <div className="grid gap-3 border border-ink p-4">
+          <p className="type-body text-ink">Returns are not available for this order</p>
+          <p className="type-body-sm text-ink-muted">
+            {nonReturnableMessage ??
+              "This order is not eligible for return under the current policy."}
+          </p>
+          <Link
+            className="type-body-sm focus-ring inline-flex min-h-9 w-fit items-center text-ink underline underline-offset-4"
+            href="/pages/returns-exchanges"
+          >
+            View Returns &amp; Exchange Policy
+          </Link>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function OrderLineItemRow({ item }: { item: OrderLineItem }) {
   return (
     <li className="flex items-center gap-3 p-3">
@@ -104,7 +187,7 @@ function OrderLineItemRow({ item }: { item: OrderLineItem }) {
         <p className="type-body-sm text-muted-foreground">× {item.quantity}</p>
       </div>
       {item.totalPrice ? (
-        <span className="type-body-sm tabular-nums">{formatPrice(item.totalPrice)}</span>
+        <span className="type-body-sm shrink-0 tabular-nums">{formatPrice(item.totalPrice)}</span>
       ) : null}
     </li>
   );
