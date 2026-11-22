@@ -36,17 +36,8 @@ export function SearchModal({ onOpenChange, open }: SearchModalProps) {
     if (onSearchPage && open) onOpenChange(false);
   }, [onSearchPage, open, onOpenChange]);
 
-  if (onSearchPage) {
-    return (
-      <button
-        className={NAV_ITEM_CLASS}
-        onClick={() => document.getElementById("search-input")?.focus()}
-        type="button"
-      >
-        Search
-      </button>
-    );
-  }
+  // The search page is the search experience; the nav item yields to its input.
+  if (onSearchPage) return null;
 
   return (
     <Dialog.Root onOpenChange={onOpenChange} open={open}>
