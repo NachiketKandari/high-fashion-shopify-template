@@ -212,7 +212,7 @@ function SearchExplorerContent({
           {value || onClose ? (
             <button
               aria-label={value ? "Clear search" : "Close search"}
-              className="focus-ring flex size-9 shrink-0 cursor-pointer items-center justify-center text-ink"
+              className="focus-ring -mr-2 flex size-9 shrink-0 cursor-pointer items-center justify-center text-ink"
               onClick={value ? clear : onClose}
               type="button"
             >
