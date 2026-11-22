@@ -6,7 +6,7 @@ import { FOOTER_COLUMNS } from "@/lib/nav";
 
 export function Footer() {
   return (
-    <footer className="border-t border-disabled bg-paper pt-20 pb-10 desktop:pt-30 desktop:pb-30">
+    <footer className="bg-paper pt-20 pb-10 desktop:pt-30 desktop:pb-30">
       <Container>
         <div className="flex flex-col gap-12 tablet:gap-16 desktop:flex-row desktop:items-start desktop:justify-between desktop:gap-0">
           <Wordmark variant="footer" />

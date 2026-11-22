@@ -15,8 +15,8 @@ const DEFAULT_ROW_CLASS =
 const DEFAULT_CARD_CLASS = "w-[46.4vw] shrink-0 snap-start desktop:w-auto";
 
 const HOME_ROW_CLASS =
-  "flex snap-x overflow-x-auto desktop:grid desktop:grid-cols-4 desktop:gap-x-[102px] desktop:overflow-visible desktop:px-20 desktop:py-20";
-const HOME_CARD_CLASS = "w-[46.4vw] shrink-0 snap-start desktop:w-auto";
+  "grid grid-cols-2 gap-x-3 gap-y-10 px-(--gutter) pt-12 pb-10 tablet:grid-cols-4 tablet:gap-x-6 desktop:gap-x-[102px] desktop:gap-y-0 desktop:px-20 desktop:py-20";
+const HOME_CARD_CLASS = "w-auto";
 
 interface ProductRowProps {
   handle: string;
@@ -111,14 +111,11 @@ function HomeProductCard({
         </h3>
       </div>
       <div className="desktop:hidden">
-        <Link
-          className="focus-ring flex min-h-12 items-center justify-between gap-2 px-2"
-          href={href}
-        >
-          <span className="type-label min-w-0 truncate text-ink">{product.title}</span>
+        <Link className="focus-ring grid gap-1 px-1 pt-3" href={href}>
+          <span className="type-label min-w-0 text-ink">{product.title}</span>
           <Price
             amount={product.price.amount}
-            className="type-label shrink-0 text-ink-muted"
+            className="type-label text-ink-muted"
             currencyCode={product.price.currencyCode}
           />
         </Link>
@@ -167,7 +164,7 @@ function ProductRowCardSkeleton({
       <div className="hidden justify-center pt-6 desktop:flex">
         <div className="h-[21px] w-3/4 animate-pulse bg-surface motion-reduce:animate-none" />
       </div>
-      <div className="flex min-h-12 items-center justify-between gap-2 px-2 desktop:hidden">
+      <div className="grid gap-1 px-1 pt-3 desktop:hidden">
         <div className="h-4 w-2/3 animate-pulse bg-surface motion-reduce:animate-none" />
         <div className="h-4 w-12 animate-pulse bg-surface motion-reduce:animate-none" />
       </div>

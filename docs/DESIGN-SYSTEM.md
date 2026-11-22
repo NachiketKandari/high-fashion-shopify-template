@@ -322,7 +322,7 @@ tokens. Do not move domain types into `components/ui/`.
 
 **Footer**
 
-- White, top rule, 361px tall at 1440. Six zones: flagship/address/wordmark, Help, Policies, The
+- White, no top rule, 361px tall at 1440. Six zones: flagship/address/wordmark, Help, Policies, The
   Brand, Socials, newsletter. Bottom row: copyright + credit left, payment marks and currency
   selector right.
 - Headings 9px type-label (9/14 400); links 12/18 300 `#4d4d4d` in 36px min-height rows; hover

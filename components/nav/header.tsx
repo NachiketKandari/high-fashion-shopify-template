@@ -36,8 +36,8 @@ export function Header({ actions, mobileActions, search }: HeaderProps) {
     >
       <div
         className={cn(
-          "pointer-events-auto h-full bg-paper transition-colors duration-(--motion-fast) ease-(--ease-standard)",
-          solid ? "desktop:bg-paper" : "desktop:bg-transparent",
+          "pointer-events-auto h-full transition-colors duration-(--motion-fast) ease-(--ease-standard)",
+          solid ? "bg-paper" : "bg-transparent",
         )}
       >
         <div className="flex h-full items-center justify-between gap-0 px-(--gutter) desktop:hidden">

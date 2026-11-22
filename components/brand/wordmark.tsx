@@ -25,13 +25,13 @@ export function Wordmark({ className, variant }: WordmarkProps) {
   return (
     <Link
       aria-label={shopConfig.site.name}
-      className={cn("flex min-h-9 shrink-0 items-center", className)}
+      className={cn("flex min-h-9 min-w-0 items-center", className)}
       data-wordmark={variant}
       href="/"
     >
       <Image
         alt={shopConfig.site.name}
-        className={cn("h-auto", VARIANT_CLASS[variant])}
+        className={cn("h-auto max-w-full", VARIANT_CLASS[variant])}
         height={HEIGHT}
         sizes="100vw"
         src={SRC}
