@@ -2,15 +2,19 @@
 
 import { Dialog } from "@base-ui/react/dialog";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { SearchExplorer } from "@/components/search/search-explorer";
 import { Container } from "@/components/ui/container";
 
 import { NAV_ITEM_CLASS } from "./nav-chip";
 
-export function SearchModal() {
-  const [open, setOpen] = useState(false);
+interface SearchModalProps {
+  onOpenChange: (open: boolean) => void;
+  open: boolean;
+}
+
+export function SearchModal({ onOpenChange, open }: SearchModalProps) {
   const pathname = usePathname();
   const onSearchPage = pathname === "/search";
 
@@ -22,11 +26,15 @@ export function SearchModal() {
         document.getElementById("search-input")?.focus();
         return;
       }
-      setOpen((previous) => !previous);
+      onOpenChange(!open);
     }
     document.addEventListener("keydown", handleShortcut);
     return () => document.removeEventListener("keydown", handleShortcut);
-  }, [onSearchPage]);
+  }, [onSearchPage, open, onOpenChange]);
+
+  useEffect(() => {
+    if (onSearchPage && open) onOpenChange(false);
+  }, [onSearchPage, open, onOpenChange]);
 
   if (onSearchPage) {
     return (
@@ -41,7 +49,7 @@ export function SearchModal() {
   }
 
   return (
-    <Dialog.Root onOpenChange={setOpen} open={open}>
+    <Dialog.Root onOpenChange={onOpenChange} open={open}>
       <Dialog.Trigger
         render={
           <button
@@ -61,11 +69,7 @@ export function SearchModal() {
         >
           <Dialog.Title className="sr-only">Search</Dialog.Title>
           <Container className="pt-(--page-top) pb-10 desktop:pt-10 desktop:pb-20">
-            <SearchExplorer
-              closeOnNavigate
-              inputId="search-drawer-input"
-              onClose={() => setOpen(false)}
-            />
+            <SearchExplorer inputId="search-drawer-input" onClose={() => onOpenChange(false)} />
           </Container>
         </Dialog.Popup>
       </Dialog.Portal>

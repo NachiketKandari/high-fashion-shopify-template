@@ -13,7 +13,6 @@ import type { SearchSuggestion } from "@/lib/search/types";
 interface SearchExplorerProps {
   autoFocus?: boolean;
   children?: ReactNode;
-  closeOnNavigate?: boolean;
   initialQuery?: string;
   inputId?: string;
   onClose?: () => void;
@@ -30,7 +29,6 @@ export function SearchExplorer(props: SearchExplorerProps) {
 function SearchExplorerContent({
   autoFocus = false,
   children,
-  closeOnNavigate = false,
   initialQuery = "",
   inputId = "search-input",
   onClose,
@@ -47,7 +45,6 @@ function SearchExplorerContent({
   function navigate(next: string) {
     const nextTerm = next.trim();
     if (!nextTerm) return;
-    if (closeOnNavigate) onClose?.();
     if (nextTerm === initialQuery) {
       inputRef.current?.focus();
       return;
@@ -65,7 +62,6 @@ function SearchExplorerContent({
     setValue("");
     reset();
     if (initialQuery) {
-      if (closeOnNavigate) onClose?.();
       router.push("/search");
       return;
     }
@@ -198,7 +194,6 @@ function SearchExplorerContent({
                 <Link
                   className="type-h3 focus-ring flex text-ink"
                   href={`/search?q=${encodeURIComponent(trending)}`}
-                  onClick={closeOnNavigate ? onClose : undefined}
                 >
                   {trending}
                 </Link>

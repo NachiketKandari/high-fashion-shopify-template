@@ -7,13 +7,12 @@ import { shopConfig } from "@/lib/config";
 import { NavAccount, NavAccountFallback } from "./account";
 import { CartIcon, CartIconFallback } from "./cart";
 import { ContactDrawer } from "./contact-drawer";
-import { Header } from "./header";
 import { NAV_CHIP_CLASS } from "./nav-chip";
-import { SearchModal } from "./search-modal";
+import { NavChrome } from "./nav-chrome";
 
 export function Nav() {
   return (
-    <Header
+    <NavChrome
       actions={
         <>
           <Link className={`${NAV_CHIP_CLASS} hidden desktop:flex`} href="/pages/wishlist">
@@ -51,7 +50,7 @@ export function Nav() {
           )}
         </>
       }
-      search={shopConfig.search.isEnabled ? <SearchModal /> : null}
+      searchEnabled={shopConfig.search.isEnabled}
     />
   );
 }
