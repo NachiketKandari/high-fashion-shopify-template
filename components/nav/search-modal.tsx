@@ -68,7 +68,7 @@ export function SearchModal({ onOpenChange, open }: SearchModalProps) {
           role="dialog"
         >
           <Dialog.Title className="sr-only">Search</Dialog.Title>
-          <Container className="pt-(--page-top) pb-10 desktop:pt-10 desktop:pb-20">
+          <Container className="max-w-[1440px] pt-(--page-top) pb-10 desktop:pt-20 desktop:pb-20">
             <SearchExplorer inputId="search-drawer-input" onClose={() => onOpenChange(false)} />
           </Container>
         </Dialog.Popup>

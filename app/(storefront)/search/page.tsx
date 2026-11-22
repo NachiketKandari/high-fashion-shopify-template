@@ -67,8 +67,8 @@ export default function SearchPage({ searchParams }: PageProps<"/search">) {
     fetchSearchResults({ query: getParam(resolved, "q")?.trim(), statePromise }),
   );
   return (
-    <Page className="desktop:pt-10">
-      <Container className="pb-10 desktop:pb-20">
+    <Page className="desktop:pt-20">
+      <Container className="max-w-[1440px] pb-10 desktop:pb-20">
         <Suspense fallback={<SearchPageSkeleton />}>
           <SearchExperience
             resultsPromise={resultsPromise}
@@ -245,9 +245,9 @@ function SearchResultsSkeleton() {
 function SearchPageSkeleton() {
   return (
     <div aria-busy="true" className="grid gap-10">
-      <div className="grid gap-3 desktop:grid-cols-[1fr_276px] desktop:gap-10">
+      <div className="grid gap-3 tablet:grid-cols-[1fr_276px] tablet:gap-10">
         <Skeleton className="h-[57px] w-full" />
-        <Skeleton className="h-[57px] w-full" />
+        <Skeleton className="h-[57px] w-full max-w-[276px] justify-self-end" />
       </div>
       <div className="grid gap-4 pl-8">
         <Skeleton className="h-5 w-40" />

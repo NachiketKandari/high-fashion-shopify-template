@@ -96,7 +96,7 @@ function SearchExplorerContent({
     <div>
       <form
         action="/search"
-        className="grid gap-3 desktop:grid-cols-[1fr_276px] desktop:gap-10"
+        className="grid gap-3 tablet:grid-cols-[1fr_276px] tablet:gap-10"
         method="get"
         onSubmit={handleSubmit}
         role="search"
@@ -140,7 +140,7 @@ function SearchExplorerContent({
           ) : null}
         </div>
         <button
-          className="type-nav flex h-[57px] items-center justify-center rounded-control bg-ink-strong text-inverse uppercase"
+          className="type-nav flex h-[57px] w-full max-w-[276px] items-center justify-center justify-self-end rounded-control bg-ink-strong text-inverse uppercase"
           type="submit"
         >
           Search
