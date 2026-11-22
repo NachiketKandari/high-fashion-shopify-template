@@ -221,7 +221,7 @@ function SearchExplorerContent({
           ) : null}
         </div>
         <button
-          className="type-nav flex h-[57px] w-full max-w-[276px] cursor-pointer items-center justify-center justify-self-end rounded-control bg-ink-strong text-inverse uppercase"
+          className="type-nav flex h-[57px] w-full cursor-pointer items-center justify-center rounded-control bg-ink-strong text-inverse uppercase tablet:max-w-[276px] tablet:justify-self-end"
           type="submit"
         >
           Search

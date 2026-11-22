@@ -247,7 +247,7 @@ function SearchPageSkeleton() {
     <div aria-busy="true" className="grid gap-10">
       <div className="grid gap-3 tablet:grid-cols-[1fr_276px] tablet:gap-10">
         <Skeleton className="h-[57px] w-full" />
-        <Skeleton className="h-[57px] w-full max-w-[276px] justify-self-end" />
+        <Skeleton className="h-[57px] w-full tablet:max-w-[276px] tablet:justify-self-end" />
       </div>
       <div className="grid gap-4 pl-8">
         <Skeleton className="h-5 w-40" />
