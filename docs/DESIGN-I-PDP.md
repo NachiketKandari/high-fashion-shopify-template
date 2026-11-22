@@ -72,4 +72,4 @@ The try-on image studio from the reference repo is intentionally not part of thi
 
 - `type-nav` carries uppercase and `-0.011em` tracking (WOMAN / MAN / SEARCH / WISHLIST / BAG / HELP / ACCOUNT).
 - Header nav links are spaced at 24px; the menswear entry reads "Man".
-- The footer brand mark uses the shared `/brand/wordmark.png` wordmark instead of typed text.
+- The footer brand mark uses the shared `/brand/wordmark.svg` wordmark instead of typed text.

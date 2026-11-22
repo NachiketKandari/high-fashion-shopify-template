@@ -120,6 +120,6 @@ Python is easier for a full geometry dump; any agent can adapt the walker from
   for some search/cart titles, and one off-canvas **Mea Culpa** wordmark study. The try-on page
   normalised everything to DM Sans; keep that decision.
 - The footer wordmark is drawn as **text** `LOREM IPSUM` 36/54, not the vector used in the header.
-  The repo's `public/brand/wordmark.png` can serve both at different widths.
+  The repo's `public/brand/wordmark.svg` can serve both at different widths.
 - Control radius is **4 px** in the design; the repo's zero-radius contract is the deliberate
   deviation (see `docs/DESIGN-I-CHECKOUT-JOURNEY.md` D1).

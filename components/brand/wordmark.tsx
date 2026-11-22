@@ -4,11 +4,17 @@ import Image from "next/image";
 import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 
-const SRC = "/brand/wordmark.png";
-const WIDTH = 950;
-const HEIGHT = 82;
+const SRC = "/brand/wordmark.svg";
+const WIDTH = 303;
+const HEIGHT = 24;
 
-export type WordmarkVariant = "bar" | "footer" | "nav";
+const VARIANT_CLASS = {
+  bar: "w-[196.5px]",
+  footer: "w-[249px]",
+  nav: "w-[196.5px] desktop:w-[303px]",
+} as const;
+
+export type WordmarkVariant = keyof typeof VARIANT_CLASS;
 
 interface WordmarkProps {
   className?: string;
@@ -16,29 +22,20 @@ interface WordmarkProps {
 }
 
 export function Wordmark({ className, variant }: WordmarkProps) {
-  const linkClass = cn("flex min-h-9 shrink-0 items-center", className);
-
-  if (variant === "nav" || variant === "bar") {
-    return (
-      <Link
-        aria-label={shopConfig.site.name}
-        className={linkClass}
-        data-wordmark={variant}
-        href="/"
-      >
-        <span className="type-wordmark font-sans">{shopConfig.site.name}</span>
-      </Link>
-    );
-  }
-
   return (
-    <Link aria-label={shopConfig.site.name} className={linkClass} data-wordmark="footer" href="/">
+    <Link
+      aria-label={shopConfig.site.name}
+      className={cn("flex min-h-9 shrink-0 items-center", className)}
+      data-wordmark={variant}
+      href="/"
+    >
       <Image
         alt={shopConfig.site.name}
-        className="h-auto w-[249px]"
+        className={cn("h-auto", VARIANT_CLASS[variant])}
         height={HEIGHT}
         sizes="100vw"
         src={SRC}
+        unoptimized
         width={WIDTH}
       />
     </Link>

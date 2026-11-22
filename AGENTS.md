@@ -110,6 +110,7 @@ Use the `build-shop` skill for route-specific workflow and audits.
 
 ## Design system
 
+- The logo is `public/brand/wordmark.svg`, 303 × 24, `#353535`, rendered through `components/brand/wordmark.tsx`; never recreate it as text or a second asset.
 - `app/globals.css` is the only token source. Use `type-*` role utilities for type, never raw `text-[…]`, `leading-[…]`, `font-medium` or a heading size utility.
 - Use `desktop:` (1100px) and `tablet:` (750px), not `xl:`/`md:`, for the storefront breakpoints. Use `--gutter`, `--page-top`, `--section-gap`, `--grid-*` and `--motion-*` rather than one-off values.
 - Rectangular controls and surfaces have zero radius; `rounded-full` is only for counts, colour dots and gallery indicators. Modal elevation is `shadow-modal`; every other template shadow is a defect.

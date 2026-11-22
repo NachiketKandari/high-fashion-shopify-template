@@ -205,36 +205,26 @@ Lucide icons, 1.25 stroke, sizes 12/14/16/20. Icons inherit current colour. Icon
 
 ## 3. Brand mark
 
-The wordmark is the only logo lockup. It is the placeholder wordmark, a single SVG at
-`public/brand/wordmark.svg`, rendered at `149.354 × 12.054` (ratio 12.39:1). Its viewBox uses the
-same ratio and includes clear space around the outlined lettering. It is black and must never be
-recreated as text. `components/brand/wordmark.tsx` owns every instance.
+The wordmark is the only logo lockup. It is the vector at `public/brand/wordmark.svg`, 303 × 24
+(ratio 12.625:1), filled with `#353535`. `components/brand/wordmark.tsx` owns every instance and
+renders it through `next/image` with `unoptimized`; never recreate it as text or copy the path data.
 
-| Variant    | Rendered size                         | Where                             |
-| ---------- | ------------------------------------- | --------------------------------- |
-| `masthead` | 1016 × 82                             | Homepage large header at 1440     |
-| `compact`  | 342 × 27.6 desktop, 170 × 13.7 mobile | Header on every other route/state |
-| `menu`     | 210 × 16.9                            | Mobile menu panel                 |
-| `footer`   | 315 × 25.4                            | Footer                            |
+| Variant  | Rendered size                         | Where                              |
+| -------- | ------------------------------------- | ---------------------------------- |
+| `bar`    | 196.5 × 15.6                          | Auth and checkout brand bar        |
+| `footer` | 249 × 19.7                            | Footer                             |
+| `nav`    | 196.5 × 15.6 mobile, 303 × 24 desktop | Storefront header and nav fallback |
 
 Rules:
 
-- One `Wordmark` component owns every variant. Header, mobile menu, footer and nav fallback must not
+- One `Wordmark` component owns every variant. Header, brand bar, footer and nav fallback must not
   instantiate `next/image` with the wordmark path directly.
-- The masthead width is `min(1016px, calc(100vw - 2 * var(--gutter)))`; it scales below 1440.
-- Derive height from the 12.39:1 ratio. Do not declare 342 × 28, 315 × 25 or another rounded pair;
-  those introduce a 1–2% squash.
+- Derive height from the 12.625:1 viewBox. Do not declare a rounded pair that squashes the mark.
 - The SVG paints no background. Keep the mark on paper.
 - The mark links to `/` with `aria-label` and `alt` from `shopConfig.site.name`.
-- Load the compact header mark with `priority` on non-home routes. The homepage hero is the LCP,
-  so the masthead is not preloaded twice; footer and menu marks are lazy.
-- Keep the measured reference at 342px on desktop and 170px on mobile. The current live mobile header
-  uses 210px, but 170px is the right choice when utility icons meet the 36px target; record that as a
-  deliberate accessibility decision.
 - Clear space is at least the gutter on the outside and 14px from adjacent controls.
 - The app icon and favicon use the LI monogram in `app/icon.svg`; regenerate `public/icons/*.png` and
   `app/apple-icon.png` from that source when the mark changes.
-- Replace the placeholder wordmark with the production mark before launch.
 
 ## 4. Layout primitives
 

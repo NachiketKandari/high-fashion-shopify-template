@@ -19,10 +19,9 @@ test.describe("design tokens", () => {
       const wordmark = [...document.querySelectorAll('[data-wordmark="nav"]')].find(
         (node) => node.getBoundingClientRect().width > 0,
       );
-      const wordmarkText = wordmark?.querySelector("span");
-      const wordmarkTextStyle = wordmarkText ? getComputedStyle(wordmarkText) : null;
+      const wordmarkImage = wordmark?.querySelector("img");
+      const wordmarkImageRect = wordmarkImage?.getBoundingClientRect();
       const headerRect = header?.getBoundingClientRect();
-      const wordmarkRect = wordmark?.getBoundingClientRect();
       return {
         bodyFontSize: body.fontSize,
         bodyFontWeight: body.fontWeight,
@@ -43,14 +42,10 @@ test.describe("design tokens", () => {
         pageTop: root.getPropertyValue("--page-top").trim(),
         sectionGap: root.getPropertyValue("--section-gap").trim(),
         target: root.getPropertyValue("--target-min").trim(),
-        wordmarkFontFamily: wordmarkTextStyle?.fontFamily,
-        wordmarkFontSize: wordmarkTextStyle?.fontSize,
-        wordmarkFontWeight: wordmarkTextStyle?.fontWeight,
-        wordmarkHeight: wordmarkRect?.height,
-        wordmarkLineHeight: wordmarkTextStyle?.lineHeight,
-        wordmarkText: wordmarkText?.textContent,
-        wordmarkTextTransform: wordmarkTextStyle?.textTransform,
-        wordmarkWidth: wordmarkRect?.width,
+        wordmarkAlt: wordmarkImage?.getAttribute("alt"),
+        wordmarkHeight: wordmarkImageRect?.height,
+        wordmarkSrc: wordmarkImage?.getAttribute("src"),
+        wordmarkWidth: wordmarkImageRect?.width,
       };
     });
 
@@ -72,13 +67,10 @@ test.describe("design tokens", () => {
     expect(probe.navFontWeight).toBe("700");
     expect(probe.navLineHeight).toBe("21px");
     expect(probe.headerHeight).toBeCloseTo(74, 0);
-    expect(probe.wordmarkText).toBe("Lorem Ipsum");
-    expect(probe.wordmarkFontFamily).toContain("DM Sans");
-    expect(probe.wordmarkFontSize).toBe("18px");
-    expect(probe.wordmarkFontWeight).toBe("400");
-    expect(probe.wordmarkLineHeight).toBe("27px");
-    expect(probe.wordmarkTextTransform).toBe("uppercase");
-    expect(probe.wordmarkWidth).toBeGreaterThan(100);
+    expect(probe.wordmarkAlt).toBe("Lorem Ipsum");
+    expect(probe.wordmarkSrc).toContain("/brand/wordmark.svg");
+    expect(probe.wordmarkHeight).toBeCloseTo(24, 0);
+    expect(probe.wordmarkWidth).toBeCloseTo(303, 0);
   });
 
   test("mobile tokens and shell geometry", async ({ page }) => {
@@ -93,12 +85,11 @@ test.describe("design tokens", () => {
       const wordmark = [...document.querySelectorAll('[data-wordmark="nav"]')].find(
         (node) => node.getBoundingClientRect().width > 0,
       );
-      const wordmarkText = wordmark?.querySelector("span");
-      const wordmarkTextStyle = wordmarkText ? getComputedStyle(wordmarkText) : null;
+      const wordmarkImage = wordmark?.querySelector("img");
+      const wordmarkImageRect = wordmarkImage?.getBoundingClientRect();
       const nav = document.querySelector('nav[aria-label="Menu"]');
       const menu = document.querySelector('[aria-controls="mobile-menu"]');
       const headerRect = header?.getBoundingClientRect();
-      const wordmarkRect = wordmark?.getBoundingClientRect();
       const menuRect = menu?.getBoundingClientRect();
       return {
         gutter: root.getPropertyValue("--gutter").trim(),
@@ -107,14 +98,10 @@ test.describe("design tokens", () => {
         menuHeight: menuRect?.height,
         menuWidth: menuRect?.width,
         sectionGap: root.getPropertyValue("--section-gap").trim(),
-        wordmarkFontFamily: wordmarkTextStyle?.fontFamily,
-        wordmarkFontSize: wordmarkTextStyle?.fontSize,
-        wordmarkFontWeight: wordmarkTextStyle?.fontWeight,
-        wordmarkHeight: wordmarkRect?.height,
-        wordmarkLineHeight: wordmarkTextStyle?.lineHeight,
-        wordmarkText: wordmarkText?.textContent,
-        wordmarkTextTransform: wordmarkTextStyle?.textTransform,
-        wordmarkWidth: wordmarkRect?.width,
+        wordmarkAlt: wordmarkImage?.getAttribute("alt"),
+        wordmarkHeight: wordmarkImageRect?.height,
+        wordmarkSrc: wordmarkImage?.getAttribute("src"),
+        wordmarkWidth: wordmarkImageRect?.width,
       };
     });
 
@@ -122,13 +109,10 @@ test.describe("design tokens", () => {
     expect(probe.sectionGap).toBe("40px");
     expect(probe.headerHeight).toBeCloseTo(56, 0);
     expect(probe.navDisplay).toBe("none");
-    expect(probe.wordmarkText).toBe("Lorem Ipsum");
-    expect(probe.wordmarkFontFamily).toContain("DM Sans");
-    expect(probe.wordmarkFontSize).toBe("18px");
-    expect(probe.wordmarkFontWeight).toBe("400");
-    expect(probe.wordmarkLineHeight).toBe("27px");
-    expect(probe.wordmarkTextTransform).toBe("uppercase");
-    expect(probe.wordmarkWidth).toBeGreaterThan(100);
+    expect(probe.wordmarkAlt).toBe("Lorem Ipsum");
+    expect(probe.wordmarkSrc).toContain("/brand/wordmark.svg");
+    expect(probe.wordmarkHeight).toBeCloseTo(15.56, 1);
+    expect(probe.wordmarkWidth).toBeCloseTo(196.5, 0);
     expect(probe.menuWidth).toBeGreaterThanOrEqual(36);
     expect(probe.menuHeight).toBeGreaterThanOrEqual(36);
   });
