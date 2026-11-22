@@ -53,7 +53,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Suspense>
           </CartProviderWrapper>
         </CurrencyProvider>
-        <ConsentBanner />
+        <Suspense fallback={null}>
+          <ConsentBanner />
+        </Suspense>
       </body>
     </html>
   );

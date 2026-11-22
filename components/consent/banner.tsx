@@ -1,12 +1,14 @@
 "use client";
 
 import { cn } from "cn";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { type ConsentChoice, readConsent, writeConsent } from "@/lib/consent";
 
 export function ConsentBanner() {
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [raised, setRaised] = useState(false);
 
@@ -37,6 +39,7 @@ export function ConsentBanner() {
       className={cn(
         "fixed inset-x-0 bottom-0 z-(--z-header) border-t border-rule bg-paper px-6 pt-10 pb-10 transition-transform duration-(--motion-base) ease-(--ease-standard) motion-reduce:transition-none desktop:px-10 desktop:pt-10 desktop:pb-20",
         raised ? "translate-y-0" : "translate-y-full",
+        pathname === "/cart" && "max-desktop:hidden",
       )}
       data-slot="consent-banner"
       inert={!raised}
