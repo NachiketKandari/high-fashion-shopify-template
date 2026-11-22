@@ -68,7 +68,7 @@ export function ProductCard({
       <div
         className={
           isCart
-            ? "relative mx-auto aspect-[2/3] w-full max-w-[250px] overflow-hidden border border-ink bg-surface desktop:aspect-[250/447] desktop:border-0"
+            ? "relative mx-auto aspect-[2/3] w-full max-w-[250px] overflow-hidden bg-surface desktop:aspect-[250/447]"
             : isBrowse
               ? "relative aspect-[3/4] overflow-hidden bg-paper desktop:aspect-[4/5] [[data-card-density=gallery]_&]:aspect-[2/3]"
               : cn(
@@ -280,7 +280,7 @@ export function ProductCardSkeleton({
   if (variant === "cart") {
     return (
       <div className={cn("flex flex-col", className)}>
-        <ImagePlaceholder className="mx-auto aspect-[2/3] w-full max-w-[250px] animate-pulse border border-ink motion-reduce:animate-none desktop:aspect-[250/447] desktop:border-0" />
+        <ImagePlaceholder className="mx-auto aspect-[2/3] w-full max-w-[250px] animate-pulse motion-reduce:animate-none desktop:aspect-[250/447]" />
         <div className="flex h-12 items-center justify-between gap-2 px-2 desktop:h-auto desktop:flex-col desktop:items-start desktop:gap-2 desktop:px-6 desktop:pt-6">
           <div className="h-3 w-2/3 animate-pulse bg-surface motion-reduce:animate-none" />
           <div className="h-2.5 w-10 animate-pulse bg-surface motion-reduce:animate-none" />

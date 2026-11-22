@@ -92,8 +92,7 @@ function CartLineItem({ item }: CartLineItemProps) {
   ) : (
     <ImagePlaceholder className="size-full" />
   );
-  const imageClass =
-    "relative h-[191px] w-[123px] shrink-0 self-start overflow-hidden border border-ink bg-surface desktop:border-0";
+  const imageClass = "relative h-[191px] w-[123px] shrink-0 self-start overflow-hidden bg-surface";
 
   return (
     <li
