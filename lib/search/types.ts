@@ -3,7 +3,7 @@ import type { Money } from "@/lib/money/types";
 
 export interface PredictiveSearchProduct {
   featuredImage: Image | null;
-  handle: string;
+  href: string;
   id: string;
   price: Money;
   title: string;
@@ -15,7 +15,7 @@ export interface SearchSuggestion {
 }
 
 export interface PredictiveSearchCollection {
-  handle: string;
+  href: string;
   id: string;
   image: Image | null;
   title: string;
