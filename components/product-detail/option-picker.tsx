@@ -35,9 +35,13 @@ export function OptionPicker({
           const targetClass = "focus-ring inline-flex min-h-9 min-w-9 cursor-pointer items-center";
           const boxClass = cn(
             "inline-flex items-center justify-center border transition-colors",
-            compact
-              ? "type-body-sm min-h-8 px-2"
-              : "type-label min-h-[26px] px-1.5 desktop:h-11 desktop:px-4",
+            isSize
+              ? compact
+                ? "type-body-sm size-8"
+                : "type-label size-9 desktop:size-11"
+              : compact
+                ? "type-body-sm min-h-8 px-2"
+                : "type-label min-h-[26px] px-1.5 desktop:h-11 desktop:px-4",
             value.selected && value.available
               ? "border-ink bg-ink text-inverse desktop:border-rule"
               : value.exists && value.available

@@ -244,7 +244,7 @@ function Grid({ mediaItems, title }: { mediaItems: MediaSlot[]; title: string })
   return (
     <Lightbox label={title}>
       <div className="grid grid-cols-2 gap-0">
-        <div className="relative col-span-2 aspect-[800/1432] overflow-hidden border border-ink">
+        <div className="relative col-span-2 aspect-[800/1432] overflow-hidden">
           {hero ? (
             hero.type === "video" ? (
               <MediaVideo item={hero} priority />
