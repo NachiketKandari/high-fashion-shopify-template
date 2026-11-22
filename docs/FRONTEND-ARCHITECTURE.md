@@ -521,9 +521,11 @@ The agent is **disabled**. When enabled:
 
 ## 12. What is pending
 
-This is the current backlog, deduplicated across the docs. Historical records such as the root
-`PLAN.md` (gitignored), `DESIGN-SYSTEM-AUDIT.md`, `UX-RECON-2026-11-05.md` and
-`reference/PLAYWRIGHT-COMPARISON.md` are snapshots, not current task lists.
+The actionable checklist is [`TODO.md`](../TODO.md); keep it and this section in sync. This section
+keeps the detail, deduplicated across the docs. Historical records such as the root `PLAN.md`
+(gitignored), `DESIGN-SYSTEM-AUDIT.md`, `UX-RECON-2026-11-05.md` and
+`reference/PLAYWRIGHT-COMPARISON.md` are snapshots, not current task lists. Catalog counts below
+predate the 23 November store audit; verify them against the live store.
 
 ### A. Blocked on Shopify admin or external approval
 
