@@ -19,9 +19,11 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
       <main className="flex min-w-0 flex-1 flex-col" id="main-content">
         {children}
       </main>
-      <FooterGate>
-        <Footer />
-      </FooterGate>
+      <Suspense fallback={<Footer />}>
+        <FooterGate>
+          <Footer />
+        </FooterGate>
+      </Suspense>
       <CartUI />
       <Suspense fallback={null}>
         <NewsletterPopup />
