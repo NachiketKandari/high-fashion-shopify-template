@@ -5,9 +5,10 @@ import { type FormEvent, useState } from "react";
 interface NewsletterFormProps {
   className?: string;
   inputId: string;
+  variant?: "inline" | "swipe";
 }
 
-export function NewsletterForm({ className, inputId }: NewsletterFormProps) {
+export function NewsletterForm({ className, inputId, variant = "inline" }: NewsletterFormProps) {
   const [status, setStatus] = useState<"idle" | "unavailable">("idle");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -30,10 +31,27 @@ export function NewsletterForm({ className, inputId }: NewsletterFormProps) {
           required
           type="email"
         />
-        <button className="type-label focus-ring flex h-9 shrink-0 items-center px-1" type="submit">
-          Subscribe
-        </button>
+        {variant === "inline" ? (
+          <button
+            className="type-label focus-ring flex h-9 shrink-0 items-center px-1"
+            type="submit"
+          >
+            Subscribe
+          </button>
+        ) : null}
       </div>
+      {variant === "swipe" ? (
+        <button
+          className="type-label focus-ring group relative mt-3 flex h-10 w-full cursor-pointer items-center justify-center overflow-hidden border border-ink bg-paper text-ink transition-colors duration-(--motion-base) ease-(--ease-standard) hover:text-inverse"
+          type="submit"
+        >
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 origin-left scale-x-0 bg-ink transition-transform duration-(--motion-base) ease-(--ease-standard) group-hover:scale-x-100"
+          />
+          <span className="relative">Subscribe</span>
+        </button>
+      ) : null}
       {status === "unavailable" ? (
         <p className="type-body-sm pt-3 text-ink-muted" role="status">
           Newsletter signup is not available yet.
