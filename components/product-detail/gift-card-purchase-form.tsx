@@ -7,6 +7,7 @@ import { useCartDrawer } from "@/components/cart/context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/components/ui/link";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useProductForm } from "@/lib/product/client";
@@ -70,6 +71,16 @@ export function GiftCardPurchaseForm() {
             autoComplete="email"
             placeholder="friend@example.com"
           />
+          <p className="type-body-sm text-ink-muted">
+            See our{" "}
+            <Link
+              className="focus-ring underline underline-offset-2 transition-colors hover:text-ink"
+              href="/pages/privacy-policies"
+            >
+              Privacy Policy
+            </Link>{" "}
+            for how recipient details are used.
+          </p>
         </div>
 
         <div className="grid gap-2.5">

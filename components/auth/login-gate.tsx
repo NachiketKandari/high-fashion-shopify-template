@@ -94,6 +94,17 @@ export function LoginGate() {
         </Button>
       </form>
 
+      <p className="type-body-sm text-ink-muted">
+        See our{" "}
+        <Link
+          className="focus-ring underline underline-offset-2 transition-colors hover:text-ink"
+          href="/pages/privacy-policies"
+        >
+          Privacy Policy
+        </Link>{" "}
+        for how your details are used.
+      </p>
+
       <Link
         className="type-body-sm focus-ring flex h-12 w-fit items-center gap-3 text-ink-strong"
         href="/"

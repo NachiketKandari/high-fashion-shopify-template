@@ -4,9 +4,7 @@ test.describe("shell and commerce flows", () => {
   test("mega menu opens on hover and Escape returns focus", async ({ page }) => {
     await page.goto("/");
     await page.waitForTimeout(500);
-    const trigger = page
-      .getByRole("navigation", { name: "Menu" })
-      .getByRole("button", { name: "Woman" });
+    const trigger = page.locator('nav[aria-label="Menu"] button', { hasText: "Woman" });
     await trigger.click();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
     const panel = page.locator("#nav-panel");

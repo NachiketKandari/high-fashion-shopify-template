@@ -16,8 +16,8 @@ metrics, rendering and assets come from the Figma MCP when the file URL is avail
 
 ## Composition
 
-Desktop splits 800 / 592 inside the 24px gutter. The gallery is a 800x1432 hero with a 1px black
-border over two 2-up 400-wide rows; the buy column is 592 wide with 80px horizontal padding and a
+Desktop splits 800 / 592 inside the 24px gutter. The gallery is a 800x1432 hero over two 2-up
+400-wide rows; the buy column is 592 wide with 80px horizontal padding and a
 432px content column. Mobile is a 2:3 swipe gallery, then the buy column at the 24px gutter.
 
 Measured at 1440 against the frame:

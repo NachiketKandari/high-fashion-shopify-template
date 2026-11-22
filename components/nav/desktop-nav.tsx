@@ -1,8 +1,9 @@
 "use client";
 
+import { Dialog } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { type KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { Link } from "@/components/ui/link";
 import { MAIN_NAV } from "@/lib/nav";
@@ -20,60 +21,26 @@ const UTILITY_LINKS = [
 const PANEL_LINK_CLASS = "type-h4 focus-ring flex transition-colors hover:text-ink-muted";
 
 export function DesktopNav() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const triggerRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const item = openIndex === null ? null : MAIN_NAV[openIndex];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [open, setOpen] = useState(false);
+  const item = MAIN_NAV[activeIndex];
 
-  useEffect(() => {
-    if (openIndex === null) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    panelRef.current?.focus();
-    const onKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      setOpenIndex(null);
-      triggerRefs.current[openIndex]?.focus();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [openIndex]);
-
-  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== "Tab") return;
-    const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
-      "a[href], button:not([disabled])",
-    );
-    if (!focusable || focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (!first || !last) return;
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
+  function openMenu(index: number) {
+    setActiveIndex(index);
+    setOpen(true);
   }
 
   return (
-    <>
+    <Dialog.Root onOpenChange={setOpen} open={open}>
       <nav aria-label="Menu" className="hidden desktop:block">
         <ul className="flex items-center gap-6" role="list">
           {MAIN_NAV.map((entry, index) => (
             <li key={entry.label}>
               <button
                 aria-controls="nav-panel"
-                aria-expanded={openIndex === index}
+                aria-expanded={open && activeIndex === index}
                 className={NAV_ITEM_CLASS}
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                ref={(element) => {
-                  triggerRefs.current[index] = element;
-                }}
+                onClick={() => openMenu(index)}
                 type="button"
               >
                 {navLabel(entry.label)}
@@ -83,75 +50,50 @@ export function DesktopNav() {
         </ul>
       </nav>
 
-      {item ? (
-        <>
-          <div
-            aria-hidden="true"
-            className="fixed inset-0 z-(--z-overlay) bg-black/20"
-            onClick={() => setOpenIndex(null)}
-          />
-          <div
-            aria-label={`${navLabel(item.label)} menu`}
-            aria-modal="true"
-            className="fixed inset-y-0 left-0 z-(--z-overlay) hidden h-dvh w-[709px] max-w-full flex-col bg-paper outline-none desktop:flex"
-            id="nav-panel"
-            onKeyDown={handleKeyDown}
-            ref={panelRef}
-            role="dialog"
-            tabIndex={-1}
-          >
-            <div className="flex h-[74px] shrink-0 items-center justify-between px-6">
-              <div className="flex items-center gap-6">
-                {MAIN_NAV.map((entry, index) => (
-                  <button
-                    aria-pressed={entry.label === item.label}
-                    className={`${NAV_ITEM_CLASS} aria-pressed:underline aria-pressed:underline-offset-4`}
-                    key={entry.label}
-                    onClick={() => setOpenIndex(index)}
-                    type="button"
-                  >
-                    {navLabel(entry.label)}
-                  </button>
-                ))}
-                <Link className={NAV_ITEM_CLASS} href="/search" onClick={() => setOpenIndex(null)}>
-                  Search
-                </Link>
-              </div>
-              <button
-                aria-label="Close menu"
-                className="focus-ring flex size-9 items-center justify-center"
-                onClick={() => setOpenIndex(null)}
-                type="button"
-              >
-                <X className="size-4" strokeWidth={1.25} />
-              </button>
+      <Dialog.Portal>
+        <Dialog.Backdrop className="fixed inset-0 z-(--z-overlay) bg-ink-strong/20 transition-opacity duration-(--motion-base) ease-(--ease-standard) motion-reduce:transition-none data-ending-style:opacity-0" />
+        <Dialog.Popup
+          aria-label={`${navLabel(item.label)} menu`}
+          className="fixed inset-y-0 left-0 z-(--z-overlay) hidden h-dvh w-[709px] max-w-full flex-col bg-paper outline-none transition-[clip-path] duration-(--motion-base) ease-(--ease-standard) motion-reduce:transition-none [clip-path:inset(0_0_0_0)] data-ending-style:[clip-path:inset(0_100%_0_0)] data-starting-style:[clip-path:inset(0_100%_0_0)] desktop:flex"
+          id="nav-panel"
+        >
+          <div className="flex h-[74px] shrink-0 items-center justify-between px-6">
+            <div className="flex items-center gap-6">
+              {MAIN_NAV.map((entry, index) => (
+                <button
+                  aria-pressed={entry.label === item.label}
+                  className={`${NAV_ITEM_CLASS} aria-pressed:underline aria-pressed:underline-offset-4`}
+                  key={entry.label}
+                  onClick={() => setActiveIndex(index)}
+                  type="button"
+                >
+                  {navLabel(entry.label)}
+                </button>
+              ))}
+              <Link className={NAV_ITEM_CLASS} href="/search" onClick={() => setOpen(false)}>
+                Search
+              </Link>
             </div>
+            <button
+              aria-label="Close menu"
+              className="focus-ring flex size-9 items-center justify-center"
+              onClick={() => setOpen(false)}
+              type="button"
+            >
+              <X className="size-4" strokeWidth={1.25} />
+            </button>
+          </div>
 
-            <div className="grid min-h-0 flex-1 grid-cols-2">
-              <div className="flex min-h-0 flex-col">
-                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6">
-                  <ul className="grid gap-4" role="list">
-                    {item.columns?.[0]?.links.map((link) => (
-                      <li key={link.label}>
-                        <Link
-                          className={`${PANEL_LINK_CLASS} text-ink`}
-                          href={link.href}
-                          onClick={() => setOpenIndex(null)}
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <ul className="grid shrink-0 gap-3 px-6 py-6" role="list">
-                  {UTILITY_LINKS.map((link) => (
+          <div className="grid min-h-0 flex-1 grid-cols-2">
+            <div className="flex min-h-0 flex-col">
+              <div className="scrollbar-subtle min-h-0 flex-1 overflow-y-auto overscroll-contain px-6">
+                <ul className="grid gap-4" role="list">
+                  {item.columns?.[0]?.links.map((link) => (
                     <li key={link.label}>
                       <Link
-                        className={`${PANEL_LINK_CLASS} text-ink-muted`}
+                        className={`${PANEL_LINK_CLASS} text-ink`}
                         href={link.href}
-                        onClick={() => setOpenIndex(null)}
+                        onClick={() => setOpen(false)}
                       >
                         {link.label}
                       </Link>
@@ -160,31 +102,45 @@ export function DesktopNav() {
                 </ul>
               </div>
 
-              <div className="min-h-0 overflow-y-auto overscroll-contain">
-                {item.tiles?.map((tile) => (
-                  <Link
-                    className="relative block aspect-[354/442] shrink-0 overflow-hidden bg-surface"
-                    href={tile.href}
-                    key={`${tile.href}-${tile.label}`}
-                    onClick={() => setOpenIndex(null)}
-                  >
-                    <Image
-                      alt=""
-                      className="object-cover"
-                      fill
-                      sizes="(min-width: 1100px) 355px, 100vw"
-                      src={tile.image}
-                    />
-                    <span className="type-nav absolute bottom-6 left-6 text-inverse uppercase">
-                      {tile.label}
-                    </span>
-                  </Link>
+              <ul className="grid shrink-0 gap-3 px-6 py-6" role="list">
+                {UTILITY_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      className={`${PANEL_LINK_CLASS} text-ink-muted`}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
+            </div>
+
+            <div className="scrollbar-subtle min-h-0 overflow-y-auto overscroll-contain">
+              {item.tiles?.map((tile) => (
+                <Link
+                  className="relative block aspect-[354/442] shrink-0 overflow-hidden bg-surface"
+                  href={tile.href}
+                  key={`${tile.href}-${tile.label}`}
+                  onClick={() => setOpen(false)}
+                >
+                  <Image
+                    alt=""
+                    className="object-cover"
+                    fill
+                    sizes="(min-width: 1100px) 355px, 100vw"
+                    src={tile.image}
+                  />
+                  <span className="type-nav absolute bottom-6 left-6 text-inverse uppercase">
+                    {tile.label}
+                  </span>
+                </Link>
+              ))}
             </div>
           </div>
-        </>
-      ) : null}
-    </>
+        </Dialog.Popup>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
