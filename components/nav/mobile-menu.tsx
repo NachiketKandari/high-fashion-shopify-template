@@ -106,7 +106,7 @@ export function MobileMenu() {
             {MAIN_NAV.map((entry, index) => (
               <button
                 aria-pressed={activeIndex === index}
-                className={`${NAV_ITEM_CLASS} aria-pressed:underline aria-pressed:underline-offset-4`}
+                className={NAV_ITEM_CLASS}
                 key={entry.label}
                 onClick={() => setActiveIndex(index)}
                 type="button"
