@@ -42,7 +42,7 @@ test.describe("accessibility and motion", () => {
   });
 
   test("product disclosures are native and open independently", async ({ page }) => {
-    await page.goto("/products/micro-pleated-shorts");
+    await page.goto("/products/black-tshirt-cowhide-corset-midi-dress");
     const items = page.locator("[data-slot=accordion] details");
     await expect(items).toHaveCount(3);
     expect(await page.locator('[role="tab"], [role="tabpanel"]').count()).toBe(0);

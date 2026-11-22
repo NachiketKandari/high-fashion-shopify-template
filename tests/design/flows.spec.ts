@@ -41,7 +41,7 @@ test.describe("shell and commerce flows", () => {
   });
 
   test("add to cart opens the 440px drawer with progress semantics", async ({ page }) => {
-    await page.goto("/products/micro-pleated-shorts");
+    await page.goto("/products/black-tshirt-cowhide-corset-midi-dress");
     await page.getByRole("button", { name: "Add to Cart" }).click();
     const drawer = page.locator('[data-slot="sheet-content"]');
     await expect(drawer).toBeVisible();
