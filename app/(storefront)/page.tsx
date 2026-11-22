@@ -8,9 +8,6 @@ import { Page } from "@/components/ui/page";
 import { shopConfig } from "@/lib/config";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 
-const MARQUEE_COPY =
-  "Lorem ipsum means something before it means anything. Originally used as placeholder text, it exists to hold space for meaning that has yet to be written. We chose the name because we see fashion in much the same way.";
-
 const CATEGORY_LABEL_CLASS =
   "bg-gradient-to-t px-6 pt-16 pb-6 desktop:bg-none desktop:px-9 desktop:pt-0 desktop:pb-6.5";
 
@@ -70,17 +67,6 @@ export default function HomePage() {
             <span className="absolute top-[85.96%] left-[18.68%] flex size-6 items-center justify-center rounded-full bg-paper/60">
               <span className="size-[15.11px] rounded-full bg-paper/60" />
             </span>
-          </div>
-        </div>
-
-        <div className="absolute inset-x-0 -bottom-[18px] z-10 h-[50px] overflow-hidden bg-paper">
-          <p className="sr-only">{MARQUEE_COPY}</p>
-          <div
-            aria-hidden="true"
-            className="flex h-full w-max animate-[marquee_40s_linear_infinite] items-center motion-reduce:animate-none"
-          >
-            <span className="type-marquee pr-12 pl-6 whitespace-nowrap">{MARQUEE_COPY}</span>
-            <span className="type-marquee pr-12 pl-6 whitespace-nowrap">{MARQUEE_COPY}</span>
           </div>
         </div>
       </section>
