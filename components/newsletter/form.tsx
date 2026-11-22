@@ -2,6 +2,8 @@
 
 import { type FormEvent, useState } from "react";
 
+import { Link } from "@/components/ui/link";
+
 interface NewsletterFormProps {
   className?: string;
   inputId: string;
@@ -52,6 +54,16 @@ export function NewsletterForm({ className, inputId, variant = "inline" }: Newsl
           <span className="relative">Subscribe</span>
         </button>
       ) : null}
+      <p className="type-body-sm pt-3 text-ink-muted">
+        By subscribing, you agree to our{" "}
+        <Link
+          className="focus-ring underline underline-offset-2 transition-colors hover:text-ink"
+          href="/pages/privacy-policies"
+        >
+          Privacy Policy
+        </Link>
+        .
+      </p>
       {status === "unavailable" ? (
         <p className="type-body-sm pt-3 text-ink-muted" role="status">
           Newsletter signup is not available yet.
