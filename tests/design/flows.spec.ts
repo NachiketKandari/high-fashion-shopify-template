@@ -7,7 +7,7 @@ test.describe("shell and commerce flows", () => {
     const trigger = page
       .getByRole("navigation", { name: "Menu" })
       .getByRole("button", { name: "Woman" });
-    await trigger.click();
+    await trigger.hover();
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
     const panel = page.locator("#nav-panel");
     await expect(panel).toBeVisible();

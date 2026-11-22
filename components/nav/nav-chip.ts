@@ -10,6 +10,10 @@ export const NAV_ITEM_CLASS = `${NAV_ITEM_BASE} text-ink ${NAV_UNDERLINE_CLASS} 
 
 export const NAV_PANEL_ITEM_CLASS = `${NAV_ITEM_BASE} text-ink-muted aria-pressed:text-ink`;
 
+export const NAV_PANEL_LINK_CLASS = `${NAV_ITEM_BASE} text-ink-muted ${NAV_UNDERLINE_CLASS} hover:text-ink focus-visible:text-ink`;
+
+export const NAV_TAB_CLASS = `${NAV_ITEM_BASE} text-ink-muted ${NAV_UNDERLINE_CLASS} aria-pressed:text-ink aria-pressed:after:scale-x-100`;
+
 export function navLabel(label: string) {
   return label === "Men" ? "Man" : label;
 }

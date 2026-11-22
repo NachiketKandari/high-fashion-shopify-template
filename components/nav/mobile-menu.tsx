@@ -9,7 +9,7 @@ import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 import { MAIN_NAV } from "@/lib/nav";
 
-import { NAV_ITEM_CLASS, navLabel } from "./nav-chip";
+import { NAV_TAB_CLASS, navLabel } from "./nav-chip";
 
 // Built from Mobile Menu-Women (2022:4641) and Mobile Menu-Men (2022:4768).
 const UTILITY_LINKS = [
@@ -106,7 +106,7 @@ export function MobileMenu() {
             {MAIN_NAV.map((entry, index) => (
               <button
                 aria-pressed={activeIndex === index}
-                className={NAV_ITEM_CLASS}
+                className={NAV_TAB_CLASS}
                 key={entry.label}
                 onClick={() => setActiveIndex(index)}
                 type="button"

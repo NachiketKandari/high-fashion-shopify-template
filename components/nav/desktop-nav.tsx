@@ -3,12 +3,12 @@
 import { cn } from "cn";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Link } from "@/components/ui/link";
 import { MAIN_NAV } from "@/lib/nav";
 
-import { NAV_ITEM_CLASS, NAV_PANEL_ITEM_CLASS, navLabel } from "./nav-chip";
+import { NAV_ITEM_CLASS, NAV_PANEL_ITEM_CLASS, NAV_PANEL_LINK_CLASS, navLabel } from "./nav-chip";
 
 // Built from menu-woman (2022:2660) and menu-man (1:309).
 const UTILITY_LINKS = [
@@ -19,6 +19,8 @@ const UTILITY_LINKS = [
 ];
 
 const PANEL_LINK_CLASS = "type-h4 focus-ring flex transition-colors hover:text-ink-muted";
+const HOVER_CLOSE_DELAY_MS = 180;
+const HOVER_OPEN_DELAY_MS = 120;
 
 export function DesktopNav() {
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
@@ -31,46 +33,104 @@ export function DesktopNav() {
   const brandRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const brandBarRef = useRef<HTMLDivElement>(null);
   const openIndexRef = useRef<number | null>(null);
+  const openIntentRef = useRef<"activation" | "hover">("hover");
+  const hoverCloseTimer = useRef<number | undefined>(undefined);
+  const hoverOpenTimer = useRef<number | undefined>(undefined);
   const isOpen = openIndex !== null;
   const activeIndex = openIndex ?? selectedIndex;
   const dimmedIndex = hoveredIndex ?? focusedIndex;
   const item = MAIN_NAV[activeIndex];
 
-  const selectIndex = useCallback((index: number) => {
-    openIndexRef.current = index;
-    setSelectedIndex(index);
-    setOpenIndex(index);
+  const clearHoverClose = useCallback(() => {
+    if (hoverCloseTimer.current === undefined) return;
+    window.clearTimeout(hoverCloseTimer.current);
+    hoverCloseTimer.current = undefined;
   }, []);
 
-  const closePanel = useCallback((restoreFocus = true) => {
-    const closingIndex = openIndexRef.current;
-    openIndexRef.current = null;
-    setFocusedIndex(null);
-    setHoveredIndex(null);
-    setOpenIndex(null);
-    if (restoreFocus && closingIndex !== null) {
-      triggerRefs.current[closingIndex]?.focus();
-    }
+  const clearHoverOpen = useCallback(() => {
+    if (hoverOpenTimer.current === undefined) return;
+    window.clearTimeout(hoverOpenTimer.current);
+    hoverOpenTimer.current = undefined;
   }, []);
+
+  const selectIndex = useCallback(
+    (index: number) => {
+      clearHoverClose();
+      openIndexRef.current = index;
+      setSelectedIndex(index);
+      setOpenIndex(index);
+    },
+    [clearHoverClose],
+  );
+
+  const openPanel = useCallback(
+    (index: number, intent: "activation" | "hover") => {
+      clearHoverOpen();
+      openIntentRef.current = intent;
+      selectIndex(index);
+    },
+    [clearHoverOpen, selectIndex],
+  );
+
+  const closePanel = useCallback(
+    (restoreFocus = true) => {
+      clearHoverClose();
+      clearHoverOpen();
+      const closingIndex = openIndexRef.current;
+      openIndexRef.current = null;
+      setFocusedIndex(null);
+      setHoveredIndex(null);
+      setOpenIndex(null);
+      if (restoreFocus && closingIndex !== null) {
+        triggerRefs.current[closingIndex]?.focus();
+      }
+    },
+    [clearHoverClose, clearHoverOpen],
+  );
+
+  const scheduleHoverOpen = useCallback(
+    (index: number) => {
+      clearHoverOpen();
+      clearHoverClose();
+      hoverOpenTimer.current = window.setTimeout(() => {
+        hoverOpenTimer.current = undefined;
+        openPanel(index, "hover");
+      }, HOVER_OPEN_DELAY_MS);
+    },
+    [clearHoverClose, clearHoverOpen, openPanel],
+  );
+
+  const scheduleHoverClose = useCallback(() => {
+    clearHoverClose();
+    hoverCloseTimer.current = window.setTimeout(() => {
+      hoverCloseTimer.current = undefined;
+      const restoreFocus = panelRef.current?.contains(document.activeElement) ?? false;
+      closePanel(restoreFocus);
+    }, HOVER_CLOSE_DELAY_MS);
+  }, [clearHoverClose, closePanel]);
 
   useEffect(() => {
     if (!isOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const selectedBrand =
-      openIndexRef.current === null ? null : brandRefs.current[openIndexRef.current];
-    if (selectedBrand) selectedBrand.focus();
-    else panelRef.current?.focus();
+    if (openIntentRef.current === "activation") {
+      const selectedBrand =
+        openIndexRef.current === null ? null : brandRefs.current[openIndexRef.current];
+      if (selectedBrand) selectedBrand.focus();
+      else panelRef.current?.focus();
+    }
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key !== "Escape") return;
       closePanel();
     };
     document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKeyDown);
-    };
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [closePanel, isOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverCloseTimer.current !== undefined) window.clearTimeout(hoverCloseTimer.current);
+      if (hoverOpenTimer.current !== undefined) window.clearTimeout(hoverOpenTimer.current);
+    };
+  }, []);
 
   useEffect(() => {
     const measure = () => {
@@ -93,22 +153,9 @@ export function DesktopNav() {
     };
   }, [activeIndex]);
 
-  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== "Tab") return;
-    const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
-      "a[href], button:not([disabled])",
-    );
-    if (!focusable || focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (!first || !last) return;
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
+  function handleTriggerLeave() {
+    setHoveredIndex(null);
+    clearHoverOpen();
   }
 
   return (
@@ -122,21 +169,33 @@ export function DesktopNav() {
               setFocusedIndex(null);
             }
           }}
-          onMouseLeave={() => setHoveredIndex(null)}
+          onMouseLeave={handleTriggerLeave}
           role="list"
         >
           {MAIN_NAV.map((entry, index) => (
-            <li key={entry.label} onMouseEnter={() => setHoveredIndex(index)}>
+            <li
+              key={entry.label}
+              onMouseEnter={() => {
+                setHoveredIndex(index);
+                scheduleHoverOpen(index);
+              }}
+              onMouseLeave={handleTriggerLeave}
+            >
               <button
                 aria-controls="nav-panel"
                 aria-expanded={openIndex === index}
                 className={cn(NAV_ITEM_CLASS, "data-[dimmed=true]:text-ink-muted")}
                 data-dimmed={dimmedIndex !== null && dimmedIndex !== index ? true : undefined}
                 onFocus={() => setFocusedIndex(index)}
-                onClick={() => (openIndex === index ? closePanel() : selectIndex(index))}
+                onClick={() => {
+                  clearHoverOpen();
+                  if (openIndex === index) closePanel();
+                  else openPanel(index, "activation");
+                }}
                 ref={(element) => {
                   triggerRefs.current[index] = element;
                 }}
+                tabIndex={isOpen ? -1 : undefined}
                 type="button"
               >
                 {navLabel(entry.label)}
@@ -158,7 +217,6 @@ export function DesktopNav() {
       <div
         aria-hidden={!isOpen}
         aria-label={isOpen ? `${navLabel(item.label)} menu` : undefined}
-        aria-modal={isOpen || undefined}
         className={cn(
           "fixed inset-y-0 left-0 z-(--z-overlay) hidden h-dvh w-[709px] max-w-full flex-col bg-paper outline-none transition-[clip-path,visibility] [transition-duration:var(--motion-long),0s] ease-(--ease-standard) motion-reduce:transition-none desktop:flex",
           isOpen
@@ -168,9 +226,10 @@ export function DesktopNav() {
         data-open={isOpen}
         id="nav-panel"
         inert={!isOpen}
-        onKeyDown={handleKeyDown}
+        onMouseEnter={clearHoverClose}
+        onMouseLeave={scheduleHoverClose}
         ref={panelRef}
-        role={isOpen ? "dialog" : undefined}
+        role={isOpen ? "group" : undefined}
         tabIndex={-1}
       >
         <div className="flex h-[74px] shrink-0 items-center justify-between px-6">
@@ -185,6 +244,7 @@ export function DesktopNav() {
                   if (isOpen) selectIndex(index);
                 }}
                 onMouseEnter={() => {
+                  clearHoverClose();
                   if (isOpen) selectIndex(index);
                 }}
                 ref={(element) => {
@@ -195,7 +255,7 @@ export function DesktopNav() {
                 {navLabel(entry.label)}
               </button>
             ))}
-            <Link className={NAV_ITEM_CLASS} href="/search" onClick={() => closePanel(false)}>
+            <Link className={NAV_PANEL_LINK_CLASS} href="/search" onClick={() => closePanel(false)}>
               Search
             </Link>
             <span
