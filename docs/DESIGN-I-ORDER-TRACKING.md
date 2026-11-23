@@ -13,8 +13,9 @@ the same one recorded in [`DESIGN-I-CHECKOUT-JOURNEY.md`](./DESIGN-I-CHECKOUT-JO
 | Cancellation modals   | `55:1355`, `55:1578` (+ mobile pair); guest `55:1801`, `55:1917` not built | `components/orders/cancel-order-dialog` |
 | Orders list and empty | `67:16186`, `67:16241`, `67:16289`, `67:16318`                             | `/account/orders`                       |
 
-The Overview hub, Account Balance, invoices, returns pages, addresses and profile screens are out of
-this pass. They keep their existing content; only the shared account shell changed.
+The Overview hub, Account Balance, invoices, addresses and profile screens are out of this pass.
+Self-serve returns are built in their own flow; the delivered tracking state links to them. Only the
+shared account shell changed for the out-of-scope screens.
 
 ## 2. Route and chrome
 
@@ -102,7 +103,7 @@ schema-verified and typechecked but not live-tested.
 | `cancellation`  | `available`   | Submits `orderRequestEdit` for editable line items                           |
 | `addressChange` | `unavailable` | No Modify Address control; the policy copy routes address changes to support |
 | `invoices`      | `unavailable` | No Download Tax Invoice control                                              |
-| `returns`       | `unavailable` | Delivered orders show return policy and support, not Request Return          |
+| `returns`       | `available`   | Delivered orders show return status and link to the `/returns` flow          |
 
 A capability flips only when its transport exists. The UI reads the constant; it never renders a
 control that cannot complete.
@@ -113,8 +114,10 @@ control that cannot complete.
   designed mismatch alert would claim a lookup that did not run.
 - The orders-list filter is omitted. The query supports `query`, but the filter values were not
   validated against the Customer Account search syntax; a dead select is worse than no filter.
-- The two delivered frames collapse into one honest return-eligibility panel because Shopify exposes
-  returnable line items, not a return-window end date. The policy links to the Shopify refund policy.
+- The two delivered frames collapse into one return-eligibility panel driven by
+  `returnInformation` and `returns`. It lists active returns with a View return link, offers Request
+  return while `returnableLineItemCount` is nonzero, and reuses `lib/returns` for the non-returnable
+  messages and policy link. Shopify exposes returnable line items, not a return-window end date.
 - Type roles replace the export's raw line heights: 18/23 for 18/25.2, 14/18 for 14/19.6, 12/16 for
   12/16.8. Controls are 48px, not 47px. The design's 2px list CTA radius normalizes to the 4px
   `rounded-control` primitive.
@@ -148,6 +151,13 @@ control that cannot complete.
   and `Original payment method` for `#1002`. Gift card, store credit, discount-only and mixed
   funding are schema-verified and typechecked but not live-tested, because the configured Admin
   scopes cannot create those instruments.
+- The merge with the self-serve returns work keeps one order detail route. It unions the returns
+  fields (`returnInformation`, `returns`, line-item `id`/`productId`/`variantId`) with the tracking
+  fields in the order fragment, transform and page. The delivered panel now uses the live returns
+  data instead of the earlier unavailable placeholder, and an existing return is listed on every
+  stage. Order `#1002` has the requested return `#1002-R1`; the dispatched tracking page renders it
+  and View return opens the return status page. The Request return CTA was not exercised because no
+  delivered order with returnable items was available.
 - The live cancellation request is verified. A free, unfulfilled test order (`#1003`) submitted
   `orderRequestEdit` from the production build; the tracking page replaced the cancel control with
   the `Cancellation requested` pending notice and the order stayed in `Preparing`. Merchant approval

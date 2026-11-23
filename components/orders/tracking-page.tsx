@@ -44,6 +44,10 @@ export function TrackingPage({ email, order, view }: TrackingPageProps) {
 
         <StageBox order={order} view={view} />
 
+        {view.stage !== "delivered" && order.returns.length > 0 ? (
+          <ReturnPanel allowRequest={false} order={order} />
+        ) : null}
+
         {order.shippingAddress ? (
           <section className="grid gap-3">
             <h3 className="type-body-sm text-ink-strong">Dispatch Destination</h3>
@@ -152,10 +156,16 @@ function StageBox({ order, view }: { order: CustomerOrder; view: OrderTrackingVi
   return <ReturnPanel order={order} />;
 }
 
-function ReturnPanel({ order }: { order: CustomerOrder }) {
+function ReturnPanel({
+  allowRequest = true,
+  order,
+}: {
+  allowRequest?: boolean;
+  order: CustomerOrder;
+}) {
   const encodedOrderId = encodeURIComponent(order.id);
   const hasReturns = order.returns.length > 0;
-  const canRequest = order.returnableLineItemCount > 0;
+  const canRequest = allowRequest && order.returnableLineItemCount > 0;
   const nonReturnableMessage = order.nonReturnableSummary
     ? getNonReturnableMessage(order.nonReturnableSummary.reasons)
     : null;

@@ -252,7 +252,6 @@ Keep [`STUBS.md`](./docs/STUBS.md) authoritative for the stub location and repla
 | Size recommendation    | Not started                                                    | Fit metafield schema or a fit app                    |
 | Public order tracking  | Form and unavailable state built; no lookup is sent            | A lookup service plus an enumeration decision        |
 | Order cancellation     | `orderRequestEdit` request only; no instant cancel or refund   | Server-side Admin API credential and refund decision |
-| Returns                | Not started                                                    | P11 scope                                            |
 | Tax invoices           | Not started                                                    | GST app or Admin API generation decision             |
 | Search typo correction | Shows honest zero results; does not fabricate closest products | A search service or synonym dictionary               |
 
