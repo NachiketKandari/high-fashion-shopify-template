@@ -13,7 +13,7 @@ export default function OrdersPage({
 }) {
   return (
     <div className="grid gap-6">
-      <AccountPageHeader breadcrumb="Account & Wallet / My orders" title="My orders" />
+      <AccountPageHeader breadcrumb="My orders" title="My orders" />
       <Suspense fallback={<OrdersSkeleton />}>
         <OrdersContent searchParams={searchParams} />
       </Suspense>

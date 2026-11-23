@@ -13,7 +13,7 @@ export function SidebarClient({ links }: { links: AccountLink[] }) {
   return (
     <nav aria-label="Account" className="grid">
       {links.map((link) => {
-        const isActive = isAccountLinkActive(link.href, pathname);
+        const isActive = isAccountLinkActive(pathname, link);
         return (
           <Link
             aria-current={isActive ? "page" : undefined}

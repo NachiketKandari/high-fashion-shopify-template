@@ -13,9 +13,9 @@ the same one recorded in [`DESIGN-I-CHECKOUT-JOURNEY.md`](./DESIGN-I-CHECKOUT-JO
 | Cancellation modals   | `55:1355`, `55:1578` (+ mobile pair); guest `55:1801`, `55:1917` not built | `components/orders/cancel-order-dialog` |
 | Orders list and empty | `67:16186`, `67:16241`, `67:16289`, `67:16318`                             | `/account/orders`                       |
 
-The Overview hub, Account Balance, invoices, addresses and profile screens are out of this pass.
-Self-serve returns are built in their own flow; the delivered tracking state links to them. Only the
-shared account shell changed for the out-of-scope screens.
+The Overview hub, Account Balance, invoices, addresses and profile screens are built separately.
+Self-serve returns are built in their own flow; the delivered tracking state links to them. This pass
+owns the shared account shell those screens render inside.
 
 ## 2. Route and chrome
 
@@ -25,8 +25,8 @@ shared account shell changed for the out-of-scope screens.
 - `/account/orders/[id]` sits outside the account layout so tracking can use the designed 848 + 592
   split with no rail.
 - The account rail is 288px with a 1px black rule, 40px padding and the designed active black block.
-  It links only to pages that exist: My orders, Saved addresses, Profile details, Private wishlist,
-  Sign out. Overview, Account Balance and Invoices & notes are omitted until those pages exist.
+  It links only to pages that exist: Overview, My orders, Account Balance, Invoices & notes, Saved
+  addresses, Profile details, Private wishlist, Sign out.
 - The mobile account header keeps the designed `My account / <page> / Account menu` disclosure.
 
 ## 3. State model

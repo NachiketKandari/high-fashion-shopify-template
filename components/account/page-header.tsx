@@ -7,7 +7,7 @@ interface AccountPageHeaderProps {
 export function AccountPageHeader({ breadcrumb, description, title }: AccountPageHeaderProps) {
   return (
     <div className="grid gap-3">
-      {breadcrumb ? <p className="type-body-sm text-ink-muted">{breadcrumb}</p> : null}
+      <p className="type-body-sm text-ink-muted">Account &amp; Wallet / {breadcrumb ?? title}</p>
       <h1 className="type-h2 text-ink-strong">{title}</h1>
       {description ? <p className="type-body-sm text-ink-muted">{description}</p> : null}
     </div>

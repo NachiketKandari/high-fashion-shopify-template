@@ -89,9 +89,9 @@ function AccountLabelSkeleton() {
 function SidebarSkeleton() {
   return (
     <div className="flex flex-col gap-1">
-      <Skeleton className="h-10 w-full rounded-none" />
-      <Skeleton className="h-10 w-full rounded-none" />
-      <Skeleton className="h-10 w-full rounded-none" />
+      {Array.from({ length: 7 }).map((_, index) => (
+        <Skeleton className="h-10 w-full rounded-none" key={index} />
+      ))}
     </div>
   );
 }

@@ -103,7 +103,11 @@ Whichever path is chosen, the callback/logout URL registration and `.env` secret
 
 Customer Account OAuth requires an HTTPS origin, so local testing runs through `pnpm dev:portless`
 or a tunnel, with the three auth variables set (all three are required while `auth.isEnabled` is
-true). The checks worth running after touching auth:
+true). Register the tunnel's `/account/authorize` callback and logout URL with the Customer Account
+API app. The tunnel host must also be allowed by `allowedDevOrigins` and the development
+`serverActions.allowedOrigins` in `next.config.ts`; ngrok and Cloudflare quick-tunnel hosts are
+already listed, and another provider needs its host added. The checks worth running after touching
+auth:
 
 1. Open `/login`, submit a real email, and confirm the gate prefills Shopify's sign-in page; the code
    arrives from the store's sender address.

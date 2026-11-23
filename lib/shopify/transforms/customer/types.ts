@@ -5,6 +5,7 @@ import type {
   ORDER_LIST_FRAGMENT,
   ORDER_SUMMARY_FRAGMENT,
 } from "@/lib/shopify/fragments/customer-order";
+import type { STORE_CREDIT_ACCOUNT_FRAGMENT } from "@/lib/shopify/fragments/customer-store-credit";
 import type { CustomerAccountResultOf } from "@/lib/shopify/types";
 
 export type ShopifyCustomerAddress = CustomerAccountResultOf<typeof ADDRESS_FRAGMENT>;
@@ -19,3 +20,6 @@ export type ShopifyOrderDiscount = ShopifyOrder["discountApplications"]["nodes"]
 export type ShopifyOrderPaymentInformation = NonNullable<ShopifyOrder["paymentInformation"]>;
 export type ShopifyOrderRefund = ShopifyOrder["refunds"][number];
 export type ShopifyOrderTransaction = ShopifyOrder["transactions"][number];
+export type ShopifyStoreCreditAccount = CustomerAccountResultOf<
+  typeof STORE_CREDIT_ACCOUNT_FRAGMENT
+>;

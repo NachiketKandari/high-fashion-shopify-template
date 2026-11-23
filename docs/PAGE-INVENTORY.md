@@ -52,16 +52,18 @@ action does not link to `/checkout/address` yet.
 
 ## Authentication and account
 
-| Page                  | Path                                      | Reached from                                                                         |
-| --------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------ |
-| Login / register gate | `/login`                                  | Header Account, cart Sign in, account redirects                                      |
-| Shopify sign-in       | `/account/login?return_to=…&login_hint=…` | Generated when the gate submits; Hydrogen OAuth handoff, not a page                  |
-| Sign-in failed        | `/account/sign-in-failed`                 | Shopify redirect after a failed sign-in                                              |
-| Account overview      | `/account`                                | Account links while signed in; signed out redirects to `/login?return_to=%2Faccount` |
-| Orders                | `/account/orders`                         | Account navigation                                                                   |
-| Order detail          | `/account/orders/[id]`                    | An order in the orders list                                                          |
-| Addresses             | `/account/addresses`                      | Account navigation                                                                   |
-| Profile               | `/account/profile`                        | Account navigation                                                                   |
+| Page                  | Path                                      | Reached from                                                                                  |
+| --------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Login / register gate | `/login`                                  | Header Account, cart Sign in, account redirects                                               |
+| Shopify sign-in       | `/account/login?return_to=…&login_hint=…` | Generated when the gate submits; Hydrogen OAuth handoff, not a page                           |
+| Sign-in failed        | `/account/sign-in-failed`                 | Shopify redirect after a failed sign-in                                                       |
+| Account overview      | `/account`                                | Account links while signed in; signed out redirects to `/login?return_to=%2Faccount`          |
+| Orders                | `/account/orders`                         | Account navigation; order cards with fulfillment, cancellation and return state               |
+| Order detail          | `/account/orders/[id]`                    | An order in the orders list; progress, items, totals, payment trail, cancellation and returns |
+| Account Balance       | `/account/wallet`                         | Account navigation; store-credit balance and transaction history                              |
+| Invoices & notes      | `/account/invoices`                       | Account navigation; honest empty state until a tax-invoice or credit-note source exists       |
+| Addresses             | `/account/addresses`                      | Account navigation; default address, edit, remove and add                                     |
+| Profile               | `/account/profile`                        | Account navigation; name, read-only email/phone, email marketing consent                      |
 
 Every `/account` page requires a customer session, except `/account/sign-in-failed` and the OAuth
 paths served by `proxy.ts`. There is no separate register URL; Shopify's hosted flow decides whether

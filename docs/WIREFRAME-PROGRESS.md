@@ -21,22 +21,22 @@ recommendation-card variant remain with their owners.
 
 ## Phase status
 
-| Phase                                | Status                                                                   |
-| ------------------------------------ | ------------------------------------------------------------------------ |
-| P0 Decisions and capability gates    | In progress                                                              |
-| P1 Specification inventory           | Done — inventory written; design delta still open                        |
-| P2 Shopify connectivity verification | Not started                                                              |
-| P3 Design contract in code           | Not started                                                              |
-| P4 Shell and navigation              | Done — bar, panel and mobile header match the frames                     |
-| P5 Browse                            | Not started                                                              |
-| P6 Product page                      | Not started                                                              |
-| P7 Cart and checkout handoff         | In progress — cart and pre-checkout step built; cart CTA handoff pending |
-| P8 Search                            | Not started                                                              |
-| P9 Account                           | Not started                                                              |
-| P10 Private wishlist                 | Not started                                                              |
-| P11 Post-purchase                    | Not started                                                              |
-| P12 Content and agent surface        | Not started                                                              |
-| P13 Hardening and launch             | Not started                                                              |
+| Phase                                | Status                                                                                                        |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| P0 Decisions and capability gates    | In progress                                                                                                   |
+| P1 Specification inventory           | Done — inventory written; design delta still open                                                             |
+| P2 Shopify connectivity verification | Not started                                                                                                   |
+| P3 Design contract in code           | Not started                                                                                                   |
+| P4 Shell and navigation              | Done — bar, panel and mobile header match the frames                                                          |
+| P5 Browse                            | Not started                                                                                                   |
+| P6 Product page                      | Not started                                                                                                   |
+| P7 Cart and checkout handoff         | In progress — cart and pre-checkout step built; cart CTA handoff pending                                      |
+| P8 Search                            | Not started                                                                                                   |
+| P9 Account                           | Built — signed-in verification covers orders, wallet, addresses and profile; invoices have no document source |
+| P10 Private wishlist                 | Not started                                                                                                   |
+| P11 Post-purchase                    | Not started                                                                                                   |
+| P12 Content and agent surface        | Not started                                                                                                   |
+| P13 Hardening and launch             | Not started                                                                                                   |
 
 ## Home build
 
@@ -258,6 +258,37 @@ The header, cart and `sign-in-failed` entries point at the gate.
 
 Gated: the OTP, password and new-user frames. The `E-mail` label drops the frame's `/Phone Number`
 because Shopify's new customer accounts do not accept a phone number.
+
+## Account
+
+Built from the Account & Wallet frames 11–18: overview at `/account`, order list and detail,
+account balance at `/account/wallet`, tax invoices at `/account/invoices`, saved addresses and
+profile details. The account routes use the post-purchase brand bar and 288px account rail instead
+of the storefront header and footer, and reuse the existing tokens: `#353535` ink, `#dcdcdc` rules,
+4px controls and the existing type roles, so the frames' pure-black hairlines and 2px/46px controls
+are normalised rather than copied.
+
+The overview reads real orders, addresses and the default address. Order cards derive their copy
+from fulfillment and return states; the primary action is `Track order` for in-flight orders,
+`View return request` for an open return, and `View order` otherwise. Signed-in verification covered
+a preparing order, a fulfilled order with an open return, the Preparing, Fulfilled and Returns
+filters, and the return action's jump to the Returns section of the order detail. Order detail
+accepts the encoded Shopify GID in its route. The Customer Account API in this app version exposes no
+`taxInvoices` field, no delivery date, and no line-item summary, so the order cards use line-item
+previews and the Invoices & notes page shows an honest empty state instead of fabricating documents.
+
+The wallet reads `storeCreditAccounts` balance and transactions, maps `StoreCreditSystemEvent` to
+shopper labels, and keeps credit/debit sign-only. The test customer carries ₹50,000 in store credit:
+the wallet renders the balance and the account-credit transaction, the cart summary shows the
+balance, and the pre-checkout step projects the deduction. Shopify checkout applies the credit only
+when its own `Apply store credit` checkbox is selected, so the pre-checkout toggle is a projection
+rather than the control. An API denial still renders the unavailable state.
+
+Profile edits first and last name and real email-marketing consent. Email and phone are read-only
+with a contact path; date of birth is omitted. Address cards derive `Home · Default` and
+`Saved address` labels because the Customer Account API has no address label field. Removing a
+default address promotes another saved address first; the last remaining default has no Remove
+action because Shopify refuses to delete it.
 
 ## Cart
 

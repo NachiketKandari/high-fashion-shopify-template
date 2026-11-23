@@ -3,6 +3,7 @@
 import type { CartData } from "@shopify/hydrogen";
 import { cn } from "cn";
 import { ChevronDownIcon, Loader2 } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { useDisplayPrice } from "@/components/currency/provider";
 import { Price } from "@/components/product/price";
@@ -14,6 +15,7 @@ import { useCartMutating, useCheckout } from "@/lib/cart/client";
 import { DiscountForm } from "./discount-form";
 
 interface CartSummaryProps {
+  accountBalance?: ReactNode;
   cart: CartData;
   className?: string;
   recalculating?: "full" | "totals";
@@ -21,6 +23,7 @@ interface CartSummaryProps {
 }
 
 export function CartSummary({
+  accountBalance,
   cart,
   className,
   recalculating = "totals",
@@ -44,6 +47,7 @@ export function CartSummary({
   return (
     <div className={cn("grid gap-10", className)}>
       <div className="grid gap-8">
+        {accountBalance ? <div className="border-b border-rule pb-6">{accountBalance}</div> : null}
         {isMutating ? <CartTotalsRecalculating /> : <CartTotal cart={cart} />}
         {showCheckout ? <CartCheckout /> : null}
       </div>

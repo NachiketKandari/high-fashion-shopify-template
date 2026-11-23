@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { CartViewedTracker } from "@/components/analytics/trackers";
+import { CartAccountBalance } from "@/components/cart/account-balance";
 import { CartPageContent, CartPageSkeleton } from "@/components/cart/cart-page";
 import { CartRecommendations } from "@/components/cart/recommendations";
 import { CartSignIn } from "@/components/cart/sign-in";
@@ -23,6 +24,11 @@ export default function CartPage() {
       <CartViewedTracker />
       <Suspense fallback={<CartPageSkeleton />}>
         <CartPageContent
+          accountBalance={
+            <Suspense fallback={null}>
+              <CartAccountBalance />
+            </Suspense>
+          }
           signIn={
             <Suspense fallback={null}>
               <CartSignIn />

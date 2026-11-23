@@ -15,7 +15,7 @@ interface AccountMobileMenuProps {
 export function AccountMobileMenu({ links, signOut }: AccountMobileMenuProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const active = links.find((link) => isAccountLinkActive(link.href, pathname));
+  const active = links.find((link) => isAccountLinkActive(pathname, link));
 
   return (
     <div className="grid gap-3">
@@ -35,7 +35,7 @@ export function AccountMobileMenu({ links, signOut }: AccountMobileMenuProps) {
       <hr className="border-rule" />
       <nav aria-label="Account" className={isOpen ? "grid gap-1" : "hidden"} id="account-menu">
         {links.map((link) => {
-          const isActive = isAccountLinkActive(link.href, pathname);
+          const isActive = isAccountLinkActive(pathname, link);
           return (
             <Link
               aria-current={isActive ? "page" : undefined}

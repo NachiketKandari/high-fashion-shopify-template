@@ -1,5 +1,6 @@
 import { type AnyCustomerAccountDocument, gql } from "@shopify/hydrogen/customer-account";
 import type { CountryCode } from "@shopify/hydrogen/customer-account-api-types";
+import { unstable_rethrow } from "next/navigation";
 import { cache } from "react";
 
 import { redirectToCustomerLogin, requireCustomerAccessToken } from "@/lib/auth/server";
@@ -9,6 +10,7 @@ import type {
   CustomerOrder,
   CustomerOrdersPage,
   CustomerProfile,
+  CustomerStoreCredit,
 } from "@/lib/customer/types";
 import type { Money } from "@/lib/money/types";
 import type { ReturnContext, ReturnEstimate, ReturnRequestDetail } from "@/lib/returns/types";
@@ -25,6 +27,7 @@ import {
   RETURN_SUMMARY_FRAGMENT,
   RETURNABLE_LINE_ITEM_FRAGMENT,
 } from "@/lib/shopify/fragments/customer-return";
+import { STORE_CREDIT_ACCOUNT_FRAGMENT } from "@/lib/shopify/fragments/customer-store-credit";
 import type {
   CustomerFetchOptions,
   CustomerUserError,
@@ -34,6 +37,8 @@ import {
   transformCustomerProfile,
   transformOrder,
   transformOrderListRow,
+  transformOrderSummary,
+  transformStoreCreditAccount,
 } from "@/lib/shopify/transforms/customer";
 import {
   transformReturnContext,
@@ -228,6 +233,22 @@ const GET_CUSTOMER_STORE_CREDIT_QUERY = gql(`#graphql
   }
 `);
 
+const GET_CUSTOMER_STORE_CREDIT_ACCOUNT_QUERY = gql(
+  `#graphql
+  query getCustomerStoreCreditAccount {
+    customer {
+      marketCurrencyCode
+      storeCreditAccounts(first: 10) {
+        nodes {
+          ...StoreCreditAccountFields
+        }
+      }
+    }
+  }
+`,
+  [STORE_CREDIT_ACCOUNT_FRAGMENT],
+);
+
 const CUSTOMER_ADDRESS_CREATE_MUTATION = gql(`#graphql
   mutation customerAddressCreate($address: CustomerAddressInput!, $defaultAddress: Boolean) {
     customerAddressCreate(address: $address, defaultAddress: $defaultAddress) {
@@ -302,6 +323,36 @@ const ORDER_REQUEST_EDIT_MUTATION = gql(`#graphql
   }
 `);
 
+const CUSTOMER_EMAIL_MARKETING_SUBSCRIBE_MUTATION = gql(`#graphql
+  mutation customerEmailMarketingSubscribe {
+    customerEmailMarketingSubscribe {
+      emailAddress {
+        emailAddress
+        marketingState
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`);
+
+const CUSTOMER_EMAIL_MARKETING_UNSUBSCRIBE_MUTATION = gql(`#graphql
+  mutation customerEmailMarketingUnsubscribe {
+    customerEmailMarketingUnsubscribe {
+      emailAddress {
+        emailAddress
+        marketingState
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`);
+
 async function customerFetch<const Doc extends AnyCustomerAccountDocument>({
   returnTo,
   ...options
@@ -340,15 +391,18 @@ export const getCustomerProfile = cache(
   },
 );
 
-export async function fetchCustomerOrders(cursor?: {
-  after?: string;
-  before?: string;
-}): Promise<CustomerOrdersPage> {
+export async function fetchCustomerOrders(
+  cursor?: {
+    after?: string;
+    before?: string;
+  },
+  pathname = "/account/orders",
+): Promise<CustomerOrdersPage> {
   const paginateBackward = Boolean(cursor?.before);
   const orderParams = new URLSearchParams();
   if (cursor?.after) orderParams.set("after", cursor.after);
   if (cursor?.before) orderParams.set("before", cursor.before);
-  const returnTo = `/account/orders${orderParams.size > 0 ? `?${orderParams}` : ""}`;
+  const returnTo = `${pathname}${orderParams.size > 0 ? `?${orderParams}` : ""}`;
 
   const data = await customerFetch({
     document: GET_CUSTOMER_ORDERS_QUERY,
@@ -537,11 +591,13 @@ export async function requestCustomerOrderCancellation(
   };
 }
 
-export async function fetchCustomerAddresses(): Promise<CustomerAddress[]> {
+export async function fetchCustomerAddresses(
+  returnTo = "/account/addresses",
+): Promise<CustomerAddress[]> {
   const data = await customerFetch({
     document: GET_CUSTOMER_ADDRESSES_QUERY,
     operation: "getCustomerAddresses",
-    returnTo: "/account/addresses",
+    returnTo,
   });
 
   if (!data.customer) return [];
@@ -564,9 +620,51 @@ export async function fetchCustomerStoreCredit(): Promise<Money[]> {
   return data.customer?.storeCreditAccounts.nodes.map((account) => account.balance) ?? [];
 }
 
+export async function fetchCustomerStoreCreditAccount(
+  returnTo = "/account/wallet",
+): Promise<CustomerStoreCredit> {
+  try {
+    const data = await customerFetch({
+      document: GET_CUSTOMER_STORE_CREDIT_ACCOUNT_QUERY,
+      operation: "getCustomerStoreCreditAccount",
+      returnTo,
+    });
+
+    const marketCurrencyCode = data.customer?.marketCurrencyCode ?? "INR";
+    const accounts = data.customer?.storeCreditAccounts.nodes ?? [];
+    const account =
+      accounts.find((entry) => entry.balance.currencyCode === marketCurrencyCode) ?? accounts[0];
+
+    return {
+      account: account ? transformStoreCreditAccount(account) : null,
+      error: false,
+      marketCurrencyCode,
+    };
+  } catch (error) {
+    unstable_rethrow(error);
+    console.error("Failed to load store credit:", error);
+    return { account: null, error: true, marketCurrencyCode: "INR" };
+  }
+}
+
 // Shopify validates the code against its CountryCode enum and rejects unknown values.
 function toShopifyAddressInput({ countryCode, ...address }: CustomerAddressInput) {
   return { ...address, countryCode: countryCode as CountryCode | undefined };
+}
+
+function toAddressInput(address: CustomerAddress): CustomerAddressInput {
+  return {
+    address1: address.address1 ?? undefined,
+    address2: address.address2 ?? undefined,
+    city: address.city ?? undefined,
+    company: address.company ?? undefined,
+    countryCode: address.countryCode ?? undefined,
+    firstName: address.firstName ?? undefined,
+    lastName: address.lastName ?? undefined,
+    phoneNumber: address.phoneNumber ?? undefined,
+    zip: address.zip ?? undefined,
+    zoneCode: address.zoneCode ?? undefined,
+  };
 }
 
 export async function createCustomerAddress(
@@ -607,6 +705,35 @@ export async function deleteCustomerAddress(addressId: string): Promise<Customer
   });
 
   return toUserErrors(data.customerAddressDelete?.userErrors ?? []);
+}
+
+export async function setDefaultCustomerAddress(addressId: string): Promise<CustomerUserError[]> {
+  const addresses = await fetchCustomerAddresses();
+  const address = addresses.find((entry) => entry.id === addressId);
+
+  if (!address) {
+    return [{ message: "Address not found" }];
+  }
+
+  return updateCustomerAddress(addressId, toAddressInput(address), true);
+}
+
+export async function setCustomerEmailMarketing(subscribed: boolean): Promise<CustomerUserError[]> {
+  if (subscribed) {
+    const data = await customerFetch({
+      document: CUSTOMER_EMAIL_MARKETING_SUBSCRIBE_MUTATION,
+      operation: "customerEmailMarketingSubscribe",
+      returnTo: "/account/profile",
+    });
+    return toUserErrors(data.customerEmailMarketingSubscribe?.userErrors ?? []);
+  }
+
+  const data = await customerFetch({
+    document: CUSTOMER_EMAIL_MARKETING_UNSUBSCRIBE_MUTATION,
+    operation: "customerEmailMarketingUnsubscribe",
+    returnTo: "/account/profile",
+  });
+  return toUserErrors(data.customerEmailMarketingUnsubscribe?.userErrors ?? []);
 }
 
 export async function updateCustomerProfile(input: {
