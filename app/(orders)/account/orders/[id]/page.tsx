@@ -27,8 +27,13 @@ async function OrderTrackingContent({ params }: { params: Promise<{ id: string }
   if (!id) notFound();
   // Dynamic segments arrive percent-encoded; the Customer Account API needs the raw GID.
   const orderId = decodeURIComponent(id);
+  // The profile fetch must share the order return path, or a token refresh during an action lands on Profile.
+  const returnTo = `/account/orders/${encodeURIComponent(orderId)}`;
 
-  const [order, profile] = await Promise.all([fetchCustomerOrder(orderId), getCustomerProfile()]);
+  const [order, profile] = await Promise.all([
+    fetchCustomerOrder(orderId),
+    getCustomerProfile(returnTo),
+  ]);
   if (!order) notFound();
 
   return (

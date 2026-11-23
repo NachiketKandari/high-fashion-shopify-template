@@ -158,6 +158,15 @@ control that cannot complete.
   stage. Order `#1002` has the requested return `#1002-R1`; the dispatched tracking page renders it
   and View return opens the return status page. The Request return CTA was not exercised because no
   delivered order with returnable items was available.
+- A token refresh during the cancellation action returns to the order page. The access token was
+  forced expired in the session cookie; submitting the cancellation on `#1003` landed on
+  `/account/orders/{id}?refreshed=1` with the pending notice, not `/account/profile?refreshed=1`.
+  The tracking page now passes its order path to the profile fetch so both concurrent requests share
+  a return path.
+- `#1004` is fulfilled and returnable, but the Customer Account API reports
+  `latestShipmentStatus: CONFIRMED` with no fulfillment events after Shopify admin marked it
+  delivered. The delivered tracking panel and Request return CTA therefore remain unverified; the
+  `/returns` flow itself lists the item as eligible.
 - The live cancellation request is verified. A free, unfulfilled test order (`#1003`) submitted
   `orderRequestEdit` from the production build; the tracking page replaced the cancel control with
   the `Cancellation requested` pending notice and the order stayed in `Preparing`. Merchant approval

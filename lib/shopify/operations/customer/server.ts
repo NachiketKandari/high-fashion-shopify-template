@@ -326,17 +326,19 @@ function toUserErrors(
   }));
 }
 
-export const getCustomerProfile = cache(async (): Promise<CustomerProfile | null> => {
-  const data = await customerFetch({
-    document: GET_CUSTOMER_PROFILE_QUERY,
-    operation: "getCustomerProfile",
-    returnTo: "/account/profile",
-  });
+export const getCustomerProfile = cache(
+  async (returnTo = "/account/profile"): Promise<CustomerProfile | null> => {
+    const data = await customerFetch({
+      document: GET_CUSTOMER_PROFILE_QUERY,
+      operation: "getCustomerProfile",
+      returnTo,
+    });
 
-  if (!data.customer) return null;
+    if (!data.customer) return null;
 
-  return transformCustomerProfile(data.customer);
-});
+    return transformCustomerProfile(data.customer);
+  },
+);
 
 export async function fetchCustomerOrders(cursor?: {
   after?: string;
