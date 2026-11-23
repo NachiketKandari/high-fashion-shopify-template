@@ -252,7 +252,15 @@ profile, so protect the profile route or host the profile outside the protected 
 - **Shopify analytics** is opt-in through `shopConfig.analytics.shopify`. It uses the storefront
   ID and the shop domain.
 
-## 10. Verification checklist
+## 10. Logs and alerting
+
+Runtime logs are one JSON line per event; see [`OBSERVABILITY.md`](./OBSERVABILITY.md) for the
+schema. Retain them with a Vercel log drain to Axiom — Grafana Cloud Loki is the equivalent
+alternative — and alert on `level: "error"` events. The drain is dashboard configuration: the
+repository ships no vendor SDK and holds no vendor credentials, and the pending setup checklist
+lives in [`OBSERVABILITY.md`](./OBSERVABILITY.md#log-retention-and-alerting).
+
+## 11. Verification checklist
 
 After the first production deploy:
 
@@ -271,10 +279,11 @@ After the first production deploy:
 - [ ] `POST /api/webhooks/shopify` rejects a request without a valid HMAC and returns `200` for a
       signed test payload.
 - [ ] `POST /api/revalidate` rejects a missing bearer token and revalidates a tag with the secret.
+- [ ] The Vercel log drain delivers storefront events to Axiom, and an error alert fires on a probe.
 - [ ] GA4 shows a `page_view` in Realtime for `/`, `/collections/all`, a product page and `/cart`.
 - [ ] No secret appears in the client bundle, build logs or Vercel environment preview.
 
-## 11. Rollback and operations
+## 12. Rollback and operations
 
 - Vercel keeps every deployment. **Instant Rollback** promotes a previous deployment without a
   rebuild.

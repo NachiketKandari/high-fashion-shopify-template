@@ -569,20 +569,20 @@ This is the current backlog, deduplicated across the docs. Historical records su
 
 ### C. Frontend code remaining
 
-| Item                                                                 | Files                                                                      |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Add the missing `POLITE BLUE` swatch alias                           | `lib/product/color-swatches.ts`                                            |
-| Add `--inventory-only` and preserve inventory on other imports       | `scripts/import-live-catalog.mjs`                                          |
-| Add metadata-only import and Fabric/Fit metafields end to end        | importer, product fragment/transform, `product-tabs.tsx`, product Markdown |
-| Render colour facets as swatch + label + count                       | `components/collections/filters-client.tsx`                                |
-| Connect contact and newsletter forms                                 | `components/content/contact-form.tsx`, `components/newsletter/form.tsx`    |
-| Add gallery zoom, lightbox navigation and counter if chosen          | `components/product-detail/product-media.tsx`, `lightbox.tsx`              |
-| Import product/collection SEO copy and collection images             | importer and collection transforms                                         |
-| Connect error reporting to a retained log drain or reporting product | `lib/observability/**`, Vercel log drain/alerts                            |
-| Sync wishlist to Customer Account if chosen                          | `lib/wishlist/client.ts`, `lib/customer/action.ts`                         |
-| Move navigation to Shopify menus if chosen                           | `lib/nav/index.ts`, nav components                                         |
-| Add ecommerce analytics events                                       | `components/analytics`, `lib/analytics/client.ts`                          |
-| Remove or resolve dead config and components                         | `pdp.complementaryProducts`, unused product-card/lightbox variants         |
+| Item                                                           | Files                                                                      |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Add the missing `POLITE BLUE` swatch alias                     | `lib/product/color-swatches.ts`                                            |
+| Add `--inventory-only` and preserve inventory on other imports | `scripts/import-live-catalog.mjs`                                          |
+| Add metadata-only import and Fabric/Fit metafields end to end  | importer, product fragment/transform, `product-tabs.tsx`, product Markdown |
+| Render colour facets as swatch + label + count                 | `components/collections/filters-client.tsx`                                |
+| Connect contact and newsletter forms                           | `components/content/contact-form.tsx`, `components/newsletter/form.tsx`    |
+| Add gallery zoom, lightbox navigation and counter if chosen    | `components/product-detail/product-media.tsx`, `lightbox.tsx`              |
+| Import product/collection SEO copy and collection images       | importer and collection transforms                                         |
+| Wire the Vercel log drain to Axiom and create error alerts     | Dashboard configuration only; runbook in `docs/OBSERVABILITY.md`           |
+| Sync wishlist to Customer Account if chosen                    | `lib/wishlist/client.ts`, `lib/customer/action.ts`                         |
+| Move navigation to Shopify menus if chosen                     | `lib/nav/index.ts`, nav components                                         |
+| Add ecommerce analytics events                                 | `components/analytics`, `lib/analytics/client.ts`                          |
+| Remove or resolve dead config and components                   | `pdp.complementaryProducts`, unused product-card/lightbox variants         |
 
 ### D. Content and data remaining
 
@@ -606,8 +606,8 @@ This is the current backlog, deduplicated across the docs. Historical records su
   revalidation secret, optional Redis deduplication values and analytics IDs.
 - Register Shopify webhooks and verify tag invalidation and delivery logs.
 - Configure the Customer Account API callback and logout URLs for production and previews.
-- Configure analytics and consent; point a retained log drain/alert at the JSON error stream and
-  `/api/health` uptime monitoring.
+- Configure analytics and consent; drain the JSON error stream to Axiom with `level: "error"`
+  alerts and monitor `/api/health`.
 - Configure GitHub repository vars/secrets so CI's build and design job runs.
 - Replace the stale anonymous Vercel artifact and create the production Vercel project/domain.
 - Verify checkout, Customer Account OAuth, Eve, analytics and revalidation against a preview.

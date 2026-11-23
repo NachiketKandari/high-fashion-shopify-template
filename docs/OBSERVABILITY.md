@@ -1,9 +1,9 @@
 # Observability
 
 The storefront logs operational telemetry as structured JSON and reports server and client errors
-with request IDs. It does not add product analytics events, third-party error-reporting
-credentials, or a telemetry dependency. On Vercel, function logs and log drains consume the JSON
-stream; attach alerts or a drain to retain it.
+with request IDs. It does not add product analytics events, third-party error-reporting SDKs, or a
+telemetry dependency. On Vercel, function logs consume the JSON stream, and a log drain retains
+and alerts on it; see "Log retention and alerting" below for the chosen route.
 
 This is operational telemetry only. GA4/GTM, Vercel Analytics, Speed Insights, Shopify analytics
 and the app event bus remain owned by `components/analytics/**` and `lib/analytics/**`; the
@@ -27,7 +27,7 @@ observability layer emits no commerce or page-view events.
 | Cache invalidation     | `revalidateTag` calls are summarized through webhook/revalidate logs, not logged per tag.                                                                                               | Through outcomes   |
 | Product analytics      | Owned by `components/analytics/**`; not emitted by this layer.                                                                                                                          | No                 |
 | RUM / Web Vitals       | Speed Insights remains opt-in; no custom `useReportWebVitals`.                                                                                                                          | No                 |
-| Error persistence      | Platform function logs/log drains only. No Sentry, OpenTelemetry or third-party reporter.                                                                                               | Platform only      |
+| Error persistence      | Vercel function logs plus a log drain to Axiom (Grafana Cloud Loki is the alternative). No error-reporting SDK; `lib/observability/**` stays the seam if one is ever added.             | Platform + drain   |
 
 ## Request IDs
 
@@ -73,10 +73,9 @@ preserving its historic behavior.
   `/llms.txt` and `/api/agent/session` report their previously silent failures.
 - Degraded reads report through `withFallback(promise, fallback, operation)`.
 
-Production alerting is the operator's next step: point a Vercel log drain at the JSON stream and
-alert on `level: "error"` events, especially `request.error`, `webhook.invalidation.failed` and
-`revalidate.failed`. If an error-reporting product is later chosen, `lib/observability/**` is the
-replacement seam; do not add a second reporter beside it.
+Retention and alerting come from the log drain in "Log retention and alerting" below. If an
+error-reporting product is later chosen, `lib/observability/**` is the replacement seam; do not
+add a second reporter beside the drain.
 
 ## Webhooks and idempotency
 
@@ -97,6 +96,30 @@ completed deliveries.
 `Cache-Control: no-store` and `x-request-id`. It performs no Shopify request, so it reports process
 readiness only. Point uptime monitoring at it; a Shopify reachability check is deliberately
 absent until a monitor needs it.
+
+## Log retention and alerting
+
+The production route is a **Vercel log drain to Axiom**; Grafana Cloud Loki is the equivalent
+alternative. This is dashboard configuration only: the JSON stream from `lib/observability/**`
+stays the interface, the repository gains no vendor SDK, credentials or CI step, and switching
+vendors later means changing the drain, not the code. Vercel log drains require the Pro plan.
+
+Pending setup (dashboard work; nothing left to change in this repository):
+
+- [ ] Confirm the Vercel project is on Pro; log drains are a Pro feature.
+- [ ] Create an Axiom dataset (for example `storefront-prod`) and copy its ingest endpoint.
+- [ ] Vercel → Settings → Log Drains: add a drain targeting that endpoint.
+- [ ] Probe a known event (a signed webhook delivery or a forced server error) and confirm the
+      dataset receives it.
+- [ ] Alert on `level == "error"` events, at minimum `request.error`, `client.error`,
+      `webhook.invalidation.failed` and `revalidate.failed`.
+- [ ] Alert separately on `webhook.idempotency.unavailable` (and any `webhook.idempotency.*`
+      warning): these mean deliveries processed without deduplication, not data loss.
+- [ ] Point an uptime monitor at `GET /api/health`.
+
+If grouped error triage is ever needed — real error volume, a support team — wire Sentry through
+`lib/observability/**` and fold `/api/client-errors` into it; never run a second reporter beside
+the drain.
 
 ## Operating it today
 
