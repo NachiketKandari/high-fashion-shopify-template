@@ -1,10 +1,17 @@
-export function AccountPageHeader({ title, description }: { title: string; description?: string }) {
+interface AccountPageHeaderProps {
+  breadcrumb?: string;
+  description?: string;
+  title: string;
+}
+
+export function AccountPageHeader({ breadcrumb, description, title }: AccountPageHeaderProps) {
   return (
-    <div>
-      <h1 className="type-display">{title}</h1>
-      {description && (
-        <p className="mt-1 type-body-sm leading-6 text-muted-foreground">{description}</p>
-      )}
+    <div className="grid gap-6">
+      <p className="type-body-sm text-ink-muted">Account &amp; Wallet / {breadcrumb ?? title}</p>
+      <div className="grid gap-6">
+        <h1 className="type-h2 text-ink">{title}</h1>
+        {description ? <p className="type-body-sm text-ink-muted">{description}</p> : null}
+      </div>
     </div>
   );
 }

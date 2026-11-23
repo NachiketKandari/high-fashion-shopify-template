@@ -1,9 +1,8 @@
 "use client";
 
-import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { type FormEvent, useState, useTransition } from "react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,9 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { getAddressLabel, getAddressName, maskPhone } from "@/lib/customer";
 import {
   createAddressAction,
   deleteAddressAction,
+  setDefaultAddressAction,
   updateAddressAction,
 } from "@/lib/customer/action";
 import type { CustomerAddress, CustomerAddressInput } from "@/lib/customer/types";
@@ -48,51 +49,38 @@ const REQUIRED_FIELDS = new Set<keyof CustomerAddressInput>(["address1", "city",
 export function AddressBook({ addresses }: { addresses: CustomerAddress[] }) {
   const [formState, setFormState] = useState<FormState>(null);
   const [deleteTarget, setDeleteTarget] = useState<CustomerAddress | null>(null);
-  return (
-    <div className="grid gap-4">
-      <div>
-        <Button size="sm" onClick={() => setFormState({ mode: "create" })}>
-          <Plus aria-hidden="true" />
-          Add address
-        </Button>
-      </div>
 
+  return (
+    <div className="grid gap-6">
       {addresses.length === 0 ? (
-        <div className="rounded-none border p-6 text-center">
-          <p className="type-body-sm text-muted-foreground">You have no saved addresses yet.</p>
+        <div className="grid gap-4 border border-rule p-6">
+          <p className="type-h4 text-ink">No saved addresses yet</p>
+          <p className="type-body-sm text-ink-muted">Add an address to make checkout faster.</p>
         </div>
       ) : (
-        <ul className="grid gap-3 tablet:grid-cols-2">
+        <ul className="grid gap-6 desktop:grid-cols-2">
           {addresses.map((address) => (
-            <li key={address.id} className="flex flex-col gap-3 rounded-none border p-4">
-              <div className="flex items-start justify-between gap-2">
-                <address className="type-body-sm text-muted-foreground not-italic">
-                  {address.formatted.map((line, index) => (
-                    <span key={index} className="block">
-                      {line}
-                    </span>
-                  ))}
-                </address>
-                {address.isDefault ? <Badge variant="secondary">Default</Badge> : null}
-              </div>
-              <div className="mt-auto flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setFormState({ address, mode: "edit" })}
-                >
-                  <Pencil aria-hidden="true" />
-                  Edit
-                </Button>
-                <Button size="sm" variant="ghost" onClick={() => setDeleteTarget(address)}>
-                  <Trash2 aria-hidden="true" />
-                  Delete
-                </Button>
-              </div>
-            </li>
+            <AddressCard
+              address={address}
+              canRemove={!address.isDefault || addresses.length > 1}
+              key={address.id}
+              onDelete={setDeleteTarget}
+              onEdit={(target) => setFormState({ address: target, mode: "edit" })}
+            />
           ))}
         </ul>
       )}
+
+      <Button
+        className="w-full"
+        onClick={() => setFormState({ mode: "create" })}
+        size="lg"
+        variant="outline"
+      >
+        Add New Address
+      </Button>
+
+      <p className="type-body-sm text-ink-muted">Updates apply to future orders.</p>
 
       <Dialog open={formState !== null} onOpenChange={(open) => !open && setFormState(null)}>
         <DialogContent className="max-h-[90vh] overflow-y-auto tablet:max-w-xl">
@@ -109,8 +97,100 @@ export function AddressBook({ addresses }: { addresses: CustomerAddress[] }) {
         </DialogContent>
       </Dialog>
 
-      <DeleteDialog target={deleteTarget} onClose={() => setDeleteTarget(null)} />
+      <DeleteDialog
+        fallbackDefaultId={
+          deleteTarget
+            ? (addresses.find((address) => address.id !== deleteTarget.id)?.id ?? null)
+            : null
+        }
+        key={deleteTarget?.id ?? "none"}
+        onClose={() => setDeleteTarget(null)}
+        target={deleteTarget}
+      />
     </div>
+  );
+}
+
+function AddressCard({
+  address,
+  canRemove,
+  onDelete,
+  onEdit,
+}: {
+  address: CustomerAddress;
+  canRemove: boolean;
+  onDelete: (address: CustomerAddress) => void;
+  onEdit: (address: CustomerAddress) => void;
+}) {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function handleSetDefault() {
+    setError(null);
+    startTransition(async () => {
+      const result = await setDefaultAddressAction(address.id);
+      if (!result.success) {
+        setError(result.error ?? "Failed to set the default address");
+      }
+    });
+  }
+
+  return (
+    <li className="grid content-start gap-4 border border-rule p-6">
+      <p className="type-h4 text-ink">{getAddressLabel(address)}</p>
+      <div className="type-body-sm grid gap-2 text-ink-muted">
+        <p>{getAddressName(address)}</p>
+        <address className="grid gap-1 not-italic">
+          {address.formatted.map((line, index) => (
+            <span key={index}>{line}</span>
+          ))}
+        </address>
+        {address.phoneNumber ? <p>{maskPhone(address.phoneNumber)}</p> : null}
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        {address.isDefault ? null : (
+          <>
+            <button
+              className="type-body-sm focus-ring inline-flex min-h-9 cursor-pointer items-center text-ink underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isPending}
+              onClick={handleSetDefault}
+              type="button"
+            >
+              {isPending ? "Saving…" : "Set as default"}
+            </button>
+            <span aria-hidden="true" className="type-body-sm text-ink-muted">
+              /
+            </span>
+          </>
+        )}
+        <button
+          className="type-body-sm focus-ring inline-flex min-h-9 cursor-pointer items-center text-ink underline-offset-4 hover:underline"
+          onClick={() => onEdit(address)}
+          type="button"
+        >
+          Edit
+        </button>
+        {canRemove ? (
+          <>
+            <span aria-hidden="true" className="type-body-sm text-ink-muted">
+              /
+            </span>
+            <button
+              className="type-body-sm focus-ring inline-flex min-h-9 cursor-pointer items-center text-ink underline-offset-4 hover:underline"
+              onClick={() => onDelete(address)}
+              type="button"
+            >
+              Remove
+            </button>
+          </>
+        ) : null}
+      </div>
+      {error ? (
+        <p className="type-body-sm text-error" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </li>
   );
 }
 
@@ -140,39 +220,39 @@ function AddressForm({ address, onSuccess }: { address?: CustomerAddress; onSucc
     });
   };
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
+    <form className="grid gap-4" onSubmit={handleSubmit}>
       <div className="grid gap-4 tablet:grid-cols-2">
         {TEXT_FIELDS.map((field) => {
           const fieldError = fieldErrors[field.key];
           return (
             <div
-              key={field.key}
               className={field.span ? "grid gap-1.5 tablet:col-span-2" : "grid gap-1.5"}
+              key={field.key}
             >
               <Label htmlFor={field.key}>
                 {field.label}
                 {REQUIRED_FIELDS.has(field.key) ? <span aria-hidden="true"> *</span> : null}
               </Label>
               <Input
+                aria-invalid={fieldError ? true : undefined}
+                autoComplete={field.autoComplete}
                 id={field.key}
                 name={field.key}
-                value={values[field.key] ?? ""}
                 onChange={(event) =>
                   setValues((prev) => ({ ...prev, [field.key]: event.target.value }))
                 }
-                autoComplete={field.autoComplete}
-                required={REQUIRED_FIELDS.has(field.key)}
-                aria-invalid={fieldError ? true : undefined}
                 placeholder={
                   field.key === "countryCode"
-                    ? "e.g. US"
+                    ? "e.g. IN"
                     : field.key === "zoneCode"
-                      ? "e.g. CA"
+                      ? "e.g. MH"
                       : undefined
                 }
+                required={REQUIRED_FIELDS.has(field.key)}
+                value={values[field.key] ?? ""}
               />
               {fieldError ? (
-                <p role="alert" className="type-body-sm text-error-rule">
+                <p className="type-body-sm text-error-rule" role="alert">
                   {fieldError}
                 </p>
               ) : null}
@@ -181,25 +261,25 @@ function AddressForm({ address, onSuccess }: { address?: CustomerAddress; onSucc
         })}
       </div>
 
-      <div className="flex items-center justify-between rounded-none border p-3">
+      <div className="flex items-center justify-between gap-4 border border-rule p-3">
         <Label htmlFor="isDefault">Set as default address</Label>
         <Switch
-          id="isDefault"
           checked={isDefault}
           disabled={isCurrentDefault}
+          id="isDefault"
           onCheckedChange={setIsDefault}
         />
       </div>
 
       {error ? (
-        <p role="alert" className="type-body-sm text-error-rule">
+        <p className="type-body-sm text-error-rule" role="alert">
           {error}
         </p>
       ) : null}
 
       <DialogFooter>
-        <Button type="submit" disabled={isPending}>
-          {isPending ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : "Save"}
+        <Button disabled={isPending} type="submit">
+          {isPending ? <Loader2 aria-hidden="true" className="size-4 animate-spin" /> : "Save"}
         </Button>
       </DialogFooter>
     </form>
@@ -207,9 +287,11 @@ function AddressForm({ address, onSuccess }: { address?: CustomerAddress; onSucc
 }
 
 function DeleteDialog({
+  fallbackDefaultId,
   onClose,
   target,
 }: {
+  fallbackDefaultId: string | null;
   onClose: () => void;
   target: CustomerAddress | null;
 }) {
@@ -219,6 +301,14 @@ function DeleteDialog({
     if (!target) return;
     setError(null);
     startTransition(async () => {
+      if (target.isDefault && fallbackDefaultId) {
+        const defaultResult = await setDefaultAddressAction(fallbackDefaultId);
+        if (!defaultResult.success) {
+          setError(defaultResult.error ?? "Failed to set another default address");
+          return;
+        }
+      }
+
       const result = await deleteAddressAction(target.id);
       if (result.success) {
         onClose();
@@ -237,16 +327,16 @@ function DeleteDialog({
           </DialogDescription>
         </DialogHeader>
         {error ? (
-          <p role="alert" className="type-body-sm text-error-rule">
+          <p className="type-body-sm text-error-rule" role="alert">
             {error}
           </p>
         ) : null}
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isPending}>
+          <Button disabled={isPending} onClick={onClose} variant="outline">
             Cancel
           </Button>
-          <Button variant="destructive" onClick={handleDelete} disabled={isPending}>
-            {isPending ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : "Delete"}
+          <Button disabled={isPending} onClick={handleDelete} variant="destructive">
+            {isPending ? <Loader2 aria-hidden="true" className="size-4 animate-spin" /> : "Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>
