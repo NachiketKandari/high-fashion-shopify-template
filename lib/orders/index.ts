@@ -28,7 +28,7 @@ export const ORDER_CAPABILITIES = {
   addressChange: "unavailable",
   cancellation: "available",
   invoices: "unavailable",
-  returns: "unavailable",
+  returns: "available",
 } as const satisfies Record<string, "available" | "unavailable">;
 
 export type OrderCapability = keyof typeof ORDER_CAPABILITIES;

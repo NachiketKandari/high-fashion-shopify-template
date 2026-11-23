@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
 import { type ConsentChoice, readConsent, writeConsent } from "@/lib/consent";
 
 export function ConsentBanner() {
@@ -51,7 +52,14 @@ export function ConsentBanner() {
           </h2>
           <p className="type-body-sm text-ink-muted" id="consent-description">
             We use essential cookies to make our site work. With your consent, we&apos;d also like
-            to use analytics and marketing cookies to improve your shopping experience.
+            to use analytics and marketing cookies to improve your shopping experience. See our{" "}
+            <Link
+              className="focus-ring underline underline-offset-2 transition-colors hover:text-ink"
+              href="/pages/privacy-policies"
+            >
+              Privacy Policy
+            </Link>{" "}
+            for how we use cookies.
           </p>
         </div>
         <div className="flex flex-col gap-4 desktop:flex-row desktop:shrink-0">

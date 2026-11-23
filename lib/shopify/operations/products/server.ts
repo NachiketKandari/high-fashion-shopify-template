@@ -237,6 +237,17 @@ const GET_PRODUCT_WITH_VARIANTS_QUERY = gql(
   [PRODUCT_WITH_VARIANTS_FRAGMENT],
 );
 
+const GET_PRODUCT_WITH_VARIANTS_BY_ID_QUERY = gql(
+  `#graphql
+  query getProductWithVariantsById($id: ID!, $country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language) {
+    product(id: $id) {
+      ...ProductWithVariantsFields
+    }
+  }
+`,
+  [PRODUCT_WITH_VARIANTS_FRAGMENT],
+);
+
 export async function fetchProductWithVariants({
   handle,
   locale = shopConfig.localization,
@@ -253,6 +264,34 @@ export async function fetchProductWithVariants({
 
   if (!data.product) {
     if (response.errors?.length) throw new Error("Shopify getProductWithVariants returned errors.");
+    return undefined;
+  }
+  const product = transformShopifyProductDetails(data.product);
+  return {
+    ...product,
+    descriptionHtml: sanitizeShopifyHtml(data.product.descriptionHtml),
+    variantsComplete: product.variantsComplete && !response.errors?.length,
+  };
+}
+
+export async function fetchProductWithVariantsById({
+  id,
+  locale = shopConfig.localization,
+}: {
+  id: string;
+  locale?: CommerceLocale;
+}): Promise<ProductDetails | undefined> {
+  const response = await storefront.request(GET_PRODUCT_WITH_VARIANTS_BY_ID_QUERY, {
+    locale,
+    variables: { id },
+  });
+  assertStorefrontOk(response, "getProductWithVariantsById");
+  const { data } = response;
+
+  if (!data.product) {
+    if (response.errors?.length) {
+      throw new Error("Shopify getProductWithVariantsById returned errors.");
+    }
     return undefined;
   }
   const product = transformShopifyProductDetails(data.product);

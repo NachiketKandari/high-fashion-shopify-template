@@ -228,9 +228,9 @@ export const PAGES = [
         "Every piece is thoughtfully created with a focus on fit, fabric, and finish, becoming a lasting part of an everyday wardrobe.",
       )}
       <h2 id="studio">Studio</h2>
-      ${image("/reference/clone/about-craftsmanship.png", "Lorem Ipsum Studio", "Lorem Ipsum Studio")}
+      ${image("/reference/clone/about-craftsmanship.png", "Uniplus Design Studio", "Uniplus Design Studio")}
       ${p(
-        "Lorem Ipsum Studio is a Mumbai-based design practice working across tailoring, corsetry and everyday wear. The studio grew out of a belief that clothing should make space for individuality, and each collection is developed in-house from first sketch to final stitch.",
+        "Uniplus Design Studio is a Mumbai-based design practice working across tailoring, corsetry and everyday wear. The studio grew out of a belief that clothing should make space for individuality, and each collection is developed in-house from first sketch to final stitch.",
       )}
       <h2>Brand Philosophy</h2>
       ${VALUES.map(([src, label]) => image(src, label, label)).join("\n")}
@@ -404,7 +404,7 @@ export const PAGES = [
     body: `
       <h2>Overview</h2>
       ${p(
-        "This website is operated by Lorem Ipsum Studio. Throughout the site, the terms “we”, “us” and “our” refer to Lorem Ipsum Studio. We offer this website, including all information, tools and services available from it, conditioned on your acceptance of the terms, conditions, policies and notices stated here.",
+        "This website is operated by Uniplus Design Studio LLP. Throughout the site, the terms “we”, “us” and “our” refer to Uniplus Design Studio LLP. We offer this website, including all information, tools and services available from it, conditioned on your acceptance of the terms, conditions, policies and notices stated here.",
         "By visiting our site or purchasing something from us, you engage in our “Service” and agree to be bound by these Terms of Service, including additional terms and policies referenced here or available by hyperlink. Read these terms carefully before using the site.",
         "Our store is hosted on Shopify Inc. They provide the online e-commerce platform that allows us to sell our products and services to you.",
       )}
@@ -441,11 +441,11 @@ export const PAGES = [
       <h2>Sections 11–13 — Errors, prohibited uses, liability</h2>
       ${p(
         "We reserve the right to correct errors, inaccuracies or omissions and to change or update information or cancel orders if information is inaccurate at any time without prior notice. You are prohibited from using the site for unlawful purposes, to violate laws, to infringe rights, to harass or discriminate, to submit false information, to upload malicious code, to collect or track the personal information of others, to spam or phish, or to interfere with security features.",
-        "Your use of the service is at your sole risk. The service and all products are provided “as is” and “as available,” without warranties of any kind, express or implied. In no case shall Lorem Ipsum Studio, its directors, officers, employees, affiliates, agents, contractors, suppliers or licensors be liable for any injury, loss, claim or direct, indirect, incidental, punitive, special or consequential damages arising from your use of the service or any product.",
+        "Your use of the service is at your sole risk. The service and all products are provided “as is” and “as available,” without warranties of any kind, express or implied. In no case shall Uniplus Design Studio LLP, its directors, officers, employees, affiliates, agents, contractors, suppliers or licensors be liable for any injury, loss, claim or direct, indirect, incidental, punitive, special or consequential damages arising from your use of the service or any product.",
       )}
       <h2>Sections 14–20 — Indemnification to contact</h2>
       ${p(
-        "You agree to indemnify and hold harmless Lorem Ipsum Studio and its affiliates, partners, officers, directors, agents, contractors, licensors, service providers and employees from any claim or demand, including reasonable attorneys' fees, arising from your breach of these terms or violation of any law or third-party right.",
+        "You agree to indemnify and hold harmless Uniplus Design Studio LLP and its affiliates, partners, officers, directors, agents, contractors, licensors, service providers and employees from any claim or demand, including reasonable attorneys' fees, arising from your breach of these terms or violation of any law or third-party right.",
         "If any provision is found unlawful, void or unenforceable, that portion is severed and the remaining provisions stay in effect. These terms are effective until terminated by you or us. You may terminate by notifying us or by ceasing to use the site. We may terminate if you fail to comply.",
         "These terms and any policies posted on this site constitute the entire agreement between you and us. They are governed by the laws of India. We may update these terms by posting changes on this page. Questions may be sent to legal@loremipsum.example.",
       )}
@@ -456,12 +456,12 @@ export const PAGES = [
   {
     body: `
       ${p(
-        "Lorem Ipsum is a Mumbai-based fashion and lifestyle brand operated by Lorem Ipsum Studio (“Lorem Ipsum”, “we”, “us” or “our”). This policy explains how we collect, use, store, disclose and otherwise process personal information when you visit or purchase through www.loremipsum.example, contact customer support or otherwise engage with our services.",
+        "Lorem Ipsum is a Mumbai-based fashion and lifestyle brand operated by Uniplus Design Studio LLP (“Lorem Ipsum”, “we”, “us” or “our”). This policy explains how we collect, use, store, disclose and otherwise process personal information when you visit or purchase through www.loremipsum.example, contact customer support or otherwise engage with our services.",
         "By accessing or using the website you acknowledge that you have read and understood this policy.",
       )}
       <h2>1. Who we are</h2>
       ${p(
-        "Lorem Ipsum is operated by Lorem Ipsum Studio, 123 Example Street, Mumbai, India. Email: legal@loremipsum.example. Website: www.loremipsum.example. Lorem Ipsum Studio determines how and why personal information is processed.",
+        "Lorem Ipsum is operated by Uniplus Design Studio LLP, 123 Example Street, Mumbai, India. Email: legal@loremipsum.example. Website: www.loremipsum.example. Uniplus Design Studio LLP determines how and why personal information is processed.",
       )}
       <h2>2. Personal information we collect</h2>
       ${p(
@@ -503,8 +503,8 @@ export const PAGES = [
       )}
       <h2>15. Contact us</h2>
       ${p(
-        "Questions about this policy, privacy rights or grievances: Lorem Ipsum Studio, 123 Example Street, Mumbai, India. Email: legal@loremipsum.example. Website: www.loremipsum.example. We will review and respond within the time periods required by applicable law.",
-        "© Lorem Ipsum Studio. All rights reserved.",
+        "Questions about this policy, privacy rights or grievances: Uniplus Design Studio LLP, 123 Example Street, Mumbai, India. Email: legal@loremipsum.example. Website: www.loremipsum.example. We will review and respond within the time periods required by applicable law.",
+        "© Uniplus Design Studio LLP. All rights reserved.",
       )}
     `,
     handle: "privacy-policies",

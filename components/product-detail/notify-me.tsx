@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/components/ui/link";
 import {
   Sheet,
   SheetClose,
@@ -176,6 +177,16 @@ export function NotifyMe({ product, selectedSize, sizeOption }: NotifyMeProps) {
                     type="email"
                     value={email}
                   />
+                  <p className="type-body-sm text-ink-muted">
+                    See our{" "}
+                    <Link
+                      className="focus-ring underline underline-offset-2 transition-colors hover:text-ink"
+                      href="/pages/privacy-policies"
+                    >
+                      Privacy Policy
+                    </Link>{" "}
+                    for how we use your email.
+                  </p>
                 </div>
               </>
             )}

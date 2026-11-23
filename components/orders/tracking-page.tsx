@@ -13,6 +13,7 @@ import {
   isOrderCapabilityAvailable,
 } from "@/lib/orders";
 import type { OrderTrackingView } from "@/lib/orders/types";
+import { getNonReturnableMessage, getReturnStatusLabel } from "@/lib/returns";
 
 import { CancelOrderDialog } from "./cancel-order-dialog";
 import { RefreshStatusButton } from "./refresh-status-button";
@@ -148,27 +149,76 @@ function StageBox({ order, view }: { order: CustomerOrder; view: OrderTrackingVi
     );
   }
 
+  return <ReturnPanel order={order} />;
+}
+
+function ReturnPanel({ order }: { order: CustomerOrder }) {
+  const encodedOrderId = encodeURIComponent(order.id);
+  const hasReturns = order.returns.length > 0;
+  const canRequest = order.returnableLineItemCount > 0;
+  const nonReturnableMessage = order.nonReturnableSummary
+    ? getNonReturnableMessage(order.nonReturnableSummary.reasons)
+    : null;
+
   return (
     <section className="grid gap-3 border border-ink-strong p-5">
       <h3 className="type-h4 text-ink-strong">Return eligibility</h3>
-      <p className="type-h4 text-ink-strong">Returns are reviewed by our team</p>
-      <p className="type-body-sm text-ink-muted">
-        Return eligibility depends on the items in your order. Contact support and we’ll confirm
-        whether this order can be returned.
-      </p>
+      {hasReturns ? (
+        <ul className="grid gap-2">
+          {order.returns.map((request) => (
+            <li className="flex flex-wrap items-center justify-between gap-2" key={request.id}>
+              <span className="type-body-sm text-ink">
+                {request.name} · {getReturnStatusLabel(request.status)}
+              </span>
+              <Link
+                className="type-body-sm inline-flex min-h-9 items-center text-ink-strong hover:underline"
+                href={`/returns/${encodedOrderId}/request/${encodeURIComponent(request.id)}`}
+              >
+                View return
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {canRequest ? (
+        <>
+          <p className="type-h4 text-ink-strong">
+            {hasReturns ? "Return another item" : "Return window open"}
+          </p>
+          <p className="type-body-sm text-ink-muted">
+            You can request a return while this order is within the return window. Eligibility is
+            subject to the Returns & Exchange policy.
+          </p>
+          <Button
+            className="h-12 w-full border-ink-strong text-ink-strong"
+            render={<Link href={`/returns/${encodedOrderId}`} />}
+            variant="outline"
+          >
+            {hasReturns ? "Request another return" : "Request return"}
+          </Button>
+        </>
+      ) : null}
+      {!hasReturns && !canRequest && order.nonReturnableSummary ? (
+        <>
+          <p className="type-h4 text-ink-strong">Returns are not available for this order</p>
+          <p className="type-body-sm text-ink-muted">
+            {nonReturnableMessage ??
+              "This order is not eligible for return under the current policy."}
+          </p>
+        </>
+      ) : null}
+      {!hasReturns && !canRequest && !order.nonReturnableSummary ? (
+        <p className="type-body-sm text-ink-muted">
+          Return eligibility depends on the items in your order. Contact support and we’ll confirm
+          whether this order can be returned.
+        </p>
+      ) : null}
       <Link
         className="type-body-sm inline-flex min-h-9 items-center text-ink-strong hover:underline"
-        href="/policies/refund-policy"
+        href="/pages/returns-exchanges"
       >
         View Returns & Exchange Policy
       </Link>
-      <Button
-        className="h-12 w-full border-ink-strong text-ink-strong"
-        render={<Link href="/pages/contact-us" />}
-        variant="outline"
-      >
-        Contact Support
-      </Button>
     </section>
   );
 }

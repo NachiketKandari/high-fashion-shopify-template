@@ -3,6 +3,11 @@ import type { CustomerAddressInput as ShopifyCustomerAddressInput } from "@shopi
 import type { Image } from "@/lib/media/types";
 import type { Money } from "@/lib/money/types";
 import type { PageInfo } from "@/lib/pagination/types";
+import type {
+  ReturnNonReturnableSummary,
+  ReturnSelectedOption,
+  ReturnSummary,
+} from "@/lib/returns/types";
 
 export interface AccountActionResult {
   error?: string;
@@ -33,10 +38,14 @@ export interface OrderFulfillment {
 }
 
 export interface OrderLineItem {
+  id: string;
   image: Image | null;
+  options: ReturnSelectedOption[];
+  productId: string | null;
   quantity: number;
   title: string;
   totalPrice: Money | null;
+  variantId: string | null;
   variantOptions: Array<{ name: string; value: string }>;
   variantTitle: string | null;
 }
@@ -105,9 +114,12 @@ export interface CustomerOrder extends CustomerOrderSummary {
   editableLineItems: OrderEditableLineItem[];
   hasEditableLineItems: boolean;
   lineItems: OrderLineItem[];
+  nonReturnableSummary: ReturnNonReturnableSummary | null;
   payment: OrderPayment;
   refunds: OrderRefund[];
   requestedEdits: OrderRequestedEdit[];
+  returnableLineItemCount: number;
+  returns: ReturnSummary[];
   shippingAddress: CustomerAddress | null;
   statusPageUrl: string;
   subtotal: Money | null;

@@ -12,6 +12,7 @@ import type {
   OrderTransaction,
 } from "@/lib/customer/types";
 import type { Money } from "@/lib/money/types";
+import type { ReturnSelectedOption } from "@/lib/returns/types";
 import type {
   ShopifyCustomerAddress,
   ShopifyCustomerProfile,
@@ -27,6 +28,7 @@ import type {
   ShopifyOrderTransaction,
 } from "@/lib/shopify/transforms/customer/types";
 import { transformImage } from "@/lib/shopify/transforms/product";
+import { transformReturnSummary } from "@/lib/shopify/transforms/returns";
 
 function transformMoney(money: ShopifyMoney): Money {
   return { amount: money.amount, currencyCode: money.currencyCode };
@@ -85,12 +87,22 @@ export function transformOrderSummary(order: ShopifyOrderSummary): CustomerOrder
   };
 }
 
+function transformLineItemOptions(
+  options: ShopifyLineItem["variantOptions"],
+): ReturnSelectedOption[] {
+  return options?.map((option) => ({ name: option.name, value: option.value })) ?? [];
+}
+
 function transformLineItem(item: ShopifyLineItem): OrderLineItem {
   return {
+    id: item.id,
     image: transformImage(item.image),
+    options: transformLineItemOptions(item.variantOptions),
+    productId: item.productId ?? null,
     quantity: item.quantity,
     title: item.title,
     totalPrice: item.totalPrice ? transformMoney(item.totalPrice) : null,
+    variantId: item.variantId ?? null,
     variantOptions:
       item.variantOptions?.map((option) => ({
         name: option.name,
@@ -164,6 +176,11 @@ export function transformOrder(order: ShopifyOrder): CustomerOrder {
     })),
     hasEditableLineItems: order.requestedEditInformation.hasEditableLineItems,
     lineItems: order.lineItems.nodes.map(transformLineItem),
+    nonReturnableSummary: order.returnInformation.nonReturnableSummary
+      ? {
+          reasons: order.returnInformation.nonReturnableSummary.nonReturnableReasons,
+        }
+      : null,
     payment: order.paymentInformation
       ? transformOrderPayment(order.paymentInformation)
       : { outstanding: zeroMoney, paid: zeroMoney, status: null },
@@ -172,6 +189,8 @@ export function transformOrder(order: ShopifyOrder): CustomerOrder {
       id: request.id,
       status: request.status,
     })),
+    returnableLineItemCount: order.returnInformation.returnableLineItems.nodes.length,
+    returns: order.returns.nodes.map(transformReturnSummary),
     shippingAddress: order.shippingAddress ? transformCustomerAddress(order.shippingAddress) : null,
     statusPageUrl: order.statusPageUrl,
     subtotal: order.subtotal ? transformMoney(order.subtotal) : null,
