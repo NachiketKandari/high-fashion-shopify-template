@@ -91,8 +91,9 @@ The cancellation refund destination follows the same trail:
 
 A row with no transaction is still a trail entry: Shopify reports `financialStatus: PAID` and
 `paymentStatus: PAID` with a zero paid amount. Gift card, store credit, discount-only and mixed
-funding cannot be created through the app's current Admin scopes, so those branches are
-schema-verified and typechecked but not live-tested.
+funding cannot be created through the app's current Admin scopes, and Shopify blocks the
+`Order` and `FulfillmentEvent` objects until the app is approved for protected customer data, so
+those branches are schema-verified and typechecked but not live-tested.
 
 ## 6. Gated capabilities
 
@@ -149,28 +150,37 @@ control that cannot complete.
   Order `#1002` renders a `MANUAL` payment of ₹14,000; the free order `#1003` renders
   `No payment recorded` with `Paid ₹0.00`. The funding map returns `No payment taken` for `#1003`
   and `Original payment method` for `#1002`. Gift card, store credit, discount-only and mixed
-  funding are schema-verified and typechecked but not live-tested, because the configured Admin
-  scopes cannot create those instruments.
+  funding are schema-verified and typechecked but not live-tested, because Shopify blocks the
+  `Order` and `FulfillmentEvent` objects until the app is approved for protected customer data.
 - The merge with the self-serve returns work keeps one order detail route. It unions the returns
   fields (`returnInformation`, `returns`, line-item `id`/`productId`/`variantId`) with the tracking
   fields in the order fragment, transform and page. The delivered panel now uses the live returns
   data instead of the earlier unavailable placeholder, and an existing return is listed on every
   stage. Order `#1002` has the requested return `#1002-R1`; the dispatched tracking page renders it
-  and View return opens the return status page. The Request return CTA was not exercised because no
-  delivered order with returnable items was available.
+  and View return opens the return status page. Order `#1004` reached Delivered; the tracking page
+  shows Return window open and Request return opens `/returns/{orderId}` with the item selected and
+  marked Delivered. No second return was submitted.
 - A token refresh during the cancellation action returns to the order page. The access token was
   forced expired in the session cookie; submitting the cancellation on `#1003` landed on
   `/account/orders/{id}?refreshed=1` with the pending notice, not `/account/profile?refreshed=1`.
   The tracking page now passes its order path to the profile fetch so both concurrent requests share
   a return path.
-- `#1004` is fulfilled and returnable, but the Customer Account API reports
-  `latestShipmentStatus: CONFIRMED` with no fulfillment events after Shopify admin marked it
-  delivered. The delivered tracking panel and Request return CTA therefore remain unverified; the
-  `/returns` flow itself lists the item as eligible.
+- `#1004` first stayed Dispatched because Shopify admin's Mark as delivered did not create a
+  Delivered fulfillment event; the Customer Account API reported `latestShipmentStatus: CONFIRMED`
+  and no events. After a Delivered event was added, the page rendered the completed stepper,
+  Return window open and the Request return CTA. The CTA opened `/returns/{orderId}` with the item
+  selected and marked Delivered; no second return was submitted.
 - The live cancellation request is verified. A free, unfulfilled test order (`#1003`) submitted
   `orderRequestEdit` from the production build; the tracking page replaced the cancel control with
-  the `Cancellation requested` pending notice and the order stayed in `Preparing`. Merchant approval
-  still happens in Shopify, so the resolved and declined states remain admin-side.
+  the `Cancellation requested` pending notice and the order stayed in `Preparing`.
+- Merchant approval of the requested edit on `#1003` set it to `RESOLVED`, but the order was not
+  cancelled: `cancelledAt` stayed null and the line item remained editable, so the page returned to
+  the available cancellation state. The cancelled stage requires an actual order cancellation, not
+  a resolved edit. The page does not claim the order is cancelled, but it also gives no
+  resolved-but-active notice; that copy is still missing.
+- The order was then cancelled through the Admin API (`orderCancel`, reason `CUSTOMER`, no refund or
+  restock); the tracking page showed `This order was cancelled` and `Cancelled by you on 23 Nov
+  2026`, with no cancel control and the zero payment trail intact.
 - The store has no shipping zones, so the test order used a temporary zero-price, non-shipping
-  product. It and the test gift card were unpublished and set to draft after the request; order
-  `#1003` is left for merchant review.
+  product. It and the test gift card were unpublished and set to draft after the request. `#1003`
+  is cancelled and `#1004` is delivered with a manual payment.

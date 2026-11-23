@@ -90,6 +90,11 @@ Owners follow [`AGENTS.md`](./AGENTS.md): **Shopify** owns commerce, **Next.js**
       the direct-link-only address step and keep Shopify checkout direct. The address step is built;
       the cart still opens Shopify directly. Detail:
       [`DESIGN-I-CHECKOUT-JOURNEY.md`](./docs/DESIGN-I-CHECKOUT-JOURNEY.md) §4.5–4.6. Owner: Next.js.
+- [ ] Acknowledge a resolved cancellation request that leaves the order active. Shopify marked
+      `#1003`'s requested edit `RESOLVED` without cancelling the order or removing the line item, so
+      the tracking page silently returned to the Cancel Order control. Add a resolved-but-active
+      notice or define the merchant workflow. `components/orders/tracking-page.tsx`,
+      `lib/orders/index.ts`. Owner: Next.js.
 - [ ] Add the designed PDP add-to-bag confirmation slide-over, or record that the cart drawer is the
       accepted replacement. `components/product-detail/buy-buttons.tsx`. Owner: Next.js.
 - [ ] Decide whether the remaining Design I geometry deltas are still targets: the 74 px header vs
