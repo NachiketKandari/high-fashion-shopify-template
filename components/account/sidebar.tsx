@@ -1,6 +1,6 @@
-import { ACCOUNT_LINKS } from "./links";
+import type { AccountLink } from "./links";
 import { SidebarClient } from "./sidebar-client";
 
-export function AccountSidebar() {
-  return <SidebarClient links={ACCOUNT_LINKS} />;
+export function AccountSidebar({ links }: { links: AccountLink[] }) {
+  return <SidebarClient links={links} />;
 }

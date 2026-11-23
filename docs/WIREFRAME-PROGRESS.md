@@ -263,9 +263,10 @@ because Shopify's new customer accounts do not accept a phone number.
 
 Built from the Account & Wallet frames 11–18: overview at `/account`, order list and detail,
 account balance at `/account/wallet`, tax invoices at `/account/invoices`, saved addresses and
-profile details. The account routes keep the storefront header and footer and reuse the existing
-tokens: `#353535` ink, `#dcdcdc` rules, 4px controls and the existing type roles, so the frames'
-pure-black hairlines and 2px/46px controls are normalised rather than copied.
+profile details. The account routes use the post-purchase brand bar and 288px account rail instead
+of the storefront header and footer, and reuse the existing tokens: `#353535` ink, `#dcdcdc` rules,
+4px controls and the existing type roles, so the frames' pure-black hairlines and 2px/46px controls
+are normalised rather than copied.
 
 The overview reads real orders, addresses and the default address. Order cards derive their copy
 from fulfillment and return states; the primary action is `Track order` for in-flight orders,

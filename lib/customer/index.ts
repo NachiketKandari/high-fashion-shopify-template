@@ -75,7 +75,9 @@ export function getClosedReturn(returns: CustomerOrderSummary["returns"]) {
 
 export function getActiveOrderCount(orders: CustomerOrderSummary[]): number {
   return orders.filter(
-    (order) => order.fulfillmentStatus !== "FULFILLED" || getOpenReturn(order.returns),
+    (order) =>
+      order.cancelledAt === null &&
+      (order.fulfillmentStatus !== "FULFILLED" || getOpenReturn(order.returns)),
   ).length;
 }
 

@@ -32,15 +32,17 @@ function DialogOverlay({ className, ...props }: DialogPrimitive.Backdrop.Props) 
 
 function DialogContent({
   className,
+  overlayClassName,
   children,
   showCloseButton = true,
   ...props
 }: DialogPrimitive.Popup.Props & {
+  overlayClassName?: string;
   showCloseButton?: boolean;
 }) {
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay className={overlayClassName} />
       <DialogPrimitive.Popup
         aria-modal="true"
         data-slot="dialog-content"
@@ -95,6 +97,16 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
   );
 }
 
+function DialogClose({ className, ...props }: DialogPrimitive.Close.Props) {
+  return (
+    <DialogPrimitive.Close
+      data-slot="dialog-close"
+      className={cn("cursor-pointer disabled:cursor-not-allowed", className)}
+      {...props}
+    />
+  );
+}
+
 function DialogDescription({ className, ...props }: DialogPrimitive.Description.Props) {
   return (
     <DialogPrimitive.Description
@@ -107,6 +119,7 @@ function DialogDescription({ className, ...props }: DialogPrimitive.Description.
 
 export {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,

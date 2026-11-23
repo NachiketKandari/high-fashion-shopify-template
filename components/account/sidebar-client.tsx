@@ -11,15 +11,17 @@ export function SidebarClient({ links }: { links: AccountLink[] }) {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Account" className="grid gap-1">
+    <nav aria-label="Account" className="grid">
       {links.map((link) => {
-        const active = isAccountLinkActive(pathname, link);
+        const isActive = isAccountLinkActive(pathname, link);
         return (
           <Link
-            aria-current={active ? "page" : undefined}
+            aria-current={isActive ? "page" : undefined}
             className={cn(
-              "type-body-sm flex min-h-9 items-center px-3 transition-colors",
-              active ? "bg-ink text-inverse" : "text-ink hover:bg-surface",
+              "type-body-sm flex min-h-10 items-center px-3 py-3 transition-colors",
+              isActive
+                ? "bg-ink-strong text-inverse"
+                : "text-ink hover:bg-surface hover:text-ink-strong",
             )}
             href={link.href}
             key={link.href}

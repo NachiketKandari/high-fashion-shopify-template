@@ -20,7 +20,7 @@ import {
 } from "@/lib/shopify/customer-account/server";
 import { CUSTOMER_PROFILE_FRAGMENT } from "@/lib/shopify/fragments/customer";
 import { ADDRESS_FRAGMENT } from "@/lib/shopify/fragments/customer-address";
-import { ORDER_FRAGMENT, ORDER_SUMMARY_FRAGMENT } from "@/lib/shopify/fragments/customer-order";
+import { ORDER_FRAGMENT, ORDER_LIST_FRAGMENT } from "@/lib/shopify/fragments/customer-order";
 import {
   CALCULATED_RETURN_FRAGMENT,
   RETURN_FRAGMENT,
@@ -36,6 +36,7 @@ import {
   transformCustomerAddress,
   transformCustomerProfile,
   transformOrder,
+  transformOrderListRow,
   transformOrderSummary,
   transformStoreCreditAccount,
 } from "@/lib/shopify/transforms/customer";
@@ -65,7 +66,7 @@ const GET_CUSTOMER_ORDERS_QUERY = gql(
     customer {
       orders(after: $after, before: $before, first: $first, last: $last, reverse: true, sortKey: PROCESSED_AT) {
         nodes {
-          ...OrderSummaryFields
+          ...OrderListFields
         }
         pageInfo {
           endCursor
@@ -77,7 +78,7 @@ const GET_CUSTOMER_ORDERS_QUERY = gql(
     }
   }
 `,
-  [ORDER_SUMMARY_FRAGMENT],
+  [ORDER_LIST_FRAGMENT],
 );
 
 const GET_CUSTOMER_ORDER_QUERY = gql(
@@ -306,6 +307,22 @@ const CUSTOMER_UPDATE_MUTATION = gql(`#graphql
   }
 `);
 
+const ORDER_REQUEST_EDIT_MUTATION = gql(`#graphql
+  mutation orderRequestEdit($orderId: ID!, $lineItems: RequestedOrderEditLineItemsInput!) {
+    orderRequestEdit(orderId: $orderId, lineItems: $lineItems) {
+      requestedOrderEdit {
+        id
+        status
+      }
+      userErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`);
+
 const CUSTOMER_EMAIL_MARKETING_SUBSCRIBE_MUTATION = gql(`#graphql
   mutation customerEmailMarketingSubscribe {
     customerEmailMarketingSubscribe {
@@ -360,17 +377,19 @@ function toUserErrors(
   }));
 }
 
-export const getCustomerProfile = cache(async (): Promise<CustomerProfile | null> => {
-  const data = await customerFetch({
-    document: GET_CUSTOMER_PROFILE_QUERY,
-    operation: "getCustomerProfile",
-    returnTo: "/account/profile",
-  });
+export const getCustomerProfile = cache(
+  async (returnTo = "/account/profile"): Promise<CustomerProfile | null> => {
+    const data = await customerFetch({
+      document: GET_CUSTOMER_PROFILE_QUERY,
+      operation: "getCustomerProfile",
+      returnTo,
+    });
 
-  if (!data.customer) return null;
+    if (!data.customer) return null;
 
-  return transformCustomerProfile(data.customer);
-});
+    return transformCustomerProfile(data.customer);
+  },
+);
 
 export async function fetchCustomerOrders(
   cursor?: {
@@ -411,7 +430,7 @@ export async function fetchCustomerOrders(
   }
 
   return {
-    orders: orders.nodes.map(transformOrderSummary),
+    orders: orders.nodes.map(transformOrderListRow),
     pageInfo: {
       endCursor: orders.pageInfo.endCursor ?? null,
       hasNextPage: orders.pageInfo.hasNextPage,
@@ -541,6 +560,35 @@ export async function fetchCustomerOrderReturnDetail(
     },
     request,
   });
+}
+
+export async function requestCustomerOrderCancellation(
+  orderId: string,
+  removals: Array<{ lineItemId: string; quantity: number }>,
+): Promise<{ errors: CustomerUserError[]; requestId: string | null }> {
+  const data = await customerFetch({
+    document: ORDER_REQUEST_EDIT_MUTATION,
+    operation: "orderRequestEdit",
+    returnTo: `/account/orders/${encodeURIComponent(orderId)}`,
+    variables: {
+      lineItems: {
+        removals: removals.map((removal) => ({
+          lineItemId: removal.lineItemId,
+          quantity: removal.quantity,
+        })),
+      },
+      orderId,
+    },
+  });
+
+  const payload = data.orderRequestEdit;
+  if (!payload)
+    return { errors: [{ message: "Shopify returned no cancellation request." }], requestId: null };
+
+  return {
+    errors: toUserErrors(payload.userErrors ?? []),
+    requestId: payload.requestedOrderEdit?.id ?? null,
+  };
 }
 
 export async function fetchCustomerAddresses(
