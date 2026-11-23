@@ -3,6 +3,7 @@
 import type { CartData } from "@shopify/hydrogen";
 import { cn } from "cn";
 import { ChevronDownIcon, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { useDisplayPrice } from "@/components/currency/provider";
 import { Price } from "@/components/product/price";
@@ -116,31 +117,18 @@ interface CartCheckoutProps {
 }
 
 export function CartCheckout({ label = "Checkout" }: CartCheckoutProps) {
-  const {
-    checkoutError,
-    checkoutErrorId,
-    handleCheckout,
-    isCartMutating,
-    isCheckingOut,
-    isCheckoutDisabled,
-  } = useCheckout();
+  const router = useRouter();
+  const { isCartMutating, isCheckoutDisabled } = useCheckout();
   return (
     <div className="grid gap-2.5">
       <Button
-        aria-busy={isCheckingOut || isCartMutating || undefined}
-        aria-describedby={checkoutError ? checkoutErrorId : undefined}
+        aria-busy={isCartMutating || undefined}
         className="w-full"
         disabled={isCheckoutDisabled}
-        onClick={handleCheckout}
+        onClick={() => router.push("/checkout/address")}
       >
-        {isCheckingOut ? <Loader2 aria-hidden="true" className="size-4 animate-spin" /> : null}
         {label}
       </Button>
-      {checkoutError ? (
-        <p className="type-body-sm text-error" id={checkoutErrorId} role="alert">
-          {checkoutError}
-        </p>
-      ) : null}
     </div>
   );
 }

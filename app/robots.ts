@@ -10,10 +10,12 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: [
           "/cart",
+          "/checkout",
           "/account",
           "/login",
           "/search",
           "/*/cart",
+          "/*/checkout",
           "/*/account",
           "/*/login",
           "/*/search",

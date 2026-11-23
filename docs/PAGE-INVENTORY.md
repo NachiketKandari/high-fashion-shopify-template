@@ -39,16 +39,19 @@ The complete handle list is on `/collections` and in `/sitemap.xml`; do not dupl
 
 ## Cart and checkout
 
-| Step                         | Path                 | Current behavior                                                                           |
-| ---------------------------- | -------------------- | ------------------------------------------------------------------------------------------ |
-| Product                      | `/products/[handle]` | Choose a variant and add to cart                                                           |
-| Cart                         | `/cart`              | Full-page bag; Checkout currently opens Shopify's hosted checkout directly                 |
-| Address and shipping         | `/checkout/address`  | Built pre-checkout step, reachable by direct link only; an empty cart redirects to `/cart` |
-| Shipping, payment, placement | Shopify checkout     | Generated per cart from `cart.checkoutUrl`; no fixed storefront URL                        |
-| Confirmation                 | Shopify checkout     | Shopify-owned; no storefront page                                                          |
+| Step                         | Path                             | Current behavior                                                                                         |
+| ---------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Product                      | `/products/[handle]`             | Choose a variant and add to cart                                                                         |
+| Cart                         | `/cart`                          | Full-page bag; Checkout opens the address step                                                           |
+| Address and shipping         | `/checkout/address`              | Guest form, saved addresses, gift, promo and totals; Proceed opens the payment review                    |
+| Payment review               | `/checkout/payment`              | Reviews delivery and payment method, then hands off to Shopify checkout where Razorpay Cards Onsite runs |
+| Shipping, payment, placement | Shopify checkout                 | Generated per cart from `cart.checkoutUrl`; no fixed storefront URL                                      |
+| Confirmation                 | `/checkout/confirmation/[token]` | Durable, signed-token order confirmation; reads the order through the Admin API                          |
 
 `/checkout` is a Hydrogen redirect to Shopify's checkout, not a storefront page. The cart Checkout
-action does not link to `/checkout/address` yet.
+action opens `/checkout/address`. The confirmation page is reached with a signed token; Shopify's
+order status page remains the default post-checkout landing unless a Shopify-side link or redirect is
+configured.
 
 ## Authentication and account
 

@@ -4,9 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Price } from "@/components/product/price";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "@/components/ui/link";
 import { useCheckout, useSuspenseCart } from "@/lib/cart/client";
 import { getDeliveryErrors, getInitialDelivery, toCustomerAddressInput } from "@/lib/checkout";
@@ -17,6 +15,7 @@ import type { Money } from "@/lib/money/types";
 
 import { AddressStep } from "./address-step";
 import { CheckoutItems } from "./checkout-items";
+import { CheckoutTotals } from "./checkout-totals";
 import { GiftOption } from "./gift-option";
 import { PromoCode } from "./promo-code";
 
@@ -35,16 +34,8 @@ export function CheckoutView({ addresses, isSignedIn, storeCredit }: CheckoutVie
   const [isSavingAddress, setIsSavingAddress] = useState(false);
   const [saveAddress, setSaveAddress] = useState(true);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [useStoreCredit, setUseStoreCredit] = useState(true);
   const router = useRouter();
-  const {
-    checkoutError,
-    checkoutErrorId,
-    handleCheckout,
-    isCartMutating,
-    isCheckingOut,
-    isCheckoutDisabled,
-  } = useCheckout();
+  const { isCartMutating, isCheckoutDisabled } = useCheckout();
 
   useEffect(() => {
     if (cart.totalQuantity === 0) router.replace("/cart");
@@ -76,20 +67,8 @@ export function CheckoutView({ addresses, isSignedIn, storeCredit }: CheckoutVie
       }
     }
 
-    void handleCheckout();
+    router.push("/checkout/payment");
   }
-
-  const appliedCodes = cart.discountCodes
-    .filter((discount) => discount.applicable)
-    .map((discount) => discount.code);
-
-  const cartCurrency = cart.cost.totalAmount.currencyCode;
-  const cartTotal = Number(cart.cost.totalAmount.amount);
-  const storeCreditAmount = storeCredit
-    .filter((credit) => credit.currencyCode === cartCurrency)
-    .reduce((total, credit) => total + Number(credit.amount), 0);
-  const appliedCredit = useStoreCredit ? Math.min(storeCreditAmount, cartTotal) : 0;
-  const amountDue = Math.max(0, cartTotal - appliedCredit);
 
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-6 py-10 desktop:flex-row desktop:gap-0 desktop:py-0">
@@ -144,82 +123,20 @@ export function CheckoutView({ addresses, isSignedIn, storeCredit }: CheckoutVie
         <GiftOption cart={cart} className="order-5 desktop:order-2" />
 
         <div className="order-6 grid gap-8 desktop:order-4">
-          <div className="grid gap-6">
-            {storeCreditAmount > 0 ? (
-              <div className="flex min-h-4 items-center justify-between gap-4">
-                <Checkbox
-                  checked={useStoreCredit}
-                  className="type-meta min-h-0 text-ink"
-                  label="Use account credits"
-                  onCheckedChange={setUseStoreCredit}
-                />
-                <span className="type-meta text-ink-strong">
-                  <Price amount={String(storeCreditAmount)} currencyCode={cartCurrency} />
-                </span>
-              </div>
-            ) : null}
-
-            <dl className="grid gap-6 text-ink-strong">
-              <div className="flex items-baseline justify-between gap-8">
-                <dt className="type-h4">Subtotal</dt>
-                <dd className="type-h4">
-                  <Price
-                    amount={cart.cost.subtotalAmount.amount}
-                    currencyCode={cart.cost.subtotalAmount.currencyCode}
-                  />
-                </dd>
-              </div>
-              {appliedCodes.length > 0 ? (
-                <div className="flex items-baseline justify-between gap-8">
-                  <dt className="type-h4">Promo code</dt>
-                  <dd className="type-h4">{appliedCodes.join(", ")}</dd>
-                </div>
-              ) : null}
-              <div className="flex items-baseline justify-between gap-8">
-                <dt className="type-h4">Delivery</dt>
-                <dd className="type-h4">Calculated at checkout</dd>
-              </div>
-              {appliedCredit > 0 ? (
-                <div className="flex items-baseline justify-between gap-8">
-                  <dt className="type-h4">Account credits</dt>
-                  <dd className="type-h4">
-                    - <Price amount={String(appliedCredit)} currencyCode={cartCurrency} />
-                  </dd>
-                </div>
-              ) : null}
-              <div className="flex items-baseline justify-between gap-8">
-                <dt className="type-nav">TOTAL</dt>
-                <dd className="type-nav">
-                  <Price amount={String(amountDue)} currencyCode={cartCurrency} />
-                </dd>
-              </div>
-            </dl>
-
-            {appliedCredit > 0 ? (
-              <p className="type-meta text-ink-muted">
-                Account credits are applied at Shopify checkout.
-              </p>
-            ) : null}
-          </div>
+          <CheckoutTotals cart={cart} storeCredit={storeCredit} />
 
           <div className="grid gap-2.5">
             <Button
-              aria-busy={isCheckingOut || isCartMutating || isSavingAddress || undefined}
-              aria-describedby={checkoutError ? checkoutErrorId : undefined}
+              aria-busy={isCartMutating || isSavingAddress || undefined}
               className="type-meta-medium h-10 w-full justify-center bg-ink-strong px-6 hover:bg-ink-strong/80"
               disabled={isCheckoutDisabled || isSavingAddress}
               onClick={() => void handleProceed()}
             >
-              {isCheckingOut || isSavingAddress ? (
+              {isSavingAddress ? (
                 <Loader2 aria-hidden="true" className="size-4 animate-spin" />
               ) : null}
               Proceed to Payment
             </Button>
-            {checkoutError ? (
-              <p className="type-body-sm text-error-rule" id={checkoutErrorId} role="alert">
-                {checkoutError}
-              </p>
-            ) : null}
           </div>
         </div>
 

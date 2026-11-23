@@ -21,11 +21,19 @@ exists on 10 November 2026.
 
 ```
 Buy buttons / cart
-  → Hydrogen cart handlers (/api/cart)          lib/cart/request.ts
+  → /checkout/address                           components/checkout/*
+  → /checkout/payment                           payment review + handoff
   → prepareCheckoutAction reads checkoutUrl     lib/cart/action.ts
   → browser leaves for Shopify-hosted checkout  Shopify + payment provider
   → Shopify returns the shopper to the order status page
 ```
+
+The storefront payment step is a review, not a card form: it confirms the delivery and payment method
+and hands off to Shopify checkout, where the Razorpay Cards Onsite app renders the card fields. No card
+data reaches the Next.js app. `/checkout/confirmation/[token]` is a durable, signed-token receipt that
+reads the placed order through the server-only Admin API; it is not an automatic post-checkout
+redirect. Linking it from Shopify's order status page or confirmation email is a Shopify-side
+configuration.
 
 Everything after the redirect — address, payment method list, UPI app handoff, card 3DS, OTP,
 retries, receipts — belongs to Shopify checkout and the provider. **The app never touches payment

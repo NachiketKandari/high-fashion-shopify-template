@@ -14,6 +14,28 @@ export interface CheckoutAddresses {
   storeCredit: Money[];
 }
 
+export interface CheckoutPaymentContext {
+  isSignedIn: boolean;
+  storeCredit: Money[];
+}
+
+export async function getCheckoutPaymentContext(): Promise<CheckoutPaymentContext> {
+  if (!(await isCustomerLoggedIn())) {
+    return { isSignedIn: false, storeCredit: [] };
+  }
+
+  try {
+    const storeCredit = await fetchCustomerStoreCredit().catch((error) => {
+      unstable_rethrow(error);
+      return [];
+    });
+    return { isSignedIn: true, storeCredit };
+  } catch (error) {
+    unstable_rethrow(error);
+    return { isSignedIn: true, storeCredit: [] };
+  }
+}
+
 export async function getCheckoutAddresses(): Promise<CheckoutAddresses> {
   if (!(await isCustomerLoggedIn())) {
     return { addresses: [], isSignedIn: false, storeCredit: [] };

@@ -14,10 +14,11 @@ import type { Cart, CartLine } from "@/lib/cart/types";
 interface CheckoutItemsProps {
   cart: Cart;
   className?: string;
+  defaultOpen?: boolean;
 }
 
-export function CheckoutItems({ cart, className }: CheckoutItemsProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function CheckoutItems({ cart, className, defaultOpen = false }: CheckoutItemsProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
     <details
