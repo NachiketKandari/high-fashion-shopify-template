@@ -117,6 +117,10 @@ control that cannot complete.
     tracking without a dispatch event.
   The real list and tracking page render order `#1002`, its dispatched stepper, tracking details,
   address, item and totals.
-- Still unverified: the `orderRequestEdit` mutation needs an eligible unfulfilled order. The test
-  account's only order is dispatched, so the cancel button is correctly absent. Run one unfulfilled
-  order through processing → request → pending before launch.
+- The live cancellation request is verified. A free, unfulfilled test order (`#1003`) submitted
+  `orderRequestEdit` from the production build; the tracking page replaced the cancel control with
+  the `Cancellation requested` pending notice and the order stayed in `Preparing`. Merchant approval
+  still happens in Shopify, so the resolved and declined states remain admin-side.
+- The store has no shipping zones, so the test order used a temporary zero-price, non-shipping
+  product. It and the test gift card were unpublished and set to draft after the request; order
+  `#1003` is left for merchant review.
