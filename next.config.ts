@@ -5,10 +5,15 @@ import type { NextConfig } from "next";
 import { shopConfig } from "./lib/config";
 import { withShopConfig } from "./lib/config/server";
 
+const tunnelOrigins = ["*.ngrok-free.app", "*.ngrok-free.dev", "*.trycloudflare.com"];
+const isProduction = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
+  allowedDevOrigins: tunnelOrigins,
   cacheComponents: true,
   experimental: {
     agentUpgrade: "security",
+    ...(isProduction ? {} : { serverActions: { allowedOrigins: tunnelOrigins } }),
   },
   images: {
     deviceSizes: [1320, 1920],

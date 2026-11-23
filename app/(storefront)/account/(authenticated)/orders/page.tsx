@@ -1,12 +1,16 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { formatOrderDate, OrderStatusBadge } from "@/components/account/order-display";
+import { OrdersEmptyState } from "@/components/account/orders-empty-state";
+import { OrdersList } from "@/components/account/orders-list";
 import { AccountPageHeader } from "@/components/account/page-header";
-import { Button } from "@/components/ui/button";
 import { Link } from "@/components/ui/link";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatPrice } from "@/lib/money";
 import { fetchCustomerOrders } from "@/lib/shopify/operations/customer/server";
+
+export const metadata: Metadata = {
+  title: "My orders",
+};
 
 export default function OrdersPage({
   searchParams,
@@ -14,12 +18,9 @@ export default function OrdersPage({
   searchParams: Promise<{ after?: string; before?: string }>;
 }) {
   return (
-    <>
-      <AccountPageHeader title="Orders" description="View your order history" />
-      <Suspense fallback={<OrdersSkeleton />}>
-        <OrdersContent searchParams={searchParams} />
-      </Suspense>
-    </>
+    <Suspense fallback={<OrdersSkeleton />}>
+      <OrdersContent searchParams={searchParams} />
+    </Suspense>
   );
 }
 
@@ -29,81 +30,80 @@ async function OrdersContent({
   searchParams: Promise<{ after?: string; before?: string }>;
 }) {
   const params = await searchParams;
-  const { orders, pageInfo } = await fetchCustomerOrders({
-    after: params.after,
-    before: params.before,
-  });
+  const page = await fetchCustomerOrders({ after: params.after, before: params.before });
+  const orders = page.orders;
+  const newerHref =
+    page.pageInfo.hasPreviousPage && page.pageInfo.startCursor
+      ? `/account/orders?before=${encodeURIComponent(page.pageInfo.startCursor)}`
+      : null;
+  const olderHref =
+    page.pageInfo.hasNextPage && page.pageInfo.endCursor
+      ? `/account/orders?after=${encodeURIComponent(page.pageInfo.endCursor)}`
+      : null;
+
   if (orders.length === 0) {
+    if (params.after || params.before) {
+      return (
+        <div className="grid gap-6">
+          <AccountPageHeader breadcrumb="My orders" title="My orders" />
+          <p className="type-body-sm text-ink-muted">No orders on this page.</p>
+          <Link
+            className="type-body-sm focus-ring inline-flex min-h-9 w-fit items-center text-ink underline-offset-4 hover:underline"
+            href="/account/orders"
+          >
+            Back to my orders
+          </Link>
+        </div>
+      );
+    }
+
     return (
-      <div className="rounded-none border p-6 text-center">
-        <p className="type-body-sm text-muted-foreground">You have no orders yet.</p>
+      <div className="grid gap-6">
+        <AccountPageHeader
+          breadcrumb="My orders"
+          description="Your orders will appear here after your first purchase."
+          title="My orders"
+        />
+        <OrdersEmptyState />
+        <Link
+          className="type-body-sm focus-ring inline-flex min-h-9 w-fit items-center text-ink underline-offset-4 hover:underline"
+          href="/pages/contact-us"
+        >
+          Need help finding an order? Contact us
+        </Link>
       </div>
     );
   }
-  return (
-    <div className="grid gap-4">
-      <ul className="grid gap-3">
-        {orders.map((order) => (
-          <li key={order.id}>
-            <Link
-              href={`/account/orders/${encodeURIComponent(order.id)}`}
-              className="flex items-center justify-between gap-4 rounded-none border p-4 transition-colors hover:bg-accent"
-            >
-              <div className="grid gap-1">
-                <span className="font-normal">{order.name}</span>
-                <span className="type-body-sm text-muted-foreground">
-                  {formatOrderDate(order.processedAt)}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <OrderStatusBadge status={order.fulfillmentStatus} />
-                <span className="type-body-sm tabular-nums">{formatPrice(order.totalPrice)}</span>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
 
-      {pageInfo.hasNextPage || pageInfo.hasPreviousPage ? (
-        <div className="flex items-center justify-between">
-          {pageInfo.hasPreviousPage && pageInfo.startCursor ? (
-            <Button
-              variant="outline"
-              size="sm"
-              render={
-                <Link href={`/account/orders?before=${encodeURIComponent(pageInfo.startCursor)}`} />
-              }
-            >
-              Newer
-            </Button>
-          ) : (
-            <span />
-          )}
-          {pageInfo.hasNextPage && pageInfo.endCursor ? (
-            <Button
-              variant="outline"
-              size="sm"
-              render={
-                <Link href={`/account/orders?after=${encodeURIComponent(pageInfo.endCursor)}`} />
-              }
-            >
-              Older
-            </Button>
-          ) : (
-            <span />
-          )}
-        </div>
-      ) : null}
+  return (
+    <div className="grid gap-6">
+      <AccountPageHeader breadcrumb="My orders" title="My orders" />
+      <OrdersList
+        newerHref={newerHref}
+        olderHref={olderHref}
+        orders={orders}
+        pageInfo={page.pageInfo}
+      />
     </div>
   );
 }
 
 function OrdersSkeleton() {
   return (
-    <div className="grid gap-3">
-      {Array.from({ length: 4 }).map((_, index) => (
-        <Skeleton key={index} className="h-18 w-full rounded-none" />
-      ))}
+    <div aria-busy="true" className="grid gap-6">
+      <div className="grid gap-6">
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-6 w-32" />
+      </div>
+      <div className="grid gap-2">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-11 w-full rounded-none" />
+      </div>
+      <div className="grid gap-6">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <Skeleton className="h-64 w-full rounded-none" key={index} />
+        ))}
+      </div>
     </div>
   );
 }

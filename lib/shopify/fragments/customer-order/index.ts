@@ -10,7 +10,26 @@ export const ORDER_SUMMARY_FRAGMENT = gql(`#graphql
     id
     name
     number
+    previewLineItems: lineItems(first: 10) {
+      nodes {
+        quantity
+        title
+        variantTitle
+      }
+    }
     processedAt
+    returns(first: 5) {
+      nodes {
+        createdAt
+        id
+        name
+        returnLineItemsCount {
+          count
+        }
+        status
+      }
+    }
+    statusPageUrl
     totalPrice {
       amount
       currencyCode
@@ -67,7 +86,6 @@ export const ORDER_FRAGMENT = gql(
     shippingAddress {
       ...AddressFields
     }
-    statusPageUrl
     subtotal {
       amount
       currencyCode

@@ -16,7 +16,13 @@ import { CartWarnings } from "./warnings";
 
 const CART_WIDTH_CLASS = "max-w-[1440px]";
 
-export function CartPageContent({ signIn }: { signIn?: ReactNode }) {
+export function CartPageContent({
+  accountBalance,
+  signIn,
+}: {
+  accountBalance?: ReactNode;
+  signIn?: ReactNode;
+}) {
   const cart = useSuspenseCart((state) => state.data);
   const isMutating = useCartMutating();
 
@@ -42,6 +48,7 @@ export function CartPageContent({ signIn }: { signIn?: ReactNode }) {
               <div className="hidden empty:hidden desktop:block">{isMutating ? null : signIn}</div>
               <div className="hidden desktop:block">
                 <CartSummary
+                  accountBalance={accountBalance}
                   cart={cart}
                   className={
                     isMutating ? "desktop:min-h-[399px] desktop:content-center" : undefined
@@ -50,7 +57,7 @@ export function CartPageContent({ signIn }: { signIn?: ReactNode }) {
                 />
               </div>
               <div className="desktop:hidden">
-                <CartSummary cart={cart} showCheckout={false} />
+                <CartSummary accountBalance={accountBalance} cart={cart} showCheckout={false} />
               </div>
             </aside>
           </div>
