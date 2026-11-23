@@ -2,7 +2,12 @@ import { cn } from "cn";
 import Image from "next/image";
 import { Suspense } from "react";
 
-import { ProductCard, ProductCardSkeleton } from "@/components/product-card/product-card";
+import {
+  PRODUCT_TITLE_LINK_CLASS,
+  PRODUCT_TITLE_MARK_CLASS,
+  ProductCard,
+  ProductCardSkeleton,
+} from "@/components/product-card/product-card";
 import { Price } from "@/components/product/price";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Link } from "@/components/ui/link";
@@ -93,7 +98,7 @@ function HomeProductCard({
         {product.featuredImage ? (
           <Image
             alt={product.featuredImage.altText || product.title}
-            className="object-cover transition-transform duration-(--motion-image) ease-(--ease-standard) group-focus-within/card:scale-[1.03] group-hover/card:scale-[1.03] motion-reduce:transform-none"
+            className="object-cover"
             fill
             loading={loading}
             sizes="100vw"
@@ -105,14 +110,19 @@ function HomeProductCard({
       </Link>
       <div className="hidden justify-center pt-6 desktop:flex">
         <h3 className="type-body min-w-0 text-center text-ink">
-          <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
+          <Link
+            className={cn(PRODUCT_TITLE_LINK_CLASS, "inline-flex min-h-9 items-center")}
+            href={href}
+          >
             {product.title}
           </Link>
         </h3>
       </div>
       <div className="desktop:hidden">
         <Link className="focus-ring grid gap-1 px-1 pt-3" href={href}>
-          <span className="type-label min-w-0 text-ink">{product.title}</span>
+          <span className={cn(PRODUCT_TITLE_MARK_CLASS, "type-label min-w-0 text-ink")}>
+            {product.title}
+          </span>
           <Price
             amount={product.price.amount}
             className="type-label text-ink-muted"

@@ -23,6 +23,11 @@ export interface ProductCardProps {
   variant?: "browse" | "cart" | "default";
 }
 
+export const PRODUCT_TITLE_MARK_CLASS =
+  "underline decoration-1 decoration-transparent underline-offset-4 transition-colors duration-(--motion-underline) ease-(--ease-standard) group-focus-within/card:decoration-current group-hover/card:decoration-current focus-visible:decoration-current motion-reduce:transition-none";
+
+export const PRODUCT_TITLE_LINK_CLASS = `focus-ring ${PRODUCT_TITLE_MARK_CLASS}`;
+
 function swatchStyle(swatch: { color?: string; image?: string } | undefined) {
   if (!swatch) return undefined;
   return {
@@ -82,10 +87,9 @@ export function ProductCard({
             <Image
               alt={product.featuredImage.altText || product.title}
               className={cn(
-                "transition-transform duration-(--motion-image) ease-(--ease-standard)",
                 isBrowse
-                  ? "object-contain [[data-card-view=image]_&]:object-cover [[data-card-view=item]_&]:scale-125 [[data-card-view=item]_&]:object-cover"
-                  : "object-cover group-focus-within/card:scale-[1.03] group-hover/card:scale-[1.03] motion-reduce:transform-none",
+                  ? "object-contain transition-transform duration-(--motion-image) ease-(--ease-standard) [[data-card-view=image]_&]:object-cover [[data-card-view=item]_&]:scale-125 [[data-card-view=item]_&]:object-cover"
+                  : "object-cover",
                 isBrowse && product.hoverImage ? "[[data-card-view=image]_&]:hidden" : undefined,
               )}
               fill
@@ -96,29 +100,16 @@ export function ProductCard({
           ) : (
             <ImagePlaceholder className="size-full" />
           )}
-          {product.hoverImage ? (
-            isBrowse ? (
-              <Image
-                alt=""
-                aria-hidden="true"
-                className="hidden object-cover [[data-card-view=image]_&]:block"
-                fill
-                loading="lazy"
-                sizes="100vw"
-                src={product.hoverImage.url}
-              />
-            ) : (
-              // Display-gated so the browser skips the lazy fetch until hover/focus; touch devices never download it.
-              <Image
-                alt=""
-                aria-hidden="true"
-                className="hidden object-cover group-focus-within/card:block group-hover/card:block"
-                fill
-                loading="lazy"
-                sizes="100vw"
-                src={product.hoverImage.url}
-              />
-            )
+          {isBrowse && product.hoverImage ? (
+            <Image
+              alt=""
+              aria-hidden="true"
+              className="hidden object-cover [[data-card-view=image]_&]:block"
+              fill
+              loading="lazy"
+              sizes="100vw"
+              src={product.hoverImage.url}
+            />
           ) : null}
         </Link>
 
@@ -160,7 +151,10 @@ export function ProductCard({
         <div className="flex h-12 items-center justify-between gap-2 px-2 desktop:h-auto desktop:flex-col desktop:items-start desktop:gap-2 desktop:px-6 desktop:pt-6">
           <h3 className="type-meta-semibold min-w-0 truncate text-ink desktop:type-h4">
             <Link
-              className="focus-ring -my-2.5 flex min-h-9 items-center desktop:my-0 desktop:min-h-0"
+              className={cn(
+                PRODUCT_TITLE_LINK_CLASS,
+                "-my-2.5 flex min-h-9 items-center desktop:my-0 desktop:min-h-0",
+              )}
               href={href}
             >
               {product.title}
@@ -177,7 +171,10 @@ export function ProductCard({
       ) : isBrowse ? (
         <div className="grid gap-1 px-6 pt-2 desktop:pt-6">
           <h3 className="type-caption min-w-0 truncate text-ink">
-            <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
+            <Link
+              className={cn(PRODUCT_TITLE_LINK_CLASS, "inline-flex min-h-9 items-center")}
+              href={href}
+            >
               {product.title}
             </Link>
           </h3>
@@ -205,7 +202,10 @@ export function ProductCard({
       ) : captionLayout === "compact" ? (
         <div className="grid gap-1 px-3 pt-3 desktop:px-6 desktop:pt-6">
           <h3 className="type-caption min-w-0 truncate text-ink">
-            <Link className="focus-ring inline-flex" href={href}>
+            <Link
+              className={cn(PRODUCT_TITLE_LINK_CLASS, "inline-flex min-h-9 items-center")}
+              href={href}
+            >
               {product.title}
             </Link>
           </h3>
@@ -220,7 +220,10 @@ export function ProductCard({
       ) : captionLayout === "row" ? (
         <div className="flex items-center justify-between gap-3 px-6 py-1.5">
           <h3 className="type-caption min-w-0 truncate text-ink">
-            <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
+            <Link
+              className={cn(PRODUCT_TITLE_LINK_CLASS, "inline-flex min-h-9 items-center")}
+              href={href}
+            >
               {product.title}
             </Link>
           </h3>
@@ -235,7 +238,10 @@ export function ProductCard({
       ) : (
         <div className="grid gap-1 px-2 pt-2 pb-2">
           <h3 className="type-caption min-w-0 truncate text-ink">
-            <Link className="focus-ring inline-flex min-h-9 items-center" href={href}>
+            <Link
+              className={cn(PRODUCT_TITLE_LINK_CLASS, "inline-flex min-h-9 items-center")}
+              href={href}
+            >
               {product.title}
             </Link>
           </h3>
