@@ -1,6 +1,12 @@
 import { shopConfig } from "@/lib/config";
-import type { OrderFulfillment, CustomerOrder, CustomerOrderListRow } from "@/lib/customer/types";
 import type {
+  CustomerOrder,
+  CustomerOrderListRow,
+  OrderFulfillment,
+  OrderTransaction,
+} from "@/lib/customer/types";
+import type {
+  CancellationRefund,
   OrderCancellation,
   OrderStage,
   OrderTrackingView,
@@ -49,6 +55,61 @@ function humanizeCancelReason(reason: string): string {
     STAFF: "Cancelled by our team",
   };
   return labels[reason] ?? "Cancelled";
+}
+
+const PAYMENT_KINDS = new Set(["AUTHORIZATION", "CAPTURE", "SALE"]);
+
+const PAYMENT_TYPE_LABELS: Record<string, string> = {
+  ACH: "Bank transfer",
+  BANK_DEPOSIT: "Bank deposit",
+  CARD: "Card",
+  CASH_ON_DELIVERY: "Cash on delivery",
+  CUSTOM: "Custom payment",
+  GIFT_CARD: "Gift card",
+  MANUAL: "Manual payment",
+  MONEY_ORDER: "Money order",
+  SHOPIFY_INSTALLMENTS: "Installments",
+  STORE_CREDIT: "Account Balance wallet",
+};
+
+const TRANSACTION_KIND_LABELS: Record<string, string> = {
+  AUTHORIZATION: "Authorization",
+  CAPTURE: "Capture",
+  CARD_APPROVAL: "Card approval",
+  CARD_DECLINE: "Card declined",
+  CHANGE: "Adjustment",
+  REFUND: "Refund",
+  SALE: "Payment",
+  SUGGESTED_REFUND: "Suggested refund",
+  VOID: "Void",
+};
+
+export function getOrderPayments(order: CustomerOrder): OrderTransaction[] {
+  return order.transactions.filter(
+    (transaction) =>
+      transaction.status === "SUCCESS" &&
+      transaction.kind !== null &&
+      PAYMENT_KINDS.has(transaction.kind) &&
+      Number(transaction.amount.amount) > 0,
+  );
+}
+
+export function getPaymentTypeLabel(type: string): string {
+  return PAYMENT_TYPE_LABELS[type] ?? "Payment";
+}
+
+export function getTransactionKindLabel(kind: string | null): string {
+  return kind ? (TRANSACTION_KIND_LABELS[kind] ?? "Transaction") : "Transaction";
+}
+
+function getGiftCardLabel(payments: OrderTransaction[]): string {
+  const last4s = [
+    ...new Set(payments.map((payment) => payment.giftCardLast4).filter(Boolean)),
+  ] as string[];
+
+  if (last4s.length === 0) return "Gift card";
+  if (last4s.length === 1) return `Gift card ••••${last4s[0]}`;
+  return `Gift cards ${last4s.map((last4) => `••••${last4}`).join(", ")}`;
 }
 
 function findDeliveredAt(fulfillments: OrderFulfillment[]): string | null {
@@ -171,8 +232,168 @@ function getStatusCopy(stage: OrderStage, order: CustomerOrder): { detail: strin
   }
 
   return {
-    detail: "Your payment is confirmed. We’re preparing your items for dispatch.",
+    detail: "Your order is confirmed. We’re preparing your items for dispatch.",
     title: "Preparing your order",
+  };
+}
+
+const CARD_REFUND: CancellationRefund = {
+  cta: "Request Cancellation — Refund to Card",
+  destination: "Original card",
+  kind: "card",
+  note: "If your cancellation is approved, the refund returns to the card used at checkout. Your bank’s processing time determines when it appears.",
+  timing: "Within the 24-hour refund window",
+};
+
+const WALLET_REFUND: CancellationRefund = {
+  cta: "Request Cancellation — Wallet Credit",
+  destination: "Account Balance wallet",
+  kind: "wallet",
+  note: "If your cancellation is approved, the credit is added to the Account Balance wallet linked to your member profile. This is not a refund to your card.",
+  timing: "After the 24-hour card-refund window",
+};
+
+const MANUAL_REFUND: CancellationRefund = {
+  cta: "Request Cancellation",
+  destination: "Original payment method",
+  kind: "manual",
+  note: "If your cancellation is approved, our team will confirm the refund method with you.",
+  timing: null,
+};
+
+function withOutstanding(note: string, outstanding: number): string {
+  return outstanding > 0
+    ? `${note} Only the amount already paid can be refunded; the outstanding balance is removed.`
+    : note;
+}
+
+export function getCancellationRefund(order: CustomerOrder, now = new Date()): CancellationRefund {
+  const paid = Number(order.payment.paid.amount);
+  const outstanding = Number(order.payment.outstanding.amount);
+  const payments = getOrderPayments(order);
+  const giftCardPayments = payments.filter((payment) => payment.type === "GIFT_CARD");
+  const storeCreditPayments = payments.filter((payment) => payment.type === "STORE_CREDIT");
+  const cardPayments = payments.filter(
+    (payment) => payment.type === "CARD" || payment.type === "SHOPIFY_INSTALLMENTS",
+  );
+  const manualPayments = payments.filter(
+    (payment) =>
+      !["CARD", "GIFT_CARD", "SHOPIFY_INSTALLMENTS", "STORE_CREDIT"].includes(payment.type),
+  );
+
+  const hasCard = cardPayments.length > 0;
+  const hasGiftCard = giftCardPayments.length > 0;
+  const hasManual = manualPayments.length > 0;
+  const hasStoreCredit = storeCreditPayments.length > 0;
+  const withinCardWindow =
+    now.getTime() - new Date(order.processedAt).getTime() <= CANCELLATION_WINDOW_MS;
+
+  if (order.payment.status === "AUTHORIZED" || order.financialStatus === "AUTHORIZED") {
+    return {
+      cta: "Request Cancellation",
+      destination: "Authorized, not captured",
+      kind: "outstanding",
+      note: "The payment is authorized but not captured. Cancelling releases the authorization; no refund is issued.",
+      timing: null,
+    };
+  }
+
+  if (payments.length === 0 && paid <= 0) {
+    if (
+      outstanding > 0 ||
+      order.financialStatus === "PENDING" ||
+      order.financialStatus === "PARTIALLY_PAID"
+    ) {
+      return {
+        cta: "Request Cancellation",
+        destination: "No payment captured",
+        kind: "outstanding",
+        note: "This order has an outstanding balance. Cancelling removes the amount due; no refund is issued.",
+        timing: null,
+      };
+    }
+
+    if (order.discounts.length > 0) {
+      return {
+        cta: "Request Cancellation",
+        destination: "Covered by discount",
+        kind: "none",
+        note: "This order was covered by a discount. No payment was taken, so no refund is issued.",
+        timing: null,
+      };
+    }
+
+    return {
+      cta: "Request Cancellation",
+      destination: "No payment taken",
+      kind: "none",
+      note: "No payment was recorded for this order, so no refund is due.",
+      timing: null,
+    };
+  }
+
+  if (payments.length === 0) {
+    return { ...MANUAL_REFUND, note: withOutstanding(MANUAL_REFUND.note, outstanding) };
+  }
+
+  if (hasGiftCard && !hasCard && !hasStoreCredit && !hasManual) {
+    return {
+      cta: "Request Cancellation — Refund to Gift Card",
+      destination: getGiftCardLabel(giftCardPayments),
+      kind: "gift-card",
+      note: withOutstanding(
+        "If your cancellation is approved, the refund returns to the gift card used at checkout.",
+        outstanding,
+      ),
+      timing: null,
+    };
+  }
+
+  if (hasStoreCredit && !hasCard && !hasGiftCard && !hasManual) {
+    return {
+      cta: "Request Cancellation — Wallet Credit",
+      destination: "Account Balance wallet",
+      kind: "wallet",
+      note: withOutstanding(
+        "If your cancellation is approved, the credit is added to the Account Balance wallet linked to your member profile.",
+        outstanding,
+      ),
+      timing: null,
+    };
+  }
+
+  if (hasCard && !hasGiftCard && !hasStoreCredit && !hasManual) {
+    const refund = withinCardWindow ? CARD_REFUND : WALLET_REFUND;
+    return { ...refund, note: withOutstanding(refund.note, outstanding) };
+  }
+
+  if (hasManual && !hasCard && !hasGiftCard && !hasStoreCredit) {
+    return { ...MANUAL_REFUND, note: withOutstanding(MANUAL_REFUND.note, outstanding) };
+  }
+
+  const parts: string[] = [];
+  if (hasGiftCard) parts.push(getGiftCardLabel(giftCardPayments));
+  if (hasStoreCredit) parts.push("Account Balance wallet");
+  if (hasCard) {
+    parts.push(withinCardWindow ? "original card" : "Account Balance wallet for the card portion");
+  }
+  if (hasManual) parts.push("original payment method");
+
+  return {
+    cta: "Request Cancellation",
+    destination: parts.join(" and "),
+    kind: "mixed",
+    note: withOutstanding(
+      hasCard && !withinCardWindow
+        ? "If approved, each part returns to the method that funded it. The card portion follows the 24-hour wallet policy."
+        : "If approved, each part returns to the method that funded it.",
+      outstanding,
+    ),
+    timing: hasCard
+      ? withinCardWindow
+        ? "Within the 24-hour refund window"
+        : "After the 24-hour card-refund window"
+      : null,
   };
 }
 
@@ -183,9 +404,7 @@ export function getOrderCancellation(order: CustomerOrder, now = new Date()): Or
   if (pending) return { status: "pending", requestId: pending.id };
 
   if (order.hasEditableLineItems) {
-    const withinCardWindow =
-      now.getTime() - new Date(order.processedAt).getTime() <= CANCELLATION_WINDOW_MS;
-    return { status: "available", window: withinCardWindow ? "card" : "wallet" };
+    return { status: "available", refund: getCancellationRefund(order, now) };
   }
 
   const declined = order.requestedEdits.find((request) => request.status === "DECLINED");

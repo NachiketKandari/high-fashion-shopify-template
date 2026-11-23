@@ -45,8 +45,8 @@ complete for delivered. There is no designed frame with step 3 current; the disp
 the tracking shell and copy.
 
 `getOrderCancellation` reads `requestedEditInformation.hasEditableLineItems` and
-`requestedOrderEdits`. A `REQUESTED` edit hides the cancel button and shows the pending notice. The
-24-hour cut-off only selects the refund-destination copy; eligibility always comes from Shopify.
+`requestedOrderEdits`. A `REQUESTED` edit hides the cancel button and shows the pending notice.
+Eligibility always comes from Shopify; the 24-hour cut-off only selects the card refund destination.
 
 ## 4. Cancellation transport
 
@@ -57,10 +57,9 @@ refunds remain an Admin API concern.
 
 So the modal is a request, not an instant cancel:
 
-- the button labels read `Request Cancellation — Refund to Card` / `Request Cancellation — Wallet
-  Credit`;
-- the copy says the team reviews the request and emails the outcome, and that no refund has been
-  issued yet;
+- the button label follows the funding source (`Refund to Card`, `Refund to Gift Card`, `Wallet
+  Credit`, or plain `Request Cancellation`);
+- the copy states the refund destination and whether a refund is due;
 - the success state is `Cancellation requested`;
 - the order page then shows the pending notice from `requestedOrderEdits`.
 
@@ -68,7 +67,33 @@ The guest OTP path (`55:1801`, `55:1917`) is not built. It belongs to a public l
 public lookup is not available. Do not route a signed-in member through an OTP they do not need, and
 do not build an OTP screen that cannot send a code.
 
-## 5. Gated capabilities
+## 5. Payment trail
+
+The tracking summary renders the funding trail Shopify records, not just the total:
+`discountApplications`, successful `transactions`, `refunds`, and
+`paymentInformation.totalPaidAmount` / `totalOutstandingAmount`. Rows appear for discounts,
+payments (card, gift card, store credit, manual, cash on delivery) and refunds; `Paid` and
+`Outstanding` always render, including at `₹0.00`. A zero-total order with no discount or
+transaction says `No payment recorded for this order.` rather than hiding the section.
+
+The cancellation refund destination follows the same trail:
+
+- card or installments: original card within 24 hours, Account Balance wallet after;
+- gift card: the gift card, identified by its last four digits;
+- store credit: Account Balance wallet;
+- manual, bank, cash on delivery or other custom types: the original payment method, confirmed by
+  the team;
+- mixed funding: each part follows its own rule;
+- authorized but not captured: the authorization is released and no refund is issued;
+- outstanding balance: no payment captured, so cancelling removes the amount due;
+- fully covered by a discount, or a zero-total order with no transaction: no refund is due.
+
+A row with no transaction is still a trail entry: Shopify reports `financialStatus: PAID` and
+`paymentStatus: PAID` with a zero paid amount. Gift card, store credit, discount-only and mixed
+funding cannot be created through the app's current Admin scopes, so those branches are
+schema-verified and typechecked but not live-tested.
+
+## 6. Gated capabilities
 
 `ORDER_CAPABILITIES` in `lib/orders/index.ts` is the capability register:
 
@@ -82,7 +107,7 @@ do not build an OTP screen that cannot send a code.
 A capability flips only when its transport exists. The UI reads the constant; it never renders a
 control that cannot complete.
 
-## 6. Deliberate deviations
+## 7. Deliberate deviations
 
 - The public form's valid submit shows `Order lookup is unavailable`, not a fabricated mismatch. The
   designed mismatch alert would claim a lookup that did not run.
@@ -99,7 +124,7 @@ control that cannot complete.
   placeholder text.
 - Prices use the storefront's `formatPrice` (₹ with minor units), not the frame's `INR 10,000`.
 
-## 7. Verification
+## 8. Verification
 
 - `pnpm typecheck`, `pnpm lint` and `pnpm build` pass.
 - Playwright checked `/track` at 1440 and 390 in default and unavailable states, and a temporary
@@ -115,8 +140,14 @@ control that cannot complete.
     Customer Account query;
   - the dispatch copy now falls back to the fulfillment's `createdAt` when the courier writes
     tracking without a dispatch event.
-  The real list and tracking page render order `#1002`, its dispatched stepper, tracking details,
-  address, item and totals.
+    The real list and tracking page render order `#1002`, its dispatched stepper, tracking details,
+    address, item and totals.
+- The live API accepts `transactions`, `discountApplications`, `paymentInformation` and `refunds`.
+  Order `#1002` renders a `MANUAL` payment of ₹14,000; the free order `#1003` renders
+  `No payment recorded` with `Paid ₹0.00`. The funding map returns `No payment taken` for `#1003`
+  and `Original payment method` for `#1002`. Gift card, store credit, discount-only and mixed
+  funding are schema-verified and typechecked but not live-tested, because the configured Admin
+  scopes cannot create those instruments.
 - The live cancellation request is verified. A free, unfulfilled test order (`#1003`) submitted
   `orderRequestEdit` from the production build; the tracking page replaced the cancel control with
   the `Cancellation requested` pending notice and the order stayed in `Preparing`. Merchant approval

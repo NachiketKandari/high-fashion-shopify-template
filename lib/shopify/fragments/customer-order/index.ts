@@ -76,6 +76,34 @@ export const ORDER_FRAGMENT = gql(
     ...OrderSummaryFields
     cancelReason
     createdAt
+    discountApplications(first: 10) {
+      nodes {
+        __typename
+        value {
+          __typename
+          ... on MoneyV2 {
+            amount
+            currencyCode
+          }
+          ... on PricingPercentageValue {
+            percentage
+          }
+        }
+        ... on DiscountCodeApplication {
+          code
+        }
+        ... on AutomaticDiscountApplication {
+          title
+        }
+        ... on ManualDiscountApplication {
+          description
+          title
+        }
+        ... on ScriptDiscountApplication {
+          title
+        }
+      }
+    }
     lineItems(first: 50) {
       nodes {
         image {
@@ -95,6 +123,25 @@ export const ORDER_FRAGMENT = gql(
           value
         }
         variantTitle
+      }
+    }
+    paymentInformation {
+      paymentStatus
+      totalOutstandingAmount {
+        amount
+        currencyCode
+      }
+      totalPaidAmount {
+        amount
+        currencyCode
+      }
+    }
+    refunds {
+      createdAt
+      id
+      totalRefunded {
+        amount
+        currencyCode
       }
     }
     requestedEditInformation {
@@ -133,6 +180,23 @@ export const ORDER_FRAGMENT = gql(
     totalTax {
       amount
       currencyCode
+    }
+    transactions {
+      createdAt
+      giftCardDetails {
+        last4
+      }
+      id
+      kind
+      processedAt
+      status
+      transactionAmount {
+        presentmentMoney {
+          amount
+          currencyCode
+        }
+      }
+      type
     }
   }
 `,

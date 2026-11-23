@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/components/ui/link";
 import type { CustomerOrder, OrderLineItem } from "@/lib/customer/types";
 import { formatPrice } from "@/lib/money";
-import { isOrderCapabilityAvailable } from "@/lib/orders";
+import {
+  formatOrderDate,
+  getOrderPayments,
+  getPaymentTypeLabel,
+  getTransactionKindLabel,
+  isOrderCapabilityAvailable,
+} from "@/lib/orders";
 import type { OrderTrackingView } from "@/lib/orders/types";
 
 import { CancelOrderDialog } from "./cancel-order-dialog";
@@ -63,6 +69,7 @@ export function TrackingPage({ email, order, view }: TrackingPageProps) {
       <aside className="flex flex-col gap-10 px-6 pb-6 desktop:w-[592px] desktop:shrink-0 desktop:border-l desktop:border-ink-strong desktop:px-20 desktop:py-10">
         <OrderItems items={order.lineItems} />
         <OrderTotals order={order} />
+        <PaymentTrail order={order} />
       </aside>
     </div>
   );
@@ -74,8 +81,7 @@ function StageBox({ order, view }: { order: CustomerOrder; view: OrderTrackingVi
       <section className="grid gap-3 border border-ink-strong p-5">
         <h3 className="type-h4 text-ink-strong">Cancellation</h3>
         <p className="type-body-sm text-ink-muted">
-          This order was cancelled. Any refund follows the original payment method and your bank’s
-          processing time.
+          This order was cancelled. Any refund follows the payment method used at checkout.
         </p>
         {Number(order.totalRefunded.amount) > 0 ? (
           <p className="type-body-sm text-ink-strong">
@@ -193,7 +199,7 @@ function TrackingActions({
           email={email}
           orderId={order.id}
           orderName={order.name}
-          window={view.cancellation.window}
+          refund={view.cancellation.refund}
         />
       ) : null}
 
@@ -211,9 +217,9 @@ function TrackingActions({
         <div className="grid gap-3">
           <h3 className="type-body-sm text-ink-strong">Cancellation & address correction</h3>
           <p className="type-body-sm text-ink-muted">
-            Within 24 hours, cancellations return to your original payment method. After 24 hours,
-            cancellations are credited to your Account Balance wallet. Changes stop when the order
-            is locked for dispatch.
+            Card refunds return to the original card within 24 hours and to your Account Balance
+            wallet after 24 hours. Gift card payments return to the gift card; manual payments are
+            refunded by our team. Changes stop when the order is locked for dispatch.
           </p>
           <p className="type-body-sm text-ink-muted">
             {canRequestCancellation || isPending
@@ -335,5 +341,75 @@ function TotalRow({ label, money }: { label: string; money: CustomerOrder["total
       <dt className="type-body text-ink">{label}</dt>
       <dd className="type-body tabular-nums text-ink">{formatPrice(money)}</dd>
     </div>
+  );
+}
+
+function PaymentTrail({ order }: { order: CustomerOrder }) {
+  const payments = getOrderPayments(order);
+  const hasTrail = order.discounts.length > 0 || payments.length > 0 || order.refunds.length > 0;
+  const outstanding = Number(order.payment.outstanding.amount);
+
+  return (
+    <section className="grid gap-3">
+      <h2 className="type-body-sm text-ink-strong">Payment</h2>
+      {hasTrail ? (
+        <dl className="grid gap-3">
+          {order.discounts.map((discount, index) => (
+            <div
+              className="flex items-baseline justify-between gap-4"
+              key={`${discount.label}-${discount.code ?? index}`}
+            >
+              <dt className="type-body-sm text-ink">
+                {discount.label}
+                {discount.code && discount.code !== discount.label ? (
+                  <span className="text-ink-muted"> · {discount.code}</span>
+                ) : null}
+              </dt>
+              <dd className="type-body-sm tabular-nums text-ink">
+                {discount.amount
+                  ? `−${formatPrice(discount.amount)}`
+                  : discount.percentage != null
+                    ? `−${discount.percentage}%`
+                    : "Applied"}
+              </dd>
+            </div>
+          ))}
+          {payments.map((payment) => (
+            <div className="flex items-baseline justify-between gap-4" key={payment.id}>
+              <dt className="type-body-sm text-ink">
+                {payment.type === "GIFT_CARD" && payment.giftCardLast4
+                  ? `Gift card ••••${payment.giftCardLast4}`
+                  : getPaymentTypeLabel(payment.type)}
+                <span className="block text-ink-muted">
+                  {payment.kind === "SALE"
+                    ? formatOrderDate(payment.createdAt)
+                    : `${getTransactionKindLabel(payment.kind)} · ${formatOrderDate(payment.createdAt)}`}
+                </span>
+              </dt>
+              <dd className="type-body-sm tabular-nums text-ink">{formatPrice(payment.amount)}</dd>
+            </div>
+          ))}
+          {order.refunds.map((refund) => (
+            <div className="flex items-baseline justify-between gap-4" key={refund.id}>
+              <dt className="type-body-sm text-ink">
+                Refund
+                {refund.createdAt ? (
+                  <span className="block text-ink-muted">{formatOrderDate(refund.createdAt)}</span>
+                ) : null}
+              </dt>
+              <dd className="type-body-sm tabular-nums text-ink">−{formatPrice(refund.amount)}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <p className="type-body-sm text-ink-muted">No payment recorded for this order.</p>
+      )}
+      <dl className="grid gap-2 border-t border-rule pt-3">
+        <TotalRow label="Paid" money={order.payment.paid} />
+        {outstanding > 0 ? (
+          <TotalRow label="Outstanding" money={order.payment.outstanding} />
+        ) : null}
+      </dl>
+    </section>
   );
 }

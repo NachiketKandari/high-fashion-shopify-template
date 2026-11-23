@@ -15,3 +15,7 @@ export type ShopifyCustomerProfile = CustomerAccountResultOf<typeof CUSTOMER_PRO
 export type ShopifyLineItem = ShopifyOrder["lineItems"]["nodes"][number];
 export type ShopifyFulfillment = ShopifyOrderSummary["fulfillments"]["nodes"][number];
 export type ShopifyMoney = ShopifyOrderSummary["totalPrice"];
+export type ShopifyOrderDiscount = ShopifyOrder["discountApplications"]["nodes"][number];
+export type ShopifyOrderPaymentInformation = NonNullable<ShopifyOrder["paymentInformation"]>;
+export type ShopifyOrderRefund = ShopifyOrder["refunds"][number];
+export type ShopifyOrderTransaction = ShopifyOrder["transactions"][number];

@@ -14,14 +14,14 @@ import {
 } from "@/components/ui/dialog";
 import { Link } from "@/components/ui/link";
 import { cancelOrderAction } from "@/lib/orders/action";
-import type { CancellationWindow, OrderCancellationResult } from "@/lib/orders/types";
+import type { CancellationRefund, OrderCancellationResult } from "@/lib/orders/types";
 
 interface CancelOrderDialogProps {
   amount: string;
   email: string | null;
   orderId: string;
   orderName: string;
-  window: CancellationWindow;
+  refund: CancellationRefund;
 }
 
 export function CancelOrderDialog({
@@ -29,13 +29,14 @@ export function CancelOrderDialog({
   email,
   orderId,
   orderName,
-  window,
+  refund,
 }: CancelOrderDialogProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<OrderCancellationResult | null>(null);
   const [isPending, startTransition] = useTransition();
-  const isWallet = window === "wallet";
+  const isWallet = refund.kind === "wallet";
+  const isNoRefund = refund.kind === "none" || refund.kind === "outstanding";
   const isRequested = result?.status === "requested";
   const errorMessage =
     result?.status === "error"
@@ -86,7 +87,12 @@ export function CancelOrderDialog({
             </DialogDescription>
             <p className="type-body-sm text-ink-strong">
               We’ve sent your request to cancel the eligible items on this order. Our team will
-              review it and email you the outcome. No refund has been issued yet.
+              review it and email you the outcome.{" "}
+              {refund.kind === "none"
+                ? "No payment was taken, so no refund is due."
+                : refund.kind === "outstanding"
+                  ? "No payment has been captured, so no refund is due."
+                  : "No refund has been issued yet."}
             </p>
             <div className="grid gap-3">
               <DialogClose
@@ -110,34 +116,17 @@ export function CancelOrderDialog({
             <DialogDescription className="type-body-sm text-ink-muted">
               Order reference: {orderName}
             </DialogDescription>
-            <p className="type-body-sm text-ink-strong">
-              {isWallet
-                ? "After the 24-hour card-refund window"
-                : "Within the 24-hour refund window"}
-            </p>
+            {refund.timing ? <p className="type-body-sm text-ink-strong">{refund.timing}</p> : null}
             <div className="grid gap-2 border border-ink-strong p-4">
               <p className="type-h4 text-ink-strong">Order total: {amount}</p>
               <p className="type-body-sm text-ink-strong">
-                {isWallet
-                  ? "Refund destination: Account Balance wallet"
-                  : "Refund destination: Original card"}
+                {isNoRefund ? refund.destination : `Refund destination: ${refund.destination}`}
               </p>
-              {isWallet ? (
-                <p className="type-body-sm text-ink-muted">
-                  If approved, the credit for the eligible items is wallet credit for future
-                  purchases, not a refund to your card.
-                </p>
-              ) : null}
             </div>
-            <p className="type-body-sm text-ink-muted">
-              {isWallet
-                ? "If your cancellation is approved, the credit for the eligible items is added to the Account Balance wallet linked to your member profile. This is not a refund to your card."
-                : "If your cancellation is approved, the refund for the eligible items returns to the card used at checkout, not to your Account Balance wallet."}
-            </p>
+            <p className="type-body-sm text-ink-muted">{refund.note}</p>
             <p className="type-body-sm text-ink-muted">
               We’ll request cancellation for every item that is still eligible. Our team reviews the
-              request before the order is cancelled. Your bank’s processing time determines when a
-              refund appears, and we’ll email you the outcome.
+              request before the order is cancelled, and we’ll email you the outcome.
             </p>
             {isWallet && email ? (
               <p className="type-body-sm text-ink-strong">Signed in: {email}</p>
@@ -160,11 +149,7 @@ export function CancelOrderDialog({
                 onClick={handleRequest}
                 type="button"
               >
-                {isPending
-                  ? "Sending request…"
-                  : isWallet
-                    ? "Request Cancellation — Wallet Credit"
-                    : "Request Cancellation — Refund to Card"}
+                {isPending ? "Sending request…" : refund.cta}
               </Button>
               <DialogClose
                 render={

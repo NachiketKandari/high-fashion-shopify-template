@@ -4,8 +4,12 @@ import type {
   CustomerOrderListRow,
   CustomerOrderSummary,
   CustomerProfile,
+  OrderDiscount,
   OrderFulfillment,
   OrderLineItem,
+  OrderPayment,
+  OrderRefund,
+  OrderTransaction,
 } from "@/lib/customer/types";
 import type { Money } from "@/lib/money/types";
 import type {
@@ -15,8 +19,12 @@ import type {
   ShopifyLineItem,
   ShopifyMoney,
   ShopifyOrder,
+  ShopifyOrderDiscount,
   ShopifyOrderList,
+  ShopifyOrderPaymentInformation,
+  ShopifyOrderRefund,
   ShopifyOrderSummary,
+  ShopifyOrderTransaction,
 } from "@/lib/shopify/transforms/customer/types";
 import { transformImage } from "@/lib/shopify/transforms/product";
 
@@ -103,17 +111,63 @@ export function transformOrderListRow(order: ShopifyOrderList): CustomerOrderLis
   };
 }
 
+function transformOrderDiscount(discount: ShopifyOrderDiscount): OrderDiscount {
+  const value = discount.value;
+
+  return {
+    amount: value.__typename === "MoneyV2" ? transformMoney(value) : null,
+    code: "code" in discount ? discount.code : null,
+    label: "title" in discount ? discount.title : "code" in discount ? discount.code : "Discount",
+    percentage: value.__typename === "PricingPercentageValue" ? value.percentage : null,
+  };
+}
+
+function transformOrderPayment(payment: ShopifyOrderPaymentInformation): OrderPayment {
+  return {
+    outstanding: transformMoney(payment.totalOutstandingAmount),
+    paid: transformMoney(payment.totalPaidAmount),
+    status: payment.paymentStatus ?? null,
+  };
+}
+
+function transformOrderRefund(refund: ShopifyOrderRefund): OrderRefund {
+  return {
+    amount: transformMoney(refund.totalRefunded),
+    createdAt: refund.createdAt ?? null,
+    id: refund.id,
+  };
+}
+
+function transformOrderTransaction(transaction: ShopifyOrderTransaction): OrderTransaction {
+  return {
+    amount: transformMoney(transaction.transactionAmount.presentmentMoney),
+    createdAt: transaction.createdAt,
+    giftCardLast4: transaction.giftCardDetails?.last4 ?? null,
+    id: transaction.id,
+    kind: transaction.kind ?? null,
+    status: transaction.status ?? null,
+    type: transaction.type,
+  };
+}
+
 export function transformOrder(order: ShopifyOrder): CustomerOrder {
+  const zeroMoney: Money = { amount: "0", currencyCode: order.totalPrice.currencyCode };
+
   return {
     ...transformOrderSummary(order),
     cancelReason: order.cancelReason ?? null,
     createdAt: order.createdAt,
+    discounts: order.discountApplications.nodes.map(transformOrderDiscount),
     editableLineItems: order.requestedEditInformation.editableLineItems.nodes.map((item) => ({
       lineItemId: item.lineItem.id,
       quantity: item.quantity,
     })),
     hasEditableLineItems: order.requestedEditInformation.hasEditableLineItems,
     lineItems: order.lineItems.nodes.map(transformLineItem),
+    payment: order.paymentInformation
+      ? transformOrderPayment(order.paymentInformation)
+      : { outstanding: zeroMoney, paid: zeroMoney, status: null },
+    refunds: order.refunds.map(transformOrderRefund),
     requestedEdits: order.requestedOrderEdits.nodes.map((request) => ({
       id: request.id,
       status: request.status,
@@ -124,6 +178,7 @@ export function transformOrder(order: ShopifyOrder): CustomerOrder {
     totalRefunded: transformMoney(order.totalRefunded),
     totalShipping: order.totalShipping ? transformMoney(order.totalShipping) : null,
     totalTax: order.totalTax ? transformMoney(order.totalTax) : null,
+    transactions: order.transactions.map(transformOrderTransaction),
   };
 }
 

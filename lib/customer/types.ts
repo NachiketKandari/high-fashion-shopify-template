@@ -69,12 +69,44 @@ export interface OrderRequestedEdit {
   status: string;
 }
 
+export interface OrderDiscount {
+  amount: Money | null;
+  code: string | null;
+  label: string;
+  percentage: number | null;
+}
+
+export interface OrderPayment {
+  outstanding: Money;
+  paid: Money;
+  status: string | null;
+}
+
+export interface OrderRefund {
+  amount: Money;
+  createdAt: string | null;
+  id: string;
+}
+
+export interface OrderTransaction {
+  amount: Money;
+  createdAt: string;
+  giftCardLast4: string | null;
+  id: string;
+  kind: string | null;
+  status: string | null;
+  type: string;
+}
+
 export interface CustomerOrder extends CustomerOrderSummary {
   cancelReason: string | null;
   createdAt: string;
+  discounts: OrderDiscount[];
   editableLineItems: OrderEditableLineItem[];
   hasEditableLineItems: boolean;
   lineItems: OrderLineItem[];
+  payment: OrderPayment;
+  refunds: OrderRefund[];
   requestedEdits: OrderRequestedEdit[];
   shippingAddress: CustomerAddress | null;
   statusPageUrl: string;
@@ -82,6 +114,7 @@ export interface CustomerOrder extends CustomerOrderSummary {
   totalRefunded: Money;
   totalShipping: Money | null;
   totalTax: Money | null;
+  transactions: OrderTransaction[];
 }
 
 export interface CustomerOrdersPage {

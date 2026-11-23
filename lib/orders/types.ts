@@ -8,10 +8,25 @@ export interface TrackingStep {
   sublabel: string;
 }
 
-export type CancellationWindow = "card" | "wallet";
+export type CancellationRefundKind =
+  | "card"
+  | "gift-card"
+  | "manual"
+  | "mixed"
+  | "none"
+  | "outstanding"
+  | "wallet";
+
+export interface CancellationRefund {
+  cta: string;
+  destination: string;
+  kind: CancellationRefundKind;
+  note: string;
+  timing: string | null;
+}
 
 export type OrderCancellation =
-  | { status: "available"; window: CancellationWindow }
+  | { status: "available"; refund: CancellationRefund }
   | { status: "cancelled" }
   | { status: "closed" }
   | { status: "declined"; requestId: string }
