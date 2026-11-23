@@ -61,7 +61,7 @@ without clearing `products-index`.
 ### 1. Shopify webhooks
 
 `app/api/webhooks/shopify/route.ts` verifies `X-Shopify-Hmac-Sha256` with
-`SHOPIFY_WEBHOOK_SECRET`, then calls `revalidateTag(tag, { expire: 0 })`.
+`SHOPIFY_WEBHOOK_SECRET`, claims the delivery ID, then calls `revalidateTag(tag, { expire: 0 })`.
 
 | Topic                                                            | Tags cleared                                                      |
 | ---------------------------------------------------------------- | ----------------------------------------------------------------- |
@@ -74,7 +74,17 @@ without clearing `products-index`.
 | `metaobjects/create`, `metaobjects/update`, `metaobjects/delete` | `metaobjects`, `metaobject-<handle>` (no current read uses these) |
 
 The route returns `404` when `SHOPIFY_WEBHOOK_SECRET` is unset, `401` when the HMAC does not match,
-and `400` when the topic header is missing.
+`400` when the topic header is missing, and `200` with `duplicate: true` when the delivery was
+already claimed. `X-Shopify-Webhook-Id` deduplication requires `UPSTASH_REDIS_REST_URL` and
+`UPSTASH_REDIS_REST_TOKEN`: a completed delivery is ignored for 24 hours, a delivery in progress
+returns `200` without invalidating again, and a failed invalidation releases its claim so Shopify's
+retry can run. Without Redis the claim is disabled and every delivery invalidates its tags again;
+the delivery log records `idempotencyState: "disabled"`.
+
+Each delivery logs `webhook.delivery.completed` with delivery ID, topic, shop domain, API version,
+triggered-at, duration and invalidated tags. Signature, parse and invalidation failures log at
+`warn`/`error`. A parse failure still returns `200` because Shopify does not retry malformed
+payloads.
 
 ### 2. Manual revalidation
 
@@ -98,13 +108,16 @@ invalidated, or after changing the cache model itself.
 
 ## Production setup
 
-Automatic invalidation needs all four pieces below. Missing any one leaves the storefront on the
-30-day revalidation window.
+Automatic invalidation needs all five pieces below. Missing the last one leaves duplicate
+deliveries free to invalidate tags again; missing any other leaves the storefront on the 30-day
+revalidation window.
 
 1. **Set the secrets in Vercel Production.**
    - `SHOPIFY_WEBHOOK_SECRET`: the Shopify app's client secret. This is the value Shopify signs
      webhooks with.
    - `REVALIDATE_SECRET`: a random string used only by `POST /api/revalidate`.
+   - `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`: optional webhook delivery
+     deduplication across serverless instances.
 2. **Grant `write_webhooks` to the seeding app.** The current Dev Dashboard app does not have it.
    Follow [`SHOPIFY-APP-SCOPES.md`](./SHOPIFY-APP-SCOPES.md): create a version, add
    `write_webhooks`, release it, and approve the change on the store.
@@ -137,7 +150,7 @@ curl -s -X POST "https://<domain>/api/revalidate?tag=products-index" \
 
 Then edit a product title, price, or collection membership in Shopify. The product page and its
 collection grids should refresh on the next request. Confirm the delivery under Shopify admin →
-Settings → Notifications → Webhooks.
+Settings → Notifications → Webhooks and the `webhook.delivery.completed` log entry.
 
 ## Troubleshooting
 
@@ -146,6 +159,8 @@ Settings → Notifications → Webhooks.
 | `POST /api/webhooks/shopify` returns `404`      | `SHOPIFY_WEBHOOK_SECRET` is unset in Vercel                  | Set it and redeploy                                             |
 | `POST /api/webhooks/shopify` returns `401`      | The Vercel secret is not the app secret Shopify signs with   | Copy the app client secret again, or the admin webhook secret   |
 | `POST /api/webhooks/shopify` returns `400`      | The request has no `X-Shopify-Topic` header                  | Send a real Shopify delivery, not a bare curl                   |
+| A duplicate delivery revalidates tags again     | Redis REST is not configured                                 | Set the two Redis variables and redeploy                        |
+| `webhook.idempotency.unavailable` appears       | Redis REST was unreachable at delivery time                  | Check the Redis endpoint; delivery processed anyway             |
 | A catalogue edit does not appear                | No subscription for that topic, or the callback URL is wrong | Run `pnpm webhooks:register --dry-run` and compare URLs         |
 | A collection grid keeps an old price            | The product update webhook did not arrive                    | Verify the product subscription and its delivery log            |
 | A page, policy, blog, or article stays stale    | Those topics have no webhook                                 | Call `POST /api/revalidate` with the page's tags                |
@@ -171,6 +186,7 @@ As of 2026-11-21, the production deployment has no automatic invalidation:
 | `SHOPIFY_WEBHOOK_SECRET` in Vercel | Unset; `POST /api/webhooks/shopify` returns `404` |
 | `REVALIDATE_SECRET` in Vercel      | Unset; `POST /api/revalidate` returns `404`       |
 | Shopify webhook subscriptions      | None                                              |
+| Redis delivery deduplication       | Unset; claims are disabled                        |
 | Cache freshness                    | A new deployment, or 30 days                      |
 
 Completing the production setup above is the remaining work. Until then, a catalogue change needs a

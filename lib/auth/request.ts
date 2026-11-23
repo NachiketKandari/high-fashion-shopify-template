@@ -8,6 +8,7 @@ import {
 } from "@shopify/hydrogen/customer-account";
 
 import { shopConfig } from "@/lib/config";
+import { logError } from "@/lib/observability/server";
 
 import type { SessionData } from "./types";
 
@@ -74,7 +75,8 @@ function decryptSession(value: string): SessionData {
     const data: unknown = JSON.parse(decrypted.toString("utf8"));
 
     return data && typeof data === "object" && !Array.isArray(data) ? (data as SessionData) : {};
-  } catch {
+  } catch (error) {
+    logError("customer.session.decrypt-failed", error);
     return {};
   }
 }

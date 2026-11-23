@@ -2,6 +2,7 @@ import { shopConfig } from "@/lib/config";
 import { notFoundMarkdown } from "@/lib/markdown/not-found";
 import { productToMarkdown } from "@/lib/markdown/product";
 import { markdownHeaders } from "@/lib/markdown/representation";
+import { logError } from "@/lib/observability/server";
 import { getProduct } from "@/lib/product/server";
 
 // Opts the handler into the stored-output model; every handle renders on demand and is kept until its tag is invalidated.
@@ -31,7 +32,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ han
         pathname,
       }),
     });
-  } catch {
+  } catch (error) {
+    logError("markdown.product.failed", error, { path: pathname });
     return new Response(
       "# Server Error\n\nAn error occurred while retrieving the product. Please try again later.",
       {

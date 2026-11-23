@@ -1,124 +1,110 @@
 # Observability
 
-The storefront has Shopify-specific transport logging and opt-in product analytics. It does not have
-application-wide error reporting, request correlation, a health check, or production RUM enabled by
-default. On a normal Vercel deployment, the platform's function and build logs are the only
-always-on backend telemetry.
+The storefront logs operational telemetry as structured JSON and reports server and client errors
+with request IDs. It does not add product analytics events, third-party error-reporting
+credentials, or a telemetry dependency. On Vercel, function logs and log drains consume the JSON
+stream; attach alerts or a drain to retain it.
 
-## Current coverage
+This is operational telemetry only. GA4/GTM, Vercel Analytics, Speed Insights, Shopify analytics
+and the app event bus remain owned by `components/analytics/**` and `lib/analytics/**`; the
+observability layer emits no commerce or page-view events.
 
-| Signal                  | Current state                                                                                                                                                                             | Always on                               |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Shopify API errors      | GraphQL partial errors are warned; Storefront failures throw with `{ errors, operation }`.                                                                                                | Yes                                     |
-| Shopify API timings     | Storefront, Customer Account and MCP transports log `durationMs` and `operation`.                                                                                                         | No — only when `DEBUG_SHOPIFY=1`/`true` |
-| Application exceptions  | Uncaught server errors reach the platform log; client errors are not reported anywhere.                                                                                                   | Server: platform only. Client: no.      |
-| Error boundaries        | Root, account and global boundaries render a retry surface. They do not log or report the error.                                                                                          | UI yes, reporting no                    |
-| Request correlation     | None. Shopify request IDs are deliberately blanked; no request ID is generated or propagated.                                                                                             | No                                      |
-| Webhook deliveries      | Invalid signatures and payload parse failures are logged. Successful deliveries and invalidations are not.                                                                                | Failures only                           |
-| Cache invalidation      | `revalidateTag` calls and results are not logged.                                                                                                                                         | No                                      |
-| Product analytics       | GA4 or GTM when configured by env; Vercel Analytics, Speed Insights and Shopify analytics are opt-in and off by default.                                                                  | Only GA4/GTM when env vars are set      |
-| RUM / Web Vitals        | Speed Insights when enabled; no `useReportWebVitals` or custom metric reporting.                                                                                                          | No                                      |
-| Storefront health check | No `/api/health` or `/status` route. Eve exposes `/eve/v1/health` only when the agent is enabled.                                                                                         | No                                      |
-| Agent telemetry         | When the Vercel project has Agent Runs and trace sampling enabled, Eve records sessions, model calls and tool calls there. The app emits no custom OpenTelemetry or Agent Runs telemetry. | Platform only, and only when Eve is on  |
+## Coverage
+
+| Signal                 | Current state                                                                                                                                                                           | Always on          |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| Server exceptions      | Next's `onRequestError` reports them as `request.error` with method, path, route and digest.                                                                                            | Yes                |
+| Client exceptions      | Root, global and account error boundaries report to `/api/client-errors` as `client.error` with name, message, digest and path.                                                         | Yes                |
+| Degraded Shopify reads | `withFallback` reports `storefront.read.fallback` with the operation; Cache Components' expected shell-abort digest is not logged as an error.                                          | Yes                |
+| Request IDs            | Every proxied HTML/RSC/route response carries `x-request-id`; proxy-generated UUIDs, validated inbound IDs for upstream callers, and operation IDs for cached/background Shopify calls. | Yes                |
+| Shopify API timings    | Storefront, Customer Account and MCP transports log `durationMs`, `operation` and `requestId` when `DEBUG_SHOPIFY=1`/`true`.                                                            | Only when debug    |
+| Shopify partial errors | Storefront and Customer Account partial GraphQL errors are warnings with the operation and request ID.                                                                                  | Yes                |
+| Silent server failures | Auth session decrypt failures, Markdown and `llms.txt` fallbacks, agent cart preparation, cart buyer sync and customer mutations report a named error.                                  | Yes                |
+| Webhook deliveries     | Signature, topic, parse, invalidation and completed outcomes are logged with delivery ID, shop domain, API version, duration, request ID and tags.                                      | When secret is set |
+| Webhook idempotency    | Redis REST claims are 24-hour completed-delivery records and 5-minute processing claims. Unset Redis is `disabled`, not an error.                                                       | Optional           |
+| Manual invalidation    | `/api/revalidate` logs unauthorized, invalid-tag, completed and failed outcomes with duration and tags.                                                                                 | When secret is set |
+| Health                 | `/api/health` reports process readiness and environment with `Cache-Control: no-store` and `x-request-id`.                                                                              | Yes                |
+| Cache invalidation     | `revalidateTag` calls are summarized through webhook/revalidate logs, not logged per tag.                                                                                               | Through outcomes   |
+| Product analytics      | Owned by `components/analytics/**`; not emitted by this layer.                                                                                                                          | No                 |
+| RUM / Web Vitals       | Speed Insights remains opt-in; no custom `useReportWebVitals`.                                                                                                                          | No                 |
+| Error persistence      | Platform function logs/log drains only. No Sentry, OpenTelemetry or third-party reporter.                                                                                               | Platform only      |
+
+## Request IDs
+
+`proxy.ts` accepts an inbound `x-request-id` only when it matches
+`^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$`; otherwise it generates a UUID. It sets the ID on the
+upstream request and stamps every direct response, including Shopify handler responses, rewrites
+and errors. `/api/client-errors`, `/api/revalidate`, `/api/webhooks/shopify` and `/api/health`
+stamp it too.
+
+Hydrogen uses the same ID as `Custom-Storefront-Request-Group-ID` for request-scoped Shopify calls.
+Cached catalog reads and other background reads create process-local operation IDs (for example
+`storefront-…`) through `createOperationId` instead of a request-time UUID, so Cache Components can
+keep the static shell and cached outputs. The Storefront, Customer Account and MCP transports also
+send that ID as Shopify's `x-request-id` and include it in their timing logs.
+
+No headers, cookies, query strings or Shopify payloads are logged. Paths are pathname-only.
 
 ## Logging
 
-Hydrogen's logger is configured once at startup in `instrumentation.ts`, through
-`configureShopifyLogging()` in `lib/shopify/logging/server.ts`. Output is prefixed console text such
-as `[shopify:warn:storefront]`, followed by the error and a context object. It is not JSON and has no
-timestamp, environment or request ID.
+`lib/observability/server.ts` writes one JSON object per line through `console.debug/info/warn/
+error`: `timestamp`, `level`, `service: "storefront"`, `environment` (`VERCEL_ENV`, otherwise
+`local`), `event`, then sanitized fields. `LOG_LEVEL` selects the minimum level and defaults to
+`info`. `DEBUG_SHOPIFY` makes those Shopify timing/debug entries visible even when `LOG_LEVEL` is
+unset.
 
-- `DEBUG_SHOPIFY=1` or `true` selects the `debug` level; otherwise the level is `info`.
-- `logShopifyDebug()` gates the Storefront, Customer Account and MCP timing logs.
-- `lib/shopify/errors/server.ts` warns on partial Storefront GraphQL errors and throws on transient
-  errors (`THROTTLED`, `INTERNAL_SERVER_ERROR`) or a response with no data.
-- `lib/shopify/customer-account/server.ts` warns on partial Customer Account errors and throws when
-  there is no data.
-- The only other runtime `console.*` calls are webhook failures in
-  `app/api/webhooks/shopify/route.ts` and one customer Server Action failure in
-  `lib/customer/action.ts`.
+Error fields are shaped by `serializeError`: name, truncated message, digest, stack, status,
+request ID, retry-after, code and a sanitized cause. Object fields are depth- and item-limited, and
+keys matching authorization, cookie, password, secret, session, token, email or address are
+dropped. Never pass a full request, cookie jar or Shopify response into a logger.
 
-There is no generic application logger, log-level configuration beyond `DEBUG_SHOPIFY`, or log
-drain. Uncaught server exceptions are visible in Vercel's function logs with the platform's own
-request metadata.
+Hydrogen's logger remains installed through `lib/shopify/logging/server.ts`, so SDK entries use the
+same JSON stream. `DEBUG_SHOPIFY` makes those Shopify timing entries visible without `LOG_LEVEL`,
+preserving its historic behavior.
 
 ## Error reporting
 
-`app/error.tsx`, `app/global-error.tsx` and `app/account/(authenticated)/error.tsx` render
-`ErrorBoundaryContent`. Each receives an `error` prop with an optional `digest`, but none logs,
-captures or forwards it.
+- `instrumentation.ts` exports `onRequestError` and reports `request.error` for render, route,
+  action and proxy failures.
+- `components/error/error-reporter.tsx` sends each client error boundary report once to
+  `POST /api/client-errors`. The endpoint is same-origin only, accepts a strict, size-limited JSON
+  shape, and logs `client.error`; it does not trust stack traces or arbitrary fields.
+- `lib/customer/action.ts`, `lib/cart/request.ts`, auth session decryption, Markdown routes,
+  `/llms.txt` and `/api/agent/session` report their previously silent failures.
+- Degraded reads report through `withFallback(promise, fallback, operation)`.
 
-There is no Sentry, OpenTelemetry, Rollbar or equivalent dependency. `instrumentation.ts` exports
-`register()` only; it does not export `onRequestError`, and there is no `instrumentation-client.ts`.
-Client-side exceptions therefore disappear after the retry UI is shown. Product, collection, blog,
-page, policy, cart and search segments rely on the root boundary.
+Production alerting is the operator's next step: point a Vercel log drain at the JSON stream and
+alert on `level: "error"` events, especially `request.error`, `webhook.invalidation.failed` and
+`revalidate.failed`. If an error-reporting product is later chosen, `lib/observability/**` is the
+replacement seam; do not add a second reporter beside it.
 
-Several server paths degrade silently, which is reasonable for rendering but leaves no trace:
-`withFallback` in `lib/shopify/errors/server.ts`, session decryption failures in
-`lib/auth/request.ts`, Markdown route data failures, the `/llms.txt` collection and policy
-fallbacks, and the `503` returned when `app/api/agent/session` cannot prepare a cart.
+## Webhooks and idempotency
 
-## Analytics
+The webhook handler verifies the HMAC, claims the delivery ID, invalidates tags, and marks the
+delivery complete. `X-Shopify-Webhook-Id` is deduplicated for 24 hours when
+`UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set. A claimed delivery that fails
+invalidation is released so Shopify's retry can run; concurrent duplicate deliveries return `200`
+with `duplicate: true` and no tags. Redis unavailability degrades to `disabled` and processes the
+delivery anyway; availability beats deduplication.
 
-- GA4 loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set and the visitor chooses Allow All in the
-  cookie bar. GTM loads on the same consent and takes precedence, because the GA4 page view is
-  expected to come from the container. No tag renders while consent is absent or essential-only.
-- Vercel Analytics and Speed Insights are wired in `components/analytics/index.tsx` but default to
-  `false` in `lib/config/index.ts`.
-- Shopify analytics, consent and WebMCP are opt-in through `shopConfig.analytics.shopify` and
-  `shopConfig.shopify.webmcp`. When enabled, `components/analytics/shopify-client.tsx` mounts
-  `ShopifyScripts` and the Hydrogen analytics bus.
-- `components/analytics/trackers.tsx` publishes `PAGE_VIEWED`, `PRODUCT_VIEWED`, `COLLECTION_VIEWED`,
-  `SEARCH_VIEWED` and `CART_VIEWED`. The tracker components mount regardless of the Shopify script
-  flags, but they no-op until `ShopifyScripts` has mounted the Hydrogen analytics bus. No custom
-  Vercel events, GTM `dataLayer` pushes or server-side conversion events are implemented.
-- `lib/analytics/client.ts` exposes `addAnalyticsDestination()`, but no destination is registered.
-
-## Webhooks and cache invalidation
-
-`app/api/webhooks/shopify/route.ts` verifies the HMAC and returns the invalidated tags. It logs only
-invalid signatures and payload parse failures. It does not read or log the Shopify webhook ID, shop
-domain, API version or retry headers, and it does not log successful deliveries, durations or
-`revalidateTag` results. A payload parse failure still returns `200`, so Shopify does not retry it.
-
-`app/api/revalidate/route.ts` has no audit log for unauthorized attempts, invalid tags or successful
-invalidations. Neither route has app-level idempotency, queueing or dead-letter handling.
+Every outcome is logged, including signature failures, missing topics, parse failures (which still
+return `200` because Shopify does not retry malformed payloads), invalidation failures and
+completed deliveries.
 
 ## Health
 
-There is no storefront health endpoint. `/eve/v1/health` exists only when `shopConfig.agent.isEnabled`
-is true; it reports whether the Eve runtime is ready, not whether Shopify or the storefront is
-healthy. `/agent/ucp-profile.json` returns `404` when the agent is disabled.
-
-## Recommended order
-
-1. **Add error reporting.** Sentry or an OpenTelemetry exporter, an `onRequestError` export in
-   `instrumentation.ts`, and capture from the three error boundaries. Include the digest, route and
-   request ID. This is the largest gap: today a production exception has no owner, count or alert.
-2. **Add request correlation.** Generate or forward a request ID in `proxy.ts`, attach it to Shopify
-   requests instead of blanking `x-request-id`, and include it in logs and error responses. Replace
-   the deliberate empty header only with an equivalent that avoids Hydrogen's synchronous UUID
-   fallback.
-3. **Introduce a structured logger.** Wrap the existing console calls in a JSON logger with level,
-   timestamp, environment, request ID, route, operation and error fields, controlled by `LOG_LEVEL`.
-   Keep the Hydrogen logger adapter so SDK logs use it too.
-4. **Add a storefront health route.** A lightweight `/api/health` that reports process readiness and,
-   optionally, a cached Shopify reachability check. Point an uptime monitor at it.
-5. **Make webhooks observable.** Log delivery ID, topic, shop domain, duration, tags invalidated and
-   failure reason; alert on repeated signature or parse failures. Decide whether parse failures
-   should return a retryable status, and add idempotency if duplicate deliveries matter.
-6. **Enable production RUM.** Turn on Speed Insights and Vercel Analytics in `shopConfig`, or move
-   Web Vitals into an existing error/analytics pipeline. A disabled Speed Insights switch means no
-   Core Web Vitals field data.
-7. **Add agent telemetry.** Use Eve's Agent Runs and OpenTelemetry traces, and surface token usage,
-   tool latency and server-safe error IDs. Keep cart IDs and customer data out of logs.
+`GET /api/health` returns `{"service":"storefront","status":"ok","environment":…}` with
+`Cache-Control: no-store` and `x-request-id`. It performs no Shopify request, so it reports process
+readiness only. Point uptime monitoring at it; a Shopify reachability check is deliberately
+absent until a monitor needs it.
 
 ## Operating it today
 
 ```sh
-DEBUG_SHOPIFY=1 pnpm dev   # Shopify transport timings and debug logs
-pnpm build                 # platform build logs
-curl https://<domain>/eve/v1/health   # only when the agent is enabled
+DEBUG_SHOPIFY=1 LOG_LEVEL=debug pnpm dev  # Shopify transport timings and degraded-read logs
+DEBUG_SHOPIFY=1 pnpm dev                  # Shopify timings without other debug entries
+pnpm build                                # platform build logs
+curl -i https://<domain>/api/health       # readiness, request ID and no-store
 ```
 
 Logs must never contain Storefront or Customer Account tokens, customer session cookies, customer

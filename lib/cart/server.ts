@@ -13,6 +13,7 @@ import { getReadonlyCustomerSessionManager } from "@/lib/auth/server";
 import { cartHandlers, createCustomerCartHandlers } from "@/lib/cart/request";
 import type { Cart, CartSeedData } from "@/lib/cart/types";
 import { shopConfig } from "@/lib/config";
+import { createOperationId } from "@/lib/observability";
 import { createRequestStorefrontClient } from "@/lib/shopify/storefront/server";
 
 export async function getCartIdFromCookie(): Promise<string | undefined> {
@@ -25,10 +26,10 @@ const getRequestContext = cache(() => {
     country: shopConfig.localization.country,
     language: shopConfig.localization.language,
   };
-  // An empty request ID suppresses Hydrogen's synchronous UUID fallback.
+  // A per-request operation ID keeps Hydrogen's request-group header aligned with the app logs.
   return createShopifyRequestContext({
     i18n,
-    request: { headers: new Headers({ "x-request-id": "" }) },
+    request: { headers: new Headers({ "x-request-id": createOperationId("cart") }) },
   });
 });
 

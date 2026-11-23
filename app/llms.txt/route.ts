@@ -2,14 +2,25 @@ import { getCollections } from "@/lib/collections/server";
 import { shopConfig } from "@/lib/config";
 import { summarizeText } from "@/lib/content";
 import { escapeMarkdown } from "@/lib/markdown";
+import { getRequestId, withRequestId } from "@/lib/observability/request";
+import { logError } from "@/lib/observability/server";
 import { getShopPolicies } from "@/lib/policies/server";
 
-export async function GET(): Promise<Response> {
+export async function GET(request: Request): Promise<Response> {
+  const requestId = getRequestId(request.headers);
+  const respond = (response: Response) =>
+    requestId ? withRequestId(response, requestId) : response;
   const { description, name, url } = shopConfig.site;
   const { country, language } = shopConfig.localization;
   const [collections, policies] = await Promise.all([
-    getCollections({ limit: 50 }).catch(() => []),
-    getShopPolicies().catch(() => []),
+    getCollections({ limit: 50 }).catch((error) => {
+      logError("llms.collections.failed", error);
+      return [];
+    }),
+    getShopPolicies().catch((error) => {
+      logError("llms.policies.failed", error);
+      return [];
+    }),
   ]);
   const collectionLinks = collections.map((collection) => {
     const link = `[${escapeMarkdown(collection.title)}](${url}${collection.path})`;
@@ -20,8 +31,7 @@ export async function GET(): Promise<Response> {
     (policy) => `- [${escapeMarkdown(policy.title)}](${url}/policies/${policy.handle})`,
   );
 
-  return new Response(
-    `# ${escapeMarkdown(name)}
+  const body = `# ${escapeMarkdown(name)}
 
 > ${escapeMarkdown(summarizeText(description))}
 
@@ -57,12 +67,14 @@ ${collectionLinks.length > 0 ? `\n## Collections\n\n${collectionLinks.join("\n")
 
 - [Sitemap](${url}/sitemap.xml): Complete index of product and collection URLs.
 - [Robots](${url}/robots.txt): Crawl policy.
-`,
-    {
+`;
+
+  return respond(
+    new Response(body, {
       headers: {
         "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
         "Content-Type": "text/plain; charset=utf-8",
       },
-    },
+    }),
   );
 }

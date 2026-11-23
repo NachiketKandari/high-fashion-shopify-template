@@ -6,6 +6,6 @@ import { withFallback } from "@/lib/shopify/errors/server";
 export async function prepareCheckoutAction(): Promise<{
   checkoutUrl: string | null;
 }> {
-  const cart = await withFallback(getCart(), undefined);
+  const cart = await withFallback(getCart(), undefined, "checkout-cart");
   return { checkoutUrl: cart?.checkoutUrl ?? null };
 }

@@ -5,6 +5,7 @@ import { unstable_rethrow } from "next/navigation";
 import { z } from "zod";
 
 import type { CustomerAddressInput } from "@/lib/customer/types";
+import { logError } from "@/lib/observability/server";
 import {
   createCustomerAddress,
   deleteCustomerAddress,
@@ -93,7 +94,7 @@ async function runCustomerMutation(
     return result;
   } catch (error) {
     unstable_rethrow(error);
-    console.error(`${failureMessage}:`, error);
+    logError("customer.mutation.failed", error, { operation: failureMessage });
     return { success: false, error: failureMessage };
   }
 }

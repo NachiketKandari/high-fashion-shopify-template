@@ -1,5 +1,6 @@
 import type { GraphQLFormattedError } from "@shopify/hydrogen";
 
+import { logError } from "@/lib/observability/server";
 import { shopifyLogger } from "@/lib/shopify/logging/server";
 import type { StorefrontResponse } from "@/lib/shopify/types";
 
@@ -34,10 +35,23 @@ export function assertStorefrontOk<T>(
   }
 }
 
-export async function withFallback<T>(promise: Promise<T>, fallback: T): Promise<T> {
+export async function withFallback<T>(
+  promise: Promise<T>,
+  fallback: T,
+  operation: string,
+): Promise<T> {
   try {
     return await promise;
-  } catch {
+  } catch (error) {
+    // Cache Components rejects pending headers() reads while a shell finishes prerendering; the fallback is the expected outcome.
+    if (
+      error instanceof Error &&
+      "digest" in error &&
+      error.digest === "HANGING_PROMISE_REJECTION"
+    ) {
+      return fallback;
+    }
+    logError("storefront.read.fallback", error, { operation });
     return fallback;
   }
 }

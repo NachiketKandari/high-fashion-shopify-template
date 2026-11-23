@@ -2,6 +2,7 @@ import { createCartServerHandlers, type StorefrontClient } from "@shopify/hydrog
 
 import type { getHydrogenCustomerSession } from "@/lib/auth/request";
 import { shopConfig } from "@/lib/config";
+import { logError } from "@/lib/observability/server";
 import { CART_FRAGMENT } from "@/lib/shopify/fragments/cart";
 import {
   fetchCartBuyerIdentity,
@@ -30,8 +31,8 @@ export async function syncCartBuyerIdentity(
     if (!buyerIdentity || buyerIdentity.countryCode === countryCode) return;
 
     const error = await updateCartBuyerIdentity(storefrontClient, cartId, countryCode);
-    if (error) console.error("Cart buyer identity sync failed", error);
+    if (error) logError("cart.buyer-identity.update-failed", null, { errors: error });
   } catch (error) {
-    console.error("Cart buyer identity sync failed", error);
+    logError("cart.buyer-identity.sync-failed", error);
   }
 }

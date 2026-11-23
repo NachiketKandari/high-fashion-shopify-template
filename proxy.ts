@@ -6,7 +6,7 @@ import {
   CUSTOMER_ACCOUNT_LOGOUT_PATH,
   CUSTOMER_ACCOUNT_REFRESH_PATH,
 } from "@shopify/hydrogen/customer-account";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 import {
   createCustomerRequestContext,
@@ -23,6 +23,7 @@ import {
 import { getRefinedCollectionPath, isRefinedCollectionPath } from "@/lib/collections";
 import { shopConfig } from "@/lib/config";
 import { getMarkdownRewritePath } from "@/lib/markdown/representation";
+import { ensureRequestId, withRequestId } from "@/lib/observability/request";
 import { predictiveSearchHandlers } from "@/lib/search/request";
 import { SHOPIFY_ROUTE_TEMPLATES } from "@/lib/shopify/routing";
 import { createRequestStorefrontClient } from "@/lib/shopify/storefront/server";
@@ -35,8 +36,10 @@ const AUTH_PATHS = new Set<string>([
 ]);
 
 export async function proxy(request: NextRequest): Promise<Response> {
-  const pathname = request.nextUrl.pathname;
-  const requestContext = createCustomerRequestContext(request);
+  const { headers: requestHeaders, requestId } = ensureRequestId(request);
+  const proxiedRequest = new NextRequest(request, { headers: requestHeaders });
+  const pathname = proxiedRequest.nextUrl.pathname;
+  const requestContext = createCustomerRequestContext(proxiedRequest);
   const isAuthPath = shopConfig.auth.isEnabled && AUTH_PATHS.has(pathname);
   const customerSession =
     isAuthPath || (shopConfig.auth.isEnabled && pathname === "/api/cart")
@@ -44,37 +47,40 @@ export async function proxy(request: NextRequest): Promise<Response> {
       : undefined;
 
   const routeOptions = {
-    request,
+    request: proxiedRequest,
     requestContext,
     routeTemplates: SHOPIFY_ROUTE_TEMPLATES,
     storefrontClient: createRequestStorefrontClient(requestContext),
   };
-  if (pathname === "/api/cart" && request.method === "POST") {
-    const cartId = getCartId({ cookie: request.headers.get("cookie") ?? undefined });
+  if (pathname === "/api/cart" && proxiedRequest.method === "POST") {
+    const cartId = getCartId({ cookie: proxiedRequest.headers.get("cookie") ?? undefined });
     if (cartId) await syncCartBuyerIdentity(routeOptions.storefrontClient, cartId);
   }
-  const shopifyRoute = customerSession
+  const shopifyRoute = await (customerSession
     ? handleShopifyRoutes({
         ...routeOptions,
         handlers: customerHandlers(customerSession, isAuthPath),
-        sessionManager: createCustomerSessionManager(request),
+        sessionManager: createCustomerSessionManager(proxiedRequest),
       })
-    : handleShopifyRoutes({ ...routeOptions, handlers: [cartHandlers, predictiveSearchHandlers] });
-  if (shopifyRoute) return shopifyRoute;
-  if (isRefinedCollectionPath(pathname)) return new Response("Not Found", { status: 404 });
+    : handleShopifyRoutes({ ...routeOptions, handlers: [cartHandlers, predictiveSearchHandlers] }));
+  if (shopifyRoute) return withRequestId(shopifyRoute, requestId);
+  if (isRefinedCollectionPath(pathname)) {
+    return withRequestId(new Response("Not Found", { status: 404 }), requestId);
+  }
 
   const headers = requestContext.getForwardedRequestHeaders();
   const rewritePath =
-    getMarkdownRewritePath(request) ?? getRefinedCollectionPath(pathname, request.nextUrl.search);
+    getMarkdownRewritePath(proxiedRequest) ??
+    getRefinedCollectionPath(pathname, proxiedRequest.nextUrl.search);
   const response = rewritePath
-    ? NextResponse.rewrite(new URL(`${rewritePath}${request.nextUrl.search}`, request.url), {
+    ? NextResponse.rewrite(new URL(`${rewritePath}${proxiedRequest.nextUrl.search}`, request.url), {
         request: { headers },
       })
     : NextResponse.next({
-        request: { headers: forwardCustomerRefreshAttempt(request.nextUrl, headers) },
+        request: { headers: forwardCustomerRefreshAttempt(proxiedRequest.nextUrl, headers) },
       });
   requestContext.applyResponseHeaders(response.headers);
-  return response;
+  return withRequestId(response, requestId);
 }
 
 function customerHandlers(

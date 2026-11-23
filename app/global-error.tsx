@@ -2,9 +2,12 @@
 
 import { AlertCircleIcon } from "lucide-react";
 
+import { ErrorReporter } from "@/components/error/error-reporter";
+
 import "./globals.css";
 
 export default function GlobalError({
+  error,
   retry,
 }: {
   error: Error & { digest?: string };
@@ -13,6 +16,7 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
+        <ErrorReporter error={error} />
         <div className="flex min-h-screen flex-col items-center justify-center px-5 py-10 text-center">
           <div className="mb-6 flex justify-center">
             <div className="bg-surface p-5">

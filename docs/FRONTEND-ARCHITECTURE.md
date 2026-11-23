@@ -40,6 +40,7 @@ does not replace them.
 | Vercel Analytics / Speed Insights    | Disabled                                                                                                                              |
 | Shopify analytics / consent / WebMCP | Disabled                                                                                                                              |
 | GA4                                  | Loads when `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_GTM_ID` is set                                                             |
+| Operational telemetry                | Structured JSON logs, request IDs, server/client error reporting, webhook delivery claims, `/api/health` and CI                       |
 | Currency                             | Store currency INR; INR-only display; final INR prices                                                                                |
 | Locale                               | Single locale: country `IN`, language `EN`, formatting locale `en-IN`                                                                 |
 
@@ -107,7 +108,7 @@ app/                      Next.js routes, route handlers and route groups
     products/              Product detail route
     search/               Search results route
     wishlist/             Redirect to /pages/wishlist
-  api/                    Webhook, revalidation and agent-session handlers
+  api/                    Webhook, revalidation, health, client-error and agent-session handlers
   agent/                  Eve UCP profile route
   md/                     Markdown mirrors for answer engines
   sitemap/                Sitemap shards
@@ -115,11 +116,14 @@ components/               Presentation
   ui/                     Primitive-only building blocks
   <domain>/               Domain components (nav, cart, product, collections, account, …)
   agent/                  Eve chat UI
+  error/                  Error boundary UI and client error reporting
   schema/                 JSON-LD
 lib/                      Universal, server, client, request, action and type modules
   shopify/                Shopify transports, operations, fragments, transforms, logging
   cart/                   Hydrogen cart handlers, store and checkout
   auth/                   Customer session adapter and read helpers
+  observability/          Request IDs, structured logs and error reporting
+  webhooks/               Shopify webhook delivery claims
   product/ collection/ search/ filters/ blog/ pages/ policies/
   money/ seo/ markdown/ nav/ content/ wishlist/ config/ agent/ botid/
 agent/                    Eve agent definition, channels, tools and instructions
@@ -175,8 +179,10 @@ turbo.json                globalEnv declarations
 | `/robots.txt`                                                                 | `app/robots.ts`                                                 | `shopConfig`                                             | Metadata route                                              |
 | `/manifest.webmanifest`                                                       | `app/manifest.ts`                                               | `shopConfig`                                             | Metadata route                                              |
 | `/api/cart`, `/api/predictive-search`                                         | `proxy.ts`                                                      | Hydrogen handlers                                        | Per-request                                                 |
-| `/api/webhooks/shopify`                                                       | `app/api/webhooks/shopify/route.ts`                             | HMAC-verified webhook                                    | Invalidates tags                                            |
-| `/api/revalidate`                                                             | `app/api/revalidate/route.ts`                                   | Bearer token                                             | Invalidates up to 20 tags                                   |
+| `/api/webhooks/shopify`                                                       | `app/api/webhooks/shopify/route.ts`                             | HMAC-verified webhook                                    | Invalidates tags; logged, Redis-claimed                     |
+| `/api/revalidate`                                                             | `app/api/revalidate/route.ts`                                   | Bearer token                                             | Invalidates up to 20 tags; logged                           |
+| `/api/health`                                                                 | `app/api/health/route.ts`                                       | Process readiness                                        | `no-store`; no Shopify request                              |
+| `/api/client-errors`                                                          | `app/api/client-errors/route.ts`                                | Validated same-origin client error                       | Logs `client.error`; 204                                    |
 | `/api/agent/session`                                                          | `app/api/agent/session/route.ts`                                | Cart cookie / empty cart                                 | 404 when Eve is disabled                                    |
 | `/agent/ucp-profile.json`                                                     | `app/agent/ucp-profile.json/route.ts`                           | Static agent profile                                     | 404 when Eve is disabled                                    |
 | `/account/authorize`, `/account/login`, `/account/logout`, `/account/refresh` | `proxy.ts`                                                      | Hydrogen customer handlers                               | OAuth lifecycle                                             |
@@ -233,38 +239,42 @@ without a webhook. A cached page two would drift from page one and duplicate pro
 
 Invalidation has two paths:
 
-1. `app/api/webhooks/shopify/route.ts` verifies `X-Shopify-Hmac-Sha256` and invalidates product and
-   collection tags. `products/create` and `products/delete` also clear `products-index`;
-   `collections/create` and `collections/delete` also clear `collections-index`. The current
-   metaobject branch invalidates tags no read uses.
+1. `app/api/webhooks/shopify/route.ts` verifies `X-Shopify-Hmac-Sha256`, claims the delivery ID, and
+   invalidates product and collection tags. `products/create` and `products/delete` also clear
+   `products-index`; `collections/create` and `collections/delete` also clear `collections-index`.
+   The current metaobject branch invalidates tags no read uses. Delivery outcomes are logged and
+   `X-Shopify-Webhook-Id` is deduplicated for 24 hours when Redis REST is configured.
 2. `POST /api/revalidate` accepts up to 20 `?tag=` values with `REVALIDATE_SECRET`. Pages, policies,
    blogs and articles have no Shopify webhook topic, so this is their invalidation path.
+
+The observability layer is orthogonal to cache ownership: it does not add tags, cache reads or
+product analytics events. See [`OBSERVABILITY.md`](./OBSERVABILITY.md).
 
 ## 6. Commerce data layer
 
 ### `lib/shopify/`
 
-| Path                                | Responsibility                                                                                                         |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `storefront/server.ts`              | `storefront.request()` and `createRequestStorefrontClient()`; locale injection, 10 s timeout, `?operation=` annotation |
-| `customer-account/server.ts`        | Customer Account API client and unauthorized detection                                                                 |
-| `operations/products/server.ts`     | 10 product, search, collection and option operations                                                                   |
-| `operations/collections/server.ts`  | Collection reads and listing                                                                                           |
-| `operations/blogs/server.ts`        | Blog index and article reads; article body sanitized                                                                   |
-| `operations/pages/server.ts`        | Page reads; body sanitized                                                                                             |
-| `operations/policies/server.ts`     | Storefront policy reads plus the `search_shop_policies_and_faqs` MCP call                                              |
-| `operations/customer/server.ts`     | Customer profile, orders, addresses and four mutations                                                                 |
-| `operations/localization/server.ts` | Store currency read; Eve uses it for price caps                                                                        |
-| `operations/sitemap/server.ts`      | Sitemap counts and shards                                                                                              |
-| `operations/catalog/server.ts`      | `search_catalog` on `/api/ucp/mcp`; Eve only                                                                           |
-| `fragments/**`                      | 19 `gql()` documents                                                                                                   |
-| `transforms/**`                     | Shopify responses → domain models                                                                                      |
-| `html/server.ts`                    | `sanitizeShopifyHtml`                                                                                                  |
-| `errors/server.ts`                  | `assertStorefrontOk`, `withFallback`                                                                                   |
-| `logging/server.ts`                 | Shared Hydrogen logger and `DEBUG_SHOPIFY` timing                                                                      |
-| `mcp/server.ts`                     | JSON-RPC / SSE client for Shopify MCP endpoints                                                                        |
-| `id/server.ts`                      | Numeric Shopify ID helpers                                                                                             |
-| `types.ts`                          | `ResultOf` and response wrappers                                                                                       |
+| Path                                | Responsibility                                                                                                                           |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `storefront/server.ts`              | `storefront.request()` and `createRequestStorefrontClient()`; locale injection, 10 s timeout, `?operation=` annotation, request-group ID |
+| `customer-account/server.ts`        | Customer Account API client and unauthorized detection; request-group ID                                                                 |
+| `operations/products/server.ts`     | 10 product, search, collection and option operations                                                                                     |
+| `operations/collections/server.ts`  | Collection reads and listing                                                                                                             |
+| `operations/blogs/server.ts`        | Blog index and article reads; article body sanitized                                                                                     |
+| `operations/pages/server.ts`        | Page reads; body sanitized                                                                                                               |
+| `operations/policies/server.ts`     | Storefront policy reads plus the `search_shop_policies_and_faqs` MCP call                                                                |
+| `operations/customer/server.ts`     | Customer profile, orders, addresses and four mutations                                                                                   |
+| `operations/localization/server.ts` | Store currency read; Eve uses it for price caps                                                                                          |
+| `operations/sitemap/server.ts`      | Sitemap counts and shards                                                                                                                |
+| `operations/catalog/server.ts`      | `search_catalog` on `/api/ucp/mcp`; Eve only                                                                                             |
+| `fragments/**`                      | 19 `gql()` documents                                                                                                                     |
+| `transforms/**`                     | Shopify responses → domain models                                                                                                        |
+| `html/server.ts`                    | `sanitizeShopifyHtml`                                                                                                                    |
+| `errors/server.ts`                  | `assertStorefrontOk`, `withFallback` (degraded reads are logged)                                                                         |
+| `logging/server.ts`                 | Shared Hydrogen logger adapter over the JSON stream and `DEBUG_SHOPIFY` timing                                                           |
+| `mcp/server.ts`                     | JSON-RPC / SSE client for Shopify MCP endpoints                                                                                          |
+| `id/server.ts`                      | Numeric Shopify ID helpers                                                                                                               |
+| `types.ts`                          | `ResultOf` and response wrappers                                                                                                         |
 
 `storefront.request()` returns `{ data, errors }` for GraphQL responses. HTTP, network and timeout
 failures throw Hydrogen's `StorefrontApiError` / `StorefrontTimeoutError`; callers handle returned
@@ -470,13 +480,15 @@ A fresh checkout cannot start or build until those six values exist, or until au
 disabled. `next typegen` is the only exempt phase.
 
 Production should also set `NEXT_PUBLIC_SITE_URL` for canonical URLs; without it the site derives
-the URL from `VERCEL_PROJECT_PRODUCTION_URL`. `SHOPIFY_WEBHOOK_SECRET` and `REVALIDATE_SECRET` are
-optional feature gates: the webhook and revalidation routes return 404 until they are set. GA4/GTM,
+the URL from `VERCEL_PROJECT_PRODUCTION_URL`. `SHOPIFY_WEBHOOK_SECRET`, `REVALIDATE_SECRET`,
+`UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are optional feature gates: webhook and
+revalidation routes return 404 until their secrets are set, and webhook delivery claims stay
+disabled until both Redis values are set. `LOG_LEVEL` controls the structured log minimum. GA4/GTM,
 Shopify analytics, BotID and Eve add their own variables; see `.env.example`.
 
 The repository rule is that every user-configurable `process.env` read has a row in `.env.example`
-and an entry in `turbo.json` `globalEnv`. The current tree declares the seed, verification and
-preview switches; platform-injected values such as `VERCEL_ENV` and
+and an entry in `turbo.json` `globalEnv`. The current tree declares the seed, verification, preview,
+log-level and Redis switches; platform-injected values such as `VERCEL_ENV` and
 `VERCEL_PROJECT_PRODUCTION_URL` are documented but not user-set.
 
 ## 10. Answer-engine surface
@@ -566,9 +578,7 @@ This is the current backlog, deduplicated across the docs. Historical records su
 | Connect contact and newsletter forms                                 | `components/content/contact-form.tsx`, `components/newsletter/form.tsx`    |
 | Add gallery zoom, lightbox navigation and counter if chosen          | `components/product-detail/product-media.tsx`, `lightbox.tsx`              |
 | Import product/collection SEO copy and collection images             | importer and collection transforms                                         |
-| Add error reporting, request IDs, structured logs and a health route | `instrumentation.ts`, `lib/shopify/logging`, new route                     |
-| Make webhooks observable and idempotent                              | `app/api/webhooks/shopify/route.ts`                                        |
-| Add CI for lint, typecheck, build and design tests                   | repository root                                                            |
+| Connect error reporting to a retained log drain or reporting product | `lib/observability/**`, Vercel log drain/alerts                            |
 | Sync wishlist to Customer Account if chosen                          | `lib/wishlist/client.ts`, `lib/customer/action.ts`                         |
 | Move navigation to Shopify menus if chosen                           | `lib/nav/index.ts`, nav components                                         |
 | Add ecommerce analytics events                                       | `components/analytics`, `lib/analytics/client.ts`                          |
@@ -593,11 +603,12 @@ This is the current backlog, deduplicated across the docs. Historical records su
 ### E. Production readiness
 
 - Set the full production environment: Shopify values, auth secrets, site URL, webhook secret,
-  revalidation secret and analytics IDs.
-- Register Shopify webhooks and verify tag invalidation.
+  revalidation secret, optional Redis deduplication values and analytics IDs.
+- Register Shopify webhooks and verify tag invalidation and delivery logs.
 - Configure the Customer Account API callback and logout URLs for production and previews.
-- Decide and configure analytics, consent, error reporting, request correlation and health checks.
-- Add CI.
+- Configure analytics and consent; point a retained log drain/alert at the JSON error stream and
+  `/api/health` uptime monitoring.
+- Configure GitHub repository vars/secrets so CI's build and design job runs.
 - Replace the stale anonymous Vercel artifact and create the production Vercel project/domain.
 - Verify checkout, Customer Account OAuth, Eve, analytics and revalidation against a preview.
 
@@ -631,6 +642,7 @@ presentation contract from current implementation and record the remaining devia
 | Change a token or primitive                | `app/globals.css` + `components/ui/` + design tests                          | A second styling system                       |
 | Add an agent tool                          | `agent/tools/` with a `z.strictObject` schema                                | A new chat API route                          |
 | Expose the store to answer engines         | Markdown, `/llms.txt`, Schema.org, sitemap                                   | Duplicate Shopify's agent endpoints           |
+| Add operational telemetry                  | `lib/observability/**` and the routes it reports through                     | An analytics event or a second reporter       |
 
 ## 14. Verification
 
@@ -640,7 +652,11 @@ pnpm typecheck        # next typegen + tsc
 pnpm build            # production build
 pnpm test:design      # Playwright computed-style, ARIA, motion and flow contracts
 pnpm audit:reference  # measure the running clone against the live reference
+curl -i localhost:3000/api/health   # readiness and x-request-id
 ```
+
+`.github/workflows/ci.yml` runs lint, typecheck, build, `/api/health`, and the design suite on
+pushes and same-repo pull requests.
 
 The design tests need `pnpm exec playwright install chromium` once. The reference audit needs the
 clone running at `CLONE_URL` (default `http://localhost:3000`). The catalog and content scripts need

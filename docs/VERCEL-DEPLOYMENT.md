@@ -64,12 +64,15 @@ point at the production store.
 
 ### Optional features
 
-| Variable                | Feature                                                                                                           |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `AI_GATEWAY_API_KEY`    | Eve model access outside Vercel OIDC, such as local development. On Vercel, OIDC covers the default gateway path. |
-| `UCP_AGENT_PROFILE_URL` | Optional override for the profile URL sent to Shopify catalog search. Leave unset to derive it from the site URL. |
-| `EVE_DEV`               | Set automatically by Eve's dev server; not a production setting.                                                  |
-| `SHIPROCKET_*`          | Only when the custom shipping flow in `docs/SHIPROCKET.md` is implemented.                                        |
+| Variable                   | Feature                                                                                                           |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `AI_GATEWAY_API_KEY`       | Eve model access outside Vercel OIDC, such as local development. On Vercel, OIDC covers the default gateway path. |
+| `UCP_AGENT_PROFILE_URL`    | Optional override for the profile URL sent to Shopify catalog search. Leave unset to derive it from the site URL. |
+| `EVE_DEV`                  | Set automatically by Eve's dev server; not a production setting.                                                  |
+| `SHIPROCKET_*`             | Only when the custom shipping flow in `docs/SHIPROCKET.md` is implemented.                                        |
+| `LOG_LEVEL`                | Minimum level for structured JSON logs; defaults to `info`. `debug` also enables degraded-read logs.              |
+| `UPSTASH_REDIS_REST_URL`   | With the token, makes Shopify webhook deliveries idempotent across serverless instances.                          |
+| `UPSTASH_REDIS_REST_TOKEN` | Pair with the Redis REST URL. Unset leaves webhooks at Shopify's at-least-once retry behavior.                    |
 
 ### Do not set in production
 
@@ -80,9 +83,7 @@ point at the production store.
 - `UNPUBLISH_OTHERS` and `V0_CALLBACK_URL` are operational switches, not production settings.
 
 Every user-configurable variable must have a row in `.env.example` and an entry in `turbo.json`
-`globalEnv`. The repository does not yet satisfy that rule for `UPDATE`, `UPLOAD_IMAGES`,
-`REVALIDATE_URL` and `V0_CALLBACK_URL`; add the missing declarations before relying on Turbo cache
-correctness.
+`globalEnv`.
 
 `NEXT_PUBLIC_*` values are embedded in the browser bundle. Never put an Admin token, customer
 account secret, Shiprocket password or webhook secret behind a `NEXT_PUBLIC_` name.
@@ -107,6 +108,22 @@ The build runs `next build`. With `shopConfig.agent.isEnabled === false`, `withE
 and the deployment is a plain Next.js app. When the agent is enabled, `withEve` from `eve/next`
 adds the agent service to the same Vercel project. It requires the Eve runtime and Vercel
 Workflow; no separate service is deployed.
+
+### CI
+
+`.github/workflows/ci.yml` runs lint and typecheck on every push and pull request, then builds,
+starts the production server, waits for `/api/health`, and runs the Playwright design suite.
+Configure these repository values and secrets for the verify job:
+
+| Value                             | Type              | Used for                         |
+| --------------------------------- | ----------------- | -------------------------------- |
+| `SHOPIFY_SHOP_ID`                 | Repository var    | Required shop ID                 |
+| `SHOPIFY_STORE_DOMAIN`            | Repository var    | Required store domain            |
+| `SHOPIFY_STOREFRONT_ACCESS_TOKEN` | Repository secret | Required public Storefront token |
+
+The Customer Account session/client values are CI-only placeholders in the workflow; they satisfy
+the build-time validation and do not authenticate. Fork pull requests skip the build job because
+they cannot read the secrets.
 
 ## 5. Custom domain
 
@@ -148,9 +165,12 @@ or `shopify.app.toml`) or a separate endpoint domain. Verify delivery before rel
 invalidation.
 
 Use the same `SHOPIFY_WEBHOOK_SECRET` that is set in Vercel. The handler verifies the
-`X-Shopify-Hmac-Sha256` header and invalidates tags; it returns `404` when the secret is unset.
-The handler also accepts metaobject topics and clears `metaobjects`/`metaobject-<handle>`, but no
-storefront read uses those tags today, so registering them has no cache effect.
+`X-Shopify-Hmac-Sha256` header, logs the delivery outcome, and invalidates tags; it returns `404`
+when the secret is unset. Delivery IDs are deduplicated for 24 hours when
+`UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set. Without Redis, every delivery is
+processed again and logs `idempotencyState: "disabled"`. The handler also accepts metaobject topics
+and clears `metaobjects`/`metaobject-<handle>`, but no storefront read uses those tags today, so
+registering them has no cache effect.
 
 Pages, policies, blogs and articles do not send the topics this handler consumes. Call the
 revalidation endpoint after editing them:
@@ -190,8 +210,8 @@ recommendation, currency prerequisite and payment security checklist, see
 - Preview deployments should use a staging store. Do not point a preview at production if the
   team is testing seed or unpublish scripts.
 
-Vercel's Data Cache is regional and shared by the deployment. The app does not need a separate
-Redis or KV store for the storefront.
+Vercel's Data Cache is regional and shared by the deployment. The app does not need Redis or KV for
+the storefront cache. Redis REST is used only for cross-instance webhook delivery deduplication.
 
 ## 8. Eve agent
 
@@ -236,6 +256,8 @@ profile, so protect the profile route or host the profile outside the protected 
 
 After the first production deploy:
 
+- [ ] `/api/health` returns `200` with a `Cache-Control: no-store` response and an `x-request-id`
+      header. Point an uptime monitor at it.
 - [ ] `/` renders the seeded catalog, not demo products.
 - [ ] `/collections/all` and each navigation collection return products.
 - [ ] A product page selects a variant, adds to cart and reaches a Shopify checkout URL.
@@ -243,6 +265,9 @@ After the first production deploy:
 - [ ] `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`, `/pages/size-guide`,
       `/pages/faqs`, `/pages/contact-us`, `/blogs/journal-2` and the policy pages return `200`.
 - [ ] `/sitemap.xml`, `/robots.txt` and `/llms.txt` use the production domain.
+- [ ] Page and route responses carry `x-request-id`; include it in support requests.
+- [ ] A failed page or client error emits a `request.error` or `client.error` JSON log with the
+      digest and route.
 - [ ] `POST /api/webhooks/shopify` rejects a request without a valid HMAC and returns `200` for a
       signed test payload.
 - [ ] `POST /api/revalidate` rejects a missing bearer token and revalidates a tag with the secret.
@@ -255,6 +280,7 @@ After the first production deploy:
   rebuild.
 - Preview deployments are isolated by environment variables. Use them for Shopify staging.
 - If a cache tag is stuck, call `/api/revalidate` with the tag rather than redeploying.
+- Attach the deployment's `x-request-id` to any cache or checkout investigation.
 - Rotate `SHOPIFY_WEBHOOK_SECRET`, `REVALIDATE_SECRET` and the Storefront token in Shopify, then
   update Vercel and redeploy.
 - Seed and unpublish scripts are not part of the build. Run them from a trusted machine against

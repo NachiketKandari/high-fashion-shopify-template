@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: lint and typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: 26
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+  verify:
+    name: build and design suite
+    runs-on: ubuntu-latest
+    # Fork pull requests do not receive repository secrets and cannot reach the store.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      CUSTOMER_ACCOUNT_SESSION_SECRET: ci-only-session-secret
+      NEXT_PUBLIC_SHOPIFY_SHOP_ID: ${{ vars.SHOPIFY_SHOP_ID }}
+      NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+      NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: ${{ vars.SHOPIFY_STORE_DOMAIN }}
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID: ci-only-client-id
+      SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_SECRET: ci-only-client-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+          node-version: 26
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Start the built storefront
+        run: |
+          pnpm start &
+          pid=$!
+          trap 'kill "$pid"' EXIT
+          ready=false
+          for _ in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3000/api/health > /dev/null; then
+              ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != "true" ]; then
+            echo "Storefront did not become healthy" >&2
+            exit 1
+          fi
+          pnpm test:design
