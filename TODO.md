@@ -114,11 +114,12 @@ Owners follow [`AGENTS.md`](./AGENTS.md): **Shopify** owns commerce, **Next.js**
       Availability and Price for `new-in`. Search & Discovery must expose Product type, Colour
       (`custom.colour_family`), Fabric (`custom.fabric`) and Price; the colour filter renders swatch + label + count, with `getColorSwatch` as fallback. The metafield writes and UI fallback can be
       prepared before the admin save. Detail: GAP-CLOSURE-PLAN G3.
-- [ ] **Complete checkout verification.** The cart currently redirects to
-      `https://dummy-store-f0ejfuh9.myshopify.com/password`; disable the Online Store password, then
-      verify line item, quantity, subtotal, currency and shipping on the first Shopify checkout
-      step. Also verify the saved-address and store-credit paths with an authenticated HTTPS
-      session. A test order needs explicit approval. Detail: GAP-CLOSURE-PLAN G5.
+- [ ] **Complete checkout verification.** The Online Store password is still enabled, so local
+      checkout needs the storefront password. The first Shopify checkout step verifies the line
+      item, quantity, subtotal, currency, Standard ₹1,000 and Express ₹1,500 shipping, and the
+      ₹50,000 store credit covering the full total. The pre-checkout credit toggle is a projection,
+      not the control. Completing a test order still needs explicit approval. Detail:
+      GAP-CLOSURE-PLAN G5.
 - [ ] **Register production webhooks and verify invalidation.** Product, collection, metaobject and
       inventory topics; set `SHOPIFY_WEBHOOK_SECRET`; verify tag invalidation. The handler has no
       `inventory_levels/update` mapping, so an inventory change does not refresh a cached PDP.
@@ -238,22 +239,22 @@ Confirm each against the current code before acting; the linked doc is a snapsho
 
 Keep [`STUBS.md`](./docs/STUBS.md) authoritative for the stub location and replacement condition.
 
-| Surface                | Current state                                                  | Unblocked by                                            |
-| ---------------------- | -------------------------------------------------------------- | ------------------------------------------------------- |
-| Newsletter signup      | Local unavailable state; nothing is sent                       | A list provider plus consent policy                     |
-| Contact form           | Local unavailable state; nothing is sent                       | A mailbox or ticketing transport                        |
-| Waitlist / notify me   | Confirms locally; no email leaves the browser                  | A storage decision (metafield, app or provider)         |
-| Low stock line         | Dormant; every active variant is untracked                     | Tracked inventory at 1–5 units                          |
-| Account credits        | Read-only projection; Shopify applies the credit at checkout   | Store-credit scope and checkout configuration           |
-| Address prefill        | Step hands off without writing the address to the cart         | A cart-write owner for delivery addresses               |
-| Delivery ETA           | No date or promise is rendered                                 | Shiprocket credentials                                  |
-| Pincode serviceability | Module exists but is not called                                | D5 decision plus API credentials                        |
-| Size recommendation    | Not started                                                    | Fit metafield schema or a fit app                       |
-| Public order tracking  | Not started; order pages link to Shopify's status page         | A Shiprocket tracking source or Shopify status decision |
-| Order cancellation     | Not started                                                    | Server-side Admin API credential decision               |
-| Returns                | Not started                                                    | P11 scope                                               |
-| Tax invoices           | Not started                                                    | GST app or Admin API generation decision                |
-| Search typo correction | Shows honest zero results; does not fabricate closest products | A search service or synonym dictionary                  |
+| Surface                | Current state                                                                                                   | Unblocked by                                            |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Newsletter signup      | Local unavailable state; nothing is sent                                                                        | A list provider plus consent policy                     |
+| Contact form           | Local unavailable state; nothing is sent                                                                        | A mailbox or ticketing transport                        |
+| Waitlist / notify me   | Confirms locally; no email leaves the browser                                                                   | A storage decision (metafield, app or provider)         |
+| Low stock line         | Dormant; every active variant is untracked                                                                      | Tracked inventory at 1–5 units                          |
+| Account credits        | Wallet reads balance and transactions when the API client grants access; Shopify applies the credit at checkout | Store-credit scope and checkout configuration           |
+| Address prefill        | Step hands off without writing the address to the cart                                                          | A cart-write owner for delivery addresses               |
+| Delivery ETA           | No date or promise is rendered                                                                                  | Shiprocket credentials                                  |
+| Pincode serviceability | Module exists but is not called                                                                                 | D5 decision plus API credentials                        |
+| Size recommendation    | Not started                                                                                                     | Fit metafield schema or a fit app                       |
+| Public order tracking  | Not started; order pages link to Shopify's status page                                                          | A Shiprocket tracking source or Shopify status decision |
+| Order cancellation     | Not started                                                                                                     | Server-side Admin API credential decision               |
+| Returns                | Order return states render read-only; no request or cancel write                                                | P11 scope                                               |
+| Tax invoices           | Customer Account API exposes no invoices or credit notes; the account page shows an honest empty state          | A document source and GST configuration                 |
+| Search typo correction | Shows honest zero results; does not fabricate closest products                                                  | A search service or synonym dictionary                  |
 
 ## Documentation to reconcile
 
