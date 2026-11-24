@@ -8,18 +8,18 @@ Shopify's hosted surfaces.
 
 ## Storefront
 
-| Page              | Path                    | Reached from                                             |
-| ----------------- | ----------------------- | -------------------------------------------------------- |
-| Home              | `/`                     | Wordmark, any breadcrumb back to the shop                |
-| Collections index | `/collections`          | Direct, or the collection grid on the home page          |
-| All products      | `/collections/all`      | Direct; empty-cart "Trending Collection"                 |
-| Collection        | `/collections/[handle]` | Header Woman/Man panels, menu tiles, home category tiles |
-| Product           | `/products/[handle]`    | Any product card                                         |
-| Search            | `/search`               | Header search, mobile search icon                        |
-| Search results    | `/search?q=[query]`     | Submit the search field                                  |
-| Cart              | `/cart`                 | Header bag, add-to-cart drawer                           |
-| Wishlist          | `/pages/wishlist`       | Header Wishlist                                          |
-| Wishlist (legacy) | `/wishlist`             | Redirects to `/pages/wishlist`                           |
+| Page              | Path                           | Reached from                                             |
+| ----------------- | ------------------------------ | -------------------------------------------------------- |
+| Home              | `/`                            | Wordmark, any breadcrumb back to the shop                |
+| Collections index | `/collections`                 | Direct, or the collection grid on the home page          |
+| All products      | `/collections/all`             | Direct; empty-cart "Trending Collection"                 |
+| Collection        | `/collections/[handle]`        | Header Woman/Man panels, menu tiles, home category tiles |
+| Product           | `/products/[handle]`           | Any product card                                         |
+| Search            | `/search`                      | Header search, mobile search icon                        |
+| Search results    | `/search?q=[query]`            | Submit the search field                                  |
+| Cart              | `/cart`                        | Header bag, add-to-cart drawer                           |
+| Wishlist          | `/account/wishlist`            | Header Wishlist, account navigation                      |
+| Wishlist (legacy) | `/pages/wishlist`, `/wishlist` | Redirects to `/account/wishlist`                         |
 
 Examples:
 

@@ -53,7 +53,7 @@ The locally rebuilt flows were checked in a browser at 1440 × 1000, 768 × 1024
 Allow All in the cookie bar. The local environment uses `G-SQVPB589E7`. Verified in the browser
 network panel: after consent, `googletagmanager.com/gtag/js` loads
 and `google-analytics.com/g/collect` receives `en=page_view` for `/`, `/pages/about-us`,
-`/collections/all`, `/collections/*`, `/products/*`, `/cart` and `/pages/wishlist`. GTM takes
+`/collections/all`, `/collections/*`, `/products/*`, `/cart` and `/account/wishlist`. GTM takes
 precedence when `NEXT_PUBLIC_GTM_ID` is also set, matching `components/analytics/index.tsx`.
 
 The integration is present and active, not just installed. The only production step is to set
@@ -172,8 +172,8 @@ source of the full catalog.
 - Content routes: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`, `/pages/press-v2`,
   `/pages/faqs`, `/pages/shipping-returns`, `/pages/returns-exchanges`,
   `/pages/terms-of-service`, `/pages/privacy-policies`, `/blogs/journal-2` and all three articles
-  return `200` from Shopify content. `/pages/contact-us`, `/pages/size-guide` and `/pages/wishlist`
-  remain Next.js routes.
+  return `200` from Shopify content. `/pages/contact-us`, `/pages/size-guide` and
+  `/account/wishlist` remain Next.js routes.
 - Seeded content: 9 Shopify pages, the `journal-2` blog, 3 articles and 38 images in Shopify Files.
   The store currently serves 11 published page resources because Shopify's pre-existing `contact`
   and `data-sharing-opt-out` pages also render through `/pages/[handle]`.
@@ -205,7 +205,7 @@ Storefront API reads.
 | `/blogs/journal-2/*`       | Shopify articles                       |
 | `/pages/contact-us`        | Next.js contact form                   |
 | `/pages/size-guide`        | Next.js size finder and tables         |
-| `/pages/wishlist`          | Next.js browser-local wishlist         |
+| `/account/wishlist`        | Next.js browser-local wishlist         |
 | `/pages/[handle]`          | Shopify page fallback                  |
 
 The granted content scopes are:
@@ -256,9 +256,10 @@ The ordered closure plan, with dependencies and acceptance checks, is in
   Contact, size guide and wishlist remain Next.js because they need forms, local state or a
   client-side size finder. Do not add a local static route for a Shopify handle; see
   [`CONTENT.md`](./CONTENT.md). Navigation remains code-owned in `lib/nav/index.ts`.
-- **Wishlist and account**: wishlist saves products in local storage and renders at
-  `/pages/wishlist`; it is per-browser and not synced to a customer account. Account utilities
-  render through Shopify's Customer Account API, and `/account` requires a signed-in session.
+- **Wishlist and account**: wishlist saves products in local storage and renders inside the
+  signed-in account at `/account/wishlist`; it remains per-browser and is not synced to the
+  customer account. Account utilities render through Shopify's Customer Account API, and
+  `/account` requires a signed-in session.
 - **Checkout, order status and payment failure** are Shopify-hosted.
 - **Newsletter and contact submissions** show a local success state; the contact form does not
   send mail yet, and the newsletter does not post to Shopify or a marketing provider.

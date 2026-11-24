@@ -13,7 +13,7 @@ and a Shopify page for the same handle.
 | `contact` and `data-sharing-opt-out` pages                                     | Shopify pages                                          | `/pages/[handle]`                                               |
 | Contact page and form                                                          | Next.js                                                | `/pages/contact-us`                                             |
 | Size guide and find-my-size form                                               | Next.js                                                | `/pages/size-guide`                                             |
-| Wishlist                                                                       | Next.js and browser storage                            | `/pages/wishlist`                                               |
+| Wishlist                                                                       | Next.js and browser storage                            | `/account/wishlist`                                             |
 | Home, collections, products, cart, account, search                             | Next.js and Shopify commerce APIs                      | Existing routes                                                 |
 | Navigation and footer links                                                    | Next.js                                                | `lib/nav/index.ts`                                              |
 | Product and editorial media                                                    | Shopify Files or `public/reference/` for design assets | —                                                               |

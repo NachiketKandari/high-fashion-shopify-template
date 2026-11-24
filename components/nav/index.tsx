@@ -15,9 +15,11 @@ export function Nav() {
     <NavChrome
       actions={
         <>
-          <Link className={`${NAV_CHIP_CLASS} hidden desktop:flex`} href="/pages/wishlist">
-            Wishlist
-          </Link>
+          {shopConfig.auth.isEnabled ? (
+            <Link className={`${NAV_CHIP_CLASS} hidden desktop:flex`} href="/account/wishlist">
+              Wishlist
+            </Link>
+          ) : null}
           <Suspense fallback={<CartIconFallback />}>
             <CartIcon />
           </Suspense>
