@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 
 import { ContactForm } from "@/components/content/contact-form";
 import { ContentPage, ContentSection } from "@/components/content/content-page";
+import { Link } from "@/components/ui/link";
 import { shopConfig } from "@/lib/config";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
 
@@ -54,6 +55,16 @@ export default function ContactPage() {
         <p>
           Our team is here for product and sizing questions, orders, returns and anything else.
           Reach us on the phone, on WhatsApp or by e-mail — or send a message below.
+        </p>
+      </ContentSection>
+
+      <ContentSection>
+        <p>
+          For order tracking, shipping, returns and policy help, visit the{" "}
+          <Link className="focus-ring text-ink underline underline-offset-4" href="/support">
+            Support Centre
+          </Link>
+          .
         </p>
       </ContentSection>
 
