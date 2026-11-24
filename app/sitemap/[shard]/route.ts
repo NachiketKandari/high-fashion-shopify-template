@@ -27,7 +27,15 @@ function xmlResponse(body: string): Response {
 }
 
 // App-owned pages only; Shopify pages and articles come from their sitemap shards.
-const STATIC_CONTENT_PATHS = ["/pages/contact-us", "/pages/size-guide"];
+const STATIC_CONTENT_PATHS = [
+  "/pages/contact-us",
+  "/pages/size-guide",
+  "/support",
+  "/support/atelier",
+  "/support/legal",
+  "/support/returns",
+  "/support/shipping",
+];
 
 async function renderStatic(): Promise<Response> {
   const entries = ["/", ...STATIC_CONTENT_PATHS]

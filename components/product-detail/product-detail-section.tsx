@@ -377,7 +377,7 @@ export function ProductDetailSkeleton() {
       <div>
         <div className="aspect-[2/3] w-full bg-surface desktop:hidden" />
         <div className="hidden desktop:block desktop:pt-[75px]">
-          <div className="aspect-[800/1432] w-full border border-ink bg-surface" />
+          <div className="aspect-[800/1432] w-full bg-surface" />
           <div className="grid grid-cols-2">
             <div className="aspect-[3/4] w-full bg-surface" />
             <div className="aspect-[3/4] w-full bg-surface" />

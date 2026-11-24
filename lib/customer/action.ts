@@ -9,6 +9,9 @@ import { logError } from "@/lib/observability/server";
 import {
   createCustomerAddress,
   deleteCustomerAddress,
+  getCustomerProfile,
+  setCustomerEmailMarketing,
+  setDefaultCustomerAddress,
   updateCustomerAddress,
   updateCustomerProfile,
 } from "@/lib/shopify/operations/customer/server";
@@ -44,7 +47,11 @@ const UPDATE_ADDRESS_INPUT = z.strictObject({
   isDefault: z.boolean(),
 });
 
-const PROFILE_INPUT = z.strictObject({ firstName: z.string(), lastName: z.string() });
+const PROFILE_INPUT = z.strictObject({
+  emailMarketing: z.boolean(),
+  firstName: z.string(),
+  lastName: z.string(),
+});
 
 const UPPERCASE_FIELDS = new Set<keyof CustomerAddressInput>(["countryCode", "zoneCode"]);
 
@@ -141,6 +148,16 @@ export async function deleteAddressAction(addressId: string): Promise<AccountAct
   return runCustomerMutation(() => deleteCustomerAddress(parsed.data), "Failed to delete address");
 }
 
+export async function setDefaultAddressAction(addressId: string): Promise<AccountActionResult> {
+  const parsed = ADDRESS_ID.safeParse(addressId);
+  if (!parsed.success) return { success: false, error: "Invalid address ID" };
+
+  return runCustomerMutation(
+    () => setDefaultCustomerAddress(parsed.data),
+    "Failed to set the default address",
+  );
+}
+
 export async function updateProfileAction(
   profile: z.infer<typeof PROFILE_INPUT>,
 ): Promise<AccountActionResult> {
@@ -149,9 +166,27 @@ export async function updateProfileAction(
 
   const firstName = parsed.data.firstName.trim().slice(0, MAX_NAME_LENGTH);
   const lastName = parsed.data.lastName.trim().slice(0, MAX_NAME_LENGTH);
+  if (!firstName) return { success: false, error: "First name is required" };
+  if (!lastName) return { success: false, error: "Last name is required" };
 
-  return runCustomerMutation(
-    () => updateCustomerProfile({ firstName, lastName }),
-    "Failed to update profile",
-  );
+  try {
+    const currentProfile = await getCustomerProfile();
+    const profileErrors = await updateCustomerProfile({ firstName, lastName });
+    if (profileErrors.length > 0) return mapUserErrors(profileErrors);
+
+    const isSubscribed =
+      currentProfile?.emailMarketingState === "PENDING" ||
+      currentProfile?.emailMarketingState === "SUBSCRIBED";
+    if (parsed.data.emailMarketing !== isSubscribed) {
+      const marketingErrors = await setCustomerEmailMarketing(parsed.data.emailMarketing);
+      if (marketingErrors.length > 0) return mapUserErrors(marketingErrors);
+    }
+
+    refresh();
+    return { success: true };
+  } catch (error) {
+    unstable_rethrow(error);
+    logError("customer.mutation.failed", error, { operation: "Failed to update profile" });
+    return { success: false, error: "Failed to update profile" };
+  }
 }

@@ -27,6 +27,7 @@ interface BuyButtonsProps {
   onAddToCart?: () => void;
   quantityPicker?: boolean;
   sizeOption?: NotifyMeSizeOption;
+  submitLabel?: (variant: ProductFormVariant) => string;
 }
 
 export function BuyButtons({
@@ -37,6 +38,7 @@ export function BuyButtons({
   onAddToCart,
   quantityPicker = false,
   sizeOption,
+  submitLabel,
 }: BuyButtonsProps) {
   const { formProps, pending, register, selectedVariant: storeVariant } = useProductForm();
   const selectedVariant = storeVariant ?? fallbackVariant;
@@ -92,7 +94,7 @@ export function BuyButtons({
     if (requiresBundleConfiguration) return "Choose bundle items";
     if (missingRequiredPlan) return "Subscription unavailable";
     if (isOutOfStock) return "Out of stock";
-    return "Add to cart";
+    return submitLabel?.(selectedVariant) ?? "Add to cart";
   };
   return (
     <form

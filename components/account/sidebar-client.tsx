@@ -5,30 +5,29 @@ import { usePathname } from "next/navigation";
 
 import { Link } from "@/components/ui/link";
 
-interface AccountSidebarLink {
-  href: string;
-  label: string;
-}
+import { type AccountLink, isAccountLinkActive } from "./links";
 
-export function SidebarClient({ links }: { links: AccountSidebarLink[] }) {
+export function SidebarClient({ links }: { links: AccountLink[] }) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col gap-1">
-      {links.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          className={cn(
-            "type-body-sm flex min-h-9 items-center px-3 transition-colors",
-            pathname.startsWith(link.href)
-              ? "bg-surface font-normal text-ink"
-              : "text-ink-muted hover:bg-surface hover:text-ink",
-          )}
-        >
-          {link.label}
-        </Link>
-      ))}
+    <nav aria-label="Account" className="grid gap-1">
+      {links.map((link) => {
+        const active = isAccountLinkActive(pathname, link);
+        return (
+          <Link
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "type-body-sm flex min-h-9 items-center px-3 transition-colors",
+              active ? "bg-ink text-inverse" : "text-ink hover:bg-surface",
+            )}
+            href={link.href}
+            key={link.href}
+          >
+            {link.label}
+          </Link>
+        );
+      })}
     </nav>
   );
 }

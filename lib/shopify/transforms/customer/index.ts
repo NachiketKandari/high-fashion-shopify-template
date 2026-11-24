@@ -3,9 +3,12 @@ import type {
   CustomerOrder,
   CustomerOrderSummary,
   CustomerProfile,
+  CustomerStoreCreditAccount,
+  CustomerStoreCreditTransaction,
   OrderLineItem,
 } from "@/lib/customer/types";
 import type { Money } from "@/lib/money/types";
+import type { ReturnSelectedOption } from "@/lib/returns/types";
 import type {
   ShopifyCustomerAddress,
   ShopifyCustomerProfile,
@@ -13,8 +16,10 @@ import type {
   ShopifyMoney,
   ShopifyOrder,
   ShopifyOrderSummary,
+  ShopifyStoreCreditAccount,
 } from "@/lib/shopify/transforms/customer/types";
 import { transformImage } from "@/lib/shopify/transforms/product";
+import { transformReturnSummary } from "@/lib/shopify/transforms/returns";
 
 function transformMoney(money: ShopifyMoney): Money {
   return { amount: money.amount, currencyCode: money.currencyCode };
@@ -48,17 +53,39 @@ export function transformOrderSummary(order: ShopifyOrderSummary): CustomerOrder
     id: order.id,
     name: order.name,
     number: order.number,
+    previewLineItems: order.previewLineItems.nodes.map((item) => ({
+      quantity: item.quantity,
+      title: item.title,
+      variantTitle: item.variantTitle ?? null,
+    })),
     processedAt: order.processedAt,
+    returns: order.returns.nodes.map((entry) => ({
+      createdAt: entry.createdAt ?? null,
+      itemCount: entry.returnLineItemsCount?.count ?? 0,
+      name: entry.name,
+      status: entry.status,
+    })),
+    statusPageUrl: order.statusPageUrl,
     totalPrice: transformMoney(order.totalPrice),
   };
 }
 
+function transformLineItemOptions(
+  options: ShopifyLineItem["variantOptions"],
+): ReturnSelectedOption[] {
+  return options?.map((option) => ({ name: option.name, value: option.value })) ?? [];
+}
+
 function transformLineItem(item: ShopifyLineItem): OrderLineItem {
   return {
+    id: item.id,
     image: transformImage(item.image),
+    options: transformLineItemOptions(item.variantOptions),
+    productId: item.productId ?? null,
     quantity: item.quantity,
     title: item.title,
     totalPrice: item.totalPrice ? transformMoney(item.totalPrice) : null,
+    variantId: item.variantId ?? null,
     variantTitle: item.variantTitle ?? null,
   };
 }
@@ -67,8 +94,14 @@ export function transformOrder(order: ShopifyOrder): CustomerOrder {
   return {
     ...transformOrderSummary(order),
     lineItems: order.lineItems.nodes.map(transformLineItem),
+    nonReturnableSummary: order.returnInformation.nonReturnableSummary
+      ? {
+          reasons: order.returnInformation.nonReturnableSummary.nonReturnableReasons,
+        }
+      : null,
+    returnableLineItemCount: order.returnInformation.returnableLineItems.nodes.length,
+    returns: order.returns.nodes.map(transformReturnSummary),
     shippingAddress: order.shippingAddress ? transformCustomerAddress(order.shippingAddress) : null,
-    statusPageUrl: order.statusPageUrl,
     subtotal: order.subtotal ? transformMoney(order.subtotal) : null,
     totalShipping: order.totalShipping ? transformMoney(order.totalShipping) : null,
     totalTax: order.totalTax ? transformMoney(order.totalTax) : null,
@@ -78,7 +111,34 @@ export function transformOrder(order: ShopifyOrder): CustomerOrder {
 export function transformCustomerProfile(customer: ShopifyCustomerProfile): CustomerProfile {
   return {
     email: customer.emailAddress?.emailAddress ?? "",
+    emailMarketingState: customer.emailAddress?.marketingState ?? "NOT_SUBSCRIBED",
     firstName: customer.firstName ?? null,
     lastName: customer.lastName ?? null,
+    marketCurrencyCode: customer.marketCurrencyCode,
+    phoneNumber: customer.phoneNumber?.phoneNumber ?? null,
+  };
+}
+
+function transactionType(typename: string): CustomerStoreCreditTransaction["type"] {
+  if (typename.endsWith("DebitRevertTransaction")) return "revert";
+  if (typename.endsWith("ExpirationTransaction")) return "expiration";
+  if (typename.endsWith("DebitTransaction")) return "debit";
+  return "credit";
+}
+
+export function transformStoreCreditAccount(
+  account: ShopifyStoreCreditAccount,
+): CustomerStoreCreditAccount {
+  return {
+    balance: transformMoney(account.balance),
+    id: account.id,
+    transactions: account.transactions.nodes.map((transaction) => ({
+      amount: transformMoney(transaction.amount),
+      balanceAfterTransaction: transformMoney(transaction.balanceAfterTransaction),
+      createdAt: transaction.createdAt,
+      event: transaction.event,
+      orderName: transaction.origin?.order?.name ?? null,
+      type: transactionType(transaction.__typename),
+    })),
   };
 }

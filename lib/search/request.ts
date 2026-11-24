@@ -29,6 +29,6 @@ export const predictiveSearchHandlers = createPredictiveSearchServerHandlers({
     product: PRODUCT_FRAGMENT,
     query: QUERY_FRAGMENT,
   },
-  limit: 3,
-  types: ["PRODUCT", "QUERY"],
+  limit: 4,
+  types: ["COLLECTION", "PRODUCT", "QUERY"],
 });

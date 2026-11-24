@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { SearchViewedTracker } from "@/components/analytics/trackers";
 import { CollectionBrowseProvider } from "@/components/collections/collection-browse-provider";
 import { InfiniteProductGrid } from "@/components/collections/infinite-product-grid";
+import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card/product-card";
 import { ProductsGridSkeleton } from "@/components/product/products-grid";
 import { SearchExplorer } from "@/components/search/search-explorer";
@@ -66,8 +67,8 @@ export default function SearchPage({ searchParams }: PageProps<"/search">) {
     fetchSearchResults({ query: getParam(resolved, "q")?.trim(), statePromise }),
   );
   return (
-    <Page className="desktop:pt-10">
-      <Container className="pb-10 desktop:pb-20">
+    <Page className="desktop:pt-20">
+      <Container className="max-w-[1440px] pb-10 desktop:pb-20">
         <Suspense fallback={<SearchPageSkeleton />}>
           <SearchExperience
             resultsPromise={resultsPromise}
@@ -126,31 +127,34 @@ async function SearchResults({
   }
 
   return (
-    <div className="grid gap-10 [--grid-row-gap:40px]">
-      <h1 className="type-h3 text-ink">showing all results for ‘{query}’</h1>
-      <CollectionBrowseProvider handle={`search:${query}`} path="/search" state={statePromise}>
-        <InfiniteProductGrid
-          cardProps={{
-            captionLayout: "compact",
-            className: "[&>div:first-child]:aspect-[348/447]",
-            showActions: false,
-            showSwatches: false,
-          }}
-          initialPageInfo={results.pageInfo}
-          initialProductIds={results.products.map((product) => product.id)}
-          showEndMessage={false}
-          source={results.source}
-        >
-          {results.products.map((product, index) => (
-            <SearchProductCard
-              key={product.id}
-              loading={index < 4 ? "eager" : "lazy"}
-              product={product}
-            />
-          ))}
-        </InfiniteProductGrid>
-      </CollectionBrowseProvider>
-    </div>
+    <>
+      <div className="grid gap-10 [--grid-row-gap:40px]">
+        <h1 className="type-h3 text-ink">showing all results for ‘{query}’</h1>
+        <CollectionBrowseProvider handle={`search:${query}`} path="/search" state={statePromise}>
+          <InfiniteProductGrid
+            cardProps={{
+              captionLayout: "compact",
+              className: "[&>div:first-child]:aspect-[348/447]",
+              showActions: false,
+              showSwatches: false,
+            }}
+            initialPageInfo={results.pageInfo}
+            initialProductIds={results.products.map((product) => product.id)}
+            showEndMessage={false}
+            source={results.source}
+          >
+            {results.products.map((product, index) => (
+              <SearchProductCard
+                key={product.id}
+                loading={index < 4 ? "eager" : "lazy"}
+                product={product}
+              />
+            ))}
+          </InfiniteProductGrid>
+        </CollectionBrowseProvider>
+      </div>
+      <SearchFooter />
+    </>
   );
 }
 
@@ -178,39 +182,53 @@ async function SearchZeroState({ query }: { query: string }) {
 
   if (closest.length === 0) {
     return (
-      <div className="grid gap-8">
-        <h1 className="type-h3 text-ink">No results found for ‘{query}’</h1>
-        <div className="grid gap-4 pl-8">
-          <p className="type-h3 text-ink-muted">Trending search -</p>
-          <ul className="grid gap-4" role="list">
-            {TRENDING_SEARCH_TERMS.map((trending) => (
-              <li key={trending}>
-                <Link
-                  className="type-h3 focus-ring flex text-ink"
-                  href={`/search?q=${encodeURIComponent(trending)}`}
-                >
-                  {trending}
-                </Link>
-              </li>
-            ))}
-          </ul>
+      <>
+        <div className="grid gap-8">
+          <h1 className="type-h3 text-ink">No results found for ‘{query}’</h1>
+          <div className="grid gap-4 pl-8">
+            <p className="type-h3 text-ink-muted">Trending search -</p>
+            <ul className="grid gap-4" role="list">
+              {TRENDING_SEARCH_TERMS.map((trending) => (
+                <li key={trending}>
+                  <Link
+                    className="type-h3 focus-ring flex text-ink"
+                    href={`/search?q=${encodeURIComponent(trending)}`}
+                  >
+                    {trending}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
+        <SearchFooter />
+      </>
     );
   }
 
   return (
-    <div className="grid gap-10 [--grid-row-gap:40px]">
-      <h1 className="type-h3 text-ink">No results found for ‘{query}’, closest results -</h1>
-      <div className="-mx-(--gutter) grid grid-cols-2 gap-px tablet:mx-0 tablet:grid-cols-3 tablet:gap-x-(--grid-gap) tablet:gap-y-(--grid-row-gap) desktop:grid-cols-4">
-        {closest.map((product, index) => (
-          <SearchProductCard
-            key={product.id}
-            loading={index < 4 ? "eager" : "lazy"}
-            product={product}
-          />
-        ))}
+    <>
+      <div className="grid gap-10 [--grid-row-gap:40px]">
+        <h1 className="type-h3 text-ink">No results found for ‘{query}’, closest results -</h1>
+        <div className="-mx-(--gutter) grid grid-cols-2 gap-px tablet:mx-0 tablet:grid-cols-3 tablet:gap-x-(--grid-gap) tablet:gap-y-(--grid-row-gap) desktop:grid-cols-4">
+          {closest.map((product, index) => (
+            <SearchProductCard
+              key={product.id}
+              loading={index < 4 ? "eager" : "lazy"}
+              product={product}
+            />
+          ))}
+        </div>
       </div>
+      <SearchFooter />
+    </>
+  );
+}
+
+function SearchFooter() {
+  return (
+    <div className="-mx-(--gutter) -mb-10 desktop:-mb-20">
+      <Footer newsletterInputId="search-footer-newsletter-email" />
     </div>
   );
 }
@@ -227,9 +245,9 @@ function SearchResultsSkeleton() {
 function SearchPageSkeleton() {
   return (
     <div aria-busy="true" className="grid gap-10">
-      <div className="grid gap-3 desktop:grid-cols-[1fr_276px] desktop:gap-10">
+      <div className="grid gap-3 tablet:grid-cols-[1fr_276px] tablet:gap-10">
         <Skeleton className="h-[57px] w-full" />
-        <Skeleton className="h-[57px] w-full" />
+        <Skeleton className="h-[57px] w-full tablet:max-w-[276px] tablet:justify-self-end" />
       </div>
       <div className="grid gap-4 pl-8">
         <Skeleton className="h-5 w-40" />

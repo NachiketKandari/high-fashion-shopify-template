@@ -13,13 +13,14 @@ interface HeaderProps {
   actions: ReactNode;
   mobileActions?: ReactNode;
   search?: ReactNode;
+  searchOpen?: boolean;
 }
 
-export function Header({ actions, mobileActions, search }: HeaderProps) {
+export function Header({ actions, mobileActions, search, searchOpen = false }: HeaderProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const isHome = pathname === "/";
-  const solid = scrolled || !isHome;
+  const solid = scrolled || !isHome || searchOpen;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);

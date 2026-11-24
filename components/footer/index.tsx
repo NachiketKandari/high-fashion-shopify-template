@@ -4,7 +4,11 @@ import { Container } from "@/components/ui/container";
 import { Link } from "@/components/ui/link";
 import { FOOTER_COLUMNS } from "@/lib/nav";
 
-export function Footer() {
+interface FooterProps {
+  newsletterInputId?: string;
+}
+
+export function Footer({ newsletterInputId = "footer-newsletter-email" }: FooterProps) {
   return (
     <footer className="bg-paper pt-20 pb-10 desktop:pt-30 desktop:pb-30">
       <Container>
@@ -36,7 +40,7 @@ export function Footer() {
 
           <div className="grid content-start gap-3 desktop:w-60">
             <p className="type-label">Subscribe to Our Newsletters</p>
-            <NewsletterForm inputId="footer-newsletter-email" />
+            <NewsletterForm inputId={newsletterInputId} />
           </div>
         </div>
       </Container>

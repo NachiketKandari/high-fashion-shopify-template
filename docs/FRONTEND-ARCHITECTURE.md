@@ -103,11 +103,11 @@ app/                      Next.js routes, route handlers and route groups
     account/              Customer account routes, gated by layout
     blogs/                Shopify blog and article routes
     collections/          Collection index, detail and request-time refine route
-    pages/                Shopify pages plus app-owned contact, size guide, wishlist
+    pages/                Shopify pages plus app-owned contact and size guide
     policies/             Shopify policy routes
     products/              Product detail route
     search/               Search results route
-    wishlist/             Redirect to /pages/wishlist
+    wishlist/             Redirect to /account/wishlist
   api/                    Webhook, revalidation, health, client-error and agent-session handlers
   agent/                  Eve UCP profile route
   md/                     Markdown mirrors for answer engines
@@ -163,13 +163,14 @@ turbo.json                globalEnv declarations
 | `/cart`                                                                       | `app/(storefront)/cart/page.tsx`                                | Hydrogen cart store / handlers                           | Per-request; never cached                                   |
 | `/login`                                                                      | `app/(auth)/login/page.tsx`                                     | `isCustomerLoggedIn`; `LoginGate`                        | App-owned gate; `noindex`; signed-in redirect to `/account` |
 | `/account/*`                                                                  | `app/(storefront)/account/(authenticated)/…`                    | Customer Account API                                     | Per-request; `noindex`; layout gate                         |
+| `/account/wishlist`                                                           | `app/(storefront)/account/(authenticated)/wishlist/page.tsx`    | `localStorage`; live refresh action                      | Client-only list; `noindex`; layout gate                    |
 | `/account/sign-in-failed`                                                     | `app/(auth)/account/sign-in-failed/page.tsx`                    | Static failure copy                                      | App-owned; `noindex`                                        |
 | `/checkout/address`                                                           | `app/(checkout)/checkout/address/page.tsx`                      | Hydrogen cart; `getCheckoutAddresses`                    | Request-time; empty cart redirects to `/cart`               |
 | `/pages/[handle]`                                                             | `app/(storefront)/pages/[handle]/page.tsx`                      | `getPage`                                                | Cached, `pages` + `page-<handle>`                           |
 | `/pages/contact-us`                                                           | `app/(storefront)/pages/contact-us/page.tsx`                    | Local contact form and `shopConfig.site.contact`         | App-owned                                                   |
 | `/pages/size-guide`                                                           | `app/(storefront)/pages/size-guide/page.tsx`                    | Local size tables                                        | App-owned                                                   |
-| `/pages/wishlist`                                                             | `app/(storefront)/pages/wishlist/page.tsx`                      | `localStorage`                                           | Client-only; `noindex`                                      |
-| `/wishlist`                                                                   | `app/(storefront)/wishlist/page.tsx`                            | Redirect                                                 | Redirects to `/pages/wishlist`                              |
+| `/pages/wishlist`                                                             | `app/(storefront)/pages/wishlist/page.tsx`                      | Redirect                                                 | Redirects to `/account/wishlist`                            |
+| `/wishlist`                                                                   | `app/(storefront)/wishlist/page.tsx`                            | Redirect                                                 | Redirects to `/account/wishlist`                            |
 | `/policies/[handle]`                                                          | `app/(storefront)/policies/[handle]/page.tsx`                   | `getShopPolicy`                                          | Cached, `policies`                                          |
 | `/blogs/[blogHandle]`                                                         | `app/(storefront)/blogs/[blogHandle]/page.tsx`                  | `getBlog`                                                | Cached, `blogs` + `blog-<handle>`                           |
 | `/blogs/[blogHandle]/[articleHandle]`                                         | `app/(storefront)/blogs/[blogHandle]/[articleHandle]/page.tsx`  | `getBlogArticle`                                         | Cached, `articles` + `article-…`                            |
@@ -258,16 +259,16 @@ product analytics events. See [`OBSERVABILITY.md`](./OBSERVABILITY.md).
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `storefront/server.ts`              | `storefront.request()` and `createRequestStorefrontClient()`; locale injection, 10 s timeout, `?operation=` annotation, request-group ID |
 | `customer-account/server.ts`        | Customer Account API client and unauthorized detection; request-group ID                                                                 |
-| `operations/products/server.ts`     | 10 product, search, collection and option operations                                                                                     |
+| `operations/products/server.ts`     | 14 product, search, collection, bundle and option operations                                                                             |
 | `operations/collections/server.ts`  | Collection reads and listing                                                                                                             |
 | `operations/blogs/server.ts`        | Blog index and article reads; article body sanitized                                                                                     |
 | `operations/pages/server.ts`        | Page reads; body sanitized                                                                                                               |
 | `operations/policies/server.ts`     | Storefront policy reads plus the `search_shop_policies_and_faqs` MCP call                                                                |
-| `operations/customer/server.ts`     | Customer profile, orders, addresses and four mutations                                                                                   |
+| `operations/customer/server.ts`     | Customer profile, orders, addresses, returns, store credit and their mutations                                                           |
 | `operations/localization/server.ts` | Store currency read; Eve uses it for price caps                                                                                          |
 | `operations/sitemap/server.ts`      | Sitemap counts and shards                                                                                                                |
 | `operations/catalog/server.ts`      | `search_catalog` on `/api/ucp/mcp`; Eve only                                                                                             |
-| `fragments/**`                      | 19 `gql()` documents                                                                                                                     |
+| `fragments/**`                      | 30 `gql()` documents                                                                                                                     |
 | `transforms/**`                     | Shopify responses → domain models                                                                                                        |
 | `html/server.ts`                    | `sanitizeShopifyHtml`                                                                                                                    |
 | `errors/server.ts`                  | `assertStorefrontOk`, `withFallback` (degraded reads are logged)                                                                         |
@@ -374,7 +375,7 @@ effects, browser APIs and handlers live in leaves.
 | Footer         | `components/footer/index.tsx`, `payment-marks.tsx`, `components/newsletter/form.tsx`, `components/currency/selector.tsx`                                                                                                               |
 | Account        | `app/(storefront)/account/(authenticated)/**`, `components/account/**`, `components/nav/account.tsx`                                                                                                                                   |
 | Content        | `app/(storefront)/pages/**`, `app/(storefront)/policies/**`, `app/(storefront)/blogs/**`, `components/content/**`, `components/blog/**`                                                                                                |
-| Wishlist       | `app/(storefront)/pages/wishlist/page.tsx`, `components/wishlist/content.tsx`, `components/product-card/wishlist-button.tsx`, `lib/wishlist/client.ts`                                                                                 |
+| Wishlist       | `app/(storefront)/account/(authenticated)/wishlist/page.tsx`, `components/wishlist/**`, `components/product-card/wishlist-button.tsx`, `lib/wishlist/**`                                                                               |
 | Agent          | `components/agent/**`, `components/action-bar/index.tsx`, `agent/**`                                                                                                                                                                   |
 | Analytics      | `components/analytics/**`, `lib/analytics/client.ts`                                                                                                                                                                                   |
 | Schema         | `components/schema/**`, `components/product-detail/schema.tsx`                                                                                                                                                                         |
@@ -533,9 +534,11 @@ The agent is **disabled**. When enabled:
 
 ## 12. What is pending
 
-This is the current backlog, deduplicated across the docs. Historical records such as the root
-`PLAN.md` (gitignored), `DESIGN-SYSTEM-AUDIT.md`, `UX-RECON-2026-11-05.md` and
-`reference/PLAYWRIGHT-COMPARISON.md` are snapshots, not current task lists.
+The actionable checklist is [`TODO.md`](../TODO.md); keep it and this section in sync. This section
+keeps the detail, deduplicated across the docs. Historical records such as the root `PLAN.md`
+(gitignored), `DESIGN-SYSTEM-AUDIT.md`, `UX-RECON-2026-11-05.md` and
+`reference/PLAYWRIGHT-COMPARISON.md` are snapshots, not current task lists. Catalog counts below
+predate the 23 November store audit; verify them against the live store.
 
 ### A. Blocked on Shopify admin or external approval
 

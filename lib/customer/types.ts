@@ -3,6 +3,11 @@ import type { CustomerAddressInput as ShopifyCustomerAddressInput } from "@shopi
 import type { Image } from "@/lib/media/types";
 import type { Money } from "@/lib/money/types";
 import type { PageInfo } from "@/lib/pagination/types";
+import type {
+  ReturnNonReturnableSummary,
+  ReturnSelectedOption,
+  ReturnSummary,
+} from "@/lib/returns/types";
 
 export interface AccountActionResult {
   error?: string;
@@ -10,18 +15,46 @@ export interface AccountActionResult {
   success: boolean;
 }
 
+export type CustomerMarketingState =
+  | "INVALID"
+  | "NOT_SUBSCRIBED"
+  | "PENDING"
+  | "REDACTED"
+  | "SUBSCRIBED"
+  | "UNSUBSCRIBED";
+
 export interface CustomerProfile {
   email: string;
+  emailMarketingState: CustomerMarketingState;
   firstName: string | null;
   lastName: string | null;
+  marketCurrencyCode: string;
+  phoneNumber: string | null;
+}
+
+export interface OrderLinePreview {
+  quantity: number;
+  title: string;
+  variantTitle: string | null;
 }
 
 export interface OrderLineItem {
+  id: string;
   image: Image | null;
+  options: ReturnSelectedOption[];
+  productId: string | null;
   quantity: number;
   title: string;
   totalPrice: Money | null;
+  variantId: string | null;
   variantTitle: string | null;
+}
+
+export interface CustomerOrderReturn {
+  createdAt: string | null;
+  itemCount: number;
+  name: string;
+  status: string;
 }
 
 export interface CustomerOrderSummary {
@@ -30,14 +63,19 @@ export interface CustomerOrderSummary {
   id: string;
   name: string;
   number: number;
+  previewLineItems: OrderLinePreview[];
   processedAt: string;
+  returns: CustomerOrderReturn[];
+  statusPageUrl: string;
   totalPrice: Money;
 }
 
-export interface CustomerOrder extends CustomerOrderSummary {
+export interface CustomerOrder extends Omit<CustomerOrderSummary, "returns"> {
   lineItems: OrderLineItem[];
+  nonReturnableSummary: ReturnNonReturnableSummary | null;
+  returnableLineItemCount: number;
+  returns: ReturnSummary[];
   shippingAddress: CustomerAddress | null;
-  statusPageUrl: string;
   subtotal: Money | null;
   totalShipping: Money | null;
   totalTax: Money | null;
@@ -62,6 +100,27 @@ export interface CustomerAddress {
   phoneNumber: string | null;
   zip: string | null;
   zoneCode: string | null;
+}
+
+export interface CustomerStoreCreditTransaction {
+  amount: Money;
+  balanceAfterTransaction: Money;
+  createdAt: string;
+  event: string;
+  orderName: string | null;
+  type: "credit" | "debit" | "expiration" | "revert";
+}
+
+export interface CustomerStoreCreditAccount {
+  balance: Money;
+  id: string;
+  transactions: CustomerStoreCreditTransaction[];
+}
+
+export interface CustomerStoreCredit {
+  account: CustomerStoreCreditAccount | null;
+  error: boolean;
+  marketCurrencyCode: string;
 }
 
 // Form values keyed by Shopify's input, so renamed or removed fields fail typecheck.

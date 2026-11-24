@@ -4,6 +4,7 @@ import { ActionBar } from "@/components/action-bar";
 import { AgentButton } from "@/components/agent/agent-button";
 import { CartUI } from "@/components/cart/cart-ui";
 import { Footer } from "@/components/footer";
+import { FooterGate } from "@/components/footer/gate";
 import { Nav } from "@/components/nav";
 import { NavFallback } from "@/components/nav/fallback";
 import { NewsletterPopup } from "@/components/newsletter/popup";
@@ -18,7 +19,11 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
       <main className="flex min-w-0 flex-1 flex-col" id="main-content">
         {children}
       </main>
-      <Footer />
+      <Suspense fallback={<Footer />}>
+        <FooterGate>
+          <Footer />
+        </FooterGate>
+      </Suspense>
       <CartUI />
       <Suspense fallback={null}>
         <NewsletterPopup />

@@ -1,6 +1,7 @@
 "use client";
 
 import type { PredictiveSearchData } from "@shopify/hydrogen";
+import { getPredictiveSearchItemUrl } from "@shopify/hydrogen";
 import {
   usePredictiveSearch as useHydrogenPredictiveSearch,
   usePredictiveSearchActions,
@@ -8,6 +9,7 @@ import {
 import { useCallback, useState } from "react";
 
 import type { PredictiveSearchResult } from "@/lib/search/types";
+import { SHOPIFY_ROUTE_TEMPLATES } from "@/lib/shopify/routing";
 
 type HydrogenProduct = PredictiveSearchData["items"]["products"][number] & {
   featuredImage: {
@@ -34,12 +36,15 @@ export function usePredictiveSearch() {
   const { clear, search } = usePredictiveSearchActions();
   const state = useHydrogenPredictiveSearch<HydrogenPredictiveSearchData>();
   const [activeIndex, setActiveIndex] = useState(-1);
+  // Previous results stay in place while a new search loads; a failed search shows no rows.
   const results: PredictiveSearchResult | null =
-    state.status !== "success"
-      ? null
-      : {
+    state.status === "loading" || state.status === "success"
+      ? {
           collections: state.result.items.collections.map((collection) => ({
-            handle: collection.handle,
+            href: getPredictiveSearchItemUrl(collection, {
+              routes: SHOPIFY_ROUTE_TEMPLATES,
+              term: state.term,
+            }),
             id: collection.id,
             image:
               collection.image?.height && collection.image.width
@@ -61,13 +66,17 @@ export function usePredictiveSearch() {
                   width: product.featuredImage.width,
                 }
               : null,
-            handle: product.handle,
+            href: getPredictiveSearchItemUrl(product, {
+              routes: SHOPIFY_ROUTE_TEMPLATES,
+              term: state.term,
+            }),
             id: product.id,
             price: product.priceRange.minVariantPrice,
             title: product.title,
           })),
           queries: state.result.items.queries,
-        };
+        }
+      : null;
 
   const setQuery = useCallback(
     (query: string) => {
@@ -84,6 +93,7 @@ export function usePredictiveSearch() {
 
   return {
     activeIndex,
+    error: state.error,
     isLoading: state.status === "loading",
     query: state.term,
     reset,

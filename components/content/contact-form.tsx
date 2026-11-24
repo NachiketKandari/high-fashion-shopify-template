@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/components/ui/link";
 import { Textarea } from "@/components/ui/textarea";
 import { shopConfig } from "@/lib/config";
 
@@ -76,6 +77,16 @@ export function ContactForm() {
       >
         Send message
       </Button>
+      <p className="type-body-sm text-ink-muted">
+        See our{" "}
+        <Link
+          className="focus-ring underline underline-offset-2 transition-colors hover:text-ink"
+          href="/pages/privacy-policies"
+        >
+          Privacy Policy
+        </Link>{" "}
+        for how we use your details.
+      </p>
     </form>
   );
 }

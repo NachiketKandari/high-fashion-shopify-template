@@ -137,6 +137,7 @@ Full documentation is available at [vercel.shop](https://vercel.shop).
 
 Project-specific runbooks:
 
+- [`TODO.md`](./TODO.md) — the repository backlog: open work grouped by priority, owner and blocker.
 - [`docs/FRONTEND-ARCHITECTURE.md`](./docs/FRONTEND-ARCHITECTURE.md) — the full frontend map: routes, components, data flow, caching, configuration, owners and pending work.
 - [`docs/PAGE-INVENTORY.md`](./docs/PAGE-INVENTORY.md) — every shopper-facing page with its production URL, how to reach it, and the cart-to-checkout handoff status.
 - [`docs/FRONTEND-GLOSSARY.md`](./docs/FRONTEND-GLOSSARY.md) — plain-English definitions of every UI/frontend term this template uses, with where each one lives in the code and external learning resources.

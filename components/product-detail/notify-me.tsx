@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/components/ui/link";
 import {
   Sheet,
   SheetClose,
@@ -36,9 +37,19 @@ interface NotifyMeProps {
   product: NotifyMeProduct;
   selectedSize?: string;
   sizeOption?: NotifyMeSizeOption;
+  triggerAriaLabel?: string;
+  triggerClassName?: string;
+  triggerLabel?: string;
 }
 
-export function NotifyMe({ product, selectedSize, sizeOption }: NotifyMeProps) {
+export function NotifyMe({
+  product,
+  selectedSize,
+  sizeOption,
+  triggerAriaLabel,
+  triggerClassName,
+  triggerLabel = "Notify me when available",
+}: NotifyMeProps) {
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState(selectedSize ?? "");
   const [email, setEmail] = useState("");
@@ -62,10 +73,14 @@ export function NotifyMe({ product, selectedSize, sizeOption }: NotifyMeProps) {
       <SheetTrigger
         render={
           <button
-            className="type-control focus-ring flex h-[50px] w-full cursor-pointer items-center justify-center border border-ink bg-transparent px-5 text-ink transition-colors hover:bg-surface"
+            aria-label={triggerAriaLabel}
+            className={cn(
+              "type-control focus-ring flex w-full cursor-pointer items-center justify-center border border-ink bg-transparent px-5 text-ink transition-colors hover:bg-surface",
+              triggerClassName ?? "h-[50px]",
+            )}
             type="button"
           >
-            Notify me when available
+            {triggerLabel}
           </button>
         }
       />
@@ -176,6 +191,16 @@ export function NotifyMe({ product, selectedSize, sizeOption }: NotifyMeProps) {
                     type="email"
                     value={email}
                   />
+                  <p className="type-body-sm text-ink-muted">
+                    See our{" "}
+                    <Link
+                      className="focus-ring underline underline-offset-2 transition-colors hover:text-ink"
+                      href="/pages/privacy-policies"
+                    >
+                      Privacy Policy
+                    </Link>{" "}
+                    for how we use your email.
+                  </p>
                 </div>
               </>
             )}

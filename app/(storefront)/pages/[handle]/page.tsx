@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import {
+  type LegalDocumentHandle,
+  LEGAL_DOCUMENTS,
+  LegalPage,
+} from "@/components/content/legal-page";
 import { RichTextPage, RichTextPageSkeleton } from "@/components/content/rich-text-page";
 import { getPage } from "@/lib/pages/server";
 import { buildAlternates, buildOpenGraph } from "@/lib/seo";
@@ -29,16 +34,18 @@ export async function generateMetadata({
   });
   if (!page) notFound();
   const pathname = `/pages/${page.handle}`;
+  const legal = LEGAL_DOCUMENTS[page.handle as LegalDocumentHandle];
+  const title = legal?.title ?? page.seo.title;
   return {
     alternates: buildAlternates({ pathname }),
     description: page.seo.description,
     openGraph: buildOpenGraph({
       description: page.seo.description,
-      title: page.seo.title,
+      title,
       type: "website",
       url: pathname,
     }),
-    title: page.seo.title,
+    title,
   };
 }
 
@@ -57,5 +64,7 @@ async function ShopifyPageContent({ params }: Pick<PageProps<"/pages/[handle]">,
     handle,
   });
   if (!page) notFound();
+  const legal = LEGAL_DOCUMENTS[page.handle as LegalDocumentHandle];
+  if (legal) return <LegalPage body={page.body} document={legal} />;
   return <RichTextPage body={page.body} title={page.title} />;
 }

@@ -12,25 +12,26 @@ was verified, and what still depends on Shopify credentials or production decisi
 
 ## Implemented
 
-| Surface        | What changed                                                                                                                                                                                                                        |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Global system  | DM Sans, 300/400/500; 14px/21px body; 0.05em tracking; black, white, `#4d4d4d` and `#e1e1e1`; zero radii; 20px mobile / 30px desktop gutters.                                                                                       |
-| Announcement   | Two rotating messages, pause on hover, 30px desktop / 35px mobile.                                                                                                                                                                  |
-| Header         | Large homepage masthead (`1016 × 82` at 1440), compact header elsewhere, sticky collapse on scroll, desktop nav with hover/focus mega menus, mobile menu drawer.                                                                    |
-| Utilities      | Currency selector, search drawer, help/contact drawer, cart count, mobile icon row.                                                                                                                                                 |
-| Auth           | Designed identity gate at `/login` with email validation and a `login_hint` handoff to Shopify's hosted customer accounts; failures render at `/account/sign-in-failed`.                                                            |
-| Search         | 440px right drawer with predictive products, recent products when empty, clear and view-all actions.                                                                                                                                |
-| Homepage       | Full-bleed campaign hero, two-up editorial tiles, “Our Picks” scroll rail, 3-up collection edits, 4 link tiles.                                                                                                                     |
-| Collection     | 18px uppercase title, chips row, inline desktop toolbar, 2/3/4-column responsive grid, 2:3 product images, 3px column gap, colour swatches, size list, wishlist toggle, hover image, filter drawer, sort, infinite loading.         |
-| Product        | 50/50 split, stacked 2:3 gallery, mobile snap gallery, 408px centred info column, inline colour and size selectors, size-guide drawer, quantity, outlined add-to-cart, black buy-now, four description tabs, related-products grid. |
-| Cart           | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                            |
-| Checkout       | Cart at `/cart` opens Shopify's hosted checkout directly; the pre-checkout address and shipping step is built at `/checkout/address` and is reachable by direct link only. Payment and confirmation stay Shopify-hosted.            |
-| Footer         | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                          |
-| Newsletter     | Home-only modal after 20 seconds and full cookie consent, with 30-day local dismissal; footer form.                                                                                                                                 |
-| Cookie consent | Fixed bottom bar with essential/all choice, stored for 180 days; analytics tags mount only after Allow All.                                                                                                                         |
-| Our World      | About Us page with studio, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                            |
-| Help           | Shopify care guide, size guide with a find-my-size form and measurement tables, Shopify FAQ with native details/summary, contact channels and message form, shipping and returns pages.                                             |
-| Policies       | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                                |
+| Surface        | What changed                                                                                                                                                                                                                                                                                                                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Global system  | DM Sans, 300/400/500; 14px/21px body; 0.05em tracking; black, white, `#4d4d4d` and `#e1e1e1`; zero radii; 20px mobile / 30px desktop gutters.                                                                                                                                                                                                                                                                |
+| Announcement   | Two rotating messages, pause on hover, 30px desktop / 35px mobile.                                                                                                                                                                                                                                                                                                                                           |
+| Header         | Large homepage masthead (`1016 × 82` at 1440), compact header elsewhere, sticky collapse on scroll, desktop nav with hover/focus mega menus, mobile menu drawer.                                                                                                                                                                                                                                             |
+| Utilities      | Currency selector, search drawer, help/contact drawer, cart count, mobile icon row.                                                                                                                                                                                                                                                                                                                          |
+| Auth           | Designed identity gate at `/login` with email validation and a `login_hint` handoff to Shopify's hosted customer accounts; failures render at `/account/sign-in-failed`.                                                                                                                                                                                                                                     |
+| Account        | Overview hub, order list and detail, wallet balance and transaction history, saved-address grid and profile details. Store credit renders in the wallet and cart, projects in the pre-checkout step, and applies at Shopify checkout. Shopify owns identity, orders, store credit and addresses; tax-invoice and credit-note documents have no Customer Account API source and render an honest empty state. |
+| Search         | 440px right drawer with predictive products, recent products when empty, clear and view-all actions.                                                                                                                                                                                                                                                                                                         |
+| Homepage       | Full-bleed campaign hero, two-up editorial tiles, “Our Picks” scroll rail, 3-up collection edits, 4 link tiles.                                                                                                                                                                                                                                                                                              |
+| Collection     | 18px uppercase title, chips row, inline desktop toolbar, 2/3/4-column responsive grid, 2:3 product images, 3px column gap, colour swatches, size list, wishlist toggle, hover image, filter drawer, sort, infinite loading.                                                                                                                                                                                  |
+| Product        | 50/50 split, stacked 2:3 gallery, mobile snap gallery, 408px centred info column, inline colour and size selectors, size-guide drawer, quantity, outlined add-to-cart, black buy-now, four description tabs, related-products grid.                                                                                                                                                                          |
+| Cart           | 440px drawer with free-shipping progress, compact line items, subtotal, checkout and view-cart; two-column cart page with order summary.                                                                                                                                                                                                                                                                     |
+| Checkout       | Cart at `/cart` opens Shopify's hosted checkout directly; the pre-checkout address and shipping step is built at `/checkout/address` and is reachable by direct link only. Payment and confirmation stay Shopify-hosted.                                                                                                                                                                                     |
+| Footer         | Address, wordmark, help/policy/brand/social columns, newsletter, copyright, payment marks.                                                                                                                                                                                                                                                                                                                   |
+| Newsletter     | Home-only modal shortly after arrival, once per session, after full cookie consent, with 30-day local dismissal; footer form.                                                                                                                                                                                                                                                                                |
+| Cookie consent | Fixed bottom bar with essential/all choice, stored for 180 days; analytics tags mount only after Allow All.                                                                                                                                                                                                                                                                                                  |
+| Our World      | About Us page with studio, brand philosophy, flagship store, atelier and archive sections; Press grid; Journal index and three articles.                                                                                                                                                                                                                                                                     |
+| Help           | Shopify care guide, size guide with a find-my-size form and measurement tables, Shopify FAQ with native details/summary, contact channels and message form, shipping and returns pages.                                                                                                                                                                                                                      |
+| Policies       | Terms, privacy, shipping and returns pages that mirror the live footer destinations.                                                                                                                                                                                                                                                                                                                         |
 
 ## Flows and screenshots
 
@@ -53,7 +54,7 @@ The locally rebuilt flows were checked in a browser at 1440 × 1000, 768 × 1024
 Allow All in the cookie bar. The local environment uses `G-SQVPB589E7`. Verified in the browser
 network panel: after consent, `googletagmanager.com/gtag/js` loads
 and `google-analytics.com/g/collect` receives `en=page_view` for `/`, `/pages/about-us`,
-`/collections/all`, `/collections/*`, `/products/*`, `/cart` and `/pages/wishlist`. GTM takes
+`/collections/all`, `/collections/*`, `/products/*`, `/cart` and `/account/wishlist`. GTM takes
 precedence when `NEXT_PUBLIC_GTM_ID` is also set, matching `components/analytics/index.tsx`.
 
 The integration is present and active, not just installed. The only production step is to set
@@ -172,8 +173,8 @@ source of the full catalog.
 - Content routes: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`, `/pages/press-v2`,
   `/pages/faqs`, `/pages/shipping-returns`, `/pages/returns-exchanges`,
   `/pages/terms-of-service`, `/pages/privacy-policies`, `/blogs/journal-2` and all three articles
-  return `200` from Shopify content. `/pages/contact-us`, `/pages/size-guide` and `/pages/wishlist`
-  remain Next.js routes.
+  return `200` from Shopify content. `/pages/contact-us`, `/pages/size-guide` and
+  `/account/wishlist` remain Next.js routes.
 - Seeded content: 9 Shopify pages, the `journal-2` blog, 3 articles and 38 images in Shopify Files.
   The store currently serves 11 published page resources because Shopify's pre-existing `contact`
   and `data-sharing-opt-out` pages also render through `/pages/[handle]`.
@@ -205,7 +206,7 @@ Storefront API reads.
 | `/blogs/journal-2/*`       | Shopify articles                       |
 | `/pages/contact-us`        | Next.js contact form                   |
 | `/pages/size-guide`        | Next.js size finder and tables         |
-| `/pages/wishlist`          | Next.js browser-local wishlist         |
+| `/account/wishlist`        | Next.js browser-local wishlist         |
 | `/pages/[handle]`          | Shopify page fallback                  |
 
 The granted content scopes are:
@@ -256,9 +257,12 @@ The ordered closure plan, with dependencies and acceptance checks, is in
   Contact, size guide and wishlist remain Next.js because they need forms, local state or a
   client-side size finder. Do not add a local static route for a Shopify handle; see
   [`CONTENT.md`](./CONTENT.md). Navigation remains code-owned in `lib/nav/index.ts`.
-- **Wishlist and account**: wishlist saves products in local storage and renders at
-  `/pages/wishlist`; it is per-browser and not synced to a customer account. Account utilities
-  render through Shopify's Customer Account API, and `/account` requires a signed-in session.
+- **Wishlist and account**: wishlist saves products in local storage and renders inside the
+  signed-in account at `/account/wishlist`; it remains per-browser and is not synced to the
+  customer account. Account utilities render through Shopify's Customer Account API, and
+  `/account` requires a signed-in session. The account hub links to wallet, invoices, addresses,
+  profile and the wishlist; the wallet and invoice lists read store credit and tax invoices from
+  Shopify, and the cart shows the available balance.
 - **Checkout, order status and payment failure** are Shopify-hosted.
 - **Newsletter and contact submissions** show a local success state; the contact form does not
   send mail yet, and the newsletter does not post to Shopify or a marketing provider.

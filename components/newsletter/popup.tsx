@@ -10,16 +10,22 @@ import { CONSENT_EVENT, readConsent } from "@/lib/consent";
 import { NewsletterForm } from "./form";
 
 const STORAGE_KEY = "newsletter-dismissed-at";
-const DELAY_MS = 20_000;
+const SHOWN_KEY = "newsletter-shown";
+const DELAY_MS = 2_000;
 const DISMISS_DAYS = 30;
 
 export function NewsletterPopup() {
   const pathname = usePathname();
+  return pathname === "/" ? <NewsletterDialog /> : null;
+}
+
+function NewsletterDialog() {
   const headingRef = useRef<HTMLParagraphElement>(null);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (pathname !== "/") return;
+    if (window.sessionStorage.getItem(SHOWN_KEY)) return;
+
     const dismissedAt = Number(window.localStorage.getItem(STORAGE_KEY) ?? 0);
     if (Date.now() - dismissedAt < DISMISS_DAYS * 24 * 60 * 60 * 1000) return;
 
@@ -27,7 +33,10 @@ export function NewsletterPopup() {
     function schedule() {
       window.clearTimeout(timer);
       if (readConsent() !== "all") return;
-      timer = window.setTimeout(() => setOpen(true), DELAY_MS);
+      timer = window.setTimeout(() => {
+        window.sessionStorage.setItem(SHOWN_KEY, "1");
+        setOpen(true);
+      }, DELAY_MS);
     }
 
     schedule();
@@ -36,7 +45,7 @@ export function NewsletterPopup() {
       window.clearTimeout(timer);
       window.removeEventListener(CONSENT_EVENT, schedule);
     };
-  }, [pathname]);
+  }, []);
 
   function handleOpenChange(nextOpen: boolean) {
     setOpen(nextOpen);
@@ -44,7 +53,7 @@ export function NewsletterPopup() {
   }
 
   return (
-    <Dialog onOpenChange={handleOpenChange} open={open && pathname === "/"}>
+    <Dialog onOpenChange={handleOpenChange} open={open}>
       <DialogContent className="gap-0 border-rule p-0" initialFocus={headingRef} showCloseButton>
         <DialogTitle className="sr-only">Join {shopConfig.site.name}</DialogTitle>
         <div className="grid gap-6 p-8 pt-10">
@@ -57,7 +66,7 @@ export function NewsletterPopup() {
               more.
             </p>
           </div>
-          <NewsletterForm inputId="newsletter-popup-email" />
+          <NewsletterForm inputId="newsletter-popup-email" variant="swipe" />
           <p className="type-body-sm text-ink-muted">You can unsubscribe at any time.</p>
         </div>
       </DialogContent>

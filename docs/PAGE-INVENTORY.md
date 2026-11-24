@@ -8,18 +8,18 @@ Shopify's hosted surfaces.
 
 ## Storefront
 
-| Page              | Path                    | Reached from                                             |
-| ----------------- | ----------------------- | -------------------------------------------------------- |
-| Home              | `/`                     | Wordmark, any breadcrumb back to the shop                |
-| Collections index | `/collections`          | Direct, or the collection grid on the home page          |
-| All products      | `/collections/all`      | Direct; empty-cart "Trending Collection"                 |
-| Collection        | `/collections/[handle]` | Header Woman/Man panels, menu tiles, home category tiles |
-| Product           | `/products/[handle]`    | Any product card                                         |
-| Search            | `/search`               | Header search, mobile search icon                        |
-| Search results    | `/search?q=[query]`     | Submit the search field                                  |
-| Cart              | `/cart`                 | Header bag, add-to-cart drawer                           |
-| Wishlist          | `/pages/wishlist`       | Header Wishlist                                          |
-| Wishlist (legacy) | `/wishlist`             | Redirects to `/pages/wishlist`                           |
+| Page              | Path                           | Reached from                                             |
+| ----------------- | ------------------------------ | -------------------------------------------------------- |
+| Home              | `/`                            | Wordmark, any breadcrumb back to the shop                |
+| Collections index | `/collections`                 | Direct, or the collection grid on the home page          |
+| All products      | `/collections/all`             | Direct; empty-cart "Trending Collection"                 |
+| Collection        | `/collections/[handle]`        | Header Woman/Man panels, menu tiles, home category tiles |
+| Product           | `/products/[handle]`           | Any product card                                         |
+| Search            | `/search`                      | Header search, mobile search icon                        |
+| Search results    | `/search?q=[query]`            | Submit the search field                                  |
+| Cart              | `/cart`                        | Header bag, add-to-cart drawer                           |
+| Wishlist          | `/account/wishlist`            | Header Wishlist, account navigation                      |
+| Wishlist (legacy) | `/pages/wishlist`, `/wishlist` | Redirects to `/account/wishlist`                         |
 
 Examples:
 
@@ -52,16 +52,18 @@ action does not link to `/checkout/address` yet.
 
 ## Authentication and account
 
-| Page                  | Path                                      | Reached from                                                                         |
-| --------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------ |
-| Login / register gate | `/login`                                  | Header Account, cart Sign in, account redirects                                      |
-| Shopify sign-in       | `/account/login?return_to=…&login_hint=…` | Generated when the gate submits; Hydrogen OAuth handoff, not a page                  |
-| Sign-in failed        | `/account/sign-in-failed`                 | Shopify redirect after a failed sign-in                                              |
-| Account overview      | `/account`                                | Account links while signed in; signed out redirects to `/login?return_to=%2Faccount` |
-| Orders                | `/account/orders`                         | Account navigation                                                                   |
-| Order detail          | `/account/orders/[id]`                    | An order in the orders list                                                          |
-| Addresses             | `/account/addresses`                      | Account navigation                                                                   |
-| Profile               | `/account/profile`                        | Account navigation                                                                   |
+| Page                  | Path                                      | Reached from                                                                            |
+| --------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------- |
+| Login / register gate | `/login`                                  | Header Account, cart Sign in, account redirects                                         |
+| Shopify sign-in       | `/account/login?return_to=…&login_hint=…` | Generated when the gate submits; Hydrogen OAuth handoff, not a page                     |
+| Sign-in failed        | `/account/sign-in-failed`                 | Shopify redirect after a failed sign-in                                                 |
+| Account overview      | `/account`                                | Account links while signed in; signed out redirects to `/login?return_to=%2Faccount`    |
+| Orders                | `/account/orders`                         | Account navigation; status filter, order actions, tax invoice links                     |
+| Order detail          | `/account/orders/[id]`                    | An order in the orders list; items, totals, returns and issued documents                |
+| Account Balance       | `/account/wallet`                         | Account navigation; store-credit balance and transaction history                        |
+| Invoices & notes      | `/account/invoices`                       | Account navigation; honest empty state until a tax-invoice or credit-note source exists |
+| Addresses             | `/account/addresses`                      | Account navigation; default address, edit, remove and add                               |
+| Profile               | `/account/profile`                        | Account navigation; name, read-only email/phone, email marketing consent                |
 
 Every `/account` page requires a customer session, except `/account/sign-in-failed` and the OAuth
 paths served by `proxy.ts`. There is no separate register URL; Shopify's hosted flow decides whether
