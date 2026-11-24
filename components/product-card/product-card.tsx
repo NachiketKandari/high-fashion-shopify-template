@@ -1,6 +1,7 @@
 import { cn } from "cn";
 import Image from "next/image";
 
+import { BrowseProductMedia } from "@/components/product-card/browse-media";
 import { QuickShop } from "@/components/product-card/quick-shop";
 import { WishlistButton } from "@/components/product-card/wishlist-button";
 import { Price } from "@/components/product/price";
@@ -82,36 +83,31 @@ export function ProductCard({
                 )
         }
       >
-        <Link aria-hidden="true" className="absolute inset-0 block" href={href} tabIndex={-1}>
-          {product.featuredImage ? (
-            <Image
-              alt={product.featuredImage.altText || product.title}
-              className={cn(
-                isBrowse
-                  ? "object-contain transition-transform duration-(--motion-image) ease-(--ease-standard) [[data-card-view=image]_&]:object-cover [[data-card-view=item]_&]:scale-125 [[data-card-view=item]_&]:object-cover"
-                  : "object-cover",
-                isBrowse && product.hoverImage ? "[[data-card-view=image]_&]:hidden" : undefined,
-              )}
-              fill
-              loading={loading}
-              sizes="100vw"
-              src={product.featuredImage.url}
-            />
-          ) : (
-            <ImagePlaceholder className="size-full" />
-          )}
-          {isBrowse && product.hoverImage ? (
-            <Image
-              alt=""
-              aria-hidden="true"
-              className="hidden object-cover [[data-card-view=image]_&]:block"
-              fill
-              loading="lazy"
-              sizes="100vw"
-              src={product.hoverImage.url}
-            />
-          ) : null}
-        </Link>
+        {isBrowse ? (
+          <BrowseProductMedia
+            featuredImage={product.featuredImage}
+            hoverImage={product.hoverImage}
+            href={href}
+            loading={loading}
+            sizes={sizes}
+            title={product.title}
+          />
+        ) : (
+          <Link aria-hidden="true" className="absolute inset-0 block" href={href} tabIndex={-1}>
+            {product.featuredImage ? (
+              <Image
+                alt={product.featuredImage.altText || product.title}
+                className="object-cover"
+                fill
+                loading={loading}
+                sizes="100vw"
+                src={product.featuredImage.url}
+              />
+            ) : (
+              <ImagePlaceholder className="size-full" />
+            )}
+          </Link>
+        )}
 
         {!product.availableForSale ? (
           <span className="type-label absolute inset-0 flex items-center justify-center bg-black/55 text-inverse">
@@ -197,6 +193,11 @@ export function ProductCard({
                 />
               ) : null}
             </div>
+          ) : null}
+          {sizes.length > 0 ? (
+            <p className="type-label hidden truncate text-ink-muted pointer-coarse:block">
+              Sizes {sizes.join(" ")}
+            </p>
           ) : null}
         </div>
       ) : captionLayout === "compact" ? (
