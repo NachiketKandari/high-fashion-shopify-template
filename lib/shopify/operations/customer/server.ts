@@ -13,6 +13,7 @@ import type {
   CustomerStoreCredit,
 } from "@/lib/customer/types";
 import type { Money } from "@/lib/money/types";
+import { logDebug, logError } from "@/lib/observability/server";
 import type { ReturnContext, ReturnEstimate, ReturnRequestDetail } from "@/lib/returns/types";
 import {
   customerAccountFetch,
@@ -529,6 +530,7 @@ export async function fetchCustomerOrderReturnDetail(
     );
   } catch {
     // A closed return can no longer be recalculated; the status page hides the estimate then.
+    logDebug("returns.estimate.skipped", { orderId });
   }
 
   return transformReturnRequestDetail({
@@ -594,7 +596,7 @@ export async function fetchCustomerStoreCreditAccount(
     };
   } catch (error) {
     unstable_rethrow(error);
-    console.error("Failed to load store credit:", error);
+    logError("customer.read.failed", error, { operation: "getCustomerStoreCreditAccount" });
     return { account: null, error: true, marketCurrencyCode: "INR" };
   }
 }
