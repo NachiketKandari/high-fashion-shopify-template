@@ -49,6 +49,14 @@ ${[
   `- Policy and FAQ search: MCP tool \`search_shop_policies_and_faqs\` at \`POST ${url}/api/mcp\` answers questions about shipping, returns, and contacting the store.`,
 ].join("\n")}
 
+## Support
+
+- [Support](${url}/support): Contact the concierge, track an order and find quick answers.
+- [Shipping & 24h cancellation](${url}/support/shipping): Delivery, cancellation windows and dispatch locks.
+- [Returns & alterations](${url}/support/returns): Eligibility, collection, inspection and settlement.
+- [Inside the atelier](${url}/support/atelier): Craftsmanship, material and finishing.
+- [Terms of Service & Privacy](${url}/support/legal): Order, payment, returns, account credit and privacy summaries.
+
 ## Browse
 
 - [All products](${url}/collections/all): The full product catalog.
