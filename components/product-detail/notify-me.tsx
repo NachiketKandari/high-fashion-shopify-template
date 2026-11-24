@@ -37,9 +37,19 @@ interface NotifyMeProps {
   product: NotifyMeProduct;
   selectedSize?: string;
   sizeOption?: NotifyMeSizeOption;
+  triggerAriaLabel?: string;
+  triggerClassName?: string;
+  triggerLabel?: string;
 }
 
-export function NotifyMe({ product, selectedSize, sizeOption }: NotifyMeProps) {
+export function NotifyMe({
+  product,
+  selectedSize,
+  sizeOption,
+  triggerAriaLabel,
+  triggerClassName,
+  triggerLabel = "Notify me when available",
+}: NotifyMeProps) {
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState(selectedSize ?? "");
   const [email, setEmail] = useState("");
@@ -63,10 +73,14 @@ export function NotifyMe({ product, selectedSize, sizeOption }: NotifyMeProps) {
       <SheetTrigger
         render={
           <button
-            className="type-control focus-ring flex h-[50px] w-full cursor-pointer items-center justify-center border border-ink bg-transparent px-5 text-ink transition-colors hover:bg-surface"
+            aria-label={triggerAriaLabel}
+            className={cn(
+              "type-control focus-ring flex w-full cursor-pointer items-center justify-center border border-ink bg-transparent px-5 text-ink transition-colors hover:bg-surface",
+              triggerClassName ?? "h-[50px]",
+            )}
             type="button"
           >
-            Notify me when available
+            {triggerLabel}
           </button>
         }
       />

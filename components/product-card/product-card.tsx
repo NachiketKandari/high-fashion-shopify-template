@@ -142,16 +142,18 @@ export function ProductCard({
           </span>
         ) : null}
 
-        {showActions && !isBrowse ? (
+        {showActions ? (
           <>
             <WishlistButton product={product} />
-            <QuickShop
-              handle={product.handle}
-              href={href}
-              image={product.featuredImage?.url ?? null}
-              label="Quick shop"
-              title={product.title}
-            />
+            {!isBrowse ? (
+              <QuickShop
+                handle={product.handle}
+                href={href}
+                image={product.featuredImage?.url ?? null}
+                label="Quick shop"
+                title={product.title}
+              />
+            ) : null}
           </>
         ) : null}
       </div>

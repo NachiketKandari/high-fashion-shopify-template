@@ -1,17 +1,17 @@
 "use client";
 
-import { useWishlist } from "@/lib/wishlist/client";
+import { useWishlistItems } from "@/lib/wishlist/client";
 
 import { SummaryCard } from "./summary-card";
 
 export function WishlistSummaryCard() {
-  const items = useWishlist();
-  const count = items.length;
+  const items = useWishlistItems();
+  const count = items?.length ?? 0;
 
   return (
     <SummaryCard
       action="View Wishlist"
-      href="/pages/wishlist"
+      href="/account/wishlist"
       label="Private wishlist"
       value={`${count} saved ${count === 1 ? "piece" : "pieces"}`}
     />

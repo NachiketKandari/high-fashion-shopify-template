@@ -4,7 +4,7 @@ import { cn } from "cn";
 import { Bookmark } from "lucide-react";
 
 import type { ProductCard } from "@/lib/product/types";
-import { toggleWishlist, useWishlist } from "@/lib/wishlist/client";
+import { toggleWishlist, useIsWishlisted } from "@/lib/wishlist/client";
 
 interface WishlistButtonProps {
   product: ProductCard;
@@ -12,7 +12,7 @@ interface WishlistButtonProps {
 }
 
 export function WishlistButton({ product, variant = "card" }: WishlistButtonProps) {
-  const saved = useWishlist().some((item) => item.product.handle === product.handle);
+  const saved = useIsWishlisted(product.id);
   return (
     <button
       aria-label={

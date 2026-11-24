@@ -172,9 +172,9 @@ route directories were deleted after the Shopify routes returned `200`; the dyna
 | `/pages/privacy-policies`                             | Shopify page                   |
 | `/pages/contact-us`                                   | Next.js contact form           |
 | `/pages/size-guide`                                   | Next.js size finder and tables |
-| `/pages/wishlist`                                     | Next.js browser-local wishlist |
+| `/account/wishlist`                                   | Next.js browser-local wishlist |
 
-`app/wishlist/page.tsx` is a compatibility redirect to `/pages/wishlist`. `STATIC_CONTENT_PATHS` in
+`app/wishlist/page.tsx` and `app/pages/wishlist/page.tsx` are compatibility redirects to `/account/wishlist`. `STATIC_CONTENT_PATHS` in
 `app/sitemap/[shard]/route.ts` now lists only the two app-owned indexable pages; Shopify's page and
 article sitemap shards cover the migrated content. The seeder is create-only by default so a rerun
 cannot overwrite merchant edits; `UPDATE=1` replaces bodies from `scripts/content/`. See
@@ -373,11 +373,11 @@ Route checks against the running storefront returned 200 for:
 - Every Shopify content route: `/pages/about-us`, `/pages/lookbooks`, `/pages/care-guide`,
   `/pages/press-v2`, `/pages/faqs`, `/pages/shipping-returns`, `/pages/returns-exchanges`,
   `/pages/terms-of-service` and `/pages/privacy-policies`.
-- The app-owned routes: `/pages/contact-us`, `/pages/size-guide` and `/pages/wishlist`.
+- The app-owned routes: `/pages/contact-us`, `/pages/size-guide` and `/account/wishlist`.
 - The Shopify journal index and all three articles under `/blogs/journal-2/`.
 - All 23 seeded collection handles, plus `/collections/all`, `/products/alma-lace-corset-top`,
   `/cart`, `/search`, `/` and the Shopify `contact` page.
-- `/wishlist` returns a 307 redirect to `/pages/wishlist`, which returns 200.
+- `/wishlist` and `/pages/wishlist` return a 307 redirect to `/account/wishlist`, which requires a signed-in session.
 
 Interactive checks recorded in `docs/IMPLEMENTATION.md`: the size finder returns a size result, FAQ
 panels expand, the contact form shows its local success state, and add-to-cart opens the cart drawer

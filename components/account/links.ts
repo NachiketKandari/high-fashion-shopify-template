@@ -11,7 +11,7 @@ export const ACCOUNT_LINKS: AccountLink[] = [
   { href: "/account/invoices", label: "Invoices & notes" },
   { href: "/account/addresses", label: "Saved addresses" },
   { href: "/account/profile", label: "Profile details" },
-  { href: "/pages/wishlist", label: "Private wishlist" },
+  { href: "/account/wishlist", label: "Private wishlist" },
 ];
 
 export function isAccountLinkActive(pathname: string, link: AccountLink): boolean {
