@@ -41,7 +41,7 @@ export function OptionPicker({
             value.selected && value.available
               ? "border-ink bg-ink text-inverse desktop:border-rule"
               : value.exists && value.available
-                ? "border-ink text-ink group-hover:bg-surface desktop:border-rule desktop:text-ink-muted desktop:group-hover:border-ink desktop:group-hover:text-ink"
+                ? "border-ink text-ink desktop:border-rule desktop:text-ink-muted desktop:group-hover:border-ink desktop:group-hover:text-ink"
                 : "border-rule bg-surface text-ink-muted line-through",
           );
           const label = <span className={boxClass}>{value.name}</span>;
