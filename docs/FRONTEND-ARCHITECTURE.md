@@ -659,7 +659,11 @@ curl -i localhost:3000/api/health   # readiness and x-request-id
 ```
 
 `.github/workflows/ci.yml` runs lint, typecheck, build, `/api/health`, and the design suite on
-pushes and same-repo pull requests.
+pushes and same-repo pull requests. The build-and-design job needs the repository variables
+`SHOPIFY_SHOP_ID` and `SHOPIFY_STORE_DOMAIN` and the repository secret
+`SHOPIFY_STOREFRONT_ACCESS_TOKEN`; until they exist it fails at the build's environment assertion,
+and the design suite reports the open `/search` 36px-target contract until the design lane closes
+it.
 
 The design tests need `pnpm exec playwright install chromium` once. The reference audit needs the
 clone running at `CLONE_URL` (default `http://localhost:3000`). The catalog and content scripts need
