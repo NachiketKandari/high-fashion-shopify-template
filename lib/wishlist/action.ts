@@ -1,8 +1,10 @@
 "use server";
 
+import { unstable_rethrow } from "next/navigation";
 import { z } from "zod";
 
 import { isCustomerLoggedIn } from "@/lib/auth/server";
+import { logError } from "@/lib/observability/server";
 import { toProductFormInput } from "@/lib/product";
 import { getProduct } from "@/lib/product/server";
 import { isSizeOption } from "@/lib/product/sizes";
@@ -42,7 +44,9 @@ export async function refreshWishlistProductsAction(ids: string[]): Promise<Wish
   try {
     const products = await fetchProductsByIds({ ids: requestedIds });
     return { products, requestedIds, success: true };
-  } catch {
+  } catch (error) {
+    unstable_rethrow(error);
+    logError("wishlist.refresh.failed", error);
     return { products: [], requestedIds, success: false };
   }
 }

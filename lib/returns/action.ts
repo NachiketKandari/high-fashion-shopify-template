@@ -4,6 +4,7 @@ import { refresh } from "next/cache";
 import { unstable_rethrow } from "next/navigation";
 import { z } from "zod";
 
+import { logError } from "@/lib/observability/server";
 import { buildReturnCustomerNote, isIssueReason } from "@/lib/returns";
 import { getExchangeProduct, getReturnContext } from "@/lib/returns/server";
 import type { ReturnActionResult, ReturnEstimateResult } from "@/lib/returns/types";
@@ -52,7 +53,7 @@ export async function estimateReturnAction(
     return { success: true, estimate };
   } catch (error) {
     unstable_rethrow(error);
-    console.error("Failed to calculate return estimate:", error);
+    logError("returns.action.failed", error, { operation: "Failed to calculate return estimate" });
     return { success: false, error: "Could not calculate the return value" };
   }
 }
@@ -148,7 +149,7 @@ export async function submitReturnAction(
     return { returnId: result.request.id, success: true };
   } catch (error) {
     unstable_rethrow(error);
-    console.error("Failed to submit return request:", error);
+    logError("returns.action.failed", error, { operation: "Failed to submit return request" });
     return {
       error:
         "We couldn't confirm this request. Check your orders before trying again or contact the concierge.",

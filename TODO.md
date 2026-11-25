@@ -41,8 +41,8 @@ Owners follow [`AGENTS.md`](./AGENTS.md): **Shopify** owns commerce, **Next.js**
 - [ ] **Add `/collections` and `/collections/all` to the static sitemap shard.**
       `STATIC_CONTENT_PATHS` currently contains only the home page and two content pages.
       `app/sitemap/[shard]/route.ts`. Owner: Next.js.
-- [ ] **Add CI** for lint, typecheck, build and the design tests; decide whether axe, Knip, jscpd and
-      Lighthouse join the permanent gate. No workflow exists yet. Repository root. Owner: Next.js.
+- [ ] **Decide whether axe, Knip, jscpd and Lighthouse join the permanent CI gate.** The lint,
+      typecheck, build and design-test workflow exists. Repository root. Owner: Next.js.
 
 ## Code, accessibility and performance
 
@@ -217,10 +217,8 @@ Confirm each against the current code before acting; the linked doc is a snapsho
 - [ ] Set the full production environment: Shopify values, auth secrets, site URL, webhook secret,
       revalidation secret and analytics IDs. Detail:
       [`VERCEL-DEPLOYMENT.md`](./docs/VERCEL-DEPLOYMENT.md).
-- [ ] Add application error reporting, request IDs and structured logs, and a `/api/health` route.
-      Webhook deliveries and `revalidateTag` calls are currently not logged. Add cache warm-up and
-      404 monitoring alongside. Detail: [`OBSERVABILITY.md`](./docs/OBSERVABILITY.md).
-- [ ] Make webhooks observable and idempotent, including inventory changes.
+- [ ] Add cache warm-up and 404 monitoring alongside the structured error stream. Detail:
+      [`OBSERVABILITY.md`](./docs/OBSERVABILITY.md).
 - [ ] Create the production Vercel project and domain; replace the stale anonymous Vercel artifact.
 - [ ] Run the deployment verification checklist against a preview: catalog, cart, checkout,
       content pages, sitemap/robots/llms, webhook HMAC, revalidation and analytics.

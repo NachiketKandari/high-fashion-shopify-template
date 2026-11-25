@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { createOperationId } from "@/lib/observability";
 import { logShopifyDebug } from "@/lib/shopify/logging/server";
 
 const SHOPIFY_STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN as string;
@@ -35,6 +36,7 @@ export async function callShopifyMcpTool({
   name: string;
   path: "/api/mcp" | "/api/ucp/mcp";
 }) {
+  const requestId = createOperationId("mcp");
   const start = performance.now();
   try {
     const response = await fetch(`https://${SHOPIFY_STORE_DOMAIN}${path}`, {
@@ -47,6 +49,7 @@ export async function callShopifyMcpTool({
       headers: {
         accept: "application/json, text/event-stream",
         "content-type": "application/json",
+        "x-request-id": requestId,
       },
       method: "POST",
       redirect: "error",
@@ -63,6 +66,7 @@ export async function callShopifyMcpTool({
     logShopifyDebug("Shopify MCP request", {
       durationMs: Math.round(performance.now() - start),
       operation: name,
+      requestId,
       scope: "mcp",
     });
   }

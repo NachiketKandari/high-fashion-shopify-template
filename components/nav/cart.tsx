@@ -6,7 +6,7 @@ import { withFallback } from "@/lib/shopify/errors/server";
 import { CartIconClient } from "./cart-client";
 
 export async function CartIcon() {
-  const cart = await withFallback(getCart(), undefined);
+  const cart = await withFallback(getCart(), undefined, "cart-seed");
   return <CartIconClient cartLabel="Bag" initialCart={cart ?? null} />;
 }
 

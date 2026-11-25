@@ -8,6 +8,7 @@ import {
 
 import { shopConfig } from "@/lib/config";
 import type { CommerceLocale } from "@/lib/config/types";
+import { createOperationId } from "@/lib/observability";
 import { logShopifyDebug } from "@/lib/shopify/logging/server";
 import type { ResultOf, StorefrontResponse } from "@/lib/shopify/types";
 
@@ -16,6 +17,8 @@ const SHOPIFY_STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN as str
 const SHOPIFY_ACCESS_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN as string;
 
 const SHOPIFY_STOREFRONT_ID = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ID;
+
+const REQUEST_GROUP_ID_HEADER = "Custom-Storefront-Request-Group-ID";
 
 const REQUEST_TIMEOUT_MS = 10_000;
 
@@ -35,6 +38,9 @@ const customFetchApi: typeof fetch = async (input, init) => {
   const operation = operationName(init?.body);
   const annotated = `${url}${url.includes("?") ? "&" : "?"}operation=${operation}`;
   const headers = new Headers(init?.headers);
+  const requestGroupId = headers.get(REQUEST_GROUP_ID_HEADER);
+  const requestId = requestGroupId ?? createOperationId("storefront");
+  headers.set("x-request-id", requestId);
   headers.set("Accept-Encoding", "gzip, br");
 
   const start = performance.now();
@@ -44,6 +50,7 @@ const customFetchApi: typeof fetch = async (input, init) => {
     logShopifyDebug("Storefront API request", {
       durationMs: Math.round(performance.now() - start),
       operation,
+      requestId,
       scope: "storefront",
     });
   }
@@ -74,9 +81,9 @@ function getClient(
   return createRequestStorefrontClient(
     createShopifyRequestContext({
       i18n: { country, language },
-      // An empty request ID suppresses Hydrogen's synchronous UUID fallback.
+      // A background operation ID keeps cached catalog reads outside Next.js request-time inputs.
       request: new Request(`https://${SHOPIFY_STORE_DOMAIN}`, {
-        headers: { "x-request-id": "" },
+        headers: { "x-request-id": createOperationId("storefront") },
       }),
     }),
   );

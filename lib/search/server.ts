@@ -41,5 +41,6 @@ export async function fetchClosestSearchResults(): Promise<ProductCard[]> {
   return withFallback(
     fetchSearchIndexProducts({ limit: 8 }).then((page) => page.products),
     [],
+    "search-closest",
   );
 }

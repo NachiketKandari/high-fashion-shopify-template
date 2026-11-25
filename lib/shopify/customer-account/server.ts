@@ -8,6 +8,7 @@ import {
 } from "@shopify/hydrogen/customer-account";
 
 import { shopConfig } from "@/lib/config";
+import { createOperationId } from "@/lib/observability";
 import type { CustomerAccountFetchOptions } from "@/lib/shopify/customer-account/types";
 import { logShopifyDebug, shopifyLogger } from "@/lib/shopify/logging/server";
 import type { CustomerAccountResultOf } from "@/lib/shopify/types";
@@ -28,15 +29,24 @@ export async function customerAccountFetch<Doc extends AnyCustomerAccountDocumen
   variables,
 }: CustomerAccountFetchOptions<Doc>): Promise<CustomerAccountResultOf<Doc>> {
   const shopId = process.env.NEXT_PUBLIC_SHOPIFY_SHOP_ID as string;
+  const requestId = createOperationId("customer-account");
+  const requestFetch: typeof fetch = (input, init) => {
+    const headers = new Headers(init?.headers);
+    headers.set("x-request-id", requestId);
+    return fetch(input, { ...init, headers });
+  };
   const client: CustomerAccountClient = createCustomerAccountClient({
     defaultTimeoutInMs: REQUEST_TIMEOUT_MS,
+    fetch: requestFetch,
     shopId,
     requestContext: createShopifyRequestContext({
       i18n: {
         country: shopConfig.localization.country,
         language: shopConfig.localization.language,
       },
-      request: new Request(shopConfig.site.url),
+      request: new Request(shopConfig.site.url, {
+        headers: { "x-request-id": requestId },
+      }),
     }),
   });
   const start = performance.now();
@@ -50,6 +60,7 @@ export async function customerAccountFetch<Doc extends AnyCustomerAccountDocumen
       shopifyLogger.warn("Customer Account API returned partial errors", {
         errors,
         operation,
+        requestId,
         scope: "customer-account",
       });
     }
@@ -59,6 +70,7 @@ export async function customerAccountFetch<Doc extends AnyCustomerAccountDocumen
     logShopifyDebug("Customer Account API request", {
       durationMs: Math.round(performance.now() - start),
       operation,
+      requestId,
       scope: "customer-account",
     });
   }

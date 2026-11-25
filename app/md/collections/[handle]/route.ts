@@ -6,6 +6,7 @@ import {
 import { collectionToMarkdown } from "@/lib/markdown/collection";
 import { notFoundMarkdown } from "@/lib/markdown/not-found";
 import { markdownHeaders } from "@/lib/markdown/representation";
+import { logError } from "@/lib/observability/server";
 
 // Opts the handler into the stored-output model; every handle renders on demand and is kept until its tag is invalidated.
 export function generateStaticParams(): Array<{ handle: string }> {
@@ -35,7 +36,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ han
         pathname,
       }),
     });
-  } catch {
+  } catch (error) {
+    logError("markdown.collection.failed", error, { path: pathname });
     return new Response(
       "# Server Error\n\nAn error occurred while retrieving the collection. Please try again later.",
       {

@@ -1,30 +1,33 @@
 import { type HydrogenLogger, type LogContext, configureLogging } from "@shopify/hydrogen";
 
+import { logDebug, logError, logInfo, logWarn, serializeError } from "@/lib/observability/server";
 import type { WritableLogLevel } from "@/lib/shopify/logging/types";
 
 const DEBUG_SHOPIFY = ["1", "true"].includes(process.env.DEBUG_SHOPIFY?.toLowerCase() ?? "");
 
-const CONSOLE_METHODS = {
-  debug: "debug",
-  error: "error",
-  fatal: "error",
-  info: "info",
-  trace: "debug",
-  warn: "warn",
-} as const;
-
 function writeLog(level: WritableLogLevel, message: string, context?: LogContext) {
-  const { error, scope = "shopify", ...details } = context ?? {};
-  const args: unknown[] = [`[shopify:${level}:${scope}] ${message}`];
-  if (error !== undefined) args.push(error);
-  if (Object.keys(details).length > 0) args.push(details);
-  console[CONSOLE_METHODS[level]](...args);
+  const { error, ...details } = context ?? {};
+  const fields = { ...details, scope: "shopify" };
+
+  if (error !== undefined) {
+    logError(message, error, fields);
+    return;
+  }
+  if (level === "debug" || level === "trace") {
+    logDebug(message, fields);
+    return;
+  }
+  if (level === "warn") {
+    logWarn(message, fields);
+    return;
+  }
+  logInfo(message, fields);
 }
 
 export const shopifyLogger: HydrogenLogger = {
   debug: (message, context) => writeLog("debug", message, context),
   error: (message, context) => writeLog("error", message, context),
-  fatal: (message, context) => writeLog("fatal", message, context),
+  fatal: (message, context) => writeLog("error", message, context),
   info: (message, context) => writeLog("info", message, context),
   trace: (message, context) => writeLog("trace", message, context),
   warn: (message, context) => writeLog("warn", message, context),
@@ -39,4 +42,8 @@ export function configureShopifyLogging() {
 
 export function logShopifyDebug(message: string, context: LogContext) {
   if (DEBUG_SHOPIFY) shopifyLogger.debug(message, context);
+}
+
+export function logShopifyWarning(message: string, context: LogContext) {
+  shopifyLogger.warn(message, context);
 }
