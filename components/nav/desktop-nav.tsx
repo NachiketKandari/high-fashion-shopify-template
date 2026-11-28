@@ -44,32 +44,25 @@ export function DesktopNav({
 }: DesktopNavProps) {
   const item = MAIN_NAV[activeIndex];
 
-  function openMenu(index: number) {
-    onActiveIndexChange(index);
-    onOpenChange(true);
-  }
-
   return (
     <Dialog.Root onOpenChange={onOpenChange} open={open}>
       <nav aria-label="Menu" className="hidden desktop:block">
         <ul className="flex items-center gap-6" role="list">
           {MAIN_NAV.map((entry, index) => (
             <li key={entry.label}>
-              <button
-                aria-controls="nav-panel"
-                aria-expanded={open && activeIndex === index}
+              <Link
                 className={NAV_ITEM_CLASS}
-                onClick={() => openMenu(index)}
+                href={entry.href}
+                onClick={() => onOpenChange(false)}
                 onPointerEnter={(event) => {
                   if (event.pointerType === "mouse") onTriggerPointerEnter(index);
                 }}
                 onPointerLeave={(event) => {
                   if (event.pointerType === "mouse") onTriggerPointerLeave();
                 }}
-                type="button"
               >
                 {navLabel(entry.label)}
-              </button>
+              </Link>
             </li>
           ))}
         </ul>
@@ -91,18 +84,18 @@ export function DesktopNav({
           <div className="flex h-[74px] shrink-0 items-center justify-between px-6">
             <div className="flex items-center gap-6">
               {MAIN_NAV.map((entry, index) => (
-                <button
-                  aria-pressed={entry.label === item.label}
-                  className={`${NAV_ITEM_CLASS} aria-pressed:underline aria-pressed:underline-offset-4`}
+                <Link
+                  className={`${NAV_ITEM_CLASS} data-[active=true]:underline data-[active=true]:underline-offset-4`}
+                  data-active={entry.label === item.label}
+                  href={entry.href}
                   key={entry.label}
-                  onClick={() => onActiveIndexChange(index)}
+                  onClick={() => onOpenChange(false)}
                   onPointerEnter={(event) => {
                     if (event.pointerType === "mouse") onActiveIndexChange(index);
                   }}
-                  type="button"
                 >
                   {navLabel(entry.label)}
-                </button>
+                </Link>
               ))}
               <Link className={NAV_ITEM_CLASS} href="/search" onClick={() => onOpenChange(false)}>
                 Search
