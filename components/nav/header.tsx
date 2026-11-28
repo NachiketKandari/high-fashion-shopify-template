@@ -6,17 +6,23 @@ import { type ReactNode, useEffect, useState } from "react";
 
 import { Wordmark } from "@/components/brand/wordmark";
 
-import { DesktopNav } from "./desktop-nav";
 import { MobileMenu } from "./mobile-menu";
 
 interface HeaderProps {
   actions: ReactNode;
+  desktopNav: ReactNode;
   mobileActions?: ReactNode;
   search?: ReactNode;
   searchOpen?: boolean;
 }
 
-export function Header({ actions, mobileActions, search, searchOpen = false }: HeaderProps) {
+export function Header({
+  actions,
+  desktopNav,
+  mobileActions,
+  search,
+  searchOpen = false,
+}: HeaderProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const isHome = pathname === "/";
@@ -51,7 +57,7 @@ export function Header({ actions, mobileActions, search, searchOpen = false }: H
 
         <div className="hidden h-full grid-cols-[1fr_auto_1fr] items-center gap-4 px-(--gutter) desktop:grid">
           <div className="flex min-w-0 items-center gap-6">
-            <DesktopNav />
+            {desktopNav}
             {search}
           </div>
 

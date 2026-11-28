@@ -2,7 +2,7 @@
 
 import { Dialog } from "@base-ui/react/dialog";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { type PointerEvent, useEffect } from "react";
 
 import { SearchExplorer } from "@/components/search/search-explorer";
 import { Container } from "@/components/ui/container";
@@ -11,10 +11,17 @@ import { NAV_ITEM_CLASS } from "./nav-chip";
 
 interface SearchModalProps {
   onOpenChange: (open: boolean) => void;
+  onTriggerPointerEnter?: (event: PointerEvent<HTMLButtonElement>) => void;
+  onTriggerPointerLeave?: (event: PointerEvent<HTMLButtonElement>) => void;
   open: boolean;
 }
 
-export function SearchModal({ onOpenChange, open }: SearchModalProps) {
+export function SearchModal({
+  onOpenChange,
+  onTriggerPointerEnter,
+  onTriggerPointerLeave,
+  open,
+}: SearchModalProps) {
   const pathname = usePathname();
   const onSearchPage = pathname === "/search";
 
@@ -45,6 +52,8 @@ export function SearchModal({ onOpenChange, open }: SearchModalProps) {
         render={
           <button
             className={`${NAV_ITEM_CLASS} ${open ? "invisible pointer-events-none" : ""}`}
+            onPointerEnter={onTriggerPointerEnter}
+            onPointerLeave={onTriggerPointerLeave}
             type="button"
           >
             Search
