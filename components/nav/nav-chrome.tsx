@@ -65,6 +65,10 @@ export function NavChrome({ actions, mobileActions, searchEnabled }: NavChromePr
     }
   }, []);
 
+  const handleTriggerPointerDown = useCallback(() => {
+    clearTimers();
+  }, [clearTimers]);
+
   const handlePanelPointerEnter = useCallback(() => {
     if (closeTimerRef.current !== null) {
       clearTimeout(closeTimerRef.current);
@@ -107,6 +111,7 @@ export function NavChrome({ actions, mobileActions, searchEnabled }: NavChromePr
           onOpenChange={handleMenuOpenChange}
           onPanelPointerEnter={handlePanelPointerEnter}
           onPanelPointerLeave={handlePanelPointerLeave}
+          onTriggerPointerDown={handleTriggerPointerDown}
           onTriggerPointerEnter={handleTriggerPointerEnter}
           onTriggerPointerLeave={handleTriggerPointerLeave}
           open={menuOpen}

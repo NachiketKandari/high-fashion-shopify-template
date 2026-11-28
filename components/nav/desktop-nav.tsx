@@ -27,6 +27,7 @@ interface DesktopNavProps {
   onOpenChange: (open: boolean) => void;
   onPanelPointerEnter: () => void;
   onPanelPointerLeave: () => void;
+  onTriggerPointerDown: () => void;
   onTriggerPointerEnter: (index: number) => void;
   onTriggerPointerLeave: () => void;
   open: boolean;
@@ -38,6 +39,7 @@ export function DesktopNav({
   onOpenChange,
   onPanelPointerEnter,
   onPanelPointerLeave,
+  onTriggerPointerDown,
   onTriggerPointerEnter,
   onTriggerPointerLeave,
   open,
@@ -54,6 +56,7 @@ export function DesktopNav({
                 className={NAV_ITEM_CLASS}
                 href={entry.href}
                 onClick={() => onOpenChange(false)}
+                onPointerDown={onTriggerPointerDown}
                 onPointerEnter={(event) => {
                   if (event.pointerType === "mouse") onTriggerPointerEnter(index);
                 }}
@@ -72,7 +75,7 @@ export function DesktopNav({
         <Dialog.Backdrop className="fixed inset-0 z-(--z-overlay) bg-ink-strong/20 transition-opacity duration-(--motion-base) ease-(--ease-standard) motion-reduce:transition-none data-ending-style:opacity-0 data-starting-style:opacity-0" />
         <Dialog.Popup
           aria-label={`${navLabel(item.label)} menu`}
-          className="fixed inset-y-0 left-0 z-(--z-overlay) hidden h-dvh w-[709px] max-w-full flex-col bg-paper outline-none transition-[clip-path,opacity] duration-(--motion-base) ease-(--ease-standard) motion-reduce:transition-none [clip-path:inset(0_0_0_0)] data-ending-style:opacity-0 data-ending-style:[clip-path:inset(0_100%_0_0)] data-starting-style:opacity-0 data-starting-style:[clip-path:inset(0_100%_0_0)] desktop:flex"
+          className="fixed inset-y-0 left-0 z-(--z-overlay) hidden h-dvh w-[709px] max-w-full flex-col bg-paper outline-none transition-[opacity,transform] duration-(--motion-base) ease-(--ease-standard) motion-reduce:transition-none data-ending-style:-translate-x-2 data-ending-style:opacity-0 data-starting-style:-translate-x-2 data-starting-style:opacity-0 desktop:flex"
           id="nav-panel"
           onPointerEnter={(event) => {
             if (event.pointerType === "mouse") onPanelPointerEnter();
